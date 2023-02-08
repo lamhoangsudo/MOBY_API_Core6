@@ -1,10 +1,7 @@
-﻿using Item.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Models;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace Item.Repository
+namespace MOBY_API_Core6.Repository
 {
     public class ItemRepository : IItemRepository
     {

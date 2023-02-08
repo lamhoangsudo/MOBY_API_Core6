@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Models;
 
-namespace Item.Repository
+namespace MOBY_API_Core6.Repository
 {
     public class ImageRepository : IImageRepository
     {

@@ -1,8 +1,6 @@
-﻿using Item.Models;
-using Item.Repository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository;
 
 namespace Item.Controllers
 {
