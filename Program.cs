@@ -1,4 +1,3 @@
-using Item.Repository;
 using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
@@ -8,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-var connectionString = builder.Configuration.GetConnectionString("MobyDB");
+var connectionString = builder.Configuration.GetConnectionString("MobyDBLocal");
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
