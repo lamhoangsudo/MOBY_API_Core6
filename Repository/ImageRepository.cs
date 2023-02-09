@@ -47,16 +47,37 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public Image GetImagesItemDetail(int itemID)
+        public bool UpdateImagesItem(int imageID, string image1, string image2, string image3, string image4, string image5)
         {
+            if (image1 == null || image1.Equals(""))
+            {
+                return false;
+            }
+            if (image2 == null || image2.Equals(""))
+            {
+                return false;
+            }
+            if (image3 == null || image3.Equals(""))
+            {
+                return false;
+            }
             try
             {
-                Image ImageDetailItem = _context.Images.FromSqlInterpolated($"").ToList().SingleOrDefault();
-                return ImageDetailItem;
+                var checkUpdate = _context.Database.ExecuteSqlInterpolated($"");
+                if (checkUpdate > 0)
+                {
+                    _context.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
             }
-            catch 
+            catch
             {
-                return null;
+                return false;
             }
         }
     }

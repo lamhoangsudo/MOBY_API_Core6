@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace MOBY_API_Core6.Models
 {
-    public partial class Image
+    public partial class @bool
     {
-        public Image()
+        public @bool()
         {
             Items = new HashSet<Item>();
             Requests = new HashSet<Request>();

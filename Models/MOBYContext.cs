@@ -25,7 +25,7 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<CartDetail> CartDetails { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<DetailItem> DetailItems { get; set; } = null!;
-        public virtual DbSet<Image> Images { get; set; } = null!;
+        public virtual DbSet<@bool> Images { get; set; } = null!;
         public virtual DbSet<Item> Items { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
@@ -40,14 +40,7 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<CheckSubCategoryExist> CheckSubCategoryExists { get; set; } = null!;
         public virtual DbSet<CheckImageExist> CheckImageExists { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-H1G0RQO;Initial Catalog=MOBY;Persist Security Info=True;User ID=sa;Password=123456789;MultipleActiveResultSets=True;Trusted_Connection=True;TrustServerCertificate=True;");
-            }
-        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){ }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -254,7 +247,7 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
 
-            modelBuilder.Entity<Image>(entity =>
+            modelBuilder.Entity<@bool>(entity =>
             {
                 entity.Property(e => e.ImageId).HasColumnName("ImageID");
 
