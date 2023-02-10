@@ -40,7 +40,7 @@ namespace MOBY_API_Core6.Controllers
         public async Task<String> UpdateUserProfile(String userName, String picture, String address, String phone, bool sex, String dateOfBirth, String User_More_Information)
         {
             //UserAccounts currentUser = new UserAccounts();
-            UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
+            UserAccount currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
 
             try
             {
@@ -79,6 +79,20 @@ namespace MOBY_API_Core6.Controllers
 
 
             return await userDAO.BanUser(uid);
+        }
+        [Authorize]
+        [HttpGet]
+        [Route("api/UserController/GetAllUser")]
+        public async Task<List<UserAccount>> GetAllUser(String uid)
+        {
+            List<UserAccount> list = new List<UserAccount>();
+            list = await userDAO.GetAllUser();
+
+            //UserAccounts currentUser = new UserAccounts();
+            //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
+
+
+            return list;
         }
     }
 }

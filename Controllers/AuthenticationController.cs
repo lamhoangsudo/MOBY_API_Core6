@@ -35,8 +35,9 @@ namespace MOBY_API_Core6.Controllers
 
 
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return "Error token not found";
             }
 

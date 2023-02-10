@@ -83,7 +83,7 @@ app.UseAuthorization();
 
 FirebaseApp.Create(new AppOptions()
 {
-    Credential = GoogleCredential.FromFile("D:\\moby-177a8-firebase-adminsdk-hii3z-75c8bd78de.json")
+    Credential = GoogleCredential.FromFile("moby-177a8-firebase-adminsdk-hii3z-75c8bd78de.json")
 });
 
 // Configure the HTTP request pipeline.
