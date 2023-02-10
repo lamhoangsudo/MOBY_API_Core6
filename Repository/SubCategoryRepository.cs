@@ -12,7 +12,7 @@ namespace MOBY_API_Core6.Repository
             _context = context;
         }
 
-        public bool CreateSubCategory(int categoryID, string SubCategoryName)
+        public async Task<bool> CreateSubCategory(int categoryID, string SubCategoryName)
         {
             var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {categoryID}").ToList().SingleOrDefault();
             if (checkCategory == null || SubCategoryName == null || SubCategoryName.Equals(""))
@@ -42,7 +42,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public bool DeleteSubCategory(int subCategoryID)
+        public async Task<bool> DeleteSubCategory(int subCategoryID)
         {
             var checkDelete = _context.Database.ExecuteSqlInterpolated($"EXEC delete_SubCategory {subCategoryID}");
             if (checkDelete != 0)
@@ -56,7 +56,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public List<SubCategoryVM> GetSubCategoriesByName(string subCategoryName)
+        public async Task<List<SubCategoryVM>> GetSubCategoriesByName(string subCategoryName)
         {
             subCategoryName = "%" + subCategoryName + "%";
             var listSubCategory = _context.SubCategories.FromSqlInterpolated($"EXEC search_SubCategory_By_Name {subCategoryName}").ToList().Select(subCategory => new SubCategoryVM
@@ -69,7 +69,7 @@ namespace MOBY_API_Core6.Repository
             return listSubCategory.ToList();
         }
 
-        public List<SubCategoryVM> GetAllSubCategory(int categoryID)
+        public async Task<List<SubCategoryVM>> GetAllSubCategory(int categoryID)
         {
             var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {categoryID}").ToList().SingleOrDefault();
             if (checkCategory == null)
@@ -89,7 +89,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public SubCategoryVM GetSubCategoryByID(int subCategoryID)
+        public async Task<SubCategoryVM> GetSubCategoryByID(int subCategoryID)
         {
             var checkSubCategory = _context.SubCategories.FromSqlInterpolated($"EXEC get_SubCategory_By_ID {subCategoryID}").ToList().SingleOrDefault();
             if (checkSubCategory != null)
@@ -108,7 +108,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public bool UpdateSubCategory(int subCategoryID, string SubCategoryName, int categoryID)
+        public async Task<bool> UpdateSubCategory(int subCategoryID, string SubCategoryName, int categoryID)
         {
             var checkUpdateSubCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {categoryID}").ToList().SingleOrDefault();
             if (checkUpdateSubCategory == null)

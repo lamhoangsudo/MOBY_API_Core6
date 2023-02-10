@@ -1,41 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MOBY_API_Core6.Models
+namespace MOBY_API_Core6.Models;
+
+public partial class Item
 {
-    public partial class Item
-    {
-        public Item()
-        {
-            CartDetails = new HashSet<CartDetail>();
-            OrderDetails = new HashSet<OrderDetail>();
-            Reports = new HashSet<Report>();
-        }
+    public int ItemId { get; set; }
 
-        public int ItemId { get; set; }
-        public string ItemCode { get; set; } = null!;
-        public int UserId { get; set; }
-        public int SubCategoryId { get; set; }
-        public string ItemTitle { get; set; } = null!;
-        public string ItemDetailedDescription { get; set; } = null!;
-        public double ItemMass { get; set; }
-        public bool ItemSize { get; set; }
-        public string ItemStatus { get; set; } = null!;
-        public double? ItemEstimateValue { get; set; }
-        public double? ItemSalePrice { get; set; }
-        public int ItemShareAmount { get; set; }
-        public bool ItemSponsoredOrderShippingFee { get; set; }
-        public DateTime? ItemExpiredTime { get; set; }
-        public string ItemShippingAddress { get; set; } = null!;
-        public DateTime ItemDateCreated { get; set; }
-        public DateTime? ItemDateUpdate { get; set; }
-        public int ImageId { get; set; }
+    public string ItemCode { get; set; } = null!;
 
-        public virtual bool Image { get; set; } = null!;
-        public virtual SubCategory SubCategory { get; set; } = null!;
-        public virtual UserAccount User { get; set; } = null!;
-        public virtual ICollection<CartDetail> CartDetails { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public virtual ICollection<Report> Reports { get; set; }
-    }
+    public int UserId { get; set; }
+
+    public int SubCategoryId { get; set; }
+
+    public string ItemTitle { get; set; } = null!;
+
+    public string ItemDetailedDescription { get; set; } = null!;
+
+    public double ItemMass { get; set; }
+
+    public bool ItemSize { get; set; }
+
+    public string ItemStatus { get; set; } = null!;
+
+    public double? ItemEstimateValue { get; set; }
+
+    public double? ItemSalePrice { get; set; }
+
+    public int ItemShareAmount { get; set; }
+
+    public bool ItemSponsoredOrderShippingFee { get; set; }
+
+    public DateTime? ItemExpiredTime { get; set; }
+
+    public string ItemShippingAddress { get; set; } = null!;
+
+    public DateTime ItemDateCreated { get; set; }
+
+    public DateTime? ItemDateUpdate { get; set; }
+
+    public int ImageId { get; set; }
+
+    public virtual ICollection<CartDetail> CartDetails { get; } = new List<CartDetail>();
+
+    public virtual Image Image { get; set; } = null!;
+
+    public virtual ICollection<OrderDetail> OrderDetails { get; } = new List<OrderDetail>();
+
+    public virtual ICollection<Report> Reports { get; } = new List<Report>();
+
+    public virtual SubCategory SubCategory { get; set; } = null!;
+
+    public virtual UserAccount User { get; set; } = null!;
 }

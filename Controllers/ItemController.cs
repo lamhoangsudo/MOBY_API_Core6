@@ -16,11 +16,11 @@ namespace Item.Controllers
         }
 
         [HttpPost("/CreateItem/{UserId},{SubCategoryId},{ItemTitle},{ItemDetailedDescription},{ItemMass},{ItemSize},{ItemStatus},{ItemEstimateValue},{ItemSalePrice},{ItemShareAmount},{ItemSponsoredOrderShippingFee},{ItemShippingAddress},{ImageId},{stringDateTimeExpired}")]
-        public IActionResult CreateItem(int UserId, int SubCategoryId, string ItemTitle, string ItemDetailedDescription, double ItemMass, bool ItemSize, string ItemStatus, double ItemEstimateValue, double ItemSalePrice, int ItemShareAmount, bool ItemSponsoredOrderShippingFee, string ItemShippingAddress, int ImageId, string stringDateTimeExpired)
+        public async Task<IActionResult> CreateItem(int UserId, int SubCategoryId, string ItemTitle, string ItemDetailedDescription, double ItemMass, bool ItemSize, string ItemStatus, double ItemEstimateValue, double ItemSalePrice, int ItemShareAmount, bool ItemSponsoredOrderShippingFee, string ItemShippingAddress, int ImageId, string stringDateTimeExpired)
         {
             try
             {
-                bool checkCreate = _itemRepository.CreateItem(UserId, SubCategoryId, ItemTitle, ItemDetailedDescription, ItemMass, ItemSize, ItemStatus, ItemEstimateValue, ItemSalePrice, ItemShareAmount, ItemSponsoredOrderShippingFee, ItemShippingAddress, ImageId, stringDateTimeExpired);
+                bool checkCreate = await _itemRepository.CreateItem(UserId, SubCategoryId, ItemTitle, ItemDetailedDescription, ItemMass, ItemSize, ItemStatus, ItemEstimateValue, ItemSalePrice, ItemShareAmount, ItemSponsoredOrderShippingFee, ItemShippingAddress, ImageId, stringDateTimeExpired);
                 if (checkCreate)
                 {
                     return Ok("da tao thanh cong");
@@ -36,11 +36,11 @@ namespace Item.Controllers
             }
         }
         [HttpGet("/GetAllBriefItem")]
-        public IActionResult GetAllBriefItem()
+        public async Task<IActionResult> GetAllBriefItem()
         {
             try
             {
-                List<BriefItem> listBriefItem = _itemRepository.GetAllBriefItem();
+                List<BriefItem> listBriefItem = await _itemRepository.GetAllBriefItem();
                 if (listBriefItem != null || listBriefItem.Count() > 0)
                 {
                     return Ok(listBriefItem);
@@ -57,11 +57,11 @@ namespace Item.Controllers
         }
 
         [HttpGet("/GetItemDetail/{itemID}")]
-        public IActionResult GetItemDetail(int itemID)
+        public async Task<IActionResult> GetItemDetail(int itemID)
         {
             try
             {
-                DetailItem itemDetail = _itemRepository.GetItemDetail(itemID);
+                DetailItem itemDetail = await _itemRepository.GetItemDetail(itemID);
                 if (itemDetail != null)
                 {
                     return Ok(itemDetail);
@@ -78,11 +78,11 @@ namespace Item.Controllers
         }
 
         [HttpGet("/GetBriefItemByUserId/{UserID}")]
-        public IActionResult GetBriefItemByUserID(int userID)
+        public async Task<IActionResult> GetBriefItemByUserID(int userID)
         {
             try
             {
-                List<BriefItem> listBriefItemByUserID = _itemRepository.GetBriefItemByUserID(userID);
+                List<BriefItem> listBriefItemByUserID = await _itemRepository.GetBriefItemByUserID(userID);
                 if (listBriefItemByUserID != null || listBriefItemByUserID.Count() > 0)
                 {
                     return Ok(listBriefItemByUserID);
@@ -99,11 +99,11 @@ namespace Item.Controllers
         }
 
         [HttpGet("/SearchBriefItemByUserId/{itemTitle}")]
-        public IActionResult SearchBriefItemByTitle(string itemTitle)
+        public async Task<IActionResult> SearchBriefItemByTitle(string itemTitle)
         {
             try
             {
-                List<BriefItem> listBriefItemByItemTitle = _itemRepository.SearchBriefItemByTitle(itemTitle);
+                List<BriefItem> listBriefItemByItemTitle = await _itemRepository.SearchBriefItemByTitle(itemTitle);
                 if (listBriefItemByItemTitle != null || listBriefItemByItemTitle.Count() > 0)
                 {
                     return Ok(listBriefItemByItemTitle);
@@ -120,11 +120,11 @@ namespace Item.Controllers
         }
 
         [HttpGet("/SearchBriefItemBySubCategoryID/{subCategoryID}")]
-        public IActionResult SearchBriefItemBySubCategoryID(int subCategoryID)
+        public async Task<IActionResult> SearchBriefItemBySubCategoryID(int subCategoryID)
         {
             try
             {
-                List<BriefItem> listBriefItemBySubCategoryID = _itemRepository.SearchBriefItemBySubCategoryID(subCategoryID);
+                List<BriefItem> listBriefItemBySubCategoryID = await _itemRepository.SearchBriefItemBySubCategoryID(subCategoryID);
                 if (listBriefItemBySubCategoryID != null || listBriefItemBySubCategoryID.Count() > 0)
                 {
                     return Ok(listBriefItemBySubCategoryID);
@@ -141,11 +141,11 @@ namespace Item.Controllers
         }
 
         [HttpGet("/SearchBriefItemByCategoryID/{categoryID}")]
-        public IActionResult SearchBriefItemByCategoryID(int categoryID)
+        public async Task<IActionResult> SearchBriefItemByCategoryID(int categoryID)
         {
             try
             {
-                List<BriefItem> listBriefItemByCategoryID = _itemRepository.SearchBriefItemByCategoryID(categoryID);
+                List<BriefItem> listBriefItemByCategoryID = await _itemRepository.SearchBriefItemByCategoryID(categoryID);
                 if (listBriefItemByCategoryID != null || listBriefItemByCategoryID.Count() > 0)
                 {
                     return Ok(listBriefItemByCategoryID);

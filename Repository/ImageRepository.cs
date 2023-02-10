@@ -11,7 +11,7 @@ namespace MOBY_API_Core6.Repository
         {
             _context = context;
         }
-        public bool CreateImage(string image1, string image2, string image3, string image4, string image5)
+        public async Task<bool> CreateImage(string image1, string image2, string image3, string image4, string image5)
         {
             if (image1 == null || image1.Equals(""))
             {
@@ -47,7 +47,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public bool UpdateImagesItem(int imageID, string image1, string image2, string image3, string image4, string image5)
+        public async Task<bool> UpdateImagesItem(int imageID, string image1, string image2, string image3, string image4, string image5)
         {
             if (image1 == null || image1.Equals(""))
             {

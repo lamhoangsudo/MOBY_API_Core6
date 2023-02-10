@@ -4,11 +4,11 @@ namespace MOBY_API_Core6.Repository
 {
     public interface ISubCategoryRepository
     {
-        List<SubCategoryVM> GetAllSubCategory(int categoryID);
-        bool CreateSubCategory(int categoryID, String SubCategoryName);
-        bool UpdateSubCategory(int subCategoryID, String SubCategoryName, int categoryID);
-        SubCategoryVM GetSubCategoryByID(int subCategoryID);
-        bool DeleteSubCategory(int subCategoryID);
-        List<SubCategoryVM> GetSubCategoriesByName(string subCategoryName);
+        Task <List<SubCategoryVM>> GetAllSubCategory(int categoryID);
+        Task <bool> CreateSubCategory(int categoryID, String SubCategoryName);
+        Task<bool> UpdateSubCategory(int subCategoryID, String SubCategoryName, int categoryID);
+        Task<SubCategoryVM> GetSubCategoryByID(int subCategoryID);
+        Task<bool> DeleteSubCategory(int subCategoryID);
+        Task<List<SubCategoryVM>> GetSubCategoriesByName(string subCategoryName);
     }
 }

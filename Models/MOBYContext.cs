@@ -25,7 +25,7 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<CartDetail> CartDetails { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<DetailItem> DetailItems { get; set; } = null!;
-        public virtual DbSet<@bool> Images { get; set; } = null!;
+        public virtual DbSet<Image> Images { get; set; } = null!;
         public virtual DbSet<Item> Items { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;

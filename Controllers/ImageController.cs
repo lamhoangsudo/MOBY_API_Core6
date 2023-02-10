@@ -13,11 +13,11 @@ namespace Item.Controllers
             _imageRepository = imageRepository;
         }
         [HttpPost("CreateImage/{image1} {image2} {image3} {image4} {image5}")]
-        public IActionResult createImage(string image1, string image2, string image3, string image4, string image5)
+        public async Task<IActionResult> createImage(string image1, string image2, string image3, string image4, string image5)
         {
             try
             {
-                bool checkCreate = _imageRepository.CreateImage(image1, image2, image3, image4, image5);
+                bool checkCreate = await _imageRepository.CreateImage(image1, image2, image3, image4, image5);
                 if (checkCreate)
                 {
                     return Ok("da tao thanh cong");
