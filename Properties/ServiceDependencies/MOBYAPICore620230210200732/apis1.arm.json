@@ -49,17 +49,17 @@
           "contentVersion": "1.0.0.0",
           "resources": [
             {
-              "name": "mobyapi",
+              "name": "MOBYAPIMANAGET",
               "type": "Microsoft.ApiManagement/service",
               "location": "[parameters('resourceLocation')]",
               "properties": {
                 "publisherEmail": "hlam5370@gmail.com",
-                "publisherName": "mobyapimanagement",
+                "publisherName": "hoang lam",
                 "notificationSenderEmail": "apimgmt-noreply@mail.windowsazure.com",
                 "hostnameConfigurations": [
                   {
                     "type": "Proxy",
-                    "hostName": "mobyapi.azure-api.net",
+                    "hostName": "mobyapimanaget.azure-api.net",
                     "encodedCertificate": null,
                     "keyVaultId": null,
                     "certificatePassword": null,
@@ -68,21 +68,17 @@
                     "defaultSslBinding": true
                   }
                 ],
-                "publicIPAddresses": [
-                  "20.187.187.115"
-                ],
+                "publicIPAddresses": null,
                 "privateIPAddresses": null,
                 "additionalLocations": null,
                 "virtualNetworkConfiguration": null,
                 "customProperties": {
-                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls11": "true",
-                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls10": "false",
-                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls11": "true",
-                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls10": "false",
-                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Ssl30": "false",
-                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Protocols.Server.Http2": "true",
-                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Ciphers.TripleDes168": "true",
-                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Ssl30": "false"
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls10": "False",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Protocols.Tls11": "False",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls10": "False",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Tls11": "False",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Security.Backend.Protocols.Ssl30": "False",
+                  "Microsoft.WindowsAzure.ApiManagement.Gateway.Protocols.Server.Http2": "False"
                 },
                 "virtualNetworkType": "None",
                 "certificates": null,
@@ -92,14 +88,14 @@
                 }
               },
               "sku": {
-                "name": "Developer",
-                "capacity": 1
+                "name": "Consumption",
+                "capacity": 0
               },
               "apiVersion": "2019-12-01"
             },
             {
               "type": "Microsoft.ApiManagement/service/apis",
-              "name": "mobyapi/MOBYAPICore6",
+              "name": "MOBYAPIMANAGET/MOBYAPICore6",
               "properties": {
                 "displayName": "MOBYAPICore6",
                 "apiRevision": "1",
@@ -122,7 +118,7 @@
               },
               "apiVersion": "2019-12-01",
               "dependsOn": [
-                "mobyapi"
+                "MOBYAPIMANAGET"
               ]
             }
           ]
