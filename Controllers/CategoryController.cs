@@ -79,7 +79,7 @@ namespace MOBY_API_Core6.Controllers
                     bool check = await _categoryRepository.DeleteCategory(categoryID);
                     if (check == true)
                     {
-                        return Ok(categoryID);
+                        return Ok(category);
                     }
                     else
                     {
