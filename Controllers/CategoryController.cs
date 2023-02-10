@@ -98,7 +98,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                var listCategory = await _categoryRepository.GetAllCategories();
+                var listCategory = await _categoryRepository.GetAllCategoriesAndSubCategory();
                 if (listCategory == null || listCategory.Count == 0)
                 {
                     return StatusCode(StatusCodes.Status404NotFound);
@@ -142,7 +142,7 @@ namespace MOBY_API_Core6.Controllers
             {
                 if (categoryName == null || categoryName.Equals(""))
                 {
-                    var listCategory = await _categoryRepository.GetAllCategories();
+                    var listCategory = await _categoryRepository.GetAllCategoriesAndSubCategory();
                     if (listCategory == null || listCategory.Count == 0)
                     {
                         return StatusCode(StatusCodes.Status404NotFound);

@@ -91,16 +91,28 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<CategoryVM>> GetAllCategories()
+        public async Task<List<CategoryVM>> GetAllCategoriesAndSubCategory()
         {
-            var listCategory = _context.Categories.FromSqlRaw($"EXEC get_All_Category").ToList().Select(category => new CategoryVM
+            List<CategoryVM> categoryVMs = new List<CategoryVM>();
+            var listCategory = _context.Categories.FromSqlRaw($"EXEC get_All_Category").ToList();
+            foreach (var category in listCategory)
             {
-                CategoryId = category.CategoryId,
-                CategoryName = category.CategoryName,
-                CategoryImage = category.CategoryImage,
-                CategoryStatus = category.CategoryStatus,
-            });
-            return listCategory.ToList();
+                CategoryVM vM = new CategoryVM();
+                vM.CategoryId = category.CategoryId;
+                vM.CategoryName = category.CategoryName;
+                vM.CategoryStatus = category.CategoryStatus;
+                vM.CategoryImage = category.CategoryImage;
+                var listSubCategory = _context.SubCategories.FromSqlInterpolated($"EXEC get_All_SubCategory {vM.CategoryId}").ToList().Select(subCategory => new SubCategoryVM
+                {
+                    SubCategoryId = subCategory.SubCategoryId,
+                    SubCategoryName = subCategory.SubCategoryName,
+                    SubCategoryStatus = subCategory.SubCategoryStatus,
+                    CategoryId = subCategory.CategoryId,
+                });
+                vM.subCategoryVMs = listSubCategory.ToList();
+                categoryVMs.Add(vM);
+            }
+            return categoryVMs;
         }
 
         public async Task<List<CategoryVM>> GetCategoriesByStatus(bool categoryStatus)

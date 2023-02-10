@@ -6,5 +6,6 @@
         public string CategoryName { get; set; } = null!;
         public string? CategoryImage { get; set; }
         public bool CategoryStatus { get; set; }
+        public List<SubCategoryVM> subCategoryVMs { get; set; }
     }
 }

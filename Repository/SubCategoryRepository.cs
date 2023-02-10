@@ -71,7 +71,7 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<List<SubCategoryVM>> GetAllSubCategory(int categoryID)
         {
-            var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {categoryID}").ToList().SingleOrDefault();
+            var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_SubCategory_By_ID {categoryID}").ToList().SingleOrDefault();
             if (checkCategory == null)
             {
                 return null;

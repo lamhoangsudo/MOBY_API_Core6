@@ -4,7 +4,7 @@ namespace MOBY_API_Core6.Repository
 {
     public interface ICategoryRepository
     {
-        Task<List<CategoryVM>> GetAllCategories();
+        Task<List<CategoryVM>> GetAllCategoriesAndSubCategory();
         Task<List<CategoryVM>> GetCategoriesByStatus(bool categoryStatus);
         Task<List<CategoryVM>> GetCategoriesByName(string categoryName);
         Task<bool> CreateCategory(string categoryName, string categoryImage);
