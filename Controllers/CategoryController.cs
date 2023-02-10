@@ -15,11 +15,11 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPost("CreateCategory/{categoryName}")]
-        public IActionResult CreateCategory(string categoryName, string categoryImange)
+        public async Task<IActionResult> CreateCategory(string categoryName, string categoryImange)
         {
             try
             {
-                bool checkCreate = _categoryRepository.CreateCategory(categoryName, categoryImange);
+                bool checkCreate = await _categoryRepository.CreateCategory(categoryName, categoryImange);
                 if (checkCreate)
                 {
                     return Ok(categoryName);
@@ -36,18 +36,18 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPut("UpdateCategory/{categoryID} {categoryName}")]
-        public IActionResult UpdateCategory(int categoryID, string categoryName, string categoryImage)
+        public async Task<IActionResult> UpdateCategory(int categoryID, string categoryName, string categoryImage)
         {
             try
             {
-                var category = _categoryRepository.GetCategoryByID(categoryID);
+                var category = await _categoryRepository.GetCategoryByID(categoryID);
                 if (category == null || category.CategoryStatus == false)
                 {
                     return StatusCode(StatusCodes.Status404NotFound);
                 }
                 else
                 {
-                    bool check = _categoryRepository.UpdateCategory(categoryID, categoryName, categoryImage);
+                    bool check = await _categoryRepository.UpdateCategory(categoryID, categoryName, categoryImage);
                     if (check == true)
                     {
                         return Ok(categoryName);
@@ -65,18 +65,18 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPut("DeleteCategory/{categoryID}")]
-        public IActionResult DeleteCategory(int categoryID)
+        public async Task<IActionResult> DeleteCategory(int categoryID)
         {
             try
             {
-                var category = _categoryRepository.GetCategoryByID(categoryID);
+                var category = await _categoryRepository.GetCategoryByID(categoryID);
                 if (category == null || category.CategoryStatus == false)
                 {
                     return StatusCode(StatusCodes.Status404NotFound);
                 }
                 else
                 {
-                    bool check = _categoryRepository.DeleteCategory(categoryID);
+                    bool check = await _categoryRepository.DeleteCategory(categoryID);
                     if (check == true)
                     {
                         return Ok(categoryID);
@@ -94,11 +94,11 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpGet("GetAllCategory/")]
-        public IActionResult GetAllCategory()
+        public async Task<IActionResult> GetAllCategory()
         {
             try
             {
-                var listCategory = _categoryRepository.GetAllCategories();
+                var listCategory = await _categoryRepository.GetAllCategories();
                 if (listCategory == null || listCategory.Count == 0)
                 {
                     return StatusCode(StatusCodes.Status404NotFound);
@@ -115,11 +115,11 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpGet("GetStatus/{categoryStatus}")]
-        public IActionResult GetCategoryByStatus(bool categoryStatus)
+        public async Task<IActionResult> GetCategoryByStatus(bool categoryStatus)
         {
             try
             {
-                var listCategory = _categoryRepository.GetCategoriesByStatus(categoryStatus);
+                var listCategory = await _categoryRepository.GetCategoriesByStatus(categoryStatus);
                 if (listCategory == null || listCategory.Count == 0)
                 {
                     return StatusCode(StatusCodes.Status404NotFound);
@@ -136,13 +136,13 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpGet("SearchCategoryName/{categoryName}")]
-        public IActionResult GetCategoryByName(string categoryName)
+        public async Task<IActionResult> GetCategoryByName(string categoryName)
         {
             try
             {
                 if (categoryName == null || categoryName.Equals(""))
                 {
-                    var listCategory = _categoryRepository.GetAllCategories();
+                    var listCategory = await _categoryRepository.GetAllCategories();
                     if (listCategory == null || listCategory.Count == 0)
                     {
                         return StatusCode(StatusCodes.Status404NotFound);
@@ -154,7 +154,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    var listCategory = _categoryRepository.GetCategoriesByName(categoryName);
+                    var listCategory = await _categoryRepository.GetCategoriesByName(categoryName);
                     if (listCategory == null || listCategory.Count == 0)
                     {
                         return StatusCode(StatusCodes.Status404NotFound);

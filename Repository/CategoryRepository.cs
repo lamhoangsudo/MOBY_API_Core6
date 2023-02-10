@@ -13,7 +13,7 @@ namespace MOBY_API_Core6.Repository
             _context = context;
         }
 
-        public CategoryVM GetCategoryByID(int categoryID)
+        public async Task<CategoryVM> GetCategoryByID(int categoryID)
         {
             var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {categoryID}").ToList().SingleOrDefault();
             if (checkCategory != null)
@@ -32,9 +32,8 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public bool CreateCategory(string categoryName, string categoryImage)
+        public async Task<bool> CreateCategory(string categoryName, string categoryImage)
         {
-            _context.Database.OpenConnection();
             var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Name {categoryName}").ToList().SingleOrDefault();
             if (checkCategory == null)
             {
@@ -42,7 +41,6 @@ namespace MOBY_API_Core6.Repository
                 if (checkCreate != 0)
                 {
                     _context.SaveChanges();
-                    _context.Database.CloseConnection();
                     return true;
                 }
                 else
@@ -56,9 +54,8 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public bool UpdateCategory(int categoryID, string categoryName, string categoryImage)
+        public async Task<bool> UpdateCategory(int categoryID, string categoryName, string categoryImage)
         {
-            _context.Database.OpenConnection();
             var checkUpdateCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Name {categoryName}").ToList().SingleOrDefault();
             if (checkUpdateCategory == null)
             {
@@ -66,7 +63,6 @@ namespace MOBY_API_Core6.Repository
                 if (checkUpdate != 0)
                 {
                     _context.SaveChanges();
-                    _context.Database.CloseConnection();
                     return true;
                 }
                 else
@@ -81,14 +77,12 @@ namespace MOBY_API_Core6.Repository
 
         }
 
-        public bool DeleteCategory(int categoryID)
+        public async Task<bool> DeleteCategory(int categoryID)
         {
-            _context.Database.OpenConnection();
             var checkDelete = _context.Database.ExecuteSqlInterpolated($"EXEC delete_Category {categoryID}");
             if (checkDelete != 0)
             {
                 _context.SaveChanges();
-                _context.Database.CloseConnection();
                 return true;
             }
             else
@@ -97,7 +91,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public List<CategoryVM> GetAllCategories()
+        public async Task<List<CategoryVM>> GetAllCategories()
         {
             var listCategory = _context.Categories.FromSqlRaw($"EXEC get_All_Category").ToList().Select(category => new CategoryVM
             {
@@ -109,7 +103,7 @@ namespace MOBY_API_Core6.Repository
             return listCategory.ToList();
         }
 
-        public List<CategoryVM> GetCategoriesByStatus(bool categoryStatus)
+        public async Task<List<CategoryVM>> GetCategoriesByStatus(bool categoryStatus)
         {
             var listCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Status {categoryStatus}").ToList().Select(category => new CategoryVM
             {
@@ -121,7 +115,7 @@ namespace MOBY_API_Core6.Repository
             return listCategory.ToList();
         }
 
-        public List<CategoryVM> GetCategoriesByName(string categoryName)
+        public async Task<List<CategoryVM>> GetCategoriesByName(string categoryName)
         {
             categoryName = "%" + categoryName + "%";
             var listCategory = _context.Categories.FromSqlInterpolated($"EXEC search_Category_By_Name {categoryName}").ToList().Select(category => new CategoryVM

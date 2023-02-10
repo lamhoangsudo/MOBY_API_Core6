@@ -10,7 +10,7 @@ namespace MOBY_API_Core6.Repository
         {
             _context = context;
         }
-        public bool CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass,
+        public async Task<bool> CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass,
             bool itemSize, string itemStatus, double itemEstimateValue, double itemSalePrice, int itemShareAmount,
             bool itemSponsoredOrderShippingFee, string itemShippingAddress, int imageId, string stringDateTimeExpired)
         {
@@ -59,7 +59,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public List<BriefItem> GetAllBriefItem()
+        public async Task<List<BriefItem>> GetAllBriefItem()
         {
             try
             {
@@ -79,7 +79,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public List<BriefItem> SearchBriefItemByTitle(string itemTitle)
+        public async Task<List<BriefItem>> SearchBriefItemByTitle(string itemTitle)
         {
             try
             {
@@ -99,7 +99,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public List<BriefItem> GetBriefItemByUserID(int userID)
+        public async Task<List<BriefItem>> GetBriefItemByUserID(int userID)
         {
             try
             {
@@ -119,7 +119,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public DetailItem GetItemDetail(int itemID)
+        public async Task<DetailItem> GetItemDetail(int itemID)
         {
             try
             {
@@ -139,7 +139,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public List<BriefItem> SearchBriefItemBySubCategoryID(int subCategoryID)
+        public async Task<List<BriefItem>> SearchBriefItemBySubCategoryID(int subCategoryID)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public List<BriefItem> SearchBriefItemByCategoryID(int categoryID)
+        public async Task<List<BriefItem>> SearchBriefItemByCategoryID(int categoryID)
         {
             try
             {
