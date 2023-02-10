@@ -18,7 +18,9 @@ namespace MOBY_API_Core6.Repository
 
             //UserRecord user = await FirebaseAuth.DefaultInstance.GetUserAsync(decodedToken.Uid);
 
-            var existUser = context.UserAccounts.Where(u => u.UserCode == claims.First(i => i.Type == "user_id").Value).FirstOrDefault();
+            var userId = claims.FirstOrDefault(i => i.Type == "user_id").Value;
+            var existUser = context.UserAccounts.Where(u => u.UserCode == userId).FirstOrDefault();
+
             if (existUser != null)
             {
                 return true;
@@ -26,20 +28,27 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<UserAccount?> FindUserByID(String uid)
+        public async Task<UserAccount?> FindUserByCode(String userCode)
         {
             UserAccount foundAccount;
-            foundAccount = context.UserAccounts.Where(u => u.UserCode == uid).FirstOrDefault();
+            foundAccount = context.UserAccounts.Where(u => u.UserCode == userCode).FirstOrDefault();
             return foundAccount;
         }
 
 
         public async Task<int?> GetRoleByToken(IEnumerable<Claim> claims)
         {
+            var uid = claims.First(i => i.Type == "user_id").Value;
 
-            UserAccount foundAccount = context.UserAccounts.Where(u => u.UserCode == claims.First(i => i.Type == "user_id").Value).FirstOrDefault();
+            UserAccount foundAccount = context.UserAccounts.Where(u => u.UserCode == uid).FirstOrDefault();
             return foundAccount.RoleId;
 
+        }
+
+        public async Task<int> getUserIDByUserCode(String userCode)
+        {
+            UserAccount Userfound = context.UserAccounts.Where(u => u.UserCode == userCode).FirstOrDefault();
+            return Userfound.UserId;
         }
 
 
@@ -53,7 +62,7 @@ namespace MOBY_API_Core6.Repository
                 newUser.UserCode = claims.First(i => i.Type == "user_id").Value;
                 newUser.RoleId = 1;
 
-                newUser.UserName = claims.First(i => i.Type == "name").Value;
+                newUser.UserName = claims.First(i => i.Type.Contains("identity/claims/name")).Value;
                 newUser.UserGmail = claims.First(i => i.Type.Contains("emailaddress")).Value;
                 newUser.UserAddress = address;
                 newUser.UserPhone = phone;

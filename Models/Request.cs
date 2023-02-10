@@ -16,7 +16,8 @@ namespace MOBY_API_Core6.Models
         public int ImageId { get; set; }
         public DateTime RequestDateCreate { get; set; }
         public DateTime? RequestDateUpdate { get; set; }
-        public virtual @bool Image { get; set; } = null!;
+
+        public virtual Image Image { get; set; } = null!;
         public virtual SubCategory SubCategory { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;
     }

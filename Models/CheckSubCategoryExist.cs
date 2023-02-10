@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Item.Models
+namespace MOBY_API_Core6.Models
 {
     public class CheckSubCategoryExist
     {

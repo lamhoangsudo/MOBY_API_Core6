@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Item.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -40,7 +39,7 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<CheckSubCategoryExist> CheckSubCategoryExists { get; set; } = null!;
         public virtual DbSet<CheckImageExist> CheckImageExists { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){ }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -247,7 +246,7 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
 
-            modelBuilder.Entity<@bool>(entity =>
+            modelBuilder.Entity<Image>(entity =>
             {
                 entity.Property(e => e.ImageId).HasColumnName("ImageID");
 
