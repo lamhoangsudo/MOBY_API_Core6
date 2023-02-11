@@ -16,7 +16,7 @@ namespace MOBY_API_Core6.Controllers
         }
         [Authorize]
         [HttpPost]
-        [Route("api/UserController/CreateAccount")]
+        [Route("api/UserController/CreateAccount/{Adress} {phone} {sex} {dateOfBirth}")]
         public async Task<String> PostGoogleAuthenticationCreated(String address, String phone, bool sex, String dateOfBirth)
         {
             try
@@ -36,7 +36,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("api/UserController/UpdateAccount")]
+        [Route("api/UserController/UpdateAccount/{userName} {picture} {Adress} {phone} {sex} {dateOfBirth} {User_More_Information}")]
         public async Task<String> UpdateUserProfile(String userName, String picture, String address, String phone, bool sex, String dateOfBirth, String User_More_Information)
         {
             //UserAccounts currentUser = new UserAccounts();
@@ -59,7 +59,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("api/UserController/BanAccount")]
+        [Route("api/UserController/BanAccount/{UserID}")]
         public async Task<String> BanUser(String uid)
         {
             //UserAccounts currentUser = new UserAccounts();
@@ -71,7 +71,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("api/UserController/UnBanAccount")]
+        [Route("api/UserController/UnBanAccount/{UserID}")]
         public async Task<String> UnBanUser(String uid)
         {
             //UserAccounts currentUser = new UserAccounts();
@@ -93,6 +93,22 @@ namespace MOBY_API_Core6.Controllers
 
 
             return list;
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("api/UserController/GetUserInfo")]
+        public async Task<UserAccount> GetUserInfo()
+        {
+            UserAccount currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+
+
+
+            //UserAccounts currentUser = new UserAccounts();
+            //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
+
+
+            return currentUser;
         }
     }
 }
