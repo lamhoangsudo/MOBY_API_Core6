@@ -6,6 +6,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,9 +41,19 @@ builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICartDetailRepository, CartDetailRepository>();
 
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy",
+        builder => builder.WithOrigins("http://localhost:3001")
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials());
+}
+    );
 builder.Services.AddSwaggerGen(swagger =>
 {
     swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Moby API" });
@@ -80,7 +93,14 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseCors("CorsPolicy");
 
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 FirebaseApp.Create(new AppOptions()
 {
     Credential = GoogleCredential.FromFile("appsettings.json")
