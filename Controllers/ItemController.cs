@@ -77,7 +77,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/GetBriefItemByUserId/{UserID}")]
+        [HttpGet("/GetBriefItemByUserId/{userID}")]
         public async Task<IActionResult> GetBriefItemByUserID(int userID)
         {
             try
