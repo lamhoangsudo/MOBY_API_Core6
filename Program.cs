@@ -6,9 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,7 +50,8 @@ builder.Services.AddCors(options =>
         .AllowAnyHeader()
         .AllowCredentials());
 }
-    );
+);
+
 builder.Services.AddSwaggerGen(swagger =>
 {
     swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Moby API" });
@@ -114,8 +112,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-
 
 app.MapControllers();
 
