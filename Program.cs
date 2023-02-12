@@ -45,7 +45,7 @@ builder.Services.AddScoped<ICartDetailRepository, CartDetailRepository>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
-        builder => builder.WithOrigins("http://moby-customer.vercel.app", "http://localhost:3001")
+        builder => builder.WithOrigins("https://moby-customer.vercel.app", "https://localhost:3001")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials());
