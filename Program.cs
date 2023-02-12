@@ -91,11 +91,11 @@ var app = builder.Build();
 
 app.UseAuthentication();
 
-app.UseAuthorization();
-
 app.UseCors("CorsPolicy");
 
 app.UseRouting();
+
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
