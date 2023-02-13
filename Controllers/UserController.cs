@@ -17,27 +17,27 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpPost]
         [Route("api/UserController/CreateAccount/{Adress} {phone} {sex} {dateOfBirth}")]
-        public async Task<String> PostGoogleAuthenticationCreated(String address, String phone, bool sex, String dateOfBirth)
+        public async Task<IActionResult> PostGoogleAuthenticationCreated(String address, String phone, bool sex, String dateOfBirth)
         {
             try
             {
                 if (await userDAO.CreateUser(this.User.Claims, address, phone, sex, dateOfBirth))
                 {
-                    return "add new user";
+                    return Ok(ReturnMessage.create("success"));
                 }
             }
             catch
             {
-                return "Error while create new account";
+
             }
 
-            return "user already existed";
+            return BadRequest(ReturnMessage.create("error at CreateAccount"));
         }
 
         [Authorize]
         [HttpPost]
         [Route("api/UserController/UpdateAccount/{userName} {picture} {Adress} {phone} {sex} {dateOfBirth} {User_More_Information}")]
-        public async Task<String> UpdateUserProfile(String userName, String picture, String address, String phone, bool sex, String dateOfBirth, String User_More_Information)
+        public async Task<IActionResult> UpdateUserProfile(String userName, String picture, String address, String phone, bool sex, String dateOfBirth, String User_More_Information)
         {
             //UserAccounts currentUser = new UserAccounts();
             UserAccount currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
@@ -46,39 +46,46 @@ namespace MOBY_API_Core6.Controllers
             {
                 if (await userDAO.EditUser(currentUser, userName, picture, address, phone, sex, dateOfBirth, User_More_Information))
                 {
-                    return "success";
+                    return Ok(ReturnMessage.create("success"));
                 }
             }
             catch (Exception e)
             {
-                return "lol";
+
             }
 
-            return "erro at edit user";
+            return BadRequest(ReturnMessage.create("error at UpdateUserProfile"));
         }
 
         [Authorize]
         [HttpPost]
         [Route("api/UserController/BanAccount/{UserID}")]
-        public async Task<String> BanUser(String uid)
+        public async Task<IActionResult> BanUser(String uid)
         {
             //UserAccounts currentUser = new UserAccounts();
             // UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
 
+            if (await userDAO.BanUser(uid))
+            {
+                return Ok(ReturnMessage.create("success"));
+            }
 
-            return await userDAO.BanUser(uid);
+            return BadRequest(ReturnMessage.create("error at BanUser"));
         }
 
         [Authorize]
         [HttpPost]
         [Route("api/UserController/UnBanAccount/{UserID}")]
-        public async Task<String> UnBanUser(String uid)
+        public async Task<IActionResult> UnBanUser(String uid)
         {
             //UserAccounts currentUser = new UserAccounts();
             //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
+            if (await userDAO.BanUser(uid))
+            {
+                return Ok(ReturnMessage.create("success"));
+            }
 
-
-            return await userDAO.BanUser(uid);
+            return BadRequest(ReturnMessage.create("error at UnBanUser"));
         }
         [Authorize]
         [HttpGet]
@@ -98,17 +105,19 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpGet]
         [Route("api/UserController/GetUserInfo")]
-        public async Task<UserAccount> GetUserInfo()
+        public async Task<IActionResult> GetUserInfo()
         {
             UserAccount currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
 
 
 
-            //UserAccounts currentUser = new UserAccounts();
-            //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
+            if (currentUser == null)
+            {
+                return NotFound(ReturnMessage.create("account not found"));
+            }
 
 
-            return currentUser;
+            return Ok(currentUser);
         }
     }
 }
