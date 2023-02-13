@@ -128,36 +128,36 @@ namespace MOBY_API_Core6.Repository
         }
 
 
-        public async Task<String> BanUser(String uid)
+        public async Task<bool> BanUser(String uid)
         {
 
             try
             {
                 UserAccount foundAccount = context.UserAccounts.Where(u => u.UserCode == uid).FirstOrDefault();
                 foundAccount.UserStatus = false;
-                return "success";
+                return true;
             }
             catch
             {
-                return "false";
+
             }
-            return "false";
+            return false;
         }
 
-        public async Task<String> UnbanUser(String uid)
+        public async Task<bool> UnbanUser(String uid)
         {
 
             try
             {
                 UserAccount foundAccount = context.UserAccounts.Where(u => u.UserCode == uid).FirstOrDefault();
                 foundAccount.UserStatus = true;
-                return "success";
+                return true;
             }
             catch
             {
-                return "false";
+
             }
-            return "false";
+            return false;
         }
     }
 }
