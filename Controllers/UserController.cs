@@ -70,22 +70,22 @@ namespace MOBY_API_Core6.Controllers
                 return Ok(ReturnMessage.create("success"));
             }
 
-            return BadRequest(ReturnMessage.create("error at UpdateUserProfile"));
+            return BadRequest(ReturnMessage.create("error at BanUser"));
         }
 
         [Authorize]
         [HttpPost]
         [Route("api/UserController/UnBanAccount/{UserID}")]
-        public async Task<String> UnBanUser(String uid)
+        public async Task<IActionResult> UnBanUser(String uid)
         {
             //UserAccounts currentUser = new UserAccounts();
             //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
             if (await userDAO.BanUser(uid))
             {
-
+                return Ok(ReturnMessage.create("success"));
             }
 
-            return;
+            return BadRequest(ReturnMessage.create("error at UnBanUser"));
         }
         [Authorize]
         [HttpGet]
