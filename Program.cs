@@ -48,7 +48,8 @@ builder.Services.AddCors(options =>
         builder => builder.WithOrigins("https://moby-customer.vercel.app", "https://localhost:3001", "http://moby-customer.vercel.app", "http://localhost:3001")
         .AllowAnyMethod()
         .AllowAnyHeader()
-        .AllowCredentials());
+        .AllowCredentials()
+        .AllowAnyOrigin());
 }
 );
 
