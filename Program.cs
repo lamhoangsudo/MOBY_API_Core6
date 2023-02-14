@@ -14,10 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
-        builder => builder.WithOrigins("https://moby-customer.vercel.app", "https://localhost:3001", "http://moby-customer.vercel.app", "http://localhost:3001")
+        builder => builder.WithOrigins("*")
         .AllowAnyMethod()
         .AllowAnyHeader()
-        .AllowCredentials());
+        .AllowAnyOrigin());
 }
 );
 
