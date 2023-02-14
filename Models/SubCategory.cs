@@ -8,7 +8,6 @@ namespace MOBY_API_Core6.Models
         public SubCategory()
         {
             Items = new HashSet<Item>();
-            Requests = new HashSet<Request>();
         }
 
         public int SubCategoryId { get; set; }
@@ -18,6 +17,5 @@ namespace MOBY_API_Core6.Models
 
         public virtual Category Category { get; set; } = null!;
         public virtual ICollection<Item> Items { get; set; }
-        public virtual ICollection<Request> Requests { get; set; }
     }
 }

@@ -11,7 +11,6 @@ namespace MOBY_API_Core6.Models
             Carts = new HashSet<Cart>();
             Items = new HashSet<Item>();
             Reports = new HashSet<Report>();
-            Requests = new HashSet<Request>();
         }
 
         public int UserId { get; set; }
@@ -34,6 +33,5 @@ namespace MOBY_API_Core6.Models
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Item> Items { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
-        public virtual ICollection<Request> Requests { get; set; }
     }
 }

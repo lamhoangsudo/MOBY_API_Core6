@@ -28,10 +28,10 @@ namespace MOBY_API_Core6.Models
         public string ItemShippingAddress { get; set; } = null!;
         public DateTime ItemDateCreated { get; set; }
         public DateTime? ItemDateUpdate { get; set; }
-        public int ImageId { get; set; }
         public bool ItemStatus { get; set; }
+        public bool Share { get; set; }
+        public string Image { get; set; } = null!;
 
-        public virtual Image Image { get; set; } = null!;
         public virtual SubCategory SubCategory { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;
         public virtual ICollection<CartDetail> CartDetails { get; set; }

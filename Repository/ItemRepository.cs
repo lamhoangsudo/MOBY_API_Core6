@@ -12,45 +12,38 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<bool> CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass,
             bool itemSize, string itemStatus, double itemEstimateValue, double itemSalePrice, int itemShareAmount,
-            bool itemSponsoredOrderShippingFee, string itemShippingAddress, int imageId, string stringDateTimeExpired)
+            bool itemSponsoredOrderShippingFee, string itemShippingAddress, string imageId, string stringDateTimeExpired)
         {
             try
             {
-                var checkUserExist = _context.CheckUserExists.FromSqlInterpolated($"EXEC check_UserExists {userId}").ToList().SingleOrDefault();
-                var checkSubCategoryExists = _context.CheckSubCategoryExists.FromSqlInterpolated($"EXEC check_SubCategoryExistsFromItem {subCategoryId}").ToList().SingleOrDefault();
-                var checkImageExists = _context.CheckImageExists.FromSqlInterpolated($"EXEC check_ImangeExists {imageId}").ToList().SingleOrDefault();
-                if (checkSubCategoryExists == null || checkImageExists == null || checkUserExist == null)
+                var checkUserExist = _context.UserAccounts.Where(u => u.UserId == userId).ToList().SingleOrDefault();
+                var checkSubCategoryExists = _context.SubCategories.Where(sc => sc.SubCategoryId == subCategoryId).ToList().SingleOrDefault();
+                if (checkSubCategoryExists == null || checkUserExist == null)
                 {
                     return false;
                 }
                 else
                 {
-                    var checkImage = _context.ItemCheckImageDulicates.FromSqlInterpolated($"EXEC check_ImangeFromItem {imageId}").ToList().SingleOrDefault();
-                    if (checkImage != null)
+
+                    DateTime dateTimeCreate = DateTime.Now;
+                    DateTime dateTimeExpired = DateTime.Parse(stringDateTimeExpired);
+                    bool check = dateTimeExpired > dateTimeCreate;
+                    if (check == false)
                     {
                         return false;
                     }
+                    string itemCode = Guid.NewGuid().ToString();
+                    var checkCreate = _context.Items.Add(null);
+                    if (checkCreate != 0)
+                    {
+                        _context.SaveChanges();
+                        return true;
+                    }
                     else
                     {
-                        DateTime dateTimeCreate = DateTime.Now;
-                        DateTime dateTimeExpired = DateTime.Parse(stringDateTimeExpired);
-                        bool check = dateTimeExpired > dateTimeCreate;
-                        if (check == false)
-                        {
-                            return false;
-                        }
-                        string itemCode =  Guid.NewGuid().ToString();
-                        var checkCreate = _context.Database.ExecuteSqlInterpolated($"EXEC create_Item {itemCode}, {userId}, {subCategoryId}, {itemTitle}, {itemDetailedDescription}, {itemMass}, {itemSize}, {itemStatus}, {itemEstimateValue}, {itemSalePrice}, {itemShareAmount}, {itemSponsoredOrderShippingFee}, {dateTimeExpired}, {itemShippingAddress}, {dateTimeCreate}, {imageId}");
-                        if (checkCreate != 0)
-                        {
-                            _context.SaveChanges();
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
-                        }
+                        return false;
                     }
+
                 }
             }
             catch
@@ -63,7 +56,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItem = _context.BriefItems.FromSqlInterpolated($"SELECT * FROM [BriefItem];").ToList();
+                var listBriefItem = _context.BriefItems.Where(bf => bf.Share == true).ToList();
                 if (listBriefItem == null || listBriefItem.Count() == 0)
                 {
                     return null;
@@ -73,7 +66,7 @@ namespace MOBY_API_Core6.Repository
                     return listBriefItem;
                 }
             }
-            catch 
+            catch
             {
                 return null;
             }
@@ -83,7 +76,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItemByTitle = _context.BriefItems.FromSqlInterpolated($"EXEC search_BriefItemByTitle {itemTitle}").ToList();
+                var listBriefItemByTitle = _context.BriefItems.Where(bf => bf.ItemTitle.Equals(itemTitle)).ToList();
                 if (listBriefItemByTitle == null || listBriefItemByTitle.Count() == 0)
                 {
                     return null;
@@ -103,7 +96,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItemByUserID = _context.BriefItems.FromSqlInterpolated($"EXEC get_BriefItemByUserID {userID}").ToList();
+                var listBriefItemByUserID = _context.BriefItems.Where(bf => bf.UserId == userID).ToList();
                 if (listBriefItemByUserID == null || listBriefItemByUserID.Count() == 0)
                 {
                     return null;
@@ -123,7 +116,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                DetailItem itemDetail = _context.DetailItems.FromSqlInterpolated($"EXEC get_DetailItem {itemID}").ToList().FirstOrDefault();
+                DetailItem itemDetail = _context.DetailItems.Where(di => di.ItemId == itemID).ToList().FirstOrDefault();
                 if (itemDetail == null)
                 {
                     return null;
@@ -143,7 +136,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItemBySubCategoryID = _context.BriefItems.FromSqlInterpolated($"EXEC search_BriefItemBySubCategoryID {subCategoryID}").ToList();
+                var listBriefItemBySubCategoryID = _context.BriefItems.Where(bf => bf.SubCategoryId == subCategoryID).ToList();
                 if (listBriefItemBySubCategoryID == null || listBriefItemBySubCategoryID.Count() == 0)
                 {
                     return null;
@@ -163,7 +156,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItemByCategoryID = _context.BriefItems.FromSqlInterpolated($"EXEC search_BriefItemByCategoryID {categoryID}").ToList();
+                var listBriefItemByCategoryID = _context.BriefItems.Where(bf => bf.CategoryId == categoryID).ToList();
                 if (listBriefItemByCategoryID == null || listBriefItemByCategoryID.Count() == 0)
                 {
                     return null;

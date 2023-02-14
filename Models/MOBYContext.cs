@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MOBY_API_Core6.Models
 {
@@ -21,19 +24,15 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<CartDetail> CartDetails { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<DetailItem> DetailItems { get; set; } = null!;
-        public virtual DbSet<Image> Images { get; set; } = null!;
+        public virtual DbSet<DetailItemRequest> DetailItemRequests { get; set; } = null!;
         public virtual DbSet<Item> Items { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
-        public virtual DbSet<Request> Requests { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<SubCategory> SubCategories { get; set; } = null!;
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
-        public virtual DbSet<ItemCheckImageDulicate> ItemCheckImageDulicates { get; set; } = null!;
         public virtual DbSet<CheckUserExist> CheckUserExists { get; set; } = null!;
         public virtual DbSet<CheckSubCategoryExist> CheckSubCategoryExists { get; set; } = null!;
-        public virtual DbSet<CheckImageExist> CheckImageExists { get; set; } = null!;
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Banner>(entity =>
@@ -99,23 +98,23 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.CategoryName).HasColumnName("Category_Name");
 
-                entity.Property(e => e.ImageLink1).HasColumnName("Image_Link_1");
+                entity.Property(e => e.CategoryStatus).HasColumnName("Category_Status");
 
                 entity.Property(e => e.ItemCode).HasColumnName("Item_Code");
-
-                entity.Property(e => e.ItemDateCreated)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("Item_Date_Created");
 
                 entity.Property(e => e.ItemId).HasColumnName("ItemID");
 
                 entity.Property(e => e.ItemSalePrice).HasColumnName("Item_Sale_Price");
+
+                entity.Property(e => e.ItemStatus).HasColumnName("Item_Status");
 
                 entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
 
                 entity.Property(e => e.SubCategoryId).HasColumnName("Sub_CategoryID");
 
                 entity.Property(e => e.SubCategoryName).HasColumnName("Sub_Category_Name");
+
+                entity.Property(e => e.SubCategoryStatus).HasColumnName("Sub_Category_Status");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -188,18 +187,6 @@ namespace MOBY_API_Core6.Models
 
                 entity.ToView("DetailItem");
 
-                entity.Property(e => e.ImageId).HasColumnName("ImageID");
-
-                entity.Property(e => e.ImageLink1).HasColumnName("Image_Link_1");
-
-                entity.Property(e => e.ImageLink2).HasColumnName("Image_Link_2");
-
-                entity.Property(e => e.ImageLink3).HasColumnName("Image_Link_3");
-
-                entity.Property(e => e.ImageLink4).HasColumnName("Image_Link_4");
-
-                entity.Property(e => e.ImageLink5).HasColumnName("Image_Link_5");
-
                 entity.Property(e => e.ItemCode).HasColumnName("Item_Code");
 
                 entity.Property(e => e.ItemDateCreated)
@@ -218,6 +205,8 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemMass).HasColumnName("Item_Mass");
 
+                entity.Property(e => e.ItemQuanlity).HasColumnName("Item_Quanlity");
+
                 entity.Property(e => e.ItemSalePrice).HasColumnName("Item_Sale_Price");
 
                 entity.Property(e => e.ItemShareAmount).HasColumnName("Item_Share_Amount");
@@ -232,35 +221,49 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
 
-                entity.Property(e => e.SubCategoryId).HasColumnName("Sub_CategoryID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
-                entity.Property(e => e.SubCategoryName).HasColumnName("Sub_Category_Name");
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+            });
+
+            modelBuilder.Entity<DetailItemRequest>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("DetailItemRequest");
+
+                entity.Property(e => e.ItemCode).HasColumnName("Item_Code");
+
+                entity.Property(e => e.ItemDateCreated)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Item_Date_Created");
+
+                entity.Property(e => e.ItemDetailedDescription).HasColumnName("Item_Detailed_Description");
+
+                entity.Property(e => e.ItemExpiredTime)
+                    .HasColumnType("date")
+                    .HasColumnName("Item_Expired_Time");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.ItemShareAmount).HasColumnName("Item_Share_Amount");
+
+                entity.Property(e => e.ItemShippingAddress).HasColumnName("Item_Shipping_Address");
+
+                entity.Property(e => e.ItemSponsoredOrderShippingFee).HasColumnName("Item_Sponsored_Order_Shipping_Fee");
+
+                entity.Property(e => e.ItemStatus).HasColumnName("Item_Status");
+
+                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
 
-            modelBuilder.Entity<Image>(entity =>
-            {
-                entity.Property(e => e.ImageId).HasColumnName("ImageID");
-
-                entity.Property(e => e.ImageLink1).HasColumnName("Image_Link_1");
-
-                entity.Property(e => e.ImageLink2).HasColumnName("Image_Link_2");
-
-                entity.Property(e => e.ImageLink3).HasColumnName("Image_Link_3");
-
-                entity.Property(e => e.ImageLink4).HasColumnName("Image_Link_4");
-
-                entity.Property(e => e.ImageLink5).HasColumnName("Image_Link_5");
-            });
-
             modelBuilder.Entity<Item>(entity =>
             {
                 entity.Property(e => e.ItemId).HasColumnName("ItemID");
-
-                entity.Property(e => e.ImageId).HasColumnName("ImageID");
 
                 entity.Property(e => e.ItemCode).HasColumnName("Item_Code");
 
@@ -301,12 +304,6 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.SubCategoryId).HasColumnName("Sub_CategoryID");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Image)
-                    .WithMany(p => p.Items)
-                    .HasForeignKey(d => d.ImageId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Items_Images");
 
                 entity.HasOne(d => d.SubCategory)
                     .WithMany(p => p.Items)
@@ -350,55 +347,6 @@ namespace MOBY_API_Core6.Models
                     .HasForeignKey(d => d.ItemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Report_UserAccounts");
-            });
-
-            modelBuilder.Entity<Request>(entity =>
-            {
-                entity.Property(e => e.RequestId).HasColumnName("RequestID");
-
-                entity.Property(e => e.ImageId).HasColumnName("ImageID");
-
-                entity.Property(e => e.RequestAmountRequired).HasColumnName("Request_Amount_Required");
-
-                entity.Property(e => e.RequestDateCreate)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("Request_Date_Create");
-
-                entity.Property(e => e.RequestDateUpdate)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("Request_Date_Update");
-
-                entity.Property(e => e.RequestDeliveryAddress).HasColumnName("Request_Delivery_Address");
-
-                entity.Property(e => e.RequestDetailedDescription).HasColumnName("Request_Detailed_Description");
-
-                entity.Property(e => e.RequestExpiredTime)
-                    .HasColumnType("date")
-                    .HasColumnName("Request_Expired_Time");
-
-                entity.Property(e => e.RequestTitle).HasColumnName("Request_Title");
-
-                entity.Property(e => e.SubCategoryId).HasColumnName("Sub_CategoryID");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Image)
-                    .WithMany(p => p.Requests)
-                    .HasForeignKey(d => d.ImageId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Requests_Images");
-
-                entity.HasOne(d => d.SubCategory)
-                    .WithMany(p => p.Requests)
-                    .HasForeignKey(d => d.SubCategoryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Requests_SubCategories");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Requests)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Requests_UserAccounts");
             });
 
             modelBuilder.Entity<Role>(entity =>
