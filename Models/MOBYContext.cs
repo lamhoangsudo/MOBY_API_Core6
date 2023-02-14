@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace MOBY_API_Core6.Models
 {
@@ -26,9 +23,6 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<DetailItem> DetailItems { get; set; } = null!;
         public virtual DbSet<Image> Images { get; set; } = null!;
         public virtual DbSet<Item> Items { get; set; } = null!;
-        public virtual DbSet<Order> Orders { get; set; } = null!;
-        public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
-        public virtual DbSet<Payment> Payments { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
         public virtual DbSet<Request> Requests { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
@@ -38,8 +32,14 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<CheckUserExist> CheckUserExists { get; set; } = null!;
         public virtual DbSet<CheckSubCategoryExist> CheckSubCategoryExists { get; set; } = null!;
         public virtual DbSet<CheckImageExist> CheckImageExists { get; set; } = null!;
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=tcp:mobys.database.windows.net,1433;Initial Catalog=MOBY;Persist Security Info=False;User ID=lamhoang;Password=Hlam@qaz890;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -160,6 +160,8 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.CartDetailItemQuantity).HasColumnName("Cart_Detail_Item_Quantity");
 
                 entity.Property(e => e.CartId).HasColumnName("CartID");
+
+                entity.Property(e => e.CartStatus).HasColumnName("Cart_Status");
 
                 entity.Property(e => e.ItemId).HasColumnName("ItemID");
 
@@ -287,6 +289,8 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemMass).HasColumnName("Item_Mass");
 
+                entity.Property(e => e.ItemQuanlity).HasColumnName("Item_Quanlity");
+
                 entity.Property(e => e.ItemSalePrice).HasColumnName("Item_Sale_Price");
 
                 entity.Property(e => e.ItemShareAmount).HasColumnName("Item_Share_Amount");
@@ -322,89 +326,6 @@ namespace MOBY_API_Core6.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Items_UserAccounts");
-            });
-
-            modelBuilder.Entity<Order>(entity =>
-            {
-                entity.Property(e => e.OrderId).HasColumnName("OrderID");
-
-                entity.Property(e => e.OrderAddress).HasColumnName("Order_Address");
-
-                entity.Property(e => e.OrderCode).HasColumnName("Order_Code");
-
-                entity.Property(e => e.OrderDateCreate)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("Order_Date_Create");
-
-                entity.Property(e => e.OrderDateUpdate)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("Order_Date_Update");
-
-                entity.Property(e => e.OrderStatus).HasColumnName("Order_Status");
-
-                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Payment)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.PaymentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Order_Payment");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Order_UserAccounts");
-            });
-
-            modelBuilder.Entity<OrderDetail>(entity =>
-            {
-                entity.Property(e => e.OrderDetailId).HasColumnName("Order_DetailID");
-
-                entity.Property(e => e.ItemId).HasColumnName("ItemID");
-
-                entity.Property(e => e.OrderDetailDateUpdate)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("Order_Detail_Date_Update");
-
-                entity.Property(e => e.OrderDetailPrice)
-                    .HasColumnType("smallmoney")
-                    .HasColumnName("Order_Detail_Price");
-
-                entity.Property(e => e.OrderDetailQuantity).HasColumnName("Order_Detail_Quantity");
-
-                entity.Property(e => e.OrderDetailShareAddress).HasColumnName("Order_Detail_Share_Address");
-
-                entity.Property(e => e.OrderDetailStatus).HasColumnName("Order_Detail_Status");
-
-                entity.Property(e => e.OrderId).HasColumnName("OrderID");
-
-                entity.HasOne(d => d.Item)
-                    .WithMany(p => p.OrderDetails)
-                    .HasForeignKey(d => d.ItemId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderDetails_Items");
-
-                entity.HasOne(d => d.Order)
-                    .WithMany(p => p.OrderDetails)
-                    .HasForeignKey(d => d.OrderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderDetails_Order");
-            });
-
-            modelBuilder.Entity<Payment>(entity =>
-            {
-                entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
-
-                entity.Property(e => e.PaymentDescription)
-                    .HasMaxLength(50)
-                    .HasColumnName("Payment_Description");
-
-                entity.Property(e => e.PaymentName)
-                    .HasMaxLength(50)
-                    .HasColumnName("Payment_Name");
             });
 
             modelBuilder.Entity<Report>(entity =>

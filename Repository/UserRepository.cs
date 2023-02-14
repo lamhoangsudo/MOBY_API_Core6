@@ -1,4 +1,5 @@
-﻿using MOBY_API_Core6.Models;
+﻿using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Models;
 using System.Security.Claims;
 
 namespace MOBY_API_Core6.Repository
@@ -35,6 +36,12 @@ namespace MOBY_API_Core6.Repository
             return foundAccount;
         }
 
+        public async Task<UserAccount?> FindUserByUid(int uid)
+        {
+            UserAccount foundAccount;
+            foundAccount = context.UserAccounts.Where(u => u.UserId == uid).FirstOrDefault();
+            return foundAccount;
+        }
 
         public async Task<int?> GetRoleByToken(IEnumerable<Claim> claims)
         {
@@ -120,11 +127,18 @@ namespace MOBY_API_Core6.Repository
         }
 
 
-        public async Task<List<UserAccount>> GetAllUser()
+        public async Task<List<UserVM>> GetAllUser()
         {
             List<UserAccount> accountList = new List<UserAccount>();
             accountList = context.UserAccounts.ToList();
-            return accountList;
+            List<UserVM> accountListVM = new List<UserVM>();
+            UserVM umv = new UserVM();
+            foreach (var user in accountList)
+            {
+                umv = UserVM.UserAccountToVewModel(user);
+                accountListVM.Add(umv);
+            }
+            return accountListVM;
         }
 
 
