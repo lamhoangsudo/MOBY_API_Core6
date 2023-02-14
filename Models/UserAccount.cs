@@ -10,7 +10,6 @@ namespace MOBY_API_Core6.Models
             Blogs = new HashSet<Blog>();
             Carts = new HashSet<Cart>();
             Items = new HashSet<Item>();
-            Orders = new HashSet<Order>();
             Reports = new HashSet<Report>();
             Requests = new HashSet<Request>();
         }
@@ -34,7 +33,6 @@ namespace MOBY_API_Core6.Models
         public virtual ICollection<Blog> Blogs { get; set; }
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Item> Items { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
         public virtual ICollection<Request> Requests { get; set; }
     }

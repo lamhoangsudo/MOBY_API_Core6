@@ -2,7 +2,7 @@
 {
     public class ReturnMessage
     {
-        string message { get; set; }
+        public string message { get; set; }
 
         public static ReturnMessage create(string message)
         {

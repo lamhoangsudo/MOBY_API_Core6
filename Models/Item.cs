@@ -8,7 +8,6 @@ namespace MOBY_API_Core6.Models
         public Item()
         {
             CartDetails = new HashSet<CartDetail>();
-            OrderDetails = new HashSet<OrderDetail>();
             Reports = new HashSet<Report>();
         }
 
@@ -20,7 +19,7 @@ namespace MOBY_API_Core6.Models
         public string ItemDetailedDescription { get; set; } = null!;
         public double ItemMass { get; set; }
         public bool ItemSize { get; set; }
-        public string ItemStatus { get; set; } = null!;
+        public string ItemQuanlity { get; set; } = null!;
         public double? ItemEstimateValue { get; set; }
         public double? ItemSalePrice { get; set; }
         public int ItemShareAmount { get; set; }
@@ -30,12 +29,12 @@ namespace MOBY_API_Core6.Models
         public DateTime ItemDateCreated { get; set; }
         public DateTime? ItemDateUpdate { get; set; }
         public int ImageId { get; set; }
+        public bool ItemStatus { get; set; }
 
         public virtual Image Image { get; set; } = null!;
         public virtual SubCategory SubCategory { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;
         public virtual ICollection<CartDetail> CartDetails { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
     }
 }

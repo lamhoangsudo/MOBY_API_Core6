@@ -20,7 +20,7 @@ namespace MOBY_API_Core6.Models
         public string ItemDetailedDescription { get; set; } = null!;
         public double ItemMass { get; set; }
         public bool ItemSize { get; set; }
-        public string ItemStatus { get; set; } = null!;
+        public bool ItemStatus { get; set; }
         public double? ItemEstimateValue { get; set; }
         public double? ItemSalePrice { get; set; }
         public int ItemShareAmount { get; set; }
