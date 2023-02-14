@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
@@ -14,7 +15,7 @@ namespace MOBY_API_Core6.Controllers
         }
         [HttpPost]
         [Route("api/AuthenticationController/CheckLogin")]
-        public async Task<String> PostGoogleAuthentication()
+        public async Task<IActionResult> PostGoogleAuthentication()
         {
 
 
@@ -25,12 +26,12 @@ namespace MOBY_API_Core6.Controllers
                 if (await userDAO.CheckExistedUser(this.User.Claims))
                 {
                     //user existed 
-                    return "user existed";
+                    return Ok(ReturnMessage.create("User existed"));
                 }
                 else
                 {
                     //quang qua trang dien thong tin
-                    return "new user";
+                    return Ok(ReturnMessage.create("new user"));
                 }
 
 
@@ -38,10 +39,10 @@ namespace MOBY_API_Core6.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return "Error token not found";
+                return BadRequest(ReturnMessage.create(ex.Message));
             }
 
-            return "Error token not found";
+
         }
     }
 }
