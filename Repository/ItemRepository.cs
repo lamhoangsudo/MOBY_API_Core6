@@ -1,4 +1,5 @@
-﻿using MOBY_API_Core6.Models;
+﻿using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -65,11 +66,11 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>> GetAllBriefItem()
+        public async Task<List<BriefItem>> GetAllBriefItemAndBriefRequest(bool share)
         {
             try
             {
-                var listBriefItem = _context.BriefItems.Where(bf => bf.Share == true).ToList();
+                var listBriefItem = _context.BriefItems.Where(bf => bf.Share == share).ToList();
                 if (listBriefItem == null || listBriefItem.Count() == 0)
                 {
                     return null;
@@ -225,7 +226,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<bool> DeleteItem(int itemID)
+        public async Task<bool> DeleteItem(int itemID, int userID)
         {
             try
             {
@@ -236,7 +237,7 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    var item = _context.Items.Where(it => it.ItemId == itemID).ToList().SingleOrDefault();
+                    var item = _context.Items.Where(it => it.ItemId == itemID && it.UserId == userID).ToList().SingleOrDefault();
                     if (item != null)
                     {
                         item.ItemStatus = false;
@@ -256,7 +257,7 @@ namespace MOBY_API_Core6.Repository
 
         }
 
-        public async Task<bool> UpdateItem(int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass,
+        public async Task<bool> UpdateItem(int userID, int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass,
             bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount,
             bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
         {
@@ -269,7 +270,7 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    Models.Item currentItem = _context.Items.Where(it => it.ItemId == itemID).ToList().SingleOrDefault();
+                    Models.Item currentItem = _context.Items.Where(it => it.ItemId == itemID && it.UserId == userID).ToList().SingleOrDefault();
                     var checkSubCategoryExists = _context.SubCategories.Where(sc => sc.SubCategoryId == subCategoryId).ToList().SingleOrDefault();
                     if (currentItem == null || currentItem.ItemStatus == false || checkSubCategoryExists == null)
                     {
@@ -311,6 +312,26 @@ namespace MOBY_API_Core6.Repository
             catch
             {
                 return false;
+            }
+        }
+
+        public async Task<List<BriefItem>> GetAllBriefItemAndBriefRequestByUserID(int userID, bool share)
+        {
+            try
+            {
+                var listBriefItemAndBriefRequestByUserID = _context.BriefItems.Where(bf => bf.Share == share && bf.UserId == userID).ToList();
+                if (listBriefItemAndBriefRequestByUserID == null || listBriefItemAndBriefRequestByUserID.Count() == 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    return listBriefItemAndBriefRequestByUserID;
+                }
+            }
+            catch
+            {
+                return null;
             }
         }
     }

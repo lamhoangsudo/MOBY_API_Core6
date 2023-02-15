@@ -35,12 +35,12 @@ namespace Item.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpGet("/GetAllBriefItem")]
-        public async Task<IActionResult> GetAllBriefItem()
+        [HttpGet("/GetAllBriefItemAndBriefRequest/{share}")]
+        public async Task<IActionResult> GetAllBriefItem(bool share)
         {
             try
             {
-                List<BriefItem> listBriefItem = await _itemRepository.GetAllBriefItem();
+                List<BriefItem> listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share);
                 if (listBriefItem != null || listBriefItem.Count() > 0)
                 {
                     return Ok(listBriefItem);
@@ -160,12 +160,13 @@ namespace Item.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpPost("/DeleteItem/{itemID}")]
-        public async Task<IActionResult> DeleteItem(int itemID)
+
+        [HttpPost("/DeleteItem/{itemID},{userID}")]
+        public async Task<IActionResult> DeleteItem(int itemID, int userID)
         {
             try
             {
-                bool checkDelete = await _itemRepository.DeleteItem(itemID);
+                bool checkDelete = await _itemRepository.DeleteItem(itemID, userID);
                 if(checkDelete)
                 {
                     return Ok("da xoa thanh cong");
@@ -180,12 +181,13 @@ namespace Item.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpPost("/Update/{itemID},{subCategoryId},{itemTitle},{itemDetailedDescription},{itemMass},{itemSize},{itemQuanlity},{itemEstimateValue},{itemSalePrice},{itemShareAmount},{itemSponsoredOrderShippingFee},{itemShippingAddress},{image},{stringDateTimeExpired},{share}")]
-        public async Task<IActionResult> UpdateItem(int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
+
+        [HttpPost("/Update/{userID},{itemID},{subCategoryId},{itemTitle},{itemDetailedDescription},{itemMass},{itemSize},{itemQuanlity},{itemEstimateValue},{itemSalePrice},{itemShareAmount},{itemSponsoredOrderShippingFee},{itemShippingAddress},{image},{stringDateTimeExpired},{share}")]
+        public async Task<IActionResult> UpdateItem(int userID, int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
         {
             try
             {
-                bool checkUpdate = await _itemRepository.UpdateItem(itemID, subCategoryId, itemTitle, itemDetailedDescription, itemMass, itemSize, itemQuanlity, itemEstimateValue, itemSalePrice, itemShareAmount, itemSponsoredOrderShippingFee, itemShippingAddress, image, stringDateTimeExpired, share);
+                bool checkUpdate = await _itemRepository.UpdateItem(userID, itemID, subCategoryId, itemTitle, itemDetailedDescription, itemMass, itemSize, itemQuanlity, itemEstimateValue, itemSalePrice, itemShareAmount, itemSponsoredOrderShippingFee, itemShippingAddress, image, stringDateTimeExpired, share);
                 if (checkUpdate)
                 {
                     return Ok("da update thanh cong");
@@ -196,6 +198,27 @@ namespace Item.Controllers
                 }
             }
             catch 
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("/GetAllBriefItemAndBriefRequestByUserID/{userID},{share}")]
+        public async Task<IActionResult> GetAllBriefItemAndBriefRequestByUserID(int userID, bool share)
+        {
+            try
+            {
+                List<BriefItem> listBriefItemAndBriefRequestByUserID = await _itemRepository.GetAllBriefItemAndBriefRequestByUserID(userID, share);
+                if (listBriefItemAndBriefRequestByUserID != null || listBriefItemAndBriefRequestByUserID.Count() > 0)
+                {
+                    return Ok(listBriefItemAndBriefRequestByUserID);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest);
+                }
+            }
+            catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
