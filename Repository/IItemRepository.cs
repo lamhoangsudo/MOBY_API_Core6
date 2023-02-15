@@ -6,6 +6,8 @@ namespace MOBY_API_Core6.Repository
     {
         Task<bool> CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share);
 
+        Task<bool> UpdateItem(int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share);
+
         Task<List<BriefItem>> GetAllBriefItem();
 
         Task<List<BriefItem>> GetBriefItemByUserID(int userID);

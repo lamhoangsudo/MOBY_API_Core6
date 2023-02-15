@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MOBY_API_Core6.Models;
+﻿using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -25,7 +24,7 @@ namespace MOBY_API_Core6.Repository
                 else
                 {
                     DateTime dateTimeCreate = DateTime.Now;
-                    DateTime dateTimeExpired = new DateTime();
+                    DateTime? dateTimeExpired = null;
                     if (stringDateTimeExpired != null || !(stringDateTimeExpired.Equals("")))
                     {
                         dateTimeExpired = DateTime.Parse(stringDateTimeExpired);
@@ -38,6 +37,7 @@ namespace MOBY_API_Core6.Repository
                     string itemCode = Guid.NewGuid().ToString();
                     Models.Item item = new Models.Item();
                     item.UserId = userId;
+                    item.ItemCode = itemCode;
                     item.SubCategoryId = subCategoryId;
                     item.ItemTitle = itemTitle;
                     item.ItemDetailedDescription = itemDetailedDescription;
@@ -53,7 +53,7 @@ namespace MOBY_API_Core6.Repository
                     item.ItemDateCreated = dateTimeCreate;
                     item.ItemStatus = true;
                     item.Share = share;
-                    item.Image= image;
+                    item.Image = image;
                     _context.Items.Add(item);
                     _context.SaveChanges();
                     return true;
@@ -254,6 +254,64 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
 
+        }
+
+        public async Task<bool> UpdateItem(int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass,
+            bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount,
+            bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
+        {
+            try
+            {
+                bool checkCurrentItem = _context.CartDetails.Where(cd => cd.ItemId == itemID).Any();
+                if (checkCurrentItem)
+                {
+                    return false;
+                }
+                else
+                {
+                    Models.Item currentItem = _context.Items.Where(it => it.ItemId == itemID).ToList().SingleOrDefault();
+                    var checkSubCategoryExists = _context.SubCategories.Where(sc => sc.SubCategoryId == subCategoryId).ToList().SingleOrDefault();
+                    if (currentItem == null || currentItem.ItemStatus == false || checkSubCategoryExists == null)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        DateTime dateTimeUpdate = DateTime.Now;
+                        DateTime? dateTimeExpired = null;
+                        if (stringDateTimeExpired != null || !(stringDateTimeExpired.Equals("")))
+                        {
+                            dateTimeExpired = DateTime.Parse(stringDateTimeExpired);
+                            bool checkDate = dateTimeExpired > dateTimeUpdate;
+                            if (checkDate == false)
+                            {
+                                return false;
+                            }
+                        }
+                        currentItem.SubCategoryId = subCategoryId;
+                        currentItem.ItemTitle = itemTitle;
+                        currentItem.ItemDetailedDescription = itemDetailedDescription;
+                        currentItem.ItemMass= itemMass;
+                        currentItem.ItemSize= itemSize;
+                        currentItem.ItemQuanlity= itemQuanlity;
+                        currentItem.ItemEstimateValue= itemEstimateValue;
+                        currentItem.ItemSalePrice= itemSalePrice;
+                        currentItem.ItemShareAmount= itemShareAmount;
+                        currentItem.ItemSponsoredOrderShippingFee= itemSponsoredOrderShippingFee;
+                        currentItem.ItemShippingAddress= itemShippingAddress;
+                        currentItem.Image = image;
+                        currentItem.ItemExpiredTime = dateTimeExpired;
+                        currentItem.ItemDateUpdate = dateTimeUpdate;
+                        currentItem.Share = share;
+                        _context.SaveChanges();
+                        return true;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
