@@ -16,11 +16,11 @@ namespace Item.Controllers
         }
 
         [HttpPost("/CreateItem/{UserId},{SubCategoryId},{ItemTitle},{ItemDetailedDescription},{ItemMass},{ItemSize},{ItemStatus},{ItemEstimateValue},{ItemSalePrice},{ItemShareAmount},{ItemSponsoredOrderShippingFee},{ItemShippingAddress},{Image},{stringDateTimeExpired}")]
-        public async Task<IActionResult> CreateItem(int UserId, int SubCategoryId, string ItemTitle, string ItemDetailedDescription, double ItemMass, bool ItemSize, string ItemStatus, double ItemEstimateValue, double ItemSalePrice, int ItemShareAmount, bool ItemSponsoredOrderShippingFee, string ItemShippingAddress, string Image, string stringDateTimeExpired)
+        public async Task<IActionResult> CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
         {
             try
             {
-                bool checkCreate = await _itemRepository.CreateItem(UserId, SubCategoryId, ItemTitle, ItemDetailedDescription, ItemMass, ItemSize, ItemStatus, ItemEstimateValue, ItemSalePrice, ItemShareAmount, ItemSponsoredOrderShippingFee, ItemShippingAddress, Image, stringDateTimeExpired);
+                bool checkCreate = await _itemRepository.CreateItem( userId, subCategoryId, itemTitle, itemDetailedDescription, itemMass, itemSize, itemQuanlity, itemEstimateValue, itemSalePrice, itemShareAmount, itemSponsoredOrderShippingFee, itemShippingAddress, image, stringDateTimeExpired, share);
                 if (checkCreate)
                 {
                     return Ok("da tao thanh cong");

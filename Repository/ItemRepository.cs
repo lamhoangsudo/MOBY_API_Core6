@@ -11,8 +11,8 @@ namespace MOBY_API_Core6.Repository
             _context = context;
         }
         public async Task<bool> CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass,
-            bool itemSize, string itemStatus, double itemEstimateValue, double itemSalePrice, int itemShareAmount,
-            bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired)
+            bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount,
+            bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
         {
             try
             {
@@ -24,26 +24,39 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-
                     DateTime dateTimeCreate = DateTime.Now;
-                    DateTime dateTimeExpired = DateTime.Parse(stringDateTimeExpired);
-                    bool check = dateTimeExpired > dateTimeCreate;
-                    if (check == false)
+                    DateTime dateTimeExpired = new DateTime();
+                    if (stringDateTimeExpired != null || !(stringDateTimeExpired.Equals("")))
                     {
-                        return false;
+                        dateTimeExpired = DateTime.Parse(stringDateTimeExpired);
+                        bool check = dateTimeExpired > dateTimeCreate;
+                        if (check == false)
+                        {
+                            return false;
+                        }
                     }
                     string itemCode = Guid.NewGuid().ToString();
-                    var checkCreate = _context.Items.Add(null);
-                    /*if (checkCreate != 0)
-                    {
-                        _context.SaveChanges();
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }*/
-                    return false;
+                    Models.Item item = new Models.Item();
+                    item.UserId = userId;
+                    item.SubCategoryId = subCategoryId;
+                    item.ItemTitle = itemTitle;
+                    item.ItemDetailedDescription = itemDetailedDescription;
+                    item.ItemMass = itemMass;
+                    item.ItemSize = itemSize;
+                    item.ItemQuanlity = itemQuanlity;
+                    item.ItemEstimateValue = itemEstimateValue;
+                    item.ItemSalePrice = itemSalePrice;
+                    item.ItemShareAmount = itemShareAmount;
+                    item.ItemSponsoredOrderShippingFee = itemSponsoredOrderShippingFee;
+                    item.ItemExpiredTime = dateTimeExpired;
+                    item.ItemShippingAddress = itemShippingAddress;
+                    item.ItemDateCreated = dateTimeCreate;
+                    item.ItemStatus = true;
+                    item.Share = share;
+                    item.Image= image;
+                    _context.Items.Add(item);
+                    _context.SaveChanges();
+                    return true;
                 }
             }
             catch
@@ -229,9 +242,10 @@ namespace MOBY_API_Core6.Repository
                         item.ItemStatus = false;
                         _context.SaveChanges();
                         return true;
-                    }else 
-                    { 
-                        return false; 
+                    }
+                    else
+                    {
+                        return false;
                     }
                 }
             }
