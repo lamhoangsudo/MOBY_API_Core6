@@ -17,7 +17,7 @@ namespace MOBY_API_Core6.Controllers
         }
         [Authorize]
         [HttpPost]
-        [Route("api/UserController/CreateAccount/{Adress} {phone} {sex} {dateOfBirth}")]
+        [Route("api/UserController/CreateAccount/{address} {phone} {sex} {dateOfBirth}")]
         public async Task<IActionResult> PostGoogleAuthenticationCreated(String address, String phone, bool sex, String dateOfBirth)
         {
             try

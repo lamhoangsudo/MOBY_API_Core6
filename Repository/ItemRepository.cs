@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MOBY_API_Core6.Models;
+﻿using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -38,6 +37,7 @@ namespace MOBY_API_Core6.Repository
                     string itemCode = Guid.NewGuid().ToString();
                     Models.Item item = new Models.Item();
                     item.UserId = userId;
+                    item.ItemCode = itemCode;
                     item.SubCategoryId = subCategoryId;
                     item.ItemTitle = itemTitle;
                     item.ItemDetailedDescription = itemDetailedDescription;
@@ -53,7 +53,7 @@ namespace MOBY_API_Core6.Repository
                     item.ItemDateCreated = dateTimeCreate;
                     item.ItemStatus = true;
                     item.Share = share;
-                    item.Image= image;
+                    item.Image = image;
                     _context.Items.Add(item);
                     _context.SaveChanges();
                     return true;

@@ -15,12 +15,12 @@ namespace Item.Controllers
             _itemRepository = itemRepository;
         }
 
-        [HttpPost("/CreateItem/{UserId},{SubCategoryId},{ItemTitle},{ItemDetailedDescription},{ItemMass},{ItemSize},{ItemQuanlity},{ItemEstimateValue},{ItemSalePrice},{ItemShareAmount},{ItemSponsoredOrderShippingFee},{ItemShippingAddress},{Image},{stringDateTimeExpired},{Share}")]
+        [HttpPost("/CreateItem/{userId},{subCategoryId},{itemTitle},{itemDetailedDescription},{itemMass},{itemSize},{itemQuanlity},{itemEstimateValue},{itemSalePrice},{itemShareAmount},{itemSponsoredOrderShippingFee},{itemShippingAddress},{image},{stringDateTimeExpired},{share}")]
         public async Task<IActionResult> CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
         {
             try
             {
-                bool checkCreate = await _itemRepository.CreateItem( userId, subCategoryId, itemTitle, itemDetailedDescription, itemMass, itemSize, itemQuanlity, itemEstimateValue, itemSalePrice, itemShareAmount, itemSponsoredOrderShippingFee, itemShippingAddress, image, stringDateTimeExpired, share);
+                bool checkCreate = await _itemRepository.CreateItem(userId, subCategoryId, itemTitle, itemDetailedDescription, itemMass, itemSize, itemQuanlity, itemEstimateValue, itemSalePrice, itemShareAmount, itemSponsoredOrderShippingFee, itemShippingAddress, image, stringDateTimeExpired, share);
                 if (checkCreate)
                 {
                     return Ok("da tao thanh cong");
@@ -71,7 +71,7 @@ namespace Item.Controllers
                     return StatusCode(StatusCodes.Status400BadRequest);
                 }
             }
-            catch 
+            catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
