@@ -15,7 +15,7 @@ namespace Item.Controllers
             _itemRepository = itemRepository;
         }
 
-        [HttpPost("/CreateItem/{UserId},{SubCategoryId},{ItemTitle},{ItemDetailedDescription},{ItemMass},{ItemSize},{ItemStatus},{ItemEstimateValue},{ItemSalePrice},{ItemShareAmount},{ItemSponsoredOrderShippingFee},{ItemShippingAddress},{Image},{stringDateTimeExpired}")]
+        [HttpPost("/CreateItem/{UserId},{SubCategoryId},{ItemTitle},{ItemDetailedDescription},{ItemMass},{ItemSize},{ItemQuanlity},{ItemEstimateValue},{ItemSalePrice},{ItemShareAmount},{ItemSponsoredOrderShippingFee},{ItemShippingAddress},{Image},{stringDateTimeExpired},{Share}")]
         public async Task<IActionResult> CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
         {
             try
