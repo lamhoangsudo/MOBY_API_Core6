@@ -17,5 +17,9 @@ namespace MOBY_API_Core6.Repository
         Task<List<BriefItem>> SearchBriefItemByCategoryID(int categoryID);
 
         Task<DetailItem> GetItemDetail(int itemID);
+
+        Task<DetailItemRequest> GetRequestDetail(int itemID);
+
+        Task<bool> DeleteItem(int itemID);
     }
 }

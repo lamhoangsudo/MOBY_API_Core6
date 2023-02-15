@@ -34,7 +34,7 @@ namespace MOBY_API_Core6.Repository
                     }
                     string itemCode = Guid.NewGuid().ToString();
                     var checkCreate = _context.Items.Add(null);
-                    if (checkCreate != 0)
+                    /*if (checkCreate != 0)
                     {
                         _context.SaveChanges();
                         return true;
@@ -42,8 +42,8 @@ namespace MOBY_API_Core6.Repository
                     else
                     {
                         return false;
-                    }
-
+                    }*/
+                    return false;
                 }
             }
             catch
@@ -112,6 +112,26 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
+        public async Task<List<BriefItem>> GetBriefItemByShare(bool share)
+        {
+            try
+            {
+                var listBriefItemByUserID = _context.BriefItems.Where(bf => bf.Share == share).ToList();
+                if (listBriefItemByUserID == null || listBriefItemByUserID.Count() == 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    return listBriefItemByUserID;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async Task<DetailItem> GetItemDetail(int itemID)
         {
             try
@@ -124,6 +144,26 @@ namespace MOBY_API_Core6.Repository
                 else
                 {
                     return itemDetail;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<DetailItemRequest> GetRequestDetail(int itemID)
+        {
+            try
+            {
+                DetailItemRequest detailItemRequest = _context.DetailItemRequests.Where(dir => dir.ItemId == itemID).FirstOrDefault();
+                if (detailItemRequest == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return detailItemRequest;
                 }
             }
             catch
@@ -170,6 +210,36 @@ namespace MOBY_API_Core6.Repository
             {
                 return null;
             }
+        }
+
+        public async Task<bool> DeleteItem(int itemID)
+        {
+            try
+            {
+                bool check = _context.CartDetails.Where(cd => cd.ItemId == itemID).Any();
+                if (check)
+                {
+                    return false;
+                }
+                else
+                {
+                    var item = _context.Items.Where(it => it.ItemId == itemID).ToList().SingleOrDefault();
+                    if (item != null)
+                    {
+                        item.ItemStatus = false;
+                        _context.SaveChanges();
+                        return true;
+                    }else 
+                    { 
+                        return false; 
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+
         }
     }
 }

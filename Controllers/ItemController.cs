@@ -15,12 +15,12 @@ namespace Item.Controllers
             _itemRepository = itemRepository;
         }
 
-        [HttpPost("/CreateItem/{UserId},{SubCategoryId},{ItemTitle},{ItemDetailedDescription},{ItemMass},{ItemSize},{ItemStatus},{ItemEstimateValue},{ItemSalePrice},{ItemShareAmount},{ItemSponsoredOrderShippingFee},{ItemShippingAddress},{ImageId},{stringDateTimeExpired}")]
-        public async Task<IActionResult> CreateItem(int UserId, int SubCategoryId, string ItemTitle, string ItemDetailedDescription, double ItemMass, bool ItemSize, string ItemStatus, double ItemEstimateValue, double ItemSalePrice, int ItemShareAmount, bool ItemSponsoredOrderShippingFee, string ItemShippingAddress, int ImageId, string stringDateTimeExpired)
+        [HttpPost("/CreateItem/{UserId},{SubCategoryId},{ItemTitle},{ItemDetailedDescription},{ItemMass},{ItemSize},{ItemStatus},{ItemEstimateValue},{ItemSalePrice},{ItemShareAmount},{ItemSponsoredOrderShippingFee},{ItemShippingAddress},{Image},{stringDateTimeExpired}")]
+        public async Task<IActionResult> CreateItem(int UserId, int SubCategoryId, string ItemTitle, string ItemDetailedDescription, double ItemMass, bool ItemSize, string ItemStatus, double ItemEstimateValue, double ItemSalePrice, int ItemShareAmount, bool ItemSponsoredOrderShippingFee, string ItemShippingAddress, string Image, string stringDateTimeExpired)
         {
             try
             {
-                bool checkCreate = await _itemRepository.CreateItem(UserId, SubCategoryId, ItemTitle, ItemDetailedDescription, ItemMass, ItemSize, ItemStatus, ItemEstimateValue, ItemSalePrice, ItemShareAmount, ItemSponsoredOrderShippingFee, ItemShippingAddress, ImageId, stringDateTimeExpired);
+                bool checkCreate = await _itemRepository.CreateItem(UserId, SubCategoryId, ItemTitle, ItemDetailedDescription, ItemMass, ItemSize, ItemStatus, ItemEstimateValue, ItemSalePrice, ItemShareAmount, ItemSponsoredOrderShippingFee, ItemShippingAddress, Image, stringDateTimeExpired);
                 if (checkCreate)
                 {
                     return Ok("da tao thanh cong");
