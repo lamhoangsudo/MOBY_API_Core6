@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
@@ -19,28 +20,28 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpPost]
         [Route("api/CartController/CreateCart")]
-        public async Task<String> CreateCart()
+        public async Task<IActionResult> CreateCart()
         {
             var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             if (await cartDAO.CheackExistedCartByUid(currentUid))
             {
-                return "false";
+                return Ok(ReturnMessage.create("this user already has a cart"));
             }
             if (await cartDAO.CreateCart(currentUid))
             {
-                return "success";
+                return Ok(ReturnMessage.create("success"));
             }
-            return "false";
+            return Ok(ReturnMessage.create("error at createCart"));
         }
 
         [Authorize]
         [HttpGet]
         [Route("api/CartController/getCartByUid")]
-        public async Task<CartVM> GetCartByUid()
+        public async Task<IActionResult> GetCartByUid()
         {
             int currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             CartVM currentCart = await cartDAO.GetCartByUid(currentUid);
-            return currentCart;
+            return Ok(currentCart);
 
 
         }
