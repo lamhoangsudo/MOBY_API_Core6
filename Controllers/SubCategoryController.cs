@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
@@ -14,7 +13,7 @@ namespace MOBY_API_Core6.Controllers
             _subCategoryRepository = subCategoryRepository;
         }
 
-        [HttpPost("createSubCategory/{subCategoryName}")]
+        [HttpPost("createSubCategory")]
         public async Task<IActionResult> createSubCategory(int categoryID, string subCategoryName)
         {
             try
@@ -35,7 +34,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpGet("GetAllSubCategory/{categoryID}")]
+        [HttpGet("GetAllSubCategory")]
         public async Task<IActionResult> GetAllSubCategory(int categoryID)
         {
             try
@@ -56,7 +55,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpPut("updateSubCategory/{subCategoryName} {subCategoryID}")]
+        [HttpPut("updateSubCategory")]
         public async Task<IActionResult> updateSubCategory(int categoryID, string subCategoryName, int subCategoryID)
         {
             try
@@ -85,7 +84,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpPut("DeleteCategory/{subCategoryID}")]
+        [HttpPut("DeleteCategory")]
         public async Task<IActionResult> DeleteCategory(int subCategoryID)
         {
             try
@@ -114,7 +113,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpGet("SearchSubCategoryName/{subCategoryName}")]
+        [HttpGet("SearchSubCategoryName")]
         public async Task<IActionResult> GetSubCategoryByName(string subCategoryName)
         {
             try

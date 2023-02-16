@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
@@ -14,7 +13,7 @@ namespace MOBY_API_Core6.Controllers
             _categoryRepository = categoryRepository;
         }
 
-        [HttpPost("CreateCategory/{categoryName}")]
+        [HttpPost("CreateCategory")]
         public async Task<IActionResult> CreateCategory(string categoryName, string categoryImange)
         {
             try
@@ -35,7 +34,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpPut("UpdateCategory/{categoryID} {categoryName}")]
+        [HttpPut("UpdateCategory")]
         public async Task<IActionResult> UpdateCategory(int categoryID, string categoryName, string categoryImage)
         {
             try
@@ -64,7 +63,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpPut("DeleteCategory/{categoryID}")]
+        [HttpPut("DeleteCategory")]
         public async Task<IActionResult> DeleteCategory(int categoryID)
         {
             try
@@ -114,7 +113,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpGet("GetStatus/{categoryStatus}")]
+        [HttpGet("GetStatus")]
         public async Task<IActionResult> GetCategoryByStatus(bool categoryStatus)
         {
             try
@@ -135,7 +134,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpGet("SearchCategoryName/{categoryName}")]
+        [HttpGet("SearchCategoryName")]
         public async Task<IActionResult> GetCategoryByName(string categoryName)
         {
             try
