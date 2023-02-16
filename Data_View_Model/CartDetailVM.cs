@@ -10,6 +10,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime CartDetailDateCreate { get; set; }
         public DateTime? CartDetailDateUpdate { get; set; }
         public int CartDetailItemQuantity { get; set; }
+        public int CartStatus { get; set; }
 
         public static CartDetailVM CartDetailToVewModel(CartDetail cartd)
         {
@@ -20,8 +21,8 @@ namespace MOBY_API_Core6.Data_View_Model
                 ItemId = cartd.ItemId,
                 CartDetailDateCreate = cartd.CartDetailDateCreate,
                 CartDetailDateUpdate = cartd.CartDetailDateUpdate,
-                CartDetailItemQuantity = cartd.CartDetailItemQuantity
-
+                CartDetailItemQuantity = cartd.CartDetailItemQuantity,
+                CartStatus = cartd.CartStatus
             };
         }
     }

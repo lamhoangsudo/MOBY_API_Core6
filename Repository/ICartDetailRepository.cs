@@ -7,9 +7,9 @@ namespace MOBY_API_Core6.Repository
     {
         public Task<List<CartDetailVM>> GetAllCartDetail(int cartID);
         public Task<bool> CreateCartDetail(int cartID, int itemID, int quantity);
-        public Task<bool> UpdateCartDetail(CartDetail cartDetail, int quantity);
-        public Task<bool> DeleteCartDetail(CartDetail cartDetail);
+        public Task<bool> UpdateCartDetail(CartDetail cartDetail, int status);
         public Task<CartDetail> GetCartDetailByCartDetailID(int CartDetail);
+        public Task<List<CartDetailVM>> GetCartDetailByItemID(int itemID);
 
     }
 }
