@@ -15,7 +15,7 @@ namespace Item.Controllers
             _itemRepository = itemRepository;
         }
 
-        [HttpPost("/CreateItem/{userId} {subCategoryId} {itemTitle} {itemDetailedDescription} {itemMass} {itemSize} {itemQuanlity} {itemEstimateValue} {itemSalePrice} {itemShareAmount} {itemSponsoredOrderShippingFee} {itemShippingAddress} {image} {stringDateTimeExpired} {share}")]
+        [HttpPost("/CreateItem")]
         public async Task<IActionResult> CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
         {
             try
@@ -35,7 +35,7 @@ namespace Item.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpGet("/GetAllBriefItemAndBriefRequest/{share}")]
+        [HttpGet("/GetAllBriefItemAndBriefRequest")]
         public async Task<IActionResult> GetAllBriefItem(bool share)
         {
             try
@@ -56,7 +56,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/GetItemDetail/{itemID}")]
+        [HttpGet("/GetItemDetail")]
         public async Task<IActionResult> GetItemDetail(int itemID)
         {
             try
@@ -77,7 +77,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/GetBriefItemByUserId/{userID}")]
+        [HttpGet("/GetBriefItemByUserId")]
         public async Task<IActionResult> GetBriefItemByUserID(int userID)
         {
             try
@@ -98,7 +98,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/SearchBriefItemByUserId/{itemTitle}")]
+        [HttpGet("/SearchBriefItemByUserId")]
         public async Task<IActionResult> SearchBriefItemByTitle(string itemTitle)
         {
             try
@@ -119,7 +119,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/SearchBriefItemBySubCategoryID/{subCategoryID}")]
+        [HttpGet("/SearchBriefItemBySubCategoryID")]
         public async Task<IActionResult> SearchBriefItemBySubCategoryID(int subCategoryID)
         {
             try
@@ -140,7 +140,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/SearchBriefItemByCategoryID/{categoryID}")]
+        [HttpGet("/SearchBriefItemByCategoryID")]
         public async Task<IActionResult> SearchBriefItemByCategoryID(int categoryID)
         {
             try
@@ -161,13 +161,13 @@ namespace Item.Controllers
             }
         }
 
-        [HttpPost("/DeleteItem/{itemID},{userID}")]
+        [HttpPost("/DeleteItem")]
         public async Task<IActionResult> DeleteItem(int itemID, int userID)
         {
             try
             {
                 bool checkDelete = await _itemRepository.DeleteItem(itemID, userID);
-                if(checkDelete)
+                if (checkDelete)
                 {
                     return Ok("da xoa thanh cong");
                 }
@@ -176,13 +176,13 @@ namespace Item.Controllers
                     return StatusCode(StatusCodes.Status400BadRequest);
                 }
             }
-            catch 
+            catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
-        [HttpPost("/Update/{userID},{itemID},{subCategoryId},{itemTitle},{itemDetailedDescription},{itemMass},{itemSize},{itemQuanlity},{itemEstimateValue},{itemSalePrice},{itemShareAmount},{itemSponsoredOrderShippingFee},{itemShippingAddress},{image},{stringDateTimeExpired},{share}")]
+        [HttpPost("/Update")]
         public async Task<IActionResult> UpdateItem(int userID, int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
         {
             try
@@ -197,13 +197,13 @@ namespace Item.Controllers
                     return StatusCode(StatusCodes.Status400BadRequest);
                 }
             }
-            catch 
+            catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
-        [HttpGet("/GetAllBriefItemAndBriefRequestByUserID/{userID},{share}")]
+        [HttpGet("/GetAllBriefItemAndBriefRequestByUserID")]
         public async Task<IActionResult> GetAllBriefItemAndBriefRequestByUserID(int userID, bool share)
         {
             try

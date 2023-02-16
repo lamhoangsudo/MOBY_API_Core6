@@ -17,7 +17,7 @@ namespace MOBY_API_Core6.Controllers
         }
         [Authorize]
         [HttpPost]
-        [Route("api/UserController/CreateAccount/{address} {phone} {sex} {dateOfBirth}")]
+        [Route("api/UserController/CreateAccount")]
         public async Task<IActionResult> PostGoogleAuthenticationCreated(String address, String phone, bool sex, String dateOfBirth)
         {
             try
@@ -37,7 +37,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("api/UserController/UpdateAccount/{userName} {picture} {Adress} {phone} {sex} {dateOfBirth} {User_More_Information}")]
+        [Route("api/UserController/UpdateAccount")]
         public async Task<IActionResult> UpdateUserProfile(String userName, String picture, String address, String phone, bool sex, String dateOfBirth, String User_More_Information)
         {
             //UserAccounts currentUser = new UserAccounts();
@@ -60,7 +60,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("api/UserController/BanAccount/{UserID}")]
+        [Route("api/UserController/BanAccount")]
         public async Task<IActionResult> BanUser(String uid)
         {
             //UserAccounts currentUser = new UserAccounts();
@@ -76,7 +76,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("api/UserController/UnBanAccount/{UserID}")]
+        [Route("api/UserController/UnBanAccount")]
         public async Task<IActionResult> UnBanUser(String uid)
         {
             //UserAccounts currentUser = new UserAccounts();

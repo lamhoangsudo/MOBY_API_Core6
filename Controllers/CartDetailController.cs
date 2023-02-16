@@ -69,7 +69,7 @@ namespace MOBY_API_Core6.Controllers
         }
         [Authorize]
         [HttpPost]
-        [Route("api/CartDetailController/CreateCartDetail/{cartID} {itemID} {quantity}")]
+        [Route("api/CartDetailController/CreateCartDetail")]
         public async Task<IActionResult> CreateCartDetail(int cartID, int itemID, int quantity)
         {
             int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
@@ -83,7 +83,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("api/CartDetailController/AcceptCartDetail/{cartDetailID}")]
+        [Route("api/CartDetailController/AcceptCartDetail")]
         public async Task<IActionResult> AcceptCartDetail(int cartDetailID)
         {
             var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(cartDetailID);
@@ -96,7 +96,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("api/CartDetailController/CancelCartDetail/{cartDetailID}")]
+        [Route("api/CartDetailController/CancelCartDetail")]
         public async Task<IActionResult> CancelCartDetail(int cartDetailID)
         {
             var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(cartDetailID);
@@ -110,7 +110,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("api/CartDetailController/ConfirmCartDetail/{cartDetailID}")]
+        [Route("api/CartDetailController/ConfirmCartDetail")]
         public async Task<IActionResult> ConfirmCartDetail(int cartDetailID)
         {
             var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(cartDetailID);
