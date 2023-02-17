@@ -13,7 +13,7 @@ namespace MOBY_API_Core6.Controllers
         {
             this.userDAO = userDao;
         }
-        [HttpPost]
+        [HttpGet]
         [Route("api/AuthenticationController/CheckLogin")]
         public async Task<IActionResult> PostGoogleAuthentication()
         {
