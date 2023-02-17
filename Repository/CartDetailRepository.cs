@@ -51,15 +51,15 @@ namespace MOBY_API_Core6.Repository
             return CartDetailToVM;
         }
 
-        public async Task<bool> CreateCartDetail(int cartID, int itemID, int quantity)
+        public async Task<bool> CreateCartDetail(CreateCartDetailVM createdCartDetail)
         {
             try
             {
                 CartDetail newCartDetail = new CartDetail();
-                newCartDetail.CartId = cartID;
-                newCartDetail.ItemId = itemID;
+                newCartDetail.CartId = createdCartDetail.CartId;
+                newCartDetail.ItemId = createdCartDetail.ItemId;
                 newCartDetail.CartDetailDateCreate = DateTime.Now;
-                newCartDetail.CartDetailItemQuantity = quantity;
+                newCartDetail.CartDetailItemQuantity = createdCartDetail.CartDetailItemQuantity;
                 newCartDetail.CartStatus = 1;
                 context.CartDetails.Add(newCartDetail);
                 context.SaveChanges();

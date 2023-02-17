@@ -1,12 +1,13 @@
-﻿using MOBY_API_Core6.Models;
+﻿using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
 {
     public interface IItemRepository
     {
-        Task<bool> CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share);
+        Task<bool> CreateItem(CreateItemVM itemVM);
 
-        Task<bool> UpdateItem(int userId, int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share);
+        Task<bool> UpdateItem(UpdateItemVM itemVM);
 
         Task<List<BriefItem>> GetAllBriefItemAndBriefRequest(bool share);
 
@@ -22,7 +23,7 @@ namespace MOBY_API_Core6.Repository
 
         Task<DetailItemRequest> GetRequestDetail(int itemID);
 
-        Task<bool> DeleteItem(int itemID, int userID);
+        Task<bool> DeleteItem(DeleteItemVM itemVM);
 
         Task<List<BriefItem>> GetAllBriefItemAndBriefRequestByUserID(int userID, bool share);
     }

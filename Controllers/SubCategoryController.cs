@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
@@ -14,14 +16,14 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPost("createSubCategory")]
-        public async Task<IActionResult> createSubCategory(int categoryID, string subCategoryName)
+        public async Task<IActionResult> createSubCategory(CreateSubCategoryVM subCategoryVM)
         {
             try
             {
-                bool checkCreate = await _subCategoryRepository.CreateSubCategory(categoryID, subCategoryName);
+                bool checkCreate = await _subCategoryRepository.CreateSubCategory(subCategoryVM);
                 if (checkCreate)
                 {
-                    return Ok(subCategoryName);
+                    return Ok(ReturnMessage.create("da tao thanh cong"));
                 }
                 else
                 {
@@ -56,21 +58,21 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPut("updateSubCategory")]
-        public async Task<IActionResult> updateSubCategory(int categoryID, string subCategoryName, int subCategoryID)
+        public async Task<IActionResult> updateSubCategory(UpdateSubCategoryVM subCategoryVM)
         {
             try
             {
-                var subCategory = await _subCategoryRepository.GetSubCategoryByID(subCategoryID);
+                var subCategory = await _subCategoryRepository.GetSubCategoryByID(subCategoryVM.subCategoryID);
                 if (subCategory == null || subCategory.SubCategoryStatus == false)
                 {
                     return StatusCode(StatusCodes.Status404NotFound);
                 }
                 else
                 {
-                    bool check = await _subCategoryRepository.UpdateSubCategory(subCategoryID, subCategoryName, categoryID);
+                    bool check = await _subCategoryRepository.UpdateSubCategory(subCategoryVM);
                     if (check == true)
                     {
-                        return Ok(subCategoryName);
+                        return Ok(ReturnMessage.create("da edit thanh cong"));
                     }
                     else
                     {
@@ -85,18 +87,18 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPut("DeleteCategory")]
-        public async Task<IActionResult> DeleteCategory(int subCategoryID)
+        public async Task<IActionResult> DeleteCategory(DeleteSubCategoryVM subCategoryVM)
         {
             try
             {
-                var subCategory = await _subCategoryRepository.GetSubCategoryByID(subCategoryID);
+                var subCategory = await _subCategoryRepository.GetSubCategoryByID(subCategoryVM.subCategoryID);
                 if (subCategory == null || subCategory.SubCategoryStatus == false)
                 {
                     return StatusCode(StatusCodes.Status404NotFound);
                 }
                 else
                 {
-                    bool check = await _subCategoryRepository.DeleteSubCategory(subCategoryID);
+                    bool check = await _subCategoryRepository.DeleteSubCategory(subCategoryVM);
                     if (check == true)
                     {
                         return Ok(subCategory);

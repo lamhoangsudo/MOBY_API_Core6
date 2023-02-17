@@ -1,5 +1,6 @@
 ﻿using Category.Data_View_Model;
 using Microsoft.EntityFrameworkCore;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
@@ -12,19 +13,19 @@ namespace MOBY_API_Core6.Repository
             _context = context;
         }
 
-        public async Task<bool> CreateSubCategory(int categoryID, string SubCategoryName)
+        public async Task<bool> CreateSubCategory(CreateSubCategoryVM subCategoryVM)
         {
-            var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {categoryID}").ToList().SingleOrDefault();
-            if (checkCategory == null || SubCategoryName == null || SubCategoryName.Equals(""))
+            var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {subCategoryVM.categoryID}").ToList().SingleOrDefault();
+            if (checkCategory == null || subCategoryVM.subCategoryName == null || subCategoryVM.subCategoryName.Equals(""))
             {
                 return false;
             }
             else
             {
-                var checkSubCategory = _context.SubCategories.FromSqlInterpolated($"EXEC get_SubCategory_By_Name {SubCategoryName}").ToList().SingleOrDefault();
+                var checkSubCategory = _context.SubCategories.FromSqlInterpolated($"EXEC get_SubCategory_By_Name {subCategoryVM.subCategoryName}").ToList().SingleOrDefault();
                 if (checkSubCategory == null)
                 {
-                    var checkCreate = _context.Database.ExecuteSqlInterpolated($"EXEC create_SubCategory {categoryID}, {SubCategoryName}");
+                    var checkCreate = _context.Database.ExecuteSqlInterpolated($"EXEC create_SubCategory {subCategoryVM.categoryID}, {subCategoryVM.subCategoryName}");
                     if (checkCreate != 0)
                     {
                         return true;
@@ -42,9 +43,9 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<bool> DeleteSubCategory(int subCategoryID)
+        public async Task<bool> DeleteSubCategory(DeleteSubCategoryVM subCategoryVM)
         {
-            var checkDelete = _context.Database.ExecuteSqlInterpolated($"EXEC delete_SubCategory {subCategoryID}");
+            var checkDelete = _context.Database.ExecuteSqlInterpolated($"EXEC delete_SubCategory {subCategoryVM.subCategoryID}");
             if (checkDelete != 0)
             {
                 _context.SaveChanges();
@@ -108,19 +109,19 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<bool> UpdateSubCategory(int subCategoryID, string SubCategoryName, int categoryID)
+        public async Task<bool> UpdateSubCategory(UpdateSubCategoryVM subCategoryVM)
         {
-            var checkUpdateSubCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {categoryID}").ToList().SingleOrDefault();
+            var checkUpdateSubCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {subCategoryVM.categoryID}").ToList().SingleOrDefault();
             if (checkUpdateSubCategory == null)
             {
-                var checkSubCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {categoryID}").ToList().SingleOrDefault();
-                if (checkSubCategory == null || SubCategoryName == null || SubCategoryName.Equals(""))
+                var checkSubCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {subCategoryVM.categoryID}").ToList().SingleOrDefault();
+                if (checkSubCategory == null || subCategoryVM.subCategoryName == null || subCategoryVM.subCategoryName.Equals(""))
                 {
                     return false;
                 }
                 else
                 {
-                    var checkUpdate = _context.Database.ExecuteSqlInterpolated($"EXEC update_SubCategory {subCategoryID},{SubCategoryName},{categoryID}");
+                    var checkUpdate = _context.Database.ExecuteSqlInterpolated($"EXEC update_SubCategory {subCategoryVM.subCategoryID},{subCategoryVM.subCategoryName},{subCategoryVM.categoryID}");
                     if (checkUpdate != 0)
                     {
                         _context.SaveChanges();

@@ -10,14 +10,12 @@ namespace MOBY_API_Core6.Repository
         {
             _context = context;
         }
-        public async Task<bool> CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass,
-            bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount,
-            bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
+        public async Task<bool> CreateItem(CreateItemVM itemVM)
         {
             try
             {
-                var checkUserExist = _context.UserAccounts.Where(u => u.UserId == userId).ToList().SingleOrDefault();
-                var checkSubCategoryExists = _context.SubCategories.Where(sc => sc.SubCategoryId == subCategoryId).ToList().SingleOrDefault();
+                var checkUserExist = _context.UserAccounts.Where(u => u.UserId == itemVM.userId).ToList().SingleOrDefault();
+                var checkSubCategoryExists = _context.SubCategories.Where(sc => sc.SubCategoryId == itemVM.subCategoryId).ToList().SingleOrDefault();
                 if (checkSubCategoryExists == null || checkUserExist == null)
                 {
                     return false;
@@ -26,9 +24,9 @@ namespace MOBY_API_Core6.Repository
                 {
                     DateTime dateTimeCreate = DateTime.Now;
                     DateTime? dateTimeExpired = null;
-                    if (stringDateTimeExpired != null || !(stringDateTimeExpired.Equals("")))
+                    if (itemVM.stringDateTimeExpired != null || !(itemVM.stringDateTimeExpired.Equals("")))
                     {
-                        dateTimeExpired = DateTime.Parse(stringDateTimeExpired);
+                        dateTimeExpired = DateTime.Parse(itemVM.stringDateTimeExpired);
                         bool check = dateTimeExpired > dateTimeCreate;
                         if (check == false)
                         {
@@ -37,24 +35,24 @@ namespace MOBY_API_Core6.Repository
                     }
                     string itemCode = Guid.NewGuid().ToString();
                     Models.Item item = new Models.Item();
-                    item.UserId = userId;
+                    item.UserId = itemVM.userId;
                     item.ItemCode = itemCode;
-                    item.SubCategoryId = subCategoryId;
-                    item.ItemTitle = itemTitle;
-                    item.ItemDetailedDescription = itemDetailedDescription;
-                    item.ItemMass = itemMass;
-                    item.ItemSize = itemSize;
-                    item.ItemQuanlity = itemQuanlity;
-                    item.ItemEstimateValue = itemEstimateValue;
-                    item.ItemSalePrice = itemSalePrice;
-                    item.ItemShareAmount = itemShareAmount;
-                    item.ItemSponsoredOrderShippingFee = itemSponsoredOrderShippingFee;
+                    item.SubCategoryId = itemVM.subCategoryId;
+                    item.ItemTitle = itemVM.itemTitle;
+                    item.ItemDetailedDescription = itemVM.itemDetailedDescription;
+                    item.ItemMass = itemVM.itemMass;
+                    item.ItemSize = itemVM.itemSize;
+                    item.ItemQuanlity = itemVM.itemQuanlity;
+                    item.ItemEstimateValue = itemVM.itemEstimateValue;
+                    item.ItemSalePrice = itemVM.itemSalePrice;
+                    item.ItemShareAmount = itemVM.itemShareAmount;
+                    item.ItemSponsoredOrderShippingFee = itemVM.itemSponsoredOrderShippingFee;
                     item.ItemExpiredTime = dateTimeExpired;
-                    item.ItemShippingAddress = itemShippingAddress;
+                    item.ItemShippingAddress = itemVM.itemShippingAddress;
                     item.ItemDateCreated = dateTimeCreate;
                     item.ItemStatus = true;
-                    item.Share = share;
-                    item.Image = image;
+                    item.Share = itemVM.share;
+                    item.Image = itemVM.image;
                     _context.Items.Add(item);
                     _context.SaveChanges();
                     return true;
@@ -226,18 +224,18 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<bool> DeleteItem(int itemID, int userID)
+        public async Task<bool> DeleteItem(DeleteItemVM itemVM)
         {
             try
             {
-                bool check = _context.CartDetails.Where(cd => cd.ItemId == itemID).Any();
+                bool check = _context.CartDetails.Where(cd => cd.ItemId == itemVM.itemID).Any();
                 if (check)
                 {
                     return false;
                 }
                 else
                 {
-                    var item = _context.Items.Where(it => it.ItemId == itemID && it.UserId == userID).ToList().SingleOrDefault();
+                    var item = _context.Items.Where(it => it.ItemId == itemVM.itemID && it.UserId == itemVM.userID).ToList().SingleOrDefault();
                     if (item != null)
                     {
                         item.ItemStatus = false;
@@ -257,21 +255,19 @@ namespace MOBY_API_Core6.Repository
 
         }
 
-        public async Task<bool> UpdateItem(int userID, int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass,
-            bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount,
-            bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
+        public async Task<bool> UpdateItem(UpdateItemVM itemVM)
         {
             try
             {
-                bool checkCurrentItem = _context.CartDetails.Where(cd => cd.ItemId == itemID).Any();
+                bool checkCurrentItem = _context.CartDetails.Where(cd => cd.ItemId == itemVM.itemID).Any();
                 if (checkCurrentItem)
                 {
                     return false;
                 }
                 else
                 {
-                    Models.Item currentItem = _context.Items.Where(it => it.ItemId == itemID && it.UserId == userID).ToList().SingleOrDefault();
-                    var checkSubCategoryExists = _context.SubCategories.Where(sc => sc.SubCategoryId == subCategoryId).ToList().SingleOrDefault();
+                    Models.Item currentItem = _context.Items.Where(it => it.ItemId == itemVM.itemID && it.UserId == itemVM.userId).ToList().SingleOrDefault();
+                    var checkSubCategoryExists = _context.SubCategories.Where(sc => sc.SubCategoryId == itemVM.subCategoryId).ToList().SingleOrDefault();
                     if (currentItem == null || currentItem.ItemStatus == false || checkSubCategoryExists == null)
                     {
                         return false;
@@ -280,30 +276,30 @@ namespace MOBY_API_Core6.Repository
                     {
                         DateTime dateTimeUpdate = DateTime.Now;
                         DateTime? dateTimeExpired = null;
-                        if (stringDateTimeExpired != null || !(stringDateTimeExpired.Equals("")))
+                        if (itemVM.stringDateTimeExpired != null || !(itemVM.stringDateTimeExpired.Equals("")))
                         {
-                            dateTimeExpired = DateTime.Parse(stringDateTimeExpired);
+                            dateTimeExpired = DateTime.Parse(itemVM.stringDateTimeExpired);
                             bool checkDate = dateTimeExpired > dateTimeUpdate;
                             if (checkDate == false)
                             {
                                 return false;
                             }
                         }
-                        currentItem.SubCategoryId = subCategoryId;
-                        currentItem.ItemTitle = itemTitle;
-                        currentItem.ItemDetailedDescription = itemDetailedDescription;
-                        currentItem.ItemMass= itemMass;
-                        currentItem.ItemSize= itemSize;
-                        currentItem.ItemQuanlity= itemQuanlity;
-                        currentItem.ItemEstimateValue= itemEstimateValue;
-                        currentItem.ItemSalePrice= itemSalePrice;
-                        currentItem.ItemShareAmount= itemShareAmount;
-                        currentItem.ItemSponsoredOrderShippingFee= itemSponsoredOrderShippingFee;
-                        currentItem.ItemShippingAddress= itemShippingAddress;
-                        currentItem.Image = image;
+                        currentItem.SubCategoryId = itemVM.subCategoryId;
+                        currentItem.ItemTitle = itemVM.itemTitle;
+                        currentItem.ItemDetailedDescription = itemVM.itemDetailedDescription;
+                        currentItem.ItemMass= itemVM.itemMass;
+                        currentItem.ItemSize= itemVM.itemSize;
+                        currentItem.ItemQuanlity= itemVM.itemQuanlity;
+                        currentItem.ItemEstimateValue= itemVM.itemEstimateValue;
+                        currentItem.ItemSalePrice= itemVM.itemSalePrice;
+                        currentItem.ItemShareAmount= itemVM.itemShareAmount;
+                        currentItem.ItemSponsoredOrderShippingFee= itemVM.itemSponsoredOrderShippingFee;
+                        currentItem.ItemShippingAddress= itemVM.itemShippingAddress;
+                        currentItem.Image = itemVM.image;
                         currentItem.ItemExpiredTime = dateTimeExpired;
                         currentItem.ItemDateUpdate = dateTimeUpdate;
-                        currentItem.Share = share;
+                        currentItem.Share = itemVM.share;
                         _context.SaveChanges();
                         return true;
                     }

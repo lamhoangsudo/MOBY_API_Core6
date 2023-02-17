@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
 
@@ -16,11 +17,11 @@ namespace Item.Controllers
         }
 
         [HttpPost("/CreateItem")]
-        public async Task<IActionResult> CreateItem(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
+        public async Task<IActionResult> CreateItem([FromBody] CreateItemVM itemVM)
         {
             try
             {
-                bool checkCreate = await _itemRepository.CreateItem(userId, subCategoryId, itemTitle, itemDetailedDescription, itemMass, itemSize, itemQuanlity, itemEstimateValue, itemSalePrice, itemShareAmount, itemSponsoredOrderShippingFee, itemShippingAddress, image, stringDateTimeExpired, share);
+                bool checkCreate = await _itemRepository.CreateItem(itemVM);
                 if (checkCreate)
                 {
                     return Ok("da tao thanh cong");
@@ -162,11 +163,11 @@ namespace Item.Controllers
         }
 
         [HttpPost("/DeleteItem")]
-        public async Task<IActionResult> DeleteItem(int itemID, int userID)
+        public async Task<IActionResult> DeleteItem(DeleteItemVM itemVM)
         {
             try
             {
-                bool checkDelete = await _itemRepository.DeleteItem(itemID, userID);
+                bool checkDelete = await _itemRepository.DeleteItem(itemVM);
                 if (checkDelete)
                 {
                     return Ok("da xoa thanh cong");
@@ -183,11 +184,11 @@ namespace Item.Controllers
         }
 
         [HttpPost("/Update")]
-        public async Task<IActionResult> UpdateItem(int userID, int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string stringDateTimeExpired, bool share)
+        public async Task<IActionResult> UpdateItem(UpdateItemVM itemVM)
         {
             try
             {
-                bool checkUpdate = await _itemRepository.UpdateItem(userID, itemID, subCategoryId, itemTitle, itemDetailedDescription, itemMass, itemSize, itemQuanlity, itemEstimateValue, itemSalePrice, itemShareAmount, itemSponsoredOrderShippingFee, itemShippingAddress, image, stringDateTimeExpired, share);
+                bool checkUpdate = await _itemRepository.UpdateItem(itemVM);
                 if (checkUpdate)
                 {
                     return Ok("da update thanh cong");
