@@ -70,11 +70,11 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpPost]
         [Route("api/CartDetailController/CreateCartDetail")]
-        public async Task<IActionResult> CreateCartDetail(int cartID, int itemID, int quantity)
+        public async Task<IActionResult> CreateCartDetail([FromBody] CreateCartDetailVM createdCartDetail)
         {
             int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             CartVM cart = await cartDAO.GetCartByUid(uid);
-            if (await cartDetailDAO.CreateCartDetail(cartID, itemID, quantity))
+            if (await cartDetailDAO.CreateCartDetail(createdCartDetail))
             {
                 return Ok(ReturnMessage.create("Success"));
             }
@@ -84,9 +84,9 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpPost]
         [Route("api/CartDetailController/AcceptCartDetail")]
-        public async Task<IActionResult> AcceptCartDetail(int cartDetailID)
+        public async Task<IActionResult> AcceptCartDetail([FromBody] CartDetailIdVM CartDetailID)
         {
-            var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(cartDetailID);
+            var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetailID.CartDetailId);
             if (await cartDetailDAO.UpdateCartDetail(cacrtDetail, 2))
             {
                 return Ok(ReturnMessage.create("Success"));
@@ -97,9 +97,9 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpPost]
         [Route("api/CartDetailController/CancelCartDetail")]
-        public async Task<IActionResult> CancelCartDetail(int cartDetailID)
+        public async Task<IActionResult> CancelCartDetail([FromBody] CartDetailIdVM CartDetailID)
         {
-            var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(cartDetailID);
+            var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetailID.CartDetailId);
             if (await cartDetailDAO.UpdateCartDetail(cacrtDetail, 3))
             {
                 return Ok(ReturnMessage.create("Success"));
@@ -111,9 +111,9 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpPost]
         [Route("api/CartDetailController/ConfirmCartDetail")]
-        public async Task<IActionResult> ConfirmCartDetail(int cartDetailID)
+        public async Task<IActionResult> ConfirmCartDetail([FromBody] CartDetailIdVM CartDetailID)
         {
-            var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(cartDetailID);
+            var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetailID.CartDetailId);
             if (await cartDetailDAO.UpdateCartDetail(cacrtDetail, 4))
             {
                 return Ok(ReturnMessage.create("Success"));

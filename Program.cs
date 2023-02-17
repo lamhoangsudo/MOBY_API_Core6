@@ -49,6 +49,8 @@ builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartDetailRepository, CartDetailRepository>();
+builder.Services.AddScoped<IBlogCategoryRepository, BlogCategoryRepository>();
+builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 
 builder.Services.AddSwaggerGen(swagger =>
 {

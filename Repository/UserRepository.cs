@@ -60,7 +60,7 @@ namespace MOBY_API_Core6.Repository
 
 
 
-        public async Task<bool> CreateUser(IEnumerable<Claim> claims, String address, String phone, bool sex, String dateOfBirth)
+        public async Task<bool> CreateUser(IEnumerable<Claim> claims, CreateAccountVM createUserVM)
         {
 
             try
@@ -71,12 +71,12 @@ namespace MOBY_API_Core6.Repository
 
                 newUser.UserName = claims.First(i => i.Type.Contains("identity/claims/name")).Value;
                 newUser.UserGmail = claims.First(i => i.Type.Contains("emailaddress")).Value;
-                newUser.UserAddress = address;
-                newUser.UserPhone = phone;
-                newUser.UserSex = sex;
+                newUser.UserAddress = createUserVM.UserAddress;
+                newUser.UserPhone = createUserVM.UserPhone;
+                newUser.UserSex = createUserVM.UserSex;
 
 
-                newUser.UserDateOfBirth = DateTime.Parse(dateOfBirth);
+                newUser.UserDateOfBirth = DateTime.Parse(createUserVM.UserDateOfBirth);
                 newUser.UserImage = claims.First(i => i.Type == "picture").Value;
                 newUser.UserStatus = true;
                 newUser.UserDateCreate = DateTime.Now;
@@ -94,7 +94,7 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> EditUser(UserAccount currentUser, String userName, String picture, String address, String phone, bool sex, String dateOfBirth, String User_More_Information)
+        public async Task<bool> EditUser(UserAccount currentUser, UpdateAccountVM accountVM)
         {
 
             try
@@ -103,15 +103,15 @@ namespace MOBY_API_Core6.Repository
 
                 //UserRecord user = await FirebaseAuth.DefaultInstance.GetUserAsync(decodedToken.Uid);
 
-                currentUser.UserName = userName;
+                currentUser.UserName = accountVM.UserName;
 
-                currentUser.UserAddress = address;
-                currentUser.UserPhone = phone;
-                currentUser.UserSex = sex;
-                currentUser.UserDateOfBirth = DateTime.Parse(dateOfBirth);
-                currentUser.UserImage = picture;
+                currentUser.UserAddress = accountVM.UserAddress;
+                currentUser.UserPhone = accountVM.UserPhone;
+                currentUser.UserSex = accountVM.UserSex;
+                currentUser.UserDateOfBirth = DateTime.Parse(accountVM.UserDateOfBirth);
+                currentUser.UserImage = accountVM.UserImage;
                 //currentUser.UserStatus = true;
-                currentUser.UserMoreInformation = User_More_Information;
+                currentUser.UserMoreInformation = accountVM.UserMoreInformation;
                 currentUser.UserDateUpdate = DateTime.Now;
 
 
@@ -142,12 +142,12 @@ namespace MOBY_API_Core6.Repository
         }
 
 
-        public async Task<bool> BanUser(String uid)
+        public async Task<bool> BanUser(UserUidVM uid)
         {
 
             try
             {
-                UserAccount foundAccount = context.UserAccounts.Where(u => u.UserCode == uid).FirstOrDefault();
+                UserAccount foundAccount = context.UserAccounts.Where(u => u.UserId == uid.UserId).FirstOrDefault();
                 foundAccount.UserStatus = false;
                 return true;
             }
@@ -158,12 +158,12 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> UnbanUser(String uid)
+        public async Task<bool> UnbanUser(UserUidVM uid)
         {
 
             try
             {
-                UserAccount foundAccount = context.UserAccounts.Where(u => u.UserCode == uid).FirstOrDefault();
+                UserAccount foundAccount = context.UserAccounts.Where(u => u.UserId == uid.UserId).FirstOrDefault();
                 foundAccount.UserStatus = true;
                 return true;
             }
