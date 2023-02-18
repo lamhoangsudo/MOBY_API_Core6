@@ -163,7 +163,7 @@ namespace Item.Controllers
         }
 
         [HttpPost("/DeleteItem")]
-        public async Task<IActionResult> DeleteItem(DeleteItemVM itemVM)
+        public async Task<IActionResult> DeleteItem([FromBody] DeleteItemVM itemVM)
         {
             try
             {
@@ -183,8 +183,8 @@ namespace Item.Controllers
             }
         }
 
-        [HttpPost("/Update")]
-        public async Task<IActionResult> UpdateItem(UpdateItemVM itemVM)
+        [HttpPost("/UpdateItem")]
+        public async Task<IActionResult> UpdateItem([FromBody] UpdateItemVM itemVM)
         {
             try
             {

@@ -16,7 +16,7 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPost("CreateCategory")]
-        public async Task<IActionResult> CreateCategory(CreateCategoryVM categoryVM)
+        public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryVM categoryVM)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPut("UpdateCategory")]
-        public async Task<IActionResult> UpdateCategory(UpdateCategoryVM categoryVM)
+        public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryVM categoryVM)
         {
             try
             {
@@ -66,7 +66,7 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPut("DeleteCategory")]
-        public async Task<IActionResult> DeleteCategory(DeleteCategoryVM categoryVM)
+        public async Task<IActionResult> DeleteCategory([FromBody] DeleteCategoryVM categoryVM)
         {
             try
             {
