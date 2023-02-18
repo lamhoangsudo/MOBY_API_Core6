@@ -1,5 +1,6 @@
 ﻿using Category.Data_View_Model;
 using Microsoft.EntityFrameworkCore;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
@@ -32,12 +33,12 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<bool> CreateCategory(string categoryName, string categoryImage)
+        public async Task<bool> CreateCategory(CreateCategoryVM categoryVM)
         {
-            var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Name {categoryName}").ToList().SingleOrDefault();
+            var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Name {categoryVM.categoryName}").ToList().SingleOrDefault();
             if (checkCategory == null)
             {
-                var checkCreate = _context.Database.ExecuteSqlInterpolated($"EXEC create_Category {categoryName}, {categoryImage}");
+                var checkCreate = _context.Database.ExecuteSqlInterpolated($"EXEC create_Category {categoryVM.categoryName}, {categoryVM.categoryImage}");
                 if (checkCreate != 0)
                 {
                     _context.SaveChanges();
@@ -54,12 +55,12 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<bool> UpdateCategory(int categoryID, string categoryName, string categoryImage)
+        public async Task<bool> UpdateCategory(UpdateCategoryVM categoryVM)
         {
-            var checkUpdateCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Name {categoryName}").ToList().SingleOrDefault();
+            var checkUpdateCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Name {categoryVM.categoryName}").ToList().SingleOrDefault();
             if (checkUpdateCategory == null)
             {
-                var checkUpdate = _context.Database.ExecuteSqlInterpolated($"EXEC update_Category {categoryID},{categoryName},{categoryImage}");
+                var checkUpdate = _context.Database.ExecuteSqlInterpolated($"EXEC update_Category {categoryVM.categoryID},{categoryVM.categoryName},{categoryVM.categoryImage}");
                 if (checkUpdate != 0)
                 {
                     _context.SaveChanges();
@@ -77,9 +78,9 @@ namespace MOBY_API_Core6.Repository
 
         }
 
-        public async Task<bool> DeleteCategory(int categoryID)
+        public async Task<bool> DeleteCategory(DeleteCategoryVM categoryVM)
         {
-            var checkDelete = _context.Database.ExecuteSqlInterpolated($"EXEC delete_Category {categoryID}");
+            var checkDelete = _context.Database.ExecuteSqlInterpolated($"EXEC delete_Category {categoryVM.categoryID}");
             if (checkDelete != 0)
             {
                 _context.SaveChanges();

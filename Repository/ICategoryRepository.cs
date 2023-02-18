@@ -1,4 +1,5 @@
 ﻿using Category.Data_View_Model;
+using MOBY_API_Core6.Data_View_Model;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -7,9 +8,9 @@ namespace MOBY_API_Core6.Repository
         Task<List<CategoryVM>> GetAllCategoriesAndSubCategory();
         Task<List<CategoryVM>> GetCategoriesByStatus(bool categoryStatus);
         Task<List<CategoryVM>> GetCategoriesByName(string categoryName);
-        Task<bool> CreateCategory(string categoryName, string categoryImage);
+        Task<bool> CreateCategory(CreateCategoryVM categoryVM);
         Task<CategoryVM> GetCategoryByID(int categoryID);
-        Task<bool> UpdateCategory(int categoryID, string categoryName, string categoryImage);
-        Task<bool> DeleteCategory(int categoryID);
+        Task<bool> UpdateCategory(UpdateCategoryVM categoryVM);
+        Task<bool> DeleteCategory(DeleteCategoryVM categoryVM);
     }
 }

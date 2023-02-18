@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
@@ -14,14 +16,14 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPost("CreateCategory")]
-        public async Task<IActionResult> CreateCategory(string categoryName, string categoryImange)
+        public async Task<IActionResult> CreateCategory(CreateCategoryVM categoryVM)
         {
             try
             {
-                bool checkCreate = await _categoryRepository.CreateCategory(categoryName, categoryImange);
+                bool checkCreate = await _categoryRepository.CreateCategory(categoryVM);
                 if (checkCreate)
                 {
-                    return Ok(categoryName);
+                    return Ok(ReturnMessage.create("da tao thanh cong"));
                 }
                 else
                 {
@@ -35,21 +37,21 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPut("UpdateCategory")]
-        public async Task<IActionResult> UpdateCategory(int categoryID, string categoryName, string categoryImage)
+        public async Task<IActionResult> UpdateCategory(UpdateCategoryVM categoryVM)
         {
             try
             {
-                var category = await _categoryRepository.GetCategoryByID(categoryID);
+                var category = await _categoryRepository.GetCategoryByID(categoryVM.categoryID);
                 if (category == null || category.CategoryStatus == false)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound);
+                    return NotFound(ReturnMessage.create("khong tim thay"));
                 }
                 else
                 {
-                    bool check = await _categoryRepository.UpdateCategory(categoryID, categoryName, categoryImage);
+                    bool check = await _categoryRepository.UpdateCategory(categoryVM);
                     if (check == true)
                     {
-                        return Ok(categoryName);
+                        return Ok(ReturnMessage.create("da edit thanh cong"));
                     }
                     else
                     {
@@ -64,21 +66,21 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPut("DeleteCategory")]
-        public async Task<IActionResult> DeleteCategory(int categoryID)
+        public async Task<IActionResult> DeleteCategory(DeleteCategoryVM categoryVM)
         {
             try
             {
-                var category = await _categoryRepository.GetCategoryByID(categoryID);
+                var category = await _categoryRepository.GetCategoryByID(categoryVM.categoryID);
                 if (category == null || category.CategoryStatus == false)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound);
+                    return NotFound(ReturnMessage.create("khong tim thay"));
                 }
                 else
                 {
-                    bool check = await _categoryRepository.DeleteCategory(categoryID);
+                    bool check = await _categoryRepository.DeleteCategory(categoryVM);
                     if (check == true)
                     {
-                        return Ok(category);
+                        return Ok(ReturnMessage.create("da update thanh cong"));
                     }
                     else
                     {
