@@ -16,7 +16,7 @@ namespace Item.Controllers
             _itemRepository = itemRepository;
         }
 
-        [HttpPost("/CreateItem")]
+        [HttpPost("CreateItem")]
         public async Task<IActionResult> CreateItem([FromBody] CreateItemVM itemVM)
         {
             try
@@ -36,7 +36,7 @@ namespace Item.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpGet("/GetAllBriefItemAndBriefRequest")]
+        [HttpGet("GetAllBriefItemAndBriefRequest")]
         public async Task<IActionResult> GetAllBriefItem(bool share)
         {
             try
@@ -57,7 +57,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/GetItemDetail")]
+        [HttpGet("GetItemDetail")]
         public async Task<IActionResult> GetItemDetail(int itemID)
         {
             try
@@ -78,7 +78,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/GetBriefItemByUserId")]
+        [HttpGet("GetBriefItemByUserId")]
         public async Task<IActionResult> GetBriefItemByUserID(int userID)
         {
             try
@@ -99,7 +99,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/SearchBriefItemByUserId")]
+        [HttpGet("SearchBriefItemByUserId")]
         public async Task<IActionResult> SearchBriefItemByTitle(string itemTitle)
         {
             try
@@ -120,7 +120,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/SearchBriefItemBySubCategoryID")]
+        [HttpGet("SearchBriefItemBySubCategoryID")]
         public async Task<IActionResult> SearchBriefItemBySubCategoryID(int subCategoryID)
         {
             try
@@ -141,7 +141,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/SearchBriefItemByCategoryID")]
+        [HttpGet("SearchBriefItemByCategoryID")]
         public async Task<IActionResult> SearchBriefItemByCategoryID(int categoryID)
         {
             try
@@ -162,7 +162,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpPost("/DeleteItem")]
+        [HttpPost("DeleteItem")]
         public async Task<IActionResult> DeleteItem([FromBody] DeleteItemVM itemVM)
         {
             try
@@ -183,7 +183,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpPost("/UpdateItem")]
+        [HttpPost("UpdateItem")]
         public async Task<IActionResult> UpdateItem([FromBody] UpdateItemVM itemVM)
         {
             try
@@ -204,7 +204,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("/GetAllBriefItemAndBriefRequestByUserID")]
+        [HttpGet("GetAllBriefItemAndBriefRequestByUserID")]
         public async Task<IActionResult> GetAllBriefItemAndBriefRequestByUserID(int userID, bool share)
         {
             try
