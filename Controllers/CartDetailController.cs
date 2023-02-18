@@ -6,7 +6,7 @@ using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
 {
-    [Route("api/[controller]")]
+
     [ApiController]
     public class CartDetailController : ControllerBase
     {
@@ -23,7 +23,7 @@ namespace MOBY_API_Core6.Controllers
         }
         [Authorize]
         [HttpGet]
-        [Route("api/CartDetailController/GetAllCartDetail")]
+        [Route("api/useraccount/cartdetail/all")]
         public async Task<IActionResult> GetAllCartDetail()
         {
             int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
@@ -41,14 +41,14 @@ namespace MOBY_API_Core6.Controllers
         }
         [Authorize]
         [HttpGet]
-        [Route("api/CartDetailController/GetCartDetailOfItemForOwner")]
+        [Route("api/useraccount/item/cartdetail")]
         public async Task<IActionResult> GetCartDetailOfItemForOwner()
         {
             int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            List<BriefItem> listItem = await itemDAO.GetBriefItemByUserID(uid);
+            List<BriefItem> listItemByUserId = await itemDAO.GetBriefItemByUserID(uid);
             List<CartDetailVM> listCartDetailResult = new List<CartDetailVM>();
             List<CartDetailVM> listcartDetailVMByItemID = new List<CartDetailVM>();
-            foreach (BriefItem item in listItem)
+            foreach (BriefItem item in listItemByUserId)
             {
                 listcartDetailVMByItemID = await cartDetailDAO.GetCartDetailByItemID(item.ItemId);
                 foreach (CartDetailVM vm in listcartDetailVMByItemID)
@@ -56,20 +56,14 @@ namespace MOBY_API_Core6.Controllers
                     listCartDetailResult.Add(vm);
                 }
             }
-            if (listCartDetailResult.Count > 0)
-            {
-                return Ok(listCartDetailResult);
-            }
-            else
-            {
-                return Ok(ReturnMessage.create("this user didn't has any request"));
-            }
 
+            return Ok(listCartDetailResult);
 
         }
+
         [Authorize]
         [HttpPost]
-        [Route("api/CartDetailController/CreateCartDetail")]
+        [Route("api/cartdetail/create")]
         public async Task<IActionResult> CreateCartDetail([FromBody] CreateCartDetailVM createdCartDetail)
         {
             int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
@@ -82,8 +76,8 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpPost]
-        [Route("api/CartDetailController/AcceptCartDetail")]
+        [HttpPatch]
+        [Route("api/cartdetail/accept")]
         public async Task<IActionResult> AcceptCartDetail([FromBody] CartDetailIdVM CartDetailID)
         {
             var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetailID.CartDetailId);
@@ -95,8 +89,8 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpPost]
-        [Route("api/CartDetailController/CancelCartDetail")]
+        [HttpPatch]
+        [Route("api/cartdetail/cancel")]
         public async Task<IActionResult> CancelCartDetail([FromBody] CartDetailIdVM CartDetailID)
         {
             var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetailID.CartDetailId);
@@ -109,8 +103,8 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpPost]
-        [Route("api/CartDetailController/ConfirmCartDetail")]
+        [HttpPatch]
+        [Route("api/cartdetail/confirm")]
         public async Task<IActionResult> ConfirmCartDetail([FromBody] CartDetailIdVM CartDetailID)
         {
             var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetailID.CartDetailId);
