@@ -5,6 +5,7 @@ namespace MOBY_API_Core6.Repository
 {
     public class ItemRepository : IItemRepository
     {
+        public static string errorMessage;
         private readonly MOBYContext _context;
         public ItemRepository(MOBYContext context)
         {
@@ -18,20 +19,31 @@ namespace MOBY_API_Core6.Repository
                 var checkSubCategoryExists = _context.SubCategories.Where(sc => sc.SubCategoryId == itemVM.subCategoryId).ToList().SingleOrDefault();
                 if (checkSubCategoryExists == null || checkUserExist == null)
                 {
+                    errorMessage = "danh mục or tài khoản bạn nhập không tồn tại";
                     return false;
                 }
                 else
                 {
                     DateTime dateTimeCreate = DateTime.Now;
                     DateTime? dateTimeExpired = null;
-                    if (itemVM.stringDateTimeExpired != null || !(itemVM.stringDateTimeExpired.Equals("")))
+                    if (!string.IsNullOrEmpty(itemVM.stringDateTimeExpired) && !string.IsNullOrWhiteSpace(itemVM.stringDateTimeExpired))
                     {
-                        dateTimeExpired = DateTime.Parse(itemVM.stringDateTimeExpired);
-                        bool check = dateTimeExpired > dateTimeCreate;
-                        if (check == false)
+                        try
                         {
+                            dateTimeExpired = DateTime.Parse(itemVM.stringDateTimeExpired);
+                            bool check = dateTimeExpired > dateTimeCreate;
+                            if (check == false)
+                            {
+                                errorMessage = "bạn đã nhập ngày hết hạn sau ngày tạo";
+                                return false;
+                            }
+                        }
+                        catch
+                        {
+                            errorMessage = "bạn đã nhập sai format ngày, fotmat của chúng tôi là yyyy/mm/dd";
                             return false;
                         }
+
                     }
                     string itemCode = Guid.NewGuid().ToString();
                     Models.Item item = new Models.Item();
@@ -58,8 +70,9 @@ namespace MOBY_API_Core6.Repository
                     return true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                errorMessage = "có lỗi khi tạo sản phẩm này" + ex.Message;
                 return false;
             }
         }
@@ -288,14 +301,14 @@ namespace MOBY_API_Core6.Repository
                         currentItem.SubCategoryId = itemVM.subCategoryId;
                         currentItem.ItemTitle = itemVM.itemTitle;
                         currentItem.ItemDetailedDescription = itemVM.itemDetailedDescription;
-                        currentItem.ItemMass= itemVM.itemMass;
-                        currentItem.ItemSize= itemVM.itemSize;
-                        currentItem.ItemQuanlity= itemVM.itemQuanlity;
-                        currentItem.ItemEstimateValue= itemVM.itemEstimateValue;
-                        currentItem.ItemSalePrice= itemVM.itemSalePrice;
-                        currentItem.ItemShareAmount= itemVM.itemShareAmount;
-                        currentItem.ItemSponsoredOrderShippingFee= itemVM.itemSponsoredOrderShippingFee;
-                        currentItem.ItemShippingAddress= itemVM.itemShippingAddress;
+                        currentItem.ItemMass = itemVM.itemMass;
+                        currentItem.ItemSize = itemVM.itemSize;
+                        currentItem.ItemQuanlity = itemVM.itemQuanlity;
+                        currentItem.ItemEstimateValue = itemVM.itemEstimateValue;
+                        currentItem.ItemSalePrice = itemVM.itemSalePrice;
+                        currentItem.ItemShareAmount = itemVM.itemShareAmount;
+                        currentItem.ItemSponsoredOrderShippingFee = itemVM.itemSponsoredOrderShippingFee;
+                        currentItem.ItemShippingAddress = itemVM.itemShippingAddress;
                         currentItem.Image = itemVM.image;
                         currentItem.ItemExpiredTime = dateTimeExpired;
                         currentItem.ItemDateUpdate = dateTimeUpdate;

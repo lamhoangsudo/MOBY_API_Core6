@@ -28,7 +28,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return BadRequest(ReturnMessage.create(ItemRepository.errorMessage));
                 }
             }
             catch
