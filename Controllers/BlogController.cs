@@ -28,16 +28,11 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 List<BlogVM> ListBlog = await BlogDAO.getAllBlog();
-                if (ListBlog.Count > 0)
-                {
-                    return Ok(ListBlog);
-                }
-                else
-                {
-                    return Ok(ReturnMessage.create("there no Blog"));
-                }
+
+                return Ok(ListBlog);
+
             }
-            catch (Exception ex)
+            catch
             {
                 return BadRequest(ReturnMessage.create("error at getAllBlog"));
             }
@@ -50,16 +45,11 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 List<BlogVM> ListBlog = await BlogDAO.getBlogByBlogCateID(blogCateID);
-                if (ListBlog.Count > 0)
-                {
-                    return Ok(ListBlog);
-                }
-                else
-                {
-                    return Ok(ReturnMessage.create("there no Blog"));
-                }
+
+                return Ok(ListBlog);
+
             }
-            catch (Exception ex)
+            catch
             {
                 return BadRequest(ReturnMessage.create("error at getBlogByBlogCate"));
             }
@@ -74,14 +64,7 @@ namespace MOBY_API_Core6.Controllers
             {
                 int UserID = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 List<BlogVM> ListBlog = await BlogDAO.getBlogByUserID(UserID);
-                if (ListBlog.Count > 0)
-                {
-                    return Ok(ListBlog);
-                }
-                else
-                {
-                    return Ok(ReturnMessage.create("there no Blog"));
-                }
+                return Ok(ListBlog);
             }
             catch (Exception ex)
             {
@@ -108,7 +91,7 @@ namespace MOBY_API_Core6.Controllers
                     return BadRequest(ReturnMessage.create("error at CreateBlog"));
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 return BadRequest(ReturnMessage.create("error at CreateBlog"));
             }
@@ -138,7 +121,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 return BadRequest(ReturnMessage.create("error at UpdateBlog"));
             }
-            catch (Exception ex)
+            catch
             {
                 return BadRequest(ReturnMessage.create("error at UpdateBlog"));
             }
@@ -168,7 +151,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 return BadRequest(ReturnMessage.create("error at AcceptBlog"));
             }
-            catch (Exception ex)
+            catch
             {
                 return BadRequest(ReturnMessage.create("error at AcceptBlog"));
             }
@@ -198,7 +181,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 return BadRequest(ReturnMessage.create("error at DenyBlog"));
             }
-            catch (Exception ex)
+            catch
             {
                 return BadRequest(ReturnMessage.create("error at DenyBlog"));
             }
