@@ -5,7 +5,7 @@ using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
 {
-    [Route("api/[controller]")]
+
     [ApiController]
     public class BlogCategoryController : ControllerBase
     {
@@ -18,37 +18,24 @@ namespace MOBY_API_Core6.Controllers
 
 
         [HttpGet]
-        [Route("api/BlogCategoryController/GetALlBlogCategory")]
+        [Route("api/blogcategory/all")]
         public async Task<IActionResult> GetALlBlogCategory()
         {
             List<BlogCategoryVM> BlogCateList = await BlogCateDAO.GetAllBlogCategory();
-            if (BlogCateList.Count == 0)
-            {
-                return Ok(ReturnMessage.create("there no Blog Category"));
-            }
-            else
+            return Ok(BlogCateList);
 
-            {
-                return Ok(BlogCateList);
-            }
         }
         [HttpGet]
-        [Route("api/BlogCategoryController/GetBlogCategoryNameByID")]
-        public async Task<IActionResult> GetBlogCategoryNameByID(int id)
+        [Route("api/blogcategory")]
+        public async Task<IActionResult> GetBlogCategoryNameByID([FromQuery] BlogCateGetVM blogCateGetVM)
         {
-            String BlogCateName = await BlogCateDAO.GetBlogCateNameByID(id);
-            if (BlogCateName == null)
-            {
-                return Ok(ReturnMessage.create("there no Blog Category"));
-            }
-            else
+            String BlogCateName = await BlogCateDAO.GetBlogCateNameByID(blogCateGetVM.BlogCategoryId);
 
-            {
-                return Ok(BlogCateName);
-            }
+            return Ok(BlogCateName);
+
         }
         [HttpPost]
-        [Route("api/BlogCategoryController/CreateBlogCategory")]
+        [Route("api/blogcategory/create")]
         public async Task<IActionResult> CreateBlogCategory([FromBody] CreateBlogCategoryName blogCateName)
         {
 

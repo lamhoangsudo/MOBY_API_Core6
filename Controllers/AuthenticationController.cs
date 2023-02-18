@@ -4,7 +4,7 @@ using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
 {
-    [Route("api/[controller]")]
+
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
@@ -14,7 +14,7 @@ namespace MOBY_API_Core6.Controllers
             this.userDAO = userDao;
         }
         [HttpGet]
-        [Route("api/AuthenticationController/CheckLogin")]
+        [Route("api/useraccount/check")]
         public async Task<IActionResult> PostGoogleAuthentication()
         {
 
