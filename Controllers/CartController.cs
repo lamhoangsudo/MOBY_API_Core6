@@ -6,7 +6,7 @@ using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
 {
-
+    [Route("api/[controller]")]
     [ApiController]
     public class CartController : ControllerBase
     {
@@ -19,7 +19,7 @@ namespace MOBY_API_Core6.Controllers
         }
         [Authorize]
         [HttpPost]
-        [Route("api/cart/create")]
+        [Route("api/CartController/CreateCart")]
         public async Task<IActionResult> CreateCart()
         {
             var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
@@ -36,7 +36,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("api/useraccount/cart")]
+        [Route("api/CartController/getCartByUid")]
         public async Task<IActionResult> GetCartByUid()
         {
             int currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);

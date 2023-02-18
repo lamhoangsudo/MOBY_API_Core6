@@ -6,7 +6,7 @@ using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
 {
-
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -17,7 +17,7 @@ namespace MOBY_API_Core6.Controllers
         }
         [Authorize]
         [HttpPost]
-        [Route("api/useraccount/create")]
+        [Route("api/UserController/CreateAccount")]
         public async Task<IActionResult> CreateAccount([FromBody] CreateAccountVM createUserVM)
 
         {
@@ -37,8 +37,8 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpPut]
-        [Route("api/useraccount")]
+        [HttpPost]
+        [Route("api/UserController/UpdateAccount")]
         public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateAccountVM accountVM)
         {
             //UserAccounts currentUser = new UserAccounts();
@@ -60,8 +60,8 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpPatch]
-        [Route("api/useraccount/ban")]
+        [HttpPost]
+        [Route("api/UserController/BanAccount")]
         public async Task<IActionResult> BanUser([FromBody] UserUidVM uid)
         {
             //UserAccounts currentUser = new UserAccounts();
@@ -76,8 +76,8 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpPatch]
-        [Route("api/useraccount/unban")]
+        [HttpPost]
+        [Route("api/UserController/UnBanAccount")]
         public async Task<IActionResult> UnBanUser([FromBody] UserUidVM uid)
         {
             //UserAccounts currentUser = new UserAccounts();
@@ -91,7 +91,7 @@ namespace MOBY_API_Core6.Controllers
         }
         [Authorize]
         [HttpGet]
-        [Route("api/useraccount/all")]
+        [Route("api/UserController/GetAllUser")]
         public async Task<IActionResult> GetAllUser()
         {
             List<UserVM> list = new List<UserVM>();
@@ -106,7 +106,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("api/useraccount/token")]
+        [Route("api/UserController/GetUserInfo")]
         public async Task<IActionResult> GetUserInfo()
         {
             UserAccount currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
@@ -124,10 +124,10 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("api/useraccount")]
-        public async Task<IActionResult> GetUserInfoByQuery([FromQuery] UserUidVM uid)
+        [Route("api/UserController/GetUserInfoByID")]
+        public async Task<IActionResult> GetUserInfoByID(int uid)
         {
-            UserAccount currentUser = await userDAO.FindUserByUid(uid.UserId);
+            UserAccount currentUser = await userDAO.FindUserByUid(uid);
 
 
 

@@ -6,6 +6,7 @@ using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
     public class BlogController : ControllerBase
     {
@@ -21,16 +22,20 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpGet]
-        [Route("api/blog/all")]
+        [Route("api/BlogController/getAllBlog")]
         public async Task<IActionResult> getAllBlog()
         {
             try
             {
                 List<BlogVM> ListBlog = await BlogDAO.getAllBlog();
-
-                return Ok(ListBlog);
-
-
+                if (ListBlog.Count > 0)
+                {
+                    return Ok(ListBlog);
+                }
+                else
+                {
+                    return Ok(ReturnMessage.create("there no Blog"));
+                }
             }
             catch (Exception ex)
             {
@@ -38,32 +43,21 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-
-
         [HttpGet]
-        [Route("api/blog")]
-
-        public async Task<IActionResult> getBlogByQuery([FromQuery] BlogGetVM blogGetVM)
+        [Route("api/BlogController/getBlogByBlogCate")]
+        public async Task<IActionResult> getBlogByBlogCate(int blogCateID)
         {
             try
             {
-                if (blogGetVM.categoryId != null)
+                List<BlogVM> ListBlog = await BlogDAO.getBlogByBlogCateID(blogCateID);
+                if (ListBlog.Count > 0)
                 {
-                    List<BlogVM> ListBlog = await BlogDAO.getBlogByBlogCateID(blogGetVM.categoryId.Value);
-
                     return Ok(ListBlog);
-
                 }
-                else if (blogGetVM.userId != null)
+                else
                 {
-                    List<BlogVM> ListBlog = await BlogDAO.getBlogByUserID(blogGetVM.userId.Value);
-
-                    return Ok(ListBlog);
-
+                    return Ok(ReturnMessage.create("there no Blog"));
                 }
-
-                return BadRequest(ReturnMessage.create("missiong query at get blog"));
-
             }
             catch (Exception ex)
             {
@@ -73,16 +67,21 @@ namespace MOBY_API_Core6.Controllers
         }
         [Authorize]
         [HttpGet]
-        [Route("api/useraccount/blog")]
-        public async Task<IActionResult> getBlogByToken()
+        [Route("api/BlogController/getBlogByUserID")]
+        public async Task<IActionResult> getBlogByUserID()
         {
             try
             {
                 int UserID = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 List<BlogVM> ListBlog = await BlogDAO.getBlogByUserID(UserID);
-
-                return Ok(ListBlog);
-
+                if (ListBlog.Count > 0)
+                {
+                    return Ok(ListBlog);
+                }
+                else
+                {
+                    return Ok(ReturnMessage.create("there no Blog"));
+                }
             }
             catch (Exception ex)
             {
@@ -93,7 +92,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost]
-        [Route("api/blog/create")]
+        [Route("api/BlogController/CreateBlog")]
         public async Task<IActionResult> CreateBlog([FromBody] CreateBlogVM createdBlog)
         {
             try
@@ -117,8 +116,8 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpPut]
-        [Route("api/blog")]
+        [HttpPost]
+        [Route("api/BlogController/UpdateBlog")]
         public async Task<IActionResult> UpdateBlog([FromBody] UpdateBlogVM UpdatedBlog)
         {
             try
@@ -147,8 +146,8 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpPatch]
-        [Route("api/blog/accept")]
+        [HttpPost]
+        [Route("api/BlogController/AcceptBlog")]
         public async Task<IActionResult> AcceptBlog([FromBody] BlogIdVM blogId)
         {
             try
@@ -177,8 +176,8 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpPatch]
-        [Route("api/blog/deny")]
+        [HttpPost]
+        [Route("api/BlogController/DenyBlog")]
         public async Task<IActionResult> DenyBlog([FromBody] BlogIdVM blogId)
         {
             try
