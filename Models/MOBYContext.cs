@@ -32,7 +32,9 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
         public virtual DbSet<CheckUserExist> CheckUserExists { get; set; } = null!;
         public virtual DbSet<CheckSubCategoryExist> CheckSubCategoryExists { get; set; } = null!;
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Banner>(entity =>

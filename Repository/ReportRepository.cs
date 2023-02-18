@@ -43,7 +43,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == false).FirstOrDefault();
+                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 1).FirstOrDefault();
                 if (report != null)
                 {
                     report.ReportDateUpdate = DateTime.Now;
@@ -66,7 +66,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == false).FirstOrDefault();
+                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 1).FirstOrDefault();
                 if (report != null)
                 {
                     report.ReportDateUpdate = DateTime.Now;

@@ -9,7 +9,7 @@ namespace MOBY_API_Core6.Models
         public int ItemId { get; set; }
         public DateTime ReportDateCreate { get; set; }
         public DateTime? ReportDateUpdate { get; set; }
-        public bool ReportStatus { get; set; }
+        public int ReportStatus { get; set; }
         public string? ReportContent { get; set; }
         public string? Image { get; set; }
 

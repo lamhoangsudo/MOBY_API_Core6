@@ -20,11 +20,18 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<bool> createBlogCategory(String name)
         {
-            BlogCategory newBlogCategory = new BlogCategory();
-            newBlogCategory.BlogCategoryName = name;
-            context.BlogCategories.Add(newBlogCategory);
-            context.SaveChanges();
-            return true;
+            try
+            {
+                BlogCategory newBlogCategory = new BlogCategory();
+                newBlogCategory.BlogCategoryName = name;
+                context.BlogCategories.Add(newBlogCategory);
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
         public async Task<String> GetBlogCateNameByID(int blogCateId)
         {
