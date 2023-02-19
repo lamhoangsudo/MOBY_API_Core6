@@ -99,7 +99,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("SearchBriefItemByUserId")]
+        [HttpGet("SearchBriefItemByTitle")]
         public async Task<IActionResult> SearchBriefItemByTitle(string itemTitle)
         {
             try
@@ -162,7 +162,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpPost("DeleteItem")]
+        [HttpPatch("DeleteItem")]
         public async Task<IActionResult> DeleteItem([FromBody] DeleteItemVM itemVM)
         {
             try
@@ -183,7 +183,7 @@ namespace Item.Controllers
             }
         }
 
-        [HttpPost("UpdateItem")]
+        [HttpPut("UpdateItem")]
         public async Task<IActionResult> UpdateItem([FromBody] UpdateItemVM itemVM)
         {
             try

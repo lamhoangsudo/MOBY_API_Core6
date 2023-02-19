@@ -35,7 +35,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpPost("/UpdateReport")]
+        [HttpPut("/UpdateReport")]
         public async Task<IActionResult> UpdateReport([FromBody] UpdateReportVM reportVM)
         {
             try
@@ -55,7 +55,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
-        [HttpPost("/DeleteReport")]
+        [HttpPatch("/DeleteReport")]
         public async Task<IActionResult> ApprovedItem([FromBody] ApprovedReportVM reportVM)
         {
             try
