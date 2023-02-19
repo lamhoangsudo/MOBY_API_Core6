@@ -5,17 +5,17 @@ namespace MOBY_API_Core6.Data_View_Model
 {
     public class UpdateBlogVM
     {
-        [DefaultValue(1)]
+
         [Required]
         public int BlogId { get; set; }
-        [DefaultValue(1)]
+        [Required]
         public int BlogCategoryId { get; set; }
 
         [DefaultValue("String blogTittle")]
         public string BlogTitle { get; set; } = null!;
-        [DefaultValue("String blogTittle")]
-        public string? BlogDescription { get; set; }
-        [DefaultValue("String blogTittle")]
+        [DefaultValue("String BlogDescription")]
+        public string BlogDescription { get; set; }
+        [DefaultValue("String BlogContent")]
         public string BlogContent { get; set; } = null!;
     }
 }
