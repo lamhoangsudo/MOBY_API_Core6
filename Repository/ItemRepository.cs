@@ -275,6 +275,7 @@ namespace MOBY_API_Core6.Repository
                 bool checkCurrentItem = _context.CartDetails.Where(cd => cd.ItemId == itemVM.itemID).Any();
                 if (checkCurrentItem)
                 {
+                    errorMessage = "danh mục or tài khoản bạn nhập không tồn tại";
                     return false;
                 }
                 else
@@ -289,14 +290,23 @@ namespace MOBY_API_Core6.Repository
                     {
                         DateTime dateTimeUpdate = DateTime.Now;
                         DateTime? dateTimeExpired = null;
-                        if (itemVM.stringDateTimeExpired != null || !(itemVM.stringDateTimeExpired.Equals("")))
+                        try
                         {
-                            dateTimeExpired = DateTime.Parse(itemVM.stringDateTimeExpired);
-                            bool checkDate = dateTimeExpired > dateTimeUpdate;
-                            if (checkDate == false)
+                            if (!string.IsNullOrEmpty(itemVM.stringDateTimeExpired) && !string.IsNullOrWhiteSpace(itemVM.stringDateTimeExpired))
                             {
-                                return false;
+                                dateTimeExpired = DateTime.Parse(itemVM.stringDateTimeExpired);
+                                bool checkDate = dateTimeExpired > dateTimeUpdate;
+                                if (checkDate == false)
+                                {
+                                    errorMessage = "bạn đã nhập ngày hết hạn sau ngày cập nhật";
+                                    return false;
+                                }
                             }
+                        }
+                        catch
+                        {
+                            errorMessage = "bạn đã nhập sai format ngày, fotmat của chúng tôi là yyyy/mm/dd";
+                            return false;
                         }
                         currentItem.SubCategoryId = itemVM.subCategoryId;
                         currentItem.ItemTitle = itemVM.itemTitle;
@@ -318,8 +328,9 @@ namespace MOBY_API_Core6.Repository
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                errorMessage = "có lỗi khi tạo sản phẩm này" + ex.Message;
                 return false;
             }
         }
