@@ -1,17 +1,18 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MOBY_API_Core6.Data_View_Model
 {
     public class CreateBlogVM
     {
-        [DefaultValue(1)]
+        [Required]
         public int BlogCategoryId { get; set; }
 
         [DefaultValue("String blogTittle")]
         public string BlogTitle { get; set; } = null!;
-        [DefaultValue("String blogTittle")]
+        [DefaultValue("String BlogDescription")]
         public string? BlogDescription { get; set; }
-        [DefaultValue("String blogTittle")]
+        [DefaultValue("String BlogContent")]
         public string BlogContent { get; set; } = null!;
     }
 }
