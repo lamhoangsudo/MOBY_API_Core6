@@ -24,5 +24,9 @@ namespace MOBY_API_Core6.Models
         public string Image { get; set; } = null!;
         public string UserName { get; set; } = null!;
         public int UserId { get; set; }
+        public int SubCategoryId { get; set; }
+        public string SubCategoryName { get; set; } = null!;
+        public int CategoryId { get; set; }
+        public string CategoryName { get; set; } = null!;
     }
 }

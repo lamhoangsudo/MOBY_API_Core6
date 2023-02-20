@@ -30,8 +30,6 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<SubCategory> SubCategories { get; set; } = null!;
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
-        public virtual DbSet<CheckUserExist> CheckUserExists { get; set; } = null!;
-        public virtual DbSet<CheckSubCategoryExist> CheckSubCategoryExists { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
@@ -189,6 +187,10 @@ namespace MOBY_API_Core6.Models
 
                 entity.ToView("DetailItem");
 
+                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
+                entity.Property(e => e.CategoryName).HasColumnName("Category_Name");
+
                 entity.Property(e => e.ItemCode).HasColumnName("Item_Code");
 
                 entity.Property(e => e.ItemDateCreated)
@@ -223,6 +225,10 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
 
+                entity.Property(e => e.SubCategoryId).HasColumnName("Sub_CategoryID");
+
+                entity.Property(e => e.SubCategoryName).HasColumnName("Sub_Category_Name");
+
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
@@ -233,6 +239,10 @@ namespace MOBY_API_Core6.Models
                 entity.HasNoKey();
 
                 entity.ToView("DetailItemRequest");
+
+                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
+                entity.Property(e => e.CategoryName).HasColumnName("Category_Name");
 
                 entity.Property(e => e.ItemCode).HasColumnName("Item_Code");
 
@@ -257,6 +267,10 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.ItemStatus).HasColumnName("Item_Status");
 
                 entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
+
+                entity.Property(e => e.SubCategoryId).HasColumnName("Sub_CategoryID");
+
+                entity.Property(e => e.SubCategoryName).HasColumnName("Sub_Category_Name");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
