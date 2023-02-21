@@ -28,7 +28,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create(ItemRepository.errorMessage));
+                    return NotFound(ReturnMessage.create(ItemRepository.errorMessage));
                 }
             }
             catch (Exception ex)
@@ -42,9 +42,9 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share, status);
-                if (listBriefItem == null || listBriefItem.Count() == 0)
+                if (listBriefItem == null || listBriefItem.Count == 0)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return BadRequest();
                 }
                 else
                 {
@@ -65,7 +65,7 @@ namespace Item.Controllers
                 DetailItem itemDetail = await _itemRepository.GetItemDetail(itemID);
                 if (itemDetail == null)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return BadRequest();
                 }
                 else
                 {
@@ -84,9 +84,9 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItemByUserID = await _itemRepository.GetBriefItemByAndBriefRequestUserID(userID, status);
-                if (listBriefItemByUserID == null || listBriefItemByUserID.Count() == 0)
+                if (listBriefItemByUserID == null || listBriefItemByUserID.Count == 0)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return BadRequest();
                 }
                 else
                 {
@@ -105,9 +105,9 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItemByItemTitle = await _itemRepository.SearchBriefItemByTitle(itemTitle, status);
-                if (listBriefItemByItemTitle == null || listBriefItemByItemTitle.Count() == 0)
+                if (listBriefItemByItemTitle == null || listBriefItemByItemTitle.Count == 0)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return BadRequest();
                 }
                 else
                 {
@@ -126,9 +126,9 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItemBySubCategoryID = await _itemRepository.SearchBriefItemBySubCategoryID(subCategoryID, status);
-                if (listBriefItemBySubCategoryID == null || listBriefItemBySubCategoryID.Count() == 0)
+                if (listBriefItemBySubCategoryID == null || listBriefItemBySubCategoryID.Count == 0)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return BadRequest();
                 }
                 else
                 {
@@ -147,9 +147,9 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItemByCategoryID = await _itemRepository.SearchBriefItemByCategoryID(categoryID, status);
-                if (listBriefItemByCategoryID == null || listBriefItemByCategoryID.Count() == 0)
+                if (listBriefItemByCategoryID == null || listBriefItemByCategoryID.Count == 0)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return BadRequest();
                 }
                 else
                 {
@@ -210,9 +210,9 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItemAndBriefRequestByUserID = await _itemRepository.GetAllMyBriefItemAndBriefRequest(userID, share);
-                if (listBriefItemAndBriefRequestByUserID == null || listBriefItemAndBriefRequestByUserID.Count() == 0)
+                if (listBriefItemAndBriefRequestByUserID == null || listBriefItemAndBriefRequestByUserID.Count == 0)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return BadRequest();
                 }
                 else
                 {
