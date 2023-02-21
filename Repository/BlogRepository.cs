@@ -25,6 +25,14 @@ namespace MOBY_API_Core6.Repository
 
             return blogFound;
         }
+
+        public async Task<Blog> getBlogByBlogIDAndUserId(int blogId, int userId)
+        {
+
+            Blog blogFound = context.Blogs.Where(b => b.BlogId == blogId && b.UserId == userId).FirstOrDefault();
+
+            return blogFound;
+        }
         public async Task<BlogVM> getBlogVMByBlogID(int id)
         {
 
