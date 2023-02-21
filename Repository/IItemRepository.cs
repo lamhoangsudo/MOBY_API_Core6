@@ -27,6 +27,6 @@ namespace MOBY_API_Core6.Repository
 
         Task<List<BriefItem>?> GetAllMyBriefItemAndBriefRequest(int userID, bool share);
 
-        public Task<List<BriefItem>?> GetAllMyBriefItemAndBriefRequestActiveandUnActive(int userID, bool share, bool status)
+        public Task<List<BriefItem>?> GetAllMyBriefItemAndBriefRequestActiveandUnActive(int userID, bool share, bool status);
     }
 }
