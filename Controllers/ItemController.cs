@@ -24,24 +24,24 @@ namespace Item.Controllers
                 bool checkCreate = await _itemRepository.CreateItem(itemVM);
                 if (checkCreate)
                 {
-                    return Ok("da tao thanh cong");
+                    return Ok(ReturnMessage.create(itemVM + " đã được thêm vào thành công."));
                 }
                 else
                 {
                     return BadRequest(ReturnMessage.create(ItemRepository.errorMessage));
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
             }
         }
         [HttpGet("GetAllBriefItemAndBriefRequest")]
-        public async Task<IActionResult> GetAllBriefItem(bool share)
+        public async Task<IActionResult> GetAllBriefItem(bool share, bool status)
         {
             try
             {
-                List<BriefItem> listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share);
+                List<BriefItem> listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share, status);
                 if (listBriefItem == null || listBriefItem.Count() == 0)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest);
@@ -51,9 +51,9 @@ namespace Item.Controllers
                     return Ok(listBriefItem);
                 }
             }
-            catch(Exception e)
+            catch(Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,e);
+                return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
             }
         }
 
@@ -72,18 +72,18 @@ namespace Item.Controllers
                     return Ok(itemDetail);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
-        [HttpGet("GetBriefItemByUserId")]
-        public async Task<IActionResult> GetBriefItemByUserID(int userID)
+        [HttpGet("GetBriefItemByAndBriefRequestUserID")]
+        public async Task<IActionResult> GetBriefItemByUserID(int userID, bool status)
         {
             try
             {
-                List<BriefItem> listBriefItemByUserID = await _itemRepository.GetBriefItemByUserID(userID);
+                List<BriefItem> listBriefItemByUserID = await _itemRepository.GetBriefItemByAndBriefRequestUserID(userID, status);
                 if (listBriefItemByUserID == null || listBriefItemByUserID.Count() == 0)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest);
@@ -93,18 +93,18 @@ namespace Item.Controllers
                     return Ok(listBriefItemByUserID);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         [HttpGet("SearchBriefItemByTitle")]
-        public async Task<IActionResult> SearchBriefItemByTitle(string itemTitle)
+        public async Task<IActionResult> SearchBriefItemByTitle(string itemTitle, bool status)
         {
             try
             {
-                List<BriefItem> listBriefItemByItemTitle = await _itemRepository.SearchBriefItemByTitle(itemTitle);
+                List<BriefItem> listBriefItemByItemTitle = await _itemRepository.SearchBriefItemByTitle(itemTitle, status);
                 if (listBriefItemByItemTitle == null || listBriefItemByItemTitle.Count() == 0)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest);
@@ -114,18 +114,18 @@ namespace Item.Controllers
                     return Ok(listBriefItemByItemTitle);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         [HttpGet("SearchBriefItemBySubCategoryID")]
-        public async Task<IActionResult> SearchBriefItemBySubCategoryID(int subCategoryID)
+        public async Task<IActionResult> SearchBriefItemBySubCategoryID(int subCategoryID, bool status)
         {
             try
             {
-                List<BriefItem> listBriefItemBySubCategoryID = await _itemRepository.SearchBriefItemBySubCategoryID(subCategoryID);
+                List<BriefItem> listBriefItemBySubCategoryID = await _itemRepository.SearchBriefItemBySubCategoryID(subCategoryID, status);
                 if (listBriefItemBySubCategoryID == null || listBriefItemBySubCategoryID.Count() == 0)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest);
@@ -135,18 +135,18 @@ namespace Item.Controllers
                     return Ok(listBriefItemBySubCategoryID);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         [HttpGet("SearchBriefItemByCategoryID")]
-        public async Task<IActionResult> SearchBriefItemByCategoryID(int categoryID)
+        public async Task<IActionResult> SearchBriefItemByCategoryID(int categoryID, bool status)
         {
             try
             {
-                List<BriefItem> listBriefItemByCategoryID = await _itemRepository.SearchBriefItemByCategoryID(categoryID);
+                List<BriefItem> listBriefItemByCategoryID = await _itemRepository.SearchBriefItemByCategoryID(categoryID, status);
                 if (listBriefItemByCategoryID == null || listBriefItemByCategoryID.Count() == 0)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest);
@@ -156,9 +156,9 @@ namespace Item.Controllers
                     return Ok(listBriefItemByCategoryID);
                 }
             }
-            catch
+            catch(Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -170,16 +170,16 @@ namespace Item.Controllers
                 bool checkDelete = await _itemRepository.DeleteItem(itemVM);
                 if (checkDelete)
                 {
-                    return Ok("da xoa thanh cong");
+                    return Ok(ReturnMessage.create("sản phẩm này đã xóa thành công"));
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return NotFound(ReturnMessage.create(ItemRepository.errorMessage));
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -191,25 +191,25 @@ namespace Item.Controllers
                 bool checkUpdate = await _itemRepository.UpdateItem(itemVM);
                 if (checkUpdate)
                 {
-                    return Ok("da update thanh cong");
+                    return Ok(ReturnMessage.create("sản phẩm này đã được cập nhập thành công"));
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return NotFound(ReturnMessage.create(ItemRepository.errorMessage));
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
-        [HttpGet("GetAllBriefItemAndBriefRequestByUserID")]
+        [HttpGet("GetAllMyBriefItemAndBriefRequest")]
         public async Task<IActionResult> GetAllBriefItemAndBriefRequestByUserID(int userID, bool share)
         {
             try
             {
-                List<BriefItem> listBriefItemAndBriefRequestByUserID = await _itemRepository.GetAllBriefItemAndBriefRequestByUserID(userID, share);
+                List<BriefItem> listBriefItemAndBriefRequestByUserID = await _itemRepository.GetAllMyBriefItemAndBriefRequest(userID, share);
                 if (listBriefItemAndBriefRequestByUserID == null || listBriefItemAndBriefRequestByUserID.Count() == 0)
                 {
                     return StatusCode(StatusCodes.Status400BadRequest);
@@ -219,9 +219,9 @@ namespace Item.Controllers
                     return Ok(listBriefItemAndBriefRequestByUserID);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }

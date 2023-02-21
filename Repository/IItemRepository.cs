@@ -9,15 +9,15 @@ namespace MOBY_API_Core6.Repository
 
         Task<bool> UpdateItem(UpdateItemVM itemVM);
 
-        Task<List<BriefItem>> GetAllBriefItemAndBriefRequest(bool share);
+        Task<List<BriefItem>> GetAllBriefItemAndBriefRequest(bool share, bool status);
 
-        Task<List<BriefItem>> GetBriefItemByUserID(int userID);
+        Task<List<BriefItem>> GetBriefItemByAndBriefRequestUserID(int userID, bool status);
 
-        Task<List<BriefItem>> SearchBriefItemByTitle(string itemTitle);
+        Task<List<BriefItem>> SearchBriefItemByTitle(string itemTitle, bool status);
 
-        Task<List<BriefItem>> SearchBriefItemBySubCategoryID(int subCategoryID);
+        Task<List<BriefItem>> SearchBriefItemBySubCategoryID(int subCategoryID, bool status);
 
-        Task<List<BriefItem>> SearchBriefItemByCategoryID(int categoryID);
+        Task<List<BriefItem>> SearchBriefItemByCategoryID(int categoryID, bool status);
 
         Task<DetailItem> GetItemDetail(int itemID);
 
@@ -25,6 +25,6 @@ namespace MOBY_API_Core6.Repository
 
         Task<bool> DeleteItem(DeleteItemVM itemVM);
 
-        Task<List<BriefItem>> GetAllBriefItemAndBriefRequestByUserID(int userID, bool share);
+        Task<List<BriefItem>> GetAllMyBriefItemAndBriefRequest(int userID, bool share);
     }
 }

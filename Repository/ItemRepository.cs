@@ -77,11 +77,11 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>> GetAllBriefItemAndBriefRequest(bool share)
+        public async Task<List<BriefItem>> GetAllBriefItemAndBriefRequest(bool share, bool status)
         {
             try
             {
-                var listBriefItem = _context.BriefItems.Where(bf => bf.Share == share).ToList();
+                var listBriefItem = _context.BriefItems.Where(bf => bf.Share == share && bf.ItemStatus == status).ToList();
                 if (listBriefItem == null || listBriefItem.Count() == 0)
                 {
                     return null;
@@ -97,7 +97,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>> SearchBriefItemByTitle(string itemTitle)
+        public async Task<List<BriefItem>> SearchBriefItemByTitle(string itemTitle, bool status)
         {
             try
             {
@@ -117,11 +117,11 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>> GetBriefItemByUserID(int userID)
+        public async Task<List<BriefItem>> GetBriefItemByAndBriefRequestUserID(int userID, bool status)
         {
             try
             {
-                var listBriefItemByUserID = _context.BriefItems.Where(bf => bf.UserId == userID).ToList();
+                var listBriefItemByUserID = _context.BriefItems.Where(bf => bf.UserId == userID && bf.ItemStatus == status).ToList();
                 if (listBriefItemByUserID == null || listBriefItemByUserID.Count() == 0)
                 {
                     return null;
@@ -137,11 +137,11 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>> GetBriefItemByShare(bool share)
+        public async Task<List<BriefItem>> GetBriefItemByShare(bool share, bool status)
         {
             try
             {
-                var listBriefItemByUserID = _context.BriefItems.Where(bf => bf.Share == share).ToList();
+                var listBriefItemByUserID = _context.BriefItems.Where(bf => bf.Share == share && bf.ItemStatus == status).ToList();
                 if (listBriefItemByUserID == null || listBriefItemByUserID.Count() == 0)
                 {
                     return null;
@@ -197,11 +197,11 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>> SearchBriefItemBySubCategoryID(int subCategoryID)
+        public async Task<List<BriefItem>> SearchBriefItemBySubCategoryID(int subCategoryID, bool status)
         {
             try
             {
-                var listBriefItemBySubCategoryID = _context.BriefItems.Where(bf => bf.SubCategoryId == subCategoryID).ToList();
+                var listBriefItemBySubCategoryID = _context.BriefItems.Where(bf => bf.SubCategoryId == subCategoryID && bf.ItemStatus == status).ToList();
                 if (listBriefItemBySubCategoryID == null || listBriefItemBySubCategoryID.Count() == 0)
                 {
                     return null;
@@ -217,11 +217,11 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>> SearchBriefItemByCategoryID(int categoryID)
+        public async Task<List<BriefItem>> SearchBriefItemByCategoryID(int categoryID, bool status)
         {
             try
             {
-                var listBriefItemByCategoryID = _context.BriefItems.Where(bf => bf.CategoryId == categoryID).ToList();
+                var listBriefItemByCategoryID = _context.BriefItems.Where(bf => bf.CategoryId == categoryID && bf.ItemStatus == status).ToList();
                 if (listBriefItemByCategoryID == null || listBriefItemByCategoryID.Count() == 0)
                 {
                     return null;
@@ -244,6 +244,7 @@ namespace MOBY_API_Core6.Repository
                 bool check = _context.CartDetails.Where(cd => cd.ItemId == itemVM.itemID).Any();
                 if (check)
                 {
+                    errorMessage = "sản phẩm của bạn đang có người muốn nhận nên bạn không thể cập nhật sản phẩm này";
                     return false;
                 }
                 else
@@ -257,6 +258,7 @@ namespace MOBY_API_Core6.Repository
                     }
                     else
                     {
+                        errorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
                         return false;
                     }
                 }
@@ -275,15 +277,21 @@ namespace MOBY_API_Core6.Repository
                 bool checkCurrentItem = _context.CartDetails.Where(cd => cd.ItemId == itemVM.itemID).Any();
                 if (checkCurrentItem)
                 {
-                    errorMessage = "danh mục or tài khoản bạn nhập không tồn tại";
+                    errorMessage = "sản phẩm của bạn đang có người muốn nhận nên bạn không thể cập nhật sản phẩm này";
                     return false;
                 }
                 else
                 {
                     Models.Item currentItem = _context.Items.Where(it => it.ItemId == itemVM.itemID && it.UserId == itemVM.userId).ToList().SingleOrDefault();
                     var checkSubCategoryExists = _context.SubCategories.Where(sc => sc.SubCategoryId == itemVM.subCategoryId).ToList().SingleOrDefault();
-                    if (currentItem == null || currentItem.ItemStatus == false || checkSubCategoryExists == null)
+                    if (currentItem == null || currentItem.ItemStatus == false)
                     {
+                        errorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
+                        return false;
+                    }
+                    if (checkSubCategoryExists == null)
+                    {
+                        errorMessage = "danh mục bạn chọn không còn tồn tại trong dữ liệu, mong bạn chọn danh mục khác";
                         return false;
                     }
                     else
@@ -330,12 +338,12 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = "có lỗi khi tạo sản phẩm này" + ex.Message;
+                errorMessage = "có lỗi khi cập nhật sản phẩm này" + ex.Message;
                 return false;
             }
         }
 
-        public async Task<List<BriefItem>> GetAllBriefItemAndBriefRequestByUserID(int userID, bool share)
+        public async Task<List<BriefItem>> GetAllMyBriefItemAndBriefRequest(int userID, bool share)
         {
             try
             {
