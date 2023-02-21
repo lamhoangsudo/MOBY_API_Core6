@@ -44,20 +44,26 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
+                List<BlogVM> ListBlog = new List<BlogVM>();
                 if (blogGetVM.categoryId != null)
                 {
-                    List<BlogVM> ListBlog = await BlogDAO.getBlogByBlogCateID(blogGetVM.categoryId.Value);
+                    ListBlog = await BlogDAO.getBlogByBlogCateID(blogGetVM.categoryId.Value);
 
                     return Ok(ListBlog);
 
                 }
                 else if (blogGetVM.userId != null)
                 {
-                    List<BlogVM> ListBlog = await BlogDAO.getBlogByUserID(blogGetVM.userId.Value);
+                    ListBlog = await BlogDAO.getBlogByUserID(blogGetVM.userId.Value);
 
                     return Ok(ListBlog);
                 }
-                return BadRequest(ReturnMessage.create("missiong query at get blog"));
+                else if (blogGetVM.BlogId != null)
+                {
+                    BlogVM foundBlogVM = await BlogDAO.getBlogVMByBlogID(blogGetVM.BlogId.Value);
+                    return Ok(foundBlogVM);
+                }
+                return Ok(ReturnMessage.create("there no field so no blog"));
             }
             catch
             {
@@ -65,6 +71,7 @@ namespace MOBY_API_Core6.Controllers
             }
 
         }
+
         [Authorize]
         [HttpGet]
         [Route("api/useraccount/blog")]
@@ -78,6 +85,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return BadRequest(ReturnMessage.create("error at getBlogByUserID"));
             }
 
