@@ -67,7 +67,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch
             {
-                return BadRequest(ReturnMessage.create("error at getBlogByBlogCate"));
+                return BadRequest(ReturnMessage.create("error at getBlogByQuery"));
             }
 
         }
@@ -124,7 +124,8 @@ namespace MOBY_API_Core6.Controllers
             try
             {
 
-                Blog foundblog = await BlogDAO.getBlogByBlogID(UpdatedBlog.BlogId);
+                int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                Blog foundblog = await BlogDAO.getBlogByBlogIDAndUserId(UpdatedBlog.BlogId, uid);
                 if (foundblog != null)
                 {
                     if (await BlogDAO.UpdateBlog(foundblog, UpdatedBlog))
@@ -165,7 +166,7 @@ namespace MOBY_API_Core6.Controllers
 
                 else
                 {
-                    return BadRequest(ReturnMessage.create("error at AcceptBlog"));
+                    return BadRequest(ReturnMessage.create("found no blog"));
                 }
                 return BadRequest(ReturnMessage.create("error at AcceptBlog"));
             }
@@ -195,13 +196,44 @@ namespace MOBY_API_Core6.Controllers
 
                 else
                 {
-                    return BadRequest(ReturnMessage.create("error at DenyBlog"));
+                    return BadRequest(ReturnMessage.create("found no blog"));
                 }
                 return BadRequest(ReturnMessage.create("error at DenyBlog"));
             }
             catch
             {
                 return BadRequest(ReturnMessage.create("error at DenyBlog"));
+            }
+
+        }
+
+        [Authorize]
+        [HttpPatch]
+        [Route("api/blog/delete")]
+        public async Task<IActionResult> DeleteBlog([FromBody] BlogIdVM blogId)
+        {
+            try
+            {
+
+                int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                Blog foundblog = await BlogDAO.getBlogByBlogIDAndUserId(blogId.BlogId, uid);
+                if (foundblog != null)
+                {
+                    if (await BlogDAO.ConfirmBlog(foundblog, false))
+                    {
+                        return Ok(ReturnMessage.create("success"));
+                    }
+                }
+
+                else
+                {
+                    return BadRequest(ReturnMessage.create("found no blog"));
+                }
+                return BadRequest(ReturnMessage.create("error at DeleteBlog"));
+            }
+            catch
+            {
+                return BadRequest(ReturnMessage.create("error at DeleteBlog"));
             }
 
         }

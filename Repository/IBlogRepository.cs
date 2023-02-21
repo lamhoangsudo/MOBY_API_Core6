@@ -7,6 +7,7 @@ namespace MOBY_API_Core6.Repository
     {
         public Task<List<BlogVM>> getAllBlog();
         public Task<Blog> getBlogByBlogID(int id);
+        public Task<Blog> getBlogByBlogIDAndUserId(int blogId, int userId);
         public Task<BlogVM> getBlogVMByBlogID(int id);
         public Task<List<BlogVM>> getBlogByBlogCateID(int blogCateID);
         public Task<List<BlogVM>> getBlogByUserID(int userID);
