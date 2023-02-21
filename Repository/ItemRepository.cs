@@ -365,5 +365,25 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
+
+        public Task<List<BriefItem>?> GetAllMyBriefItemAndBriefRequestActiveandUnActive(int userID, bool share, bool status)
+        {
+            try
+            {
+                var listBriefItemAndBriefRequestByUserID = _context.BriefItems.Where(bf => bf.Share == share && bf.UserId == userID && bf.ItemStatus == status).ToList();
+                if (listBriefItemAndBriefRequestByUserID == null || listBriefItemAndBriefRequestByUserID.Count == 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    return Task.FromResult(listBriefItemAndBriefRequestByUserID);
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

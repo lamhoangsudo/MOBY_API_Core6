@@ -45,7 +45,7 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> GetCartDetailOfItemForOwner()
         {
             int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            List<BriefItem> listItemByUserId = await itemDAO.GetBriefItemByUserID(uid);
+            List<BriefItem> listItemByUserId = await itemDAO.GetAllMyBriefItemAndBriefRequestActiveandUnActive(uid, true, true);
             List<CartDetailVM> listCartDetailResult = new List<CartDetailVM>();
             List<CartDetailVM> listcartDetailVMByItemID = new List<CartDetailVM>();
             foreach (BriefItem item in listItemByUserId)
