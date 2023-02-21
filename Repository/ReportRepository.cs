@@ -5,6 +5,7 @@ namespace MOBY_API_Core6.Repository
 {
     public class ReportRepository : IReportRepository
     {
+        public static string? errorMessage;
         private readonly MOBYContext _context;
         public ReportRepository(MOBYContext context) 
         {
@@ -26,16 +27,18 @@ namespace MOBY_API_Core6.Repository
                     report.Image = reportVM.image;
                     _context.Reports.Add(report);
                     _context.SaveChanges();
-                    return true;
+                    return await Task.FromResult(true);
                 }
                 else
                 {
-                    return false;
+                    errorMessage = "sản phẩm này không có tồn tại";
+                    return await Task.FromResult(false);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                errorMessage = ex.Message;
+                return await Task.FromResult(false);
             }
         }
 
@@ -49,16 +52,18 @@ namespace MOBY_API_Core6.Repository
                     report.ReportDateUpdate = DateTime.Now;
                     report.ReportStatus = reportVM.isApproved;
                     _context.SaveChanges();
-                    return true;
+                    return await Task.FromResult(true);
                 }
                 else
                 {
-                    return false;
+                    errorMessage = "report này không tồn tại";
+                    return await Task.FromResult(false);
                 }
             }
-            catch
+            catch (Exception ex) 
             {
-                return false;
+                errorMessage = ex.Message;
+                return await Task.FromResult(false);
             }
         }
 
@@ -73,16 +78,48 @@ namespace MOBY_API_Core6.Repository
                     report.ReportContent = reportVM.content;
                     report.Image = reportVM.image;
                     _context.SaveChanges();
-                    return true;
+                    return await Task.FromResult(true);
                 }
                 else
                 {
-                    return false;
+                    errorMessage = "report này không có tồn tại";
+                    return await Task.FromResult(false);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                errorMessage = ex.Message;
+                return await Task.FromResult(false);
+            }
+        }
+
+        public async Task<List<Report>?> GetAllReportByStatus(int status)
+        {
+            try
+            {
+                List<Report> reports = new List<Report>();
+                reports = _context.Reports.Where(rp => rp.ReportStatus == status).ToList();
+                return await Task.FromResult(reports);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<List<Report>?> GetAllReportByUserAndStatus(int status, int userid)
+        {
+            try
+            {
+                List<Report> reports = new List<Report>();
+                reports = _context.Reports.Where(rp => rp.ReportStatus == status).ToList();
+                return await Task.FromResult(reports);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return null;
             }
         }
     }

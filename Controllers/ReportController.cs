@@ -11,7 +11,7 @@ namespace MOBY_API_Core6.Controllers
     public class ReportController : ControllerBase
     {
         public readonly IReportRepository _reportRepository;
-        public ReportController (IReportRepository reportRepository)
+        public ReportController(IReportRepository reportRepository)
         {
             _reportRepository = reportRepository;
         }
@@ -23,16 +23,16 @@ namespace MOBY_API_Core6.Controllers
                 bool checkCreate = await _reportRepository.CreateReport(reportVM);
                 if (checkCreate)
                 {
-                    return Ok("da tao thanh cong");
+                    return Ok(ReturnMessage.create("đã tạo thành công"));
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.errorMessage);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
         [HttpPut("/UpdateReport")]
@@ -43,37 +43,59 @@ namespace MOBY_API_Core6.Controllers
                 bool checkUpdate = await _reportRepository.UpdateReport(reportVM);
                 if (checkUpdate)
                 {
-                    return Ok("da update thanh cong");
+                    return Ok(ReturnMessage.create("đã cập nhập thành công"));
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.errorMessage);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [HttpPatch("/DeleteReport")]
-        public async Task<IActionResult> ApprovedItem([FromBody] ApprovedReportVM reportVM)
+        [HttpPatch("/ApprovedReport")]
+        public async Task<IActionResult> ApprovedReport([FromBody] ApprovedReportVM reportVM)
         {
             try
             {
                 bool checkDelete = await _reportRepository.ApprovedReport(reportVM);
                 if (checkDelete)
                 {
-                    return Ok("da duyet thanh cong");
+                    return Ok(ReturnMessage.create("đã duyệt"));
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.errorMessage);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
+        }
+        [HttpGet("/GetReport/Status?={status}")]
+        public async Task<IActionResult> GetAllReportByStatus(int status)
+        {
+            try
+            {
+                List<Report> reports = await _reportRepository.GetAllReportByStatus(status);
+                if (reports.Count != 0)
+                {
+                    return Ok(reports);
+                }
+                else
+                {
+                    return NotFound(ReturnMessage.create("không có report nào"));
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
         }
     }
 }
