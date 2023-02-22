@@ -75,7 +75,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [HttpGet("/GetReport/Report?Status={status}")]
+        [HttpGet("/GetReport/Status=={status}")]
         public async Task<IActionResult> GetAllReportByStatus(int status)
         {
             try
