@@ -6,7 +6,7 @@ using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
 {
-    [Route("/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ReportController : ControllerBase
     {
