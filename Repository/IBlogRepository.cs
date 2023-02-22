@@ -13,6 +13,6 @@ namespace MOBY_API_Core6.Repository
         public Task<List<BlogVM>> getBlogByUserID(int userID);
         public Task<bool> CreateBlog(CreateBlogVM blogvm, int UserID);
         public Task<bool> UpdateBlog(Blog blog, UpdateBlogVM UpdatedBlogvm);
-        public Task<bool> ConfirmBlog(Blog blog, bool decision);
+        public Task<bool> ConfirmBlog(Blog blog, int decision);
     }
 }

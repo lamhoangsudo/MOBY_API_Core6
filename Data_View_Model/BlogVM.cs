@@ -12,7 +12,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public string BlogContent { get; set; } = null!;
         public DateTime BlogDateCreate { get; set; }
         public DateTime? BlogDateUpdate { get; set; }
-        public bool? BlogStatus { get; set; }
+        public int? BlogStatus { get; set; }
 
         public static BlogVM BlogToVewModel(Blog blog)
         {

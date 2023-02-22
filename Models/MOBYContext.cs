@@ -352,17 +352,19 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
 
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
                 entity.HasOne(d => d.Item)
                     .WithMany(p => p.Reports)
                     .HasForeignKey(d => d.ItemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Report_Items");
+                    .HasConstraintName("FK_Reports_Items");
 
-                entity.HasOne(d => d.ItemNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.Reports)
-                    .HasForeignKey(d => d.ItemId)
+                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Report_UserAccounts");
+                    .HasConstraintName("FK_Reports_UserAccounts");
             });
 
             modelBuilder.Entity<Role>(entity =>

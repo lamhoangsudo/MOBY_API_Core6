@@ -66,7 +66,7 @@ namespace MOBY_API_Core6.Repository
                 newblog.BlogDescription = blogvm.BlogDescription;
                 newblog.BlogContent = blogvm.BlogContent;
                 newblog.BlogDateCreate = DateTime.Now;
-                newblog.BlogStatus = true;
+                newblog.BlogStatus = 0;
                 context.Blogs.Add(newblog);
                 context.SaveChanges();
                 return true;
@@ -82,17 +82,24 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-
-                blog.BlogCategoryId = blogvm.BlogCategoryId;
-
-                blog.BlogTitle = blogvm.BlogTitle;
-                blog.BlogDescription = blogvm.BlogDescription;
-                blog.BlogContent = blogvm.BlogContent;
-                blog.BlogDateUpdate = DateTime.Now;
-                blog.BlogStatus = true;
-
-                context.SaveChanges();
-                return true;
+                if (blog.BlogStatus != 3)
+                {
+                    blog.BlogCategoryId = blogvm.BlogCategoryId;
+                    blog.BlogTitle = blogvm.BlogTitle;
+                    blog.BlogDescription = blogvm.BlogDescription;
+                    blog.BlogContent = blogvm.BlogContent;
+                    blog.BlogDateUpdate = DateTime.Now;
+                    if (blog.BlogStatus == 1 || blog.BlogStatus == 2)
+                    {
+                        blog.BlogStatus = 0;
+                    }
+                    context.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception ex)
             {
@@ -100,7 +107,7 @@ namespace MOBY_API_Core6.Repository
             }
             return false;
         }
-        public async Task<bool> ConfirmBlog(Blog blog, bool decision)
+        public async Task<bool> ConfirmBlog(Blog blog, int decision)
         {
             try
             {

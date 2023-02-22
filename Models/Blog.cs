@@ -13,7 +13,7 @@ namespace MOBY_API_Core6.Models
         public string BlogContent { get; set; } = null!;
         public DateTime BlogDateCreate { get; set; }
         public DateTime? BlogDateUpdate { get; set; }
-        public bool? BlogStatus { get; set; }
+        public int? BlogStatus { get; set; }
 
         public virtual BlogCategory BlogCategory { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;

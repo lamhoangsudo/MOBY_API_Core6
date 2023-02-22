@@ -7,6 +7,7 @@ namespace MOBY_API_Core6.Models
     {
         public int ReportId { get; set; }
         public int ItemId { get; set; }
+        public int UserId { get; set; }
         public DateTime ReportDateCreate { get; set; }
         public DateTime? ReportDateUpdate { get; set; }
         public int ReportStatus { get; set; }
@@ -14,6 +15,6 @@ namespace MOBY_API_Core6.Models
         public string? Image { get; set; }
 
         public virtual Item Item { get; set; } = null!;
-        public virtual UserAccount ItemNavigation { get; set; } = null!;
+        public virtual UserAccount User { get; set; } = null!;
     }
 }

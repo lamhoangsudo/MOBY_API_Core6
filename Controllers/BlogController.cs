@@ -158,7 +158,7 @@ namespace MOBY_API_Core6.Controllers
                 Blog foundblog = await BlogDAO.getBlogByBlogID(blogId.BlogId);
                 if (foundblog != null)
                 {
-                    if (await BlogDAO.ConfirmBlog(foundblog, true))
+                    if (await BlogDAO.ConfirmBlog(foundblog, 1))
                     {
                         return Ok(ReturnMessage.create("success"));
                     }
@@ -188,7 +188,7 @@ namespace MOBY_API_Core6.Controllers
                 Blog foundblog = await BlogDAO.getBlogByBlogID(blogId.BlogId);
                 if (foundblog != null)
                 {
-                    if (await BlogDAO.ConfirmBlog(foundblog, false))
+                    if (await BlogDAO.ConfirmBlog(foundblog, 2))
                     {
                         return Ok(ReturnMessage.create("success"));
                     }
@@ -219,7 +219,7 @@ namespace MOBY_API_Core6.Controllers
                 Blog foundblog = await BlogDAO.getBlogByBlogIDAndUserId(blogId.BlogId, uid);
                 if (foundblog != null)
                 {
-                    if (await BlogDAO.ConfirmBlog(foundblog, false))
+                    if (await BlogDAO.ConfirmBlog(foundblog, 3))
                     {
                         return Ok(ReturnMessage.create("success"));
                     }

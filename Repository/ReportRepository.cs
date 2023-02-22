@@ -16,12 +16,14 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 bool checkItem = _context.Items.Where(it => it.ItemId == reportVM.itemID && it.ItemStatus == true).Any();
-                if (checkItem)
+                bool checkUser = _context.UserAccounts.Where(us => us.UserId == reportVM.userID && us.UserStatus == true).Any();
+                if (checkItem == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
                     Report report = new Report();
                     report.ReportDateCreate = dateTimeCreate;
                     report.ItemId = reportVM.itemID;
+                    report.UserId = reportVM.userID;
                     report.ReportStatus = reportVM.status;
                     report.ReportContent= reportVM.content;
                     report.Image = reportVM.image;
