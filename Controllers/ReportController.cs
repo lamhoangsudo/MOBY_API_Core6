@@ -75,6 +75,26 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [HttpPatch("/DenyReport")]
+        public async Task<IActionResult> DenyReport([FromBody] DenyReportVM reportVM)
+        {
+            try
+            {
+                bool checkDelete = await _reportRepository.DenyReport(reportVM);
+                if (checkDelete)
+                {
+                    return Ok(ReturnMessage.create("đã từ chối"));
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.errorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
         [HttpGet("/GetReport/Status")]
         public async Task<IActionResult> GetAllReportByStatus(int status)
         {

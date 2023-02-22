@@ -10,6 +10,8 @@ namespace MOBY_API_Core6.Repository
         Task<bool> UpdateReport(UpdateReportVM reportVM);
 
         Task<bool> ApprovedReport(ApprovedReportVM reportVM);
+        
+        Task<bool> DenyReport(DenyReportVM reportVM);
 
         Task<List<Report>?> GetAllReportByStatus(int status);
 

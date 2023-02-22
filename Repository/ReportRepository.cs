@@ -67,6 +67,31 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
+        public async Task<bool> DenyReport(DenyReportVM reportVM)
+        {
+            try
+            {
+                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 1).FirstOrDefault();
+                if (report != null)
+                {
+                    report.ReportDateUpdate = DateTime.Now;
+                    report.ReportStatus = reportVM.isDeny;
+                    _context.SaveChanges();
+                    return await Task.FromResult(true);
+                }
+                else
+                {
+                    errorMessage = "report này không tồn tại";
+                    return await Task.FromResult(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return await Task.FromResult(false);
+            }
+        }
+
         public async Task<bool> UpdateReport(UpdateReportVM reportVM)
         {
             try
