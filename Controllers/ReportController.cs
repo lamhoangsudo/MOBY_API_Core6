@@ -15,7 +15,7 @@ namespace MOBY_API_Core6.Controllers
         {
             _reportRepository = reportRepository;
         }
-        [HttpPost("/CreateReport")]
+        [HttpPost("CreateReport")]
         public async Task<IActionResult> CreateReport([FromBody] CreateReportVM reportVM)
         {
             try
@@ -35,7 +35,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [HttpPut("/UpdateReport")]
+        [HttpPut("UpdateReport")]
         public async Task<IActionResult> UpdateReport([FromBody] UpdateReportVM reportVM)
         {
             try
@@ -55,7 +55,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [HttpPatch("/ApprovedReport")]
+        [HttpPatch("ApprovedReport")]
         public async Task<IActionResult> ApprovedReport([FromBody] ApprovedReportVM reportVM)
         {
             try
@@ -75,7 +75,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [HttpPatch("/DenyReport")]
+        [HttpPatch("DenyReport")]
         public async Task<IActionResult> DenyReport([FromBody] DenyReportVM reportVM)
         {
             try
@@ -95,7 +95,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [HttpGet("/GetReport/Status")]
+        [HttpGet("GetReport/Status")]
         public async Task<IActionResult> GetAllReportByStatus(int status)
         {
             try

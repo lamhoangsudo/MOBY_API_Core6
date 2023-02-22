@@ -28,12 +28,12 @@ namespace Item.Controllers
                 }
                 else
                 {
-                    return NotFound(ReturnMessage.create(ItemRepository.errorMessage));
+                    return BadRequest(ReturnMessage.create(ItemRepository.errorMessage));
                 }
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
         [HttpGet("GetAllBriefItemAndBriefRequest")]
@@ -42,18 +42,18 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share, status);
-                if (listBriefItem == null || listBriefItem.Count == 0)
+                if (listBriefItem == null)
                 {
-                    return BadRequest();
+                    return BadRequest(ItemRepository.errorMessage);
                 }
                 else
                 {
                     return Ok(listBriefItem);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -65,11 +65,32 @@ namespace Item.Controllers
                 DetailItem itemDetail = await _itemRepository.GetItemDetail(itemID);
                 if (itemDetail == null)
                 {
-                    return BadRequest();
+                    return NotFound(ReturnMessage.create("sản phẩm này không tồn tại"));
                 }
                 else
                 {
                     return Ok(itemDetail);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("GetRequestDetail")]
+        public async Task<IActionResult> GetRequestDetail(int itemID)
+        {
+            try
+            {
+                DetailItemRequest itemRequestDetail = await _itemRepository.GetRequestDetail(itemID);
+                if (itemRequestDetail == null)
+                {
+                    return NotFound(ReturnMessage.create("yêu cầu này không tồn tại"));
+                }
+                else
+                {
+                    return Ok(itemRequestDetail);
                 }
             }
             catch (Exception ex)
@@ -84,9 +105,9 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItemByUserID = await _itemRepository.GetBriefItemByAndBriefRequestUserID(userID, status);
-                if (listBriefItemByUserID == null || listBriefItemByUserID.Count == 0)
+                if (listBriefItemByUserID == null)
                 {
-                    return BadRequest();
+                    return BadRequest(ItemRepository.errorMessage);
                 }
                 else
                 {
@@ -105,9 +126,9 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItemByItemTitle = await _itemRepository.SearchBriefItemByTitle(itemTitle, status);
-                if (listBriefItemByItemTitle == null || listBriefItemByItemTitle.Count == 0)
+                if (listBriefItemByItemTitle == null)
                 {
-                    return BadRequest();
+                    return BadRequest(ItemRepository.errorMessage);
                 }
                 else
                 {
@@ -126,9 +147,9 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItemBySubCategoryID = await _itemRepository.SearchBriefItemBySubCategoryID(subCategoryID, status);
-                if (listBriefItemBySubCategoryID == null || listBriefItemBySubCategoryID.Count == 0)
+                if (listBriefItemBySubCategoryID == null)
                 {
-                    return BadRequest();
+                    return BadRequest(ItemRepository.errorMessage);
                 }
                 else
                 {
@@ -147,16 +168,16 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItemByCategoryID = await _itemRepository.SearchBriefItemByCategoryID(categoryID, status);
-                if (listBriefItemByCategoryID == null || listBriefItemByCategoryID.Count == 0)
+                if (listBriefItemByCategoryID == null)
                 {
-                    return BadRequest();
+                    return BadRequest(ItemRepository.errorMessage);
                 }
                 else
                 {
                     return Ok(listBriefItemByCategoryID);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
@@ -195,7 +216,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-                    return NotFound(ReturnMessage.create(ItemRepository.errorMessage));
+                    return BadRequest(ReturnMessage.create(ItemRepository.errorMessage));
                 }
             }
             catch (Exception ex)
@@ -210,9 +231,9 @@ namespace Item.Controllers
             try
             {
                 List<BriefItem> listBriefItemAndBriefRequestByUserID = await _itemRepository.GetAllMyBriefItemAndBriefRequest(userID, share);
-                if (listBriefItemAndBriefRequestByUserID == null || listBriefItemAndBriefRequestByUserID.Count == 0)
+                if (listBriefItemAndBriefRequestByUserID == null)
                 {
-                    return BadRequest();
+                    return BadRequest(ItemRepository.errorMessage);
                 }
                 else
                 {

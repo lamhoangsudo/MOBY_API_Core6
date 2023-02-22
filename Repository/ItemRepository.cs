@@ -83,18 +83,17 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItem = _context.BriefItems.Where(bf => bf.Share == share && bf.ItemStatus == status).ToList();
-                if (listBriefItem == null || listBriefItem.Count == 0)
+                List<BriefItem> listBriefItem = new List<BriefItem>();
+                listBriefItem = _context.BriefItems.Where(bf => bf.Share == share && bf.ItemStatus == status).ToList();
+                if (listBriefItem.Count == 0)
                 {
-                    return null;
+                    errorMessage = "không có dữ liệu";
                 }
-                else
-                {
-                    return await Task.FromResult(listBriefItem);
-                }
+                return await Task.FromResult(listBriefItem);
             }
-            catch
+            catch (Exception ex)
             {
+                errorMessage = ex.Message;
                 return null;
             }
         }
@@ -103,18 +102,17 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItemByTitle = _context.BriefItems.Where(bf => bf.ItemTitle.Equals(itemTitle)).ToList();
-                if (listBriefItemByTitle == null || listBriefItemByTitle.Count == 0)
+                List<BriefItem> listBriefItemByTitle = new List<BriefItem>();
+                listBriefItemByTitle = _context.BriefItems.Where(bf => bf.ItemTitle.Equals(itemTitle)).ToList();
+                if (listBriefItemByTitle.Count == 0)
                 {
-                    return null;
+                    errorMessage = "không có dữ liệu";
                 }
-                else
-                {
-                    return await Task.FromResult(listBriefItemByTitle);
-                }
+                return await Task.FromResult(listBriefItemByTitle);
             }
-            catch
+            catch (Exception ex)
             {
+                errorMessage = ex.Message;
                 return null;
             }
         }
@@ -123,18 +121,17 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItemByUserID = _context.BriefItems.Where(bf => bf.UserId == userID && bf.ItemStatus == status).ToList();
-                if (listBriefItemByUserID == null || listBriefItemByUserID.Count == 0)
+                List<BriefItem> listBriefItemByUserID = new List<BriefItem>();
+                listBriefItemByUserID = _context.BriefItems.Where(bf => bf.UserId == userID && bf.ItemStatus == status).ToList();
+                if (listBriefItemByUserID.Count == 0)
                 {
-                    return null;
+                    errorMessage = "không có dữ liệu";
                 }
-                else
-                {
-                    return await Task.FromResult(listBriefItemByUserID);
-                }
+                return await Task.FromResult(listBriefItemByUserID);
             }
-            catch
+            catch (Exception ex)
             {
+                errorMessage = ex.Message;
                 return null;
             }
         }
@@ -143,18 +140,17 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItemByUserID = _context.BriefItems.Where(bf => bf.Share == share && bf.ItemStatus == status).ToList();
-                if (listBriefItemByUserID == null || listBriefItemByUserID.Count == 0)
+                List<BriefItem> listBriefItemByUserID = new List<BriefItem>();
+                listBriefItemByUserID = _context.BriefItems.Where(bf => bf.Share == share && bf.ItemStatus == status).ToList();
+                if (listBriefItemByUserID.Count == 0)
                 {
-                    return null;
+                    errorMessage = "không có dữ liệu";
                 }
-                else
-                {
-                    return await Task.FromResult(listBriefItemByUserID);
-                }
+                return await Task.FromResult(listBriefItemByUserID);
             }
-            catch
+            catch (Exception ex)
             {
+                errorMessage = ex.Message;
                 return null;
             }
         }
@@ -203,18 +199,17 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItemBySubCategoryID = _context.BriefItems.Where(bf => bf.SubCategoryId == subCategoryID && bf.ItemStatus == status).ToList();
-                if (listBriefItemBySubCategoryID == null || listBriefItemBySubCategoryID.Count == 0)
+                List<BriefItem> listBriefItemBySubCategoryID = new List<BriefItem>();
+                listBriefItemBySubCategoryID = _context.BriefItems.Where(bf => bf.SubCategoryId == subCategoryID && bf.ItemStatus == status).ToList();
+                if (listBriefItemBySubCategoryID.Count == 0)
                 {
-                    return null;
+                    errorMessage = "không có dữ liệu";
                 }
-                else
-                {
-                    return await Task.FromResult(listBriefItemBySubCategoryID);
-                }
+                return await Task.FromResult(listBriefItemBySubCategoryID);
             }
-            catch
+            catch (Exception ex)
             {
+                errorMessage = ex.Message;
                 return null;
             }
         }
@@ -223,18 +218,17 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItemByCategoryID = _context.BriefItems.Where(bf => bf.CategoryId == categoryID && bf.ItemStatus == status).ToList();
-                if (listBriefItemByCategoryID == null || listBriefItemByCategoryID.Count == 0)
+                List<BriefItem> listBriefItemByCategoryID = new List<BriefItem>();
+                listBriefItemByCategoryID = _context.BriefItems.Where(bf => bf.CategoryId == categoryID && bf.ItemStatus == status).ToList();
+                if (listBriefItemByCategoryID.Count == 0)
                 {
-                    return null;
+                    errorMessage = "không có dữ liệu";
                 }
-                else
-                {
-                    return await Task.FromResult(listBriefItemByCategoryID);
-                }
+                return await Task.FromResult(listBriefItemByCategoryID);
             }
-            catch
+            catch (Exception ex)
             {
+                errorMessage += ex.Message;
                 return null;
             }
         }
@@ -350,18 +344,17 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItemAndBriefRequestByUserID = _context.BriefItems.Where(bf => bf.Share == share && bf.UserId == userID).ToList();
-                if (listBriefItemAndBriefRequestByUserID == null || listBriefItemAndBriefRequestByUserID.Count == 0)
+                List<BriefItem> listBriefItemAndBriefRequestByUserID = new List<BriefItem>();
+                listBriefItemAndBriefRequestByUserID = _context.BriefItems.Where(bf => bf.Share == share && bf.UserId == userID).ToList();
+                if (listBriefItemAndBriefRequestByUserID.Count == 0)
                 {
-                    return null;
+                    errorMessage = "không có dữ liệu";
                 }
-                else
-                {
-                    return Task.FromResult(listBriefItemAndBriefRequestByUserID);
-                }
+                return Task.FromResult(listBriefItemAndBriefRequestByUserID);
             }
-            catch
+            catch (Exception ex)
             {
+                errorMessage = ex.Message;
                 return null;
             }
         }
@@ -370,18 +363,17 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                var listBriefItemAndBriefRequestByUserID = _context.BriefItems.Where(bf => bf.Share == share && bf.UserId == userID && bf.ItemStatus == status).ToList();
-                if (listBriefItemAndBriefRequestByUserID == null || listBriefItemAndBriefRequestByUserID.Count == 0)
+                List<BriefItem> listBriefItemAndBriefRequestByUserID = new List<BriefItem>();
+                listBriefItemAndBriefRequestByUserID = _context.BriefItems.Where(bf => bf.Share == share && bf.UserId == userID && bf.ItemStatus == status).ToList();
+                if (listBriefItemAndBriefRequestByUserID.Count == 0)
                 {
-                    return null;
+                    errorMessage = "không có dữ liệu";
                 }
-                else
-                {
-                    return Task.FromResult(listBriefItemAndBriefRequestByUserID);
-                }
+                return Task.FromResult(listBriefItemAndBriefRequestByUserID);
             }
-            catch
+            catch (Exception ex)
             {
+                errorMessage = ex.Message;
                 return null;
             }
         }
