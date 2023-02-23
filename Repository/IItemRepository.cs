@@ -9,7 +9,7 @@ namespace MOBY_API_Core6.Repository
 
         Task<bool> UpdateItem(UpdateItemVM itemVM);
 
-        Task<List<BriefItem>?> GetAllBriefItemAndBriefRequest(bool share, bool status);
+        Task<List<BriefItem>?> GetAllBriefItemAndBriefRequest(bool share, bool status, int pageNumber, int pageSize);
 
         Task<List<BriefItem>?> GetBriefItemByAndBriefRequestUserID(int userID, bool status);
 

@@ -79,12 +79,13 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>?> GetAllBriefItemAndBriefRequest(bool share, bool status)
+        public async Task<List<BriefItem>?> GetAllBriefItemAndBriefRequest(bool share, bool status, int pageNumber, int pageSize)
         {
             try
             {
+                int itemsToSkip = (pageNumber - 1) * pageSize;
                 List<BriefItem> listBriefItem = new List<BriefItem>();
-                listBriefItem = _context.BriefItems.Where(bf => bf.Share == share && bf.ItemStatus == status).ToList();
+                listBriefItem = _context.BriefItems.Where(bf => bf.Share == share && bf.ItemStatus == status).Skip(itemsToSkip).Take(pageSize).ToList();
                 if (listBriefItem.Count == 0)
                 {
                     errorMessage = "không có dữ liệu";
@@ -122,7 +123,7 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 List<BriefItem> listBriefItemByUserID = new List<BriefItem>();
-                listBriefItemByUserID = _context.BriefItems.Where(bf => bf.UserId == userID && bf.ItemStatus == status).ToList();
+                listBriefItemByUserID = _context.BriefItems.Where(bf => bf.UserId == userID && bf.Share == status).ToList();
                 if (listBriefItemByUserID.Count == 0)
                 {
                     errorMessage = "không có dữ liệu";

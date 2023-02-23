@@ -48,7 +48,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 1).FirstOrDefault();
+                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefault();
                 if (report != null)
                 {
                     report.ReportDateUpdate = DateTime.Now;
@@ -73,7 +73,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 1).FirstOrDefault();
+                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefault();
                 if (report != null)
                 {
                     report.ReportDateUpdate = DateTime.Now;
@@ -98,7 +98,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 1).FirstOrDefault();
+                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefault();
                 if (report != null)
                 {
                     report.ReportDateUpdate = DateTime.Now;
@@ -120,12 +120,37 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<Report>?> GetAllReportByStatus(int status)
+        public async Task<bool> DeleteReport(DeleteReport reportVM)
         {
             try
             {
-                List<Report> reports = new List<Report>();
-                reports = _context.Reports.Where(rp => rp.ReportStatus == status).ToList();
+                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefault();
+                if (report != null)
+                {
+                    report.ReportDateUpdate = DateTime.Now;
+                    report.ReportStatus = reportVM.isDelete;
+                    _context.SaveChanges();
+                    return await Task.FromResult(true);
+                }
+                else
+                {
+                    errorMessage = "report này không tồn tại";
+                    return await Task.FromResult(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return await Task.FromResult(false);
+            }
+        }
+
+        public async Task<List<ViewReport>?> GetAllReportByStatus(int status)
+        {
+            try
+            {
+                List<ViewReport> reports = new List<ViewReport>();
+                reports = _context.ViewReports.Where(rp => rp.ReportStatus == status).ToList();
                 return await Task.FromResult(reports);
             }
             catch (Exception ex)
@@ -135,12 +160,27 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<Report>?> GetAllReportByUserAndStatus(int status, int userid)
+        public async Task<List<ViewReport>?> GetAllReportByUserAndStatus(int status, int userid)
         {
             try
             {
-                List<Report> reports = new List<Report>();
-                reports = _context.Reports.Where(rp => rp.ReportStatus == status).ToList();
+                List<ViewReport> reports = new List<ViewReport>();
+                reports = _context.ViewReports.Where(rp => rp.ReportStatus == status && rp.UserId == userid).ToList();
+                return await Task.FromResult(reports);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<List<ViewReport>?> GetAllReportByUser(int userid)
+        {
+            try
+            {
+                List<ViewReport> reports = new List<ViewReport>();
+                reports = _context.ViewReports.Where(rp => rp.UserId == userid).ToList();
                 return await Task.FromResult(reports);
             }
             catch (Exception ex)

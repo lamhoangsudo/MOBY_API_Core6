@@ -100,7 +100,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                List<Report> reports = await _reportRepository.GetAllReportByStatus(status);
+                List<ViewReport> reports = await _reportRepository.GetAllReportByStatus(status);
                 if (reports.Count != 0)
                 {
                     return Ok(reports);

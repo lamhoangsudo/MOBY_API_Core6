@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MOBY_API_Core6.Data_View_Model
 {
-    public class ApprovedReportVM
+    public class DeleteReport
     {
         [Required]
         public int reportID { get; set; }
-        [DefaultValue (2)]
+        [DefaultValue(3)]
         [ReadOnly(true)]
-        public int isApproved { get; set; }
+        public int isDelete { get; set; }
     }
 }

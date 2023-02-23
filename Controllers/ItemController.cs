@@ -37,11 +37,11 @@ namespace Item.Controllers
             }
         }
         [HttpGet("GetAllBriefItemAndBriefRequest")]
-        public async Task<IActionResult> GetAllBriefItem(bool share, bool status)
+        public async Task<IActionResult> GetAllBriefItem(bool share, bool status, int pageNumber, int pageSize)
         {
             try
             {
-                List<BriefItem> listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share, status);
+                List<BriefItem> listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share, status, pageNumber, pageSize);
                 if (listBriefItem == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);

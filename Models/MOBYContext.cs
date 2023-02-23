@@ -30,6 +30,8 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<SubCategory> SubCategories { get; set; } = null!;
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
+        public virtual DbSet<ViewBlog> ViewBlogs { get; set; } = null!;
+        public virtual DbSet<ViewReport> ViewReports { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
@@ -440,6 +442,68 @@ namespace MOBY_API_Core6.Models
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserAccounts_Roles");
+            });
+
+            modelBuilder.Entity<ViewBlog>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("ViewBlog");
+
+                entity.Property(e => e.BlogCategoryId).HasColumnName("Blog_CategoryID");
+
+                entity.Property(e => e.BlogCategoryName).HasColumnName("Blog_Category_Name");
+
+                entity.Property(e => e.BlogContent).HasColumnName("Blog_Content");
+
+                entity.Property(e => e.BlogDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Blog_Date_Create");
+
+                entity.Property(e => e.BlogDateUpdate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Blog_Date_Update");
+
+                entity.Property(e => e.BlogDescription).HasColumnName("Blog_Description");
+
+                entity.Property(e => e.BlogId).HasColumnName("BlogID");
+
+                entity.Property(e => e.BlogStatus).HasColumnName("Blog_Status");
+
+                entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+            });
+
+            modelBuilder.Entity<ViewReport>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("ViewReport");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
+
+                entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
+
+                entity.Property(e => e.ReportDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Create");
+
+                entity.Property(e => e.ReportDateUpdate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Update");
+
+                entity.Property(e => e.ReportId).HasColumnName("ReportID");
+
+                entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
 
             OnModelCreatingPartial(modelBuilder);
