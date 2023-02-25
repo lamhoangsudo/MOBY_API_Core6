@@ -26,7 +26,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public double itemSalePrice { get; set; }
         [DefaultValue(1)]
         public int itemShareAmount { get; set; }
-        [DefaultValue(true)]
+        [DefaultValue(null)]
         public bool itemSponsoredOrderShippingFee { get; set; }
         [Required]
         public string itemShippingAddress { get; set; }

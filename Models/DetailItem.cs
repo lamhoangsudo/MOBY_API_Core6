@@ -15,7 +15,7 @@ namespace MOBY_API_Core6.Models
         public double? ItemEstimateValue { get; set; }
         public double? ItemSalePrice { get; set; }
         public int ItemShareAmount { get; set; }
-        public bool ItemSponsoredOrderShippingFee { get; set; }
+        public bool? ItemSponsoredOrderShippingFee { get; set; }
         public DateTime? ItemExpiredTime { get; set; }
         public string ItemShippingAddress { get; set; } = null!;
         public DateTime ItemDateCreated { get; set; }

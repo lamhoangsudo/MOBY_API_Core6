@@ -11,7 +11,6 @@ namespace MOBY_API_Core6.Models
         public DateTime CartDetailDateCreate { get; set; }
         public DateTime? CartDetailDateUpdate { get; set; }
         public int CartDetailItemQuantity { get; set; }
-        public int CartStatus { get; set; }
 
         public virtual Cart Cart { get; set; } = null!;
         public virtual Item Item { get; set; } = null!;

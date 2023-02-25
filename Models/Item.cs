@@ -8,6 +8,8 @@ namespace MOBY_API_Core6.Models
         public Item()
         {
             CartDetails = new HashSet<CartDetail>();
+            Comments = new HashSet<Comment>();
+            OrderDetails = new HashSet<OrderDetail>();
             Reports = new HashSet<Report>();
         }
 
@@ -23,7 +25,7 @@ namespace MOBY_API_Core6.Models
         public double? ItemEstimateValue { get; set; }
         public double? ItemSalePrice { get; set; }
         public int ItemShareAmount { get; set; }
-        public bool ItemSponsoredOrderShippingFee { get; set; }
+        public bool? ItemSponsoredOrderShippingFee { get; set; }
         public DateTime? ItemExpiredTime { get; set; }
         public string ItemShippingAddress { get; set; } = null!;
         public DateTime ItemDateCreated { get; set; }
@@ -35,6 +37,8 @@ namespace MOBY_API_Core6.Models
         public virtual SubCategory SubCategory { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;
         public virtual ICollection<CartDetail> CartDetails { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
     }
 }

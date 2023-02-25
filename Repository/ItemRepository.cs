@@ -457,12 +457,11 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-        
+
         public Task<List<BriefItem>?> GetAllShareNearYou(string location, int pageNumber, int pageSize)
         {
             try
             {
-                //char[] delimiterChars = { ',' };
                 string[] words = location.Split(",");
                 string city = words[0];
                 int itemsToSkip = (pageNumber - 1) * pageSize;
@@ -497,5 +496,32 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
+
+        public Task<bool> DeactivateAllExpiredProducts()
+        {
+            try
+            {
+                DateTime dateTimeNow = DateTime.Now;
+                List<Models.Item> items = _context.Items.Where(it => it.ItemExpiredTime != null).ToList();
+                if (items != null)
+                {
+                    foreach (Models.Item item in items)
+                    {
+                        TimeSpan distance = (TimeSpan)(item.ItemExpiredTime - dateTimeNow);
+                        if (distance.TotalDays == 1)
+                        {
+                            item.ItemStatus = false;
+                        }
+                    }
+                    _context.SaveChanges();
+                    return Task.FromResult(true);
+                }
+                return Task.FromResult(false);
+            }
+            catch
+            {
+                return Task.FromResult(false);
+            }
+}
     }
 }

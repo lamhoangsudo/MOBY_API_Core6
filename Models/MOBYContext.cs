@@ -23,9 +23,13 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<Cart> Carts { get; set; } = null!;
         public virtual DbSet<CartDetail> CartDetails { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
+        public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<DetailItem> DetailItems { get; set; } = null!;
         public virtual DbSet<DetailItemRequest> DetailItemRequests { get; set; } = null!;
         public virtual DbSet<Item> Items { get; set; } = null!;
+        public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
+        public virtual DbSet<Reply> Replies { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<SubCategory> SubCategories { get; set; } = null!;
@@ -67,6 +71,8 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.BlogStatus).HasColumnName("Blog_Status");
 
                 entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
+
+                entity.Property(e => e.ReasonDeny).HasColumnName("Reason_Deny");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -155,8 +161,6 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.CartId).HasColumnName("CartID");
 
-                entity.Property(e => e.CartStatus).HasColumnName("Cart_Status");
-
                 entity.Property(e => e.ItemId).HasColumnName("ItemID");
 
                 entity.HasOne(d => d.Cart)
@@ -181,6 +185,37 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.CategoryName).HasColumnName("Category_Name");
 
                 entity.Property(e => e.CategoryStatus).HasColumnName("Category_Status");
+            });
+
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.Property(e => e.CommentId).HasColumnName("CommentID");
+
+                entity.Property(e => e.BlogId).HasColumnName("BlogID");
+
+                entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.DateUpdate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Blog)
+                    .WithMany(p => p.Comments)
+                    .HasForeignKey(d => d.BlogId)
+                    .HasConstraintName("FK_Comments_Blogs");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.Comments)
+                    .HasForeignKey(d => d.ItemId)
+                    .HasConstraintName("FK_Comments_Items");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Comments)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Comments_UserAccounts");
             });
 
             modelBuilder.Entity<DetailItem>(entity =>
@@ -334,6 +369,69 @@ namespace MOBY_API_Core6.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Items_UserAccounts");
+            });
+
+            modelBuilder.Entity<Order>(entity =>
+            {
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Orders_UserAccounts");
+            });
+
+            modelBuilder.Entity<OrderDetail>(entity =>
+            {
+                entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.SponsoredOrderShippingFee).HasColumnName("Sponsored_Order_Shipping_Fee");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.ItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetails_Items");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetails_Orders");
+            });
+
+            modelBuilder.Entity<Reply>(entity =>
+            {
+                entity.Property(e => e.ReplyId).HasColumnName("ReplyID");
+
+                entity.Property(e => e.CommentId).HasColumnName("CommentID");
+
+                entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.DateUpdate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Comment)
+                    .WithMany(p => p.Replies)
+                    .HasForeignKey(d => d.CommentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Replies_Comments");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Replies)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Replies_UserAccounts");
             });
 
             modelBuilder.Entity<Report>(entity =>
