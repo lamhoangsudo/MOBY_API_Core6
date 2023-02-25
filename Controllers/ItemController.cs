@@ -245,5 +245,90 @@ namespace Item.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [HttpGet("GetAllShareRecently")]
+        public async Task<IActionResult> GetAllShareRecently(int pageNumber, int pageSize)
+        {
+            try
+            {
+                List<BriefItem> listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize);
+                if (listAllShareRecently == null)
+                {
+                    return BadRequest(ItemRepository.errorMessage);
+                }
+                else
+                {
+                    return Ok(listAllShareRecently);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("GetAllShareFree")]
+        public async Task<IActionResult> GetAllShareFree(int pageNumber, int pageSize)
+        {
+            try
+            {
+                List<BriefItem> listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize);
+                if (listAllShareFree == null)
+                {
+                    return BadRequest(ItemRepository.errorMessage);
+                }
+                else
+                {
+                    return Ok(listAllShareFree);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("GetAllMyShareAndRequest")]
+        public async Task<IActionResult> GetAllMyShareAndRequest(int userID, bool share, bool status, int pageNumber, int pageSize)
+        {
+            try
+            {
+                List<BriefItem> listAllMyShareAndRequest = await _itemRepository.GetAllMyShareAndRequest(userID, share, status, pageNumber, pageSize);
+                if (listAllMyShareAndRequest == null)
+                {
+                    return BadRequest(ItemRepository.errorMessage);
+                }
+                else
+                {
+                    return Ok(listAllMyShareAndRequest);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("GetAllShareNearYou")]
+        public async Task<IActionResult> GetAllShareNearYou(string location, int pageNumber, int pageSize)
+        {
+            try
+            {
+                List<BriefItem> listAllShareNearYou = await _itemRepository.GetAllShareNearYou(location, pageNumber, pageSize);
+                if (listAllShareNearYou == null)
+                {
+                    return BadRequest(ItemRepository.errorMessage);
+                }
+                else
+                {
+                    return Ok(listAllShareNearYou);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
     }
 }

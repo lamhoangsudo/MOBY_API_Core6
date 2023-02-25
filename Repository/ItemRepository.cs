@@ -1,5 +1,6 @@
 ﻿using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -123,7 +124,7 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 List<BriefItem> listBriefItemByUserID = new List<BriefItem>();
-                listBriefItemByUserID = _context.BriefItems.Where(bf => bf.UserId == userID && bf.Share == status).ToList();
+                listBriefItemByUserID = _context.BriefItems.Where(bf => bf.UserId == userID && bf.ItemStatus == status).ToList();
                 if (listBriefItemByUserID.Count == 0)
                 {
                     errorMessage = "không có dữ liệu";
@@ -371,6 +372,124 @@ namespace MOBY_API_Core6.Repository
                     errorMessage = "không có dữ liệu";
                 }
                 return Task.FromResult(listBriefItemAndBriefRequestByUserID);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public Task<List<BriefItem>?> GetAllMyShareAndRequest(int userID, bool share, bool status, int pageNumber, int pageSize)
+        {
+            try
+            {
+                DateTime dateTimeNow = DateTime.Now;
+                int itemsToSkip = (pageNumber - 1) * pageSize;
+                List<BriefItem> listMyShareAndRequest = new List<BriefItem>();
+                listMyShareAndRequest = _context.BriefItems.Where(bf => bf.Share == share && bf.UserId == userID && bf.ItemStatus == status).Skip(itemsToSkip).Take(pageSize).ToList();
+                if (listMyShareAndRequest.Count == 0)
+                {
+                    errorMessage = "không có dữ liệu";
+                }
+                return Task.FromResult(listMyShareAndRequest);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public Task<List<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize)
+        {
+            try
+            {
+                int itemsToSkip = (pageNumber - 1) * pageSize;
+                List<BriefItem> listMyShareAndRequest = new List<BriefItem>();
+                listMyShareAndRequest = _context.BriefItems.Where(bf => bf.Share == true && bf.ItemStatus == true && bf.ItemSalePrice == 0).Skip(itemsToSkip).Take(pageSize).ToList();
+                if (listMyShareAndRequest.Count == 0)
+                {
+                    errorMessage = "không có dữ liệu";
+                }
+                return Task.FromResult(listMyShareAndRequest);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public Task<List<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize)
+        {
+            try
+            {
+                int itemsToSkip = (pageNumber - 1) * pageSize;
+                List<BriefItem> listShareRecently = new List<BriefItem>();
+                listShareRecently = _context.BriefItems.Where(bf => bf.Share == true && bf.ItemStatus == true).Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it }).OrderByDescending(bfit => bfit.it.ItemDateCreated).Skip(itemsToSkip).Take(pageSize).Select(bfit => new BriefItem
+                {
+                    CategoryId = bfit.bf.CategoryId,
+                    CategoryName = bfit.bf.CategoryName,
+                    CategoryStatus = bfit.bf.CategoryStatus,
+                    SubCategoryId = bfit.bf.SubCategoryId,
+                    ItemId = bfit.bf.ItemId,
+                    Image = bfit.bf.Image,
+                    ItemCode = bfit.bf.ItemCode,
+                    ItemSalePrice = bfit.bf.ItemSalePrice,
+                    ItemStatus = bfit.bf.ItemStatus,
+                    ItemTitle = bfit.bf.ItemTitle,
+                    Share = true,
+                    SubCategoryName = bfit.bf.SubCategoryName,
+                    SubCategoryStatus = bfit.bf.SubCategoryStatus,
+                    UserId = bfit.bf.UserId,
+                    UserName = bfit.bf.UserName
+                }).ToList();
+                if (listShareRecently.Count == 0)
+                {
+                    errorMessage = "không có dữ liệu";
+                }
+                return Task.FromResult(listShareRecently);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return null;
+            }
+        }
+        
+        public Task<List<BriefItem>?> GetAllShareNearYou(string location, int pageNumber, int pageSize)
+        {
+            try
+            {
+                //char[] delimiterChars = { ',' };
+                string[] words = location.Split(",");
+                string city = words[0];
+                int itemsToSkip = (pageNumber - 1) * pageSize;
+                List<BriefItem> listShareRecently = new List<BriefItem>();
+                listShareRecently = _context.BriefItems.Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it }).Where(bfit => bfit.it.ItemShippingAddress.StartsWith(city) && bfit.bf.Share == true && bfit.bf.ItemStatus == true).Skip(itemsToSkip).Take(pageSize).Select(bfit => new BriefItem
+                {
+                    CategoryId = bfit.bf.CategoryId,
+                    CategoryName = bfit.bf.CategoryName,
+                    CategoryStatus = bfit.bf.CategoryStatus,
+                    SubCategoryId = bfit.bf.SubCategoryId,
+                    ItemId = bfit.bf.ItemId,
+                    Image = bfit.bf.Image,
+                    ItemCode = bfit.bf.ItemCode,
+                    ItemSalePrice = bfit.bf.ItemSalePrice,
+                    ItemStatus = bfit.bf.ItemStatus,
+                    ItemTitle = bfit.bf.ItemTitle,
+                    Share = true,
+                    SubCategoryName = bfit.bf.SubCategoryName,
+                    SubCategoryStatus = bfit.bf.SubCategoryStatus,
+                    UserId = bfit.bf.UserId,
+                    UserName = bfit.bf.UserName
+                }).ToList();
+                if (listShareRecently.Count == 0)
+                {
+                    errorMessage = "không có dữ liệu";
+                }
+                return Task.FromResult(listShareRecently);
             }
             catch (Exception ex)
             {
