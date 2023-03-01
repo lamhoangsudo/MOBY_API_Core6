@@ -60,7 +60,7 @@ namespace MOBY_API_Core6.Repository
                 newCartDetail.ItemId = createdCartDetail.ItemId;
                 newCartDetail.CartDetailDateCreate = DateTime.Now;
                 newCartDetail.CartDetailItemQuantity = createdCartDetail.CartDetailItemQuantity;
-                newCartDetail.CartStatus = 1;
+
                 context.CartDetails.Add(newCartDetail);
                 context.SaveChanges();
                 return true;
@@ -72,13 +72,13 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> UpdateCartDetail(CartDetail cartDetail, int status)
+        public async Task<bool> UpdateCartDetail(CartDetail cartDetail, int quantity)
         {
             try
             {
-
+                cartDetail.CartDetailItemQuantity = quantity;
                 cartDetail.CartDetailDateUpdate = DateTime.Now;
-                cartDetail.CartStatus = status;
+
                 context.SaveChanges();
                 return true;
             }

@@ -50,10 +50,12 @@ namespace MOBY_API_Core6.Controllers
                     return Ok(ReturnMessage.create("success"));
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                return BadRequest(ex.Message);
 
             }
+
 
             return BadRequest(ReturnMessage.create("error at UpdateUserProfile"));
         }
@@ -93,8 +95,7 @@ namespace MOBY_API_Core6.Controllers
         [Route("api/useraccount/all")]
         public async Task<IActionResult> GetAllUser()
         {
-            List<UserVM> list = new List<UserVM>();
-            list = await userDAO.GetAllUser();
+            List<UserAccountVM> list = await userDAO.GetAllUser();
 
             //UserAccounts currentUser = new UserAccounts();
             //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
@@ -118,7 +119,7 @@ namespace MOBY_API_Core6.Controllers
             }
 
 
-            return Ok(currentUser);
+            return Ok(UserAccountVM.UserAccountToVewModel(currentUser));
         }
 
         [Authorize]
@@ -128,7 +129,7 @@ namespace MOBY_API_Core6.Controllers
         {
             UserAccount currentUser = await userDAO.FindUserByUid(uid.UserId);
 
-            return Ok(currentUser);
+            return Ok(UserAccountVM.UserAccountToVewModel(currentUser));
         }
     }
 }
