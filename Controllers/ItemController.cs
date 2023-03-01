@@ -247,11 +247,11 @@ namespace Item.Controllers
         }
 
         [HttpGet("GetAllShareRecently")]
-        public async Task<IActionResult> GetAllShareRecently(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetAllShareRecently(int pageNumber, int pageSize, int userID)
         {
             try
             {
-                List<BriefItem> listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize);
+                List<BriefItem> listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize, userID);
                 if (listAllShareRecently == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -268,11 +268,11 @@ namespace Item.Controllers
         }
 
         [HttpGet("GetAllShareFree")]
-        public async Task<IActionResult> GetAllShareFree(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetAllShareFree(int pageNumber, int pageSize, int userID)
         {
             try
             {
-                List<BriefItem> listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize);
+                List<BriefItem> listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize, userID);
                 if (listAllShareFree == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -310,11 +310,11 @@ namespace Item.Controllers
         }
 
         [HttpGet("GetAllShareNearYou")]
-        public async Task<IActionResult> GetAllShareNearYou(string location, int pageNumber, int pageSize)
+        public async Task<IActionResult> GetAllShareNearYou(string location, int pageNumber, int pageSize, int userID)
         {
             try
             {
-                List<BriefItem> listAllShareNearYou = await _itemRepository.GetAllShareNearYou(location, pageNumber, pageSize);
+                List<BriefItem> listAllShareNearYou = await _itemRepository.GetAllShareNearYou(location, pageNumber, pageSize, userID);
                 if (listAllShareNearYou == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -322,6 +322,36 @@ namespace Item.Controllers
                 else
                 {
                     return Ok(listAllShareNearYou);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("GetItemDynamicFilters")]
+        public async Task<IActionResult> GetItemDynamicFilters(int pageNumber, int pageSize, int categoryID, string? titleName, string? location, float minPrice, float maxPrice, double maxUsable, double minUsable)
+        {
+            try
+            {
+                if (maxUsable == 0)
+                {
+                    maxUsable = 100;
+                }
+                if (minUsable == 0)
+                {
+                    minUsable = 40;
+                }
+                DynamicFilterVM dynamicFilterVM = new DynamicFilterVM(categoryID, titleName, location, minPrice, maxPrice, maxUsable, minUsable);
+                List<BriefItem> listItemDynamicFilters = await _itemRepository.GetItemDynamicFilters(pageNumber, pageSize, dynamicFilterVM);
+                if (listItemDynamicFilters == null)
+                {
+                    return BadRequest(ItemRepository.errorMessage);
+                }
+                else
+                {
+                    return Ok(listItemDynamicFilters);
                 }
             }
             catch (Exception ex)

@@ -20,7 +20,8 @@ namespace MOBY_API_Core6.Data_View_Model
         [DefaultValue(false)]
         public bool itemSize { get; set; }
         public string itemQuanlity { get; set; }
-        [DefaultValue(0)]
+        [Range(40, 100)]
+        [DefaultValue(40)]
         public double itemEstimateValue { get; set; }
         [DefaultValue(0)]
         public double itemSalePrice { get; set; }

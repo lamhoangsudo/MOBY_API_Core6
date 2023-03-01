@@ -29,12 +29,14 @@ namespace MOBY_API_Core6.Repository
 
         Task<List<BriefItem>?> GetAllMyBriefItemAndBriefRequestActiveandUnActive(int userID, bool share, bool status);
 
-        Task<List<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize);
+        Task<List<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int userID);
 
-        Task<List<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize);
+        Task<List<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize, int userID);
 
         Task<List<BriefItem>?> GetAllMyShareAndRequest(int userID, bool share, bool status, int pageNumber, int pageSize);
 
-        Task<List<BriefItem>?> GetAllShareNearYou(string location, int pageNumber, int pageSize);
+        Task<List<BriefItem>?> GetAllShareNearYou(string location, int pageNumber, int pageSize, int userID);
+
+        Task<List<BriefItem>?> GetItemDynamicFilters(int pageNumber, int pageSize, DynamicFilterVM dynamicFilterVM);
     }
 }

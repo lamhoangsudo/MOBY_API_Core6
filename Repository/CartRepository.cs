@@ -16,7 +16,7 @@ namespace MOBY_API_Core6.Repository
         {
             Cart cart = new Cart();
             cart.CartDateCreate = DateTime.Now;
-            cart.UserId = userID; //co chac no tim thay dung user k =]]]
+            cart.UserId = userID;
             context.Carts.Add(cart);
             context.SaveChanges();
             return true;
