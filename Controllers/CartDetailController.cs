@@ -39,6 +39,7 @@ namespace MOBY_API_Core6.Controllers
             }
 
         }
+        /*
         [Authorize]
         [HttpGet]
         [Route("api/useraccount/item/cartdetail")]
@@ -60,7 +61,7 @@ namespace MOBY_API_Core6.Controllers
             return Ok(listCartDetailResult);
 
         }
-
+        */
         [Authorize]
         [HttpPost]
         [Route("api/cartdetail/create")]
@@ -75,6 +76,24 @@ namespace MOBY_API_Core6.Controllers
             return BadRequest(ReturnMessage.create("error at CreateCartDetail"));
         }
 
+
+        [Authorize]
+        [HttpPut]
+        [Route("api/cartdetail")]
+        public async Task<IActionResult> UpdateCartDetail([FromBody] UpdateCartDetailVM CartDetail)
+        {
+            var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetail.CartDetailId);
+            if (await cartDetailDAO.UpdateCartDetail(cacrtDetail, CartDetail.CartDetailItemQuantity))
+            {
+                return Ok(ReturnMessage.create("Success"));
+            }
+            return BadRequest(ReturnMessage.create("error at UpdateCartDetail"));
+        }
+
+
+
+
+        /*
         [Authorize]
         [HttpPatch]
         [Route("api/cartdetail/accept")]
@@ -114,5 +133,6 @@ namespace MOBY_API_Core6.Controllers
             }
             return BadRequest(ReturnMessage.create("error at UpdateCartDetail"));
         }
+        */
     }
 }

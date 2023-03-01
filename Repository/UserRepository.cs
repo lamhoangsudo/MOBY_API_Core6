@@ -127,17 +127,10 @@ namespace MOBY_API_Core6.Repository
         }
 
 
-        public async Task<List<UserVM>> GetAllUser()
+        public async Task<List<UserAccountVM>> GetAllUser()
         {
-            List<UserAccount> accountList = new List<UserAccount>();
-            accountList = context.UserAccounts.ToList();
-            List<UserVM> accountListVM = new List<UserVM>();
-            UserVM umv = new UserVM();
-            foreach (var user in accountList)
-            {
-                umv = UserVM.UserAccountToVewModel(user);
-                accountListVM.Add(umv);
-            }
+            List<UserAccountVM> accountListVM = context.UserAccounts.Select(u => UserAccountVM.UserAccountToVewModel(u)).ToList();
+
             return accountListVM;
         }
 
