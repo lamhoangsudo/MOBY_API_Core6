@@ -27,7 +27,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                List<BlogVM> ListBlog = await BlogDAO.getAllBlog();
+                List<Blog> ListBlog = BlogDAO.getAllBlog();
 
                 return Ok(ListBlog);
 
@@ -47,21 +47,21 @@ namespace MOBY_API_Core6.Controllers
                 List<BlogVM> ListBlog = new List<BlogVM>();
                 if (blogGetVM.categoryId != null)
                 {
-                    ListBlog = await BlogDAO.getBlogByBlogCateID(blogGetVM.categoryId.Value);
+                    ListBlog = BlogDAO.getBlogByBlogCateID(blogGetVM.categoryId.Value);
 
                     return Ok(ListBlog);
 
                 }
                 else if (blogGetVM.userId != null)
                 {
-                    ListBlog = await BlogDAO.getBlogByUserID(blogGetVM.userId.Value);
+                    ListBlog = BlogDAO.getBlogByUserID(blogGetVM.userId.Value);
 
                     return Ok(ListBlog);
                 }
                 else if (blogGetVM.BlogId != null)
                 {
-                    BlogVM foundBlogVM = await BlogDAO.getBlogVMByBlogID(blogGetVM.BlogId.Value);
-                    return Ok(foundBlogVM);
+                    Blog foundBlog = BlogDAO.getBlogByBlogID(blogGetVM.BlogId.Value);
+                    return Ok(foundBlog);
                 }
                 return Ok(ReturnMessage.create("there no field so no blog"));
             }
@@ -80,13 +80,13 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int UserID = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<BlogVM> ListBlog = await BlogDAO.getBlogByUserID(UserID);
+                List<BlogVM> ListBlog = BlogDAO.getBlogBySelf(UserID);
                 return Ok(ListBlog);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return BadRequest(ReturnMessage.create("error at getBlogByUserID"));
+                return BadRequest(ReturnMessage.create("error at getBlogByToken"));
             }
 
         }
@@ -100,7 +100,7 @@ namespace MOBY_API_Core6.Controllers
             {
                 int UserID = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
 
-                if (await BlogDAO.CreateBlog(createdBlog, UserID))
+                if (BlogDAO.CreateBlog(createdBlog, UserID))
                 {
                     return Ok(ReturnMessage.create("success"));
                 }
@@ -125,10 +125,10 @@ namespace MOBY_API_Core6.Controllers
             {
 
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                Blog foundblog = await BlogDAO.getBlogByBlogIDAndUserId(UpdatedBlog.BlogId, uid);
+                Blog foundblog = BlogDAO.getBlogByBlogIDAndUserId(UpdatedBlog.BlogId, uid);
                 if (foundblog != null)
                 {
-                    if (await BlogDAO.UpdateBlog(foundblog, UpdatedBlog))
+                    if (BlogDAO.UpdateBlog(foundblog, UpdatedBlog))
                     {
                         return Ok(ReturnMessage.create("success"));
                     }
@@ -155,10 +155,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
 
-                Blog foundblog = await BlogDAO.getBlogByBlogID(blogId.BlogId);
+                Blog foundblog = BlogDAO.getBlogByBlogID(blogId.BlogId);
                 if (foundblog != null)
                 {
-                    if (await BlogDAO.ConfirmBlog(foundblog, 1))
+                    if (BlogDAO.ConfirmBlog(foundblog, 1))
                     {
                         return Ok(ReturnMessage.create("success"));
                     }
@@ -185,10 +185,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
 
-                Blog foundblog = await BlogDAO.getBlogByBlogID(blogId.BlogId);
+                Blog foundblog = BlogDAO.getBlogByBlogID(blogId.BlogId);
                 if (foundblog != null)
                 {
-                    if (await BlogDAO.ConfirmBlog(foundblog, 2))
+                    if (BlogDAO.ConfirmBlog(foundblog, 2))
                     {
                         return Ok(ReturnMessage.create("success"));
                     }
@@ -216,10 +216,10 @@ namespace MOBY_API_Core6.Controllers
             {
 
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                Blog foundblog = await BlogDAO.getBlogByBlogIDAndUserId(blogId.BlogId, uid);
+                Blog foundblog = BlogDAO.getBlogByBlogIDAndUserId(blogId.BlogId, uid);
                 if (foundblog != null)
                 {
-                    if (await BlogDAO.ConfirmBlog(foundblog, 3))
+                    if (BlogDAO.ConfirmBlog(foundblog, 3))
                     {
                         return Ok(ReturnMessage.create("success"));
                     }

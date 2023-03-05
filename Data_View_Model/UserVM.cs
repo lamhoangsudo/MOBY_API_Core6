@@ -10,6 +10,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public string UserImage { get; set; } = null!;
         public bool UserStatus { get; set; }
         public DateTime UserDateCreate { get; set; }
+
         public static UserVM UserAccountToVewModel(UserAccount user)
         {
             return new UserVM
@@ -19,7 +20,7 @@ namespace MOBY_API_Core6.Data_View_Model
                 UserGmail = user.UserGmail,
                 UserImage = user.UserImage,
                 UserStatus = user.UserStatus,
-                UserDateCreate = user.UserDateCreate
+                UserDateCreate = user.UserDateCreate,
 
             };
         }

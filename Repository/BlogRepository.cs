@@ -1,4 +1,5 @@
-﻿using MOBY_API_Core6.Data_View_Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
@@ -11,51 +12,75 @@ namespace MOBY_API_Core6.Repository
             this.context = context;
         }
 
-        public async Task<List<BlogVM>> getAllBlog()
+        public List<Blog> getAllBlog()
         {
-            List<BlogVM> blogList = new List<BlogVM>();
-            blogList = context.Blogs.Select(b => BlogVM.BlogToVewModel(b)).ToList();
-
+            List<Blog> blogList = new List<Blog>();
+            //blogList = context.Blogs.Select(b => BlogVM.BlogToVewModel(b)).ToList();
+            blogList = context.Blogs.Include(b => b.Comments).ThenInclude(cmt => cmt.Replies).ToList();
+            /*foreach (var blog in blogList)
+            {
+                blog.Comments = context.Comments.Where(cmt => cmt.BlogId == blog.BlogId).Include(cmt => cmt.Replies).ToList();
+            }*/
             return blogList;
         }
-        public async Task<Blog> getBlogByBlogID(int id)
+
+        public List<BlogVM> getAllUncheckBlog()
+        {
+            List<BlogVM> blogList = new List<BlogVM>();
+            //blogList = context.Blogs.Select(b => BlogVM.BlogToVewModel(b)).ToList();
+            blogList = context.Blogs.Where(b => b.BlogStatus == 0).Select(b => BlogVM.BlogToVewModel(b)).ToList();
+            /*foreach (var blog in blogList)
+            {
+                blog.Comments = context.Comments.Where(cmt => cmt.BlogId == blog.BlogId).Include(cmt => cmt.Replies).ToList();
+            }*/
+            return blogList;
+        }
+        public Blog getBlogByBlogID(int id)
         {
 
-            Blog blogFound = context.Blogs.Where(b => b.BlogId == id).FirstOrDefault();
+            Blog blogFound = context.Blogs.Where(b => b.BlogId == id).Include(b => b.Comments).ThenInclude(cmt => cmt.Replies).FirstOrDefault();
 
             return blogFound;
         }
 
-        public async Task<Blog> getBlogByBlogIDAndUserId(int blogId, int userId)
+        public Blog getBlogByBlogIDAndUserId(int blogId, int userId)
         {
 
             Blog blogFound = context.Blogs.Where(b => b.BlogId == blogId && b.UserId == userId).FirstOrDefault();
 
             return blogFound;
         }
-        public async Task<BlogVM> getBlogVMByBlogID(int id)
+        /*public async Task<BlogVM> getBlogVMByBlogID(int id)
         {
 
             BlogVM blogFound = context.Blogs.Where(b => b.BlogId == id).Select(b => BlogVM.BlogToVewModel(b)).FirstOrDefault();
 
             return blogFound;
-        }
-        public async Task<List<BlogVM>> getBlogByBlogCateID(int blogCateID)
+        }*/
+        public List<BlogVM> getBlogByBlogCateID(int blogCateID)
         {
             List<BlogVM> blogList = new List<BlogVM>();
-            blogList = context.Blogs.Where(b => b.BlogCategoryId == blogCateID).Select(b => BlogVM.BlogToVewModel(b)).ToList();
+            blogList = context.Blogs.Where(b => b.BlogCategoryId == blogCateID && b.BlogStatus == 1).Select(b => BlogVM.BlogToVewModel(b)).ToList();
 
             return blogList;
         }
-        public async Task<List<BlogVM>> getBlogByUserID(int userID)
+        public List<BlogVM> getBlogByUserID(int userID)
         {
             List<BlogVM> blogList = new List<BlogVM>();
-            blogList = context.Blogs.Where(b => b.UserId == userID).Select(b => BlogVM.BlogToVewModel(b)).ToList();
+            blogList = context.Blogs.Where(b => b.UserId == userID && b.BlogStatus == 1).Select(b => BlogVM.BlogToVewModel(b)).ToList();
 
             return blogList;
         }
 
-        public async Task<bool> CreateBlog(CreateBlogVM blogvm, int UserID)
+        public List<BlogVM> getBlogBySelf(int userID)
+        {
+            List<BlogVM> blogList = new List<BlogVM>();
+            blogList = context.Blogs.Where(b => b.UserId == userID && b.BlogStatus != 3).Select(b => BlogVM.BlogToVewModel(b)).ToList();
+
+            return blogList;
+        }
+
+        public bool CreateBlog(CreateBlogVM blogvm, int UserID)
         {
             try
             {
@@ -78,50 +103,41 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> UpdateBlog(Blog blog, UpdateBlogVM blogvm)
+        public bool UpdateBlog(Blog blog, UpdateBlogVM blogvm)
         {
-            try
+
+            if (blog.BlogStatus != 3)
             {
-                if (blog.BlogStatus != 3)
+                blog.BlogCategoryId = blogvm.BlogCategoryId;
+                blog.BlogTitle = blogvm.BlogTitle;
+                blog.BlogDescription = blogvm.BlogDescription;
+                blog.BlogContent = blogvm.BlogContent;
+                blog.BlogDateUpdate = DateTime.Now;
+                if (blog.BlogStatus == 1 || blog.BlogStatus == 2)
                 {
-                    blog.BlogCategoryId = blogvm.BlogCategoryId;
-                    blog.BlogTitle = blogvm.BlogTitle;
-                    blog.BlogDescription = blogvm.BlogDescription;
-                    blog.BlogContent = blogvm.BlogContent;
-                    blog.BlogDateUpdate = DateTime.Now;
-                    if (blog.BlogStatus == 1 || blog.BlogStatus == 2)
-                    {
-                        blog.BlogStatus = 0;
-                    }
-                    context.SaveChanges();
+                    blog.BlogStatus = 0;
+                }
+                if (context.SaveChanges() != 0)
+                {
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
-            catch (Exception ex)
+            else
             {
-
+                return false;
             }
-            return false;
+
+
         }
-        public async Task<bool> ConfirmBlog(Blog blog, int decision)
+        public bool ConfirmBlog(Blog blog, int decision)
         {
-            try
+            blog.BlogStatus = decision;
+            if (context.SaveChanges() != 0)
             {
-
-
-                blog.BlogStatus = decision;
-
-                context.SaveChanges();
                 return true;
             }
-            catch (Exception ex)
-            {
 
-            }
             return false;
         }
 

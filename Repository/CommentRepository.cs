@@ -21,7 +21,7 @@ namespace MOBY_API_Core6.Repository
 
         public List<Comment> GetCommentByBlogID(int id)
         {
-            List<Comment> ListComment = context.Comments.Where(cmt => cmt.BlogId == id).ToList();
+            List<Comment> ListComment = context.Comments.Where(cmt => cmt.BlogId == id).Include(c => c.Replies).ToList();
 
 
             return ListComment;
@@ -29,7 +29,7 @@ namespace MOBY_API_Core6.Repository
 
         public List<Comment> GetCommentByItemID(int id)
         {
-            List<Comment> ListComment = context.Comments.Where(cmt => cmt.ItemId == id).ToList();
+            List<Comment> ListComment = context.Comments.Where(cmt => cmt.ItemId == id).Include(c => c.Replies).ToList();
             return ListComment;
         }
 

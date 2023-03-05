@@ -1,4 +1,5 @@
-﻿using MOBY_API_Core6.Data_View_Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using System.Security.Claims;
 
@@ -32,7 +33,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<UserAccount?> FindUserByCode(String userCode)
         {
             UserAccount foundAccount;
-            foundAccount = context.UserAccounts.Where(u => u.UserCode == userCode).FirstOrDefault();
+            foundAccount = context.UserAccounts.Where(u => u.UserCode == userCode).Include(u => u.Carts).FirstOrDefault();
             return foundAccount;
         }
 
@@ -127,9 +128,9 @@ namespace MOBY_API_Core6.Repository
         }
 
 
-        public async Task<List<UserAccountVM>> GetAllUser()
+        public async Task<List<UserVM>> GetAllUser()
         {
-            List<UserAccountVM> accountListVM = context.UserAccounts.Select(u => UserAccountVM.UserAccountToVewModel(u)).ToList();
+            List<UserVM> accountListVM = context.UserAccounts.Select(u => UserVM.UserAccountToVewModel(u)).ToList();
 
             return accountListVM;
         }

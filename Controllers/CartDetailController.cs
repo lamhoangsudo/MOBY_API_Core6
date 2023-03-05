@@ -27,8 +27,8 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> GetAllCartDetail()
         {
             int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            CartVM cart = await cartDAO.GetCartByUid(uid);
-            List<CartDetailVM> listCartDetail = await cartDetailDAO.GetAllCartDetail(cart.CartId);
+            Cart cart = await cartDAO.GetCartByUid(uid);
+            List<CartDetailVM> listCartDetail = cartDetailDAO.GetAllCartDetail(cart.CartId);
             if (listCartDetail != null)
             {
                 return Ok(listCartDetail);
@@ -67,9 +67,8 @@ namespace MOBY_API_Core6.Controllers
         [Route("api/cartdetail/create")]
         public async Task<IActionResult> CreateCartDetail([FromBody] CreateCartDetailVM createdCartDetail)
         {
-            int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            CartVM cart = await cartDAO.GetCartByUid(uid);
-            if (await cartDetailDAO.CreateCartDetail(createdCartDetail))
+
+            if (cartDetailDAO.CreateCartDetail(createdCartDetail))
             {
                 return Ok(ReturnMessage.create("Success"));
             }
@@ -82,8 +81,8 @@ namespace MOBY_API_Core6.Controllers
         [Route("api/cartdetail")]
         public async Task<IActionResult> UpdateCartDetail([FromBody] UpdateCartDetailVM CartDetail)
         {
-            var cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetail.CartDetailId);
-            if (await cartDetailDAO.UpdateCartDetail(cacrtDetail, CartDetail.CartDetailItemQuantity))
+            var cacrtDetail = cartDetailDAO.GetCartDetailByCartDetailID(CartDetail.CartDetailId);
+            if (cartDetailDAO.UpdateCartDetail(cacrtDetail, CartDetail.CartDetailItemQuantity))
             {
                 return Ok(ReturnMessage.create("Success"));
             }

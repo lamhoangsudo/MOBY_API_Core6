@@ -10,9 +10,11 @@ namespace MOBY_API_Core6.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository userDAO;
-        public UserController(IUserRepository userDao)
+        private readonly ICartRepository cartDAO;
+        public UserController(IUserRepository userDao, ICartRepository cartDAO)
         {
             this.userDAO = userDao;
+            this.cartDAO = cartDAO;
         }
         [Authorize]
         [HttpPost]
@@ -22,9 +24,21 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                if (await userDAO.CreateUser(this.User.Claims, createUserVM))
+                if (!(await userDAO.CheckExistedUser(this.User.Claims)))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    if (await userDAO.CreateUser(this.User.Claims, createUserVM))
+                    {
+                        int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                        if (await cartDAO.CreateCart(uid))
+                        {
+                            return Ok(ReturnMessage.create("success"));
+                        }
+
+                    }
+                }
+                else
+                {
+                    return BadRequest(ReturnMessage.create("this user already exist"));
                 }
             }
             catch
@@ -40,11 +54,12 @@ namespace MOBY_API_Core6.Controllers
         [Route("api/useraccount")]
         public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateAccountVM accountVM)
         {
-            //UserAccounts currentUser = new UserAccounts();
-            UserAccount currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-
             try
             {
+                //UserAccounts currentUser = new UserAccounts();
+                UserAccount currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+
+
                 if (await userDAO.EditUser(currentUser, accountVM))
                 {
                     return Ok(ReturnMessage.create("success"));
@@ -95,7 +110,7 @@ namespace MOBY_API_Core6.Controllers
         [Route("api/useraccount/all")]
         public async Task<IActionResult> GetAllUser()
         {
-            List<UserAccountVM> list = await userDAO.GetAllUser();
+            List<UserVM> list = await userDAO.GetAllUser();
 
             //UserAccounts currentUser = new UserAccounts();
             //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
@@ -110,8 +125,7 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> GetUserInfo()
         {
             UserAccount currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-
-
+            Cart cart = currentUser.Carts.FirstOrDefault();
 
             if (currentUser == null)
             {
@@ -119,7 +133,7 @@ namespace MOBY_API_Core6.Controllers
             }
 
 
-            return Ok(UserAccountVM.UserAccountToVewModel(currentUser));
+            return Ok(UserAccountVM.UserAccountToVewModel(currentUser, cart.CartId));
         }
 
         [Authorize]
