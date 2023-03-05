@@ -5,14 +5,16 @@ namespace MOBY_API_Core6.Repository
 {
     public interface IBlogRepository
     {
-        public Task<List<BlogVM>> getAllBlog();
-        public Task<Blog> getBlogByBlogID(int id);
-        public Task<Blog> getBlogByBlogIDAndUserId(int blogId, int userId);
-        public Task<BlogVM> getBlogVMByBlogID(int id);
-        public Task<List<BlogVM>> getBlogByBlogCateID(int blogCateID);
-        public Task<List<BlogVM>> getBlogByUserID(int userID);
-        public Task<bool> CreateBlog(CreateBlogVM blogvm, int UserID);
-        public Task<bool> UpdateBlog(Blog blog, UpdateBlogVM UpdatedBlogvm);
-        public Task<bool> ConfirmBlog(Blog blog, int decision);
+        public List<Blog> getAllBlog();
+        public List<BlogVM> getAllUncheckBlog();
+        public Blog getBlogByBlogID(int id);
+        public Blog getBlogByBlogIDAndUserId(int blogId, int userId);
+        //public Task<BlogVM> getBlogVMByBlogID(int id);
+        public List<BlogVM> getBlogByBlogCateID(int blogCateID);
+        public List<BlogVM> getBlogByUserID(int userID);
+        public List<BlogVM> getBlogBySelf(int userID);
+        public bool CreateBlog(CreateBlogVM blogvm, int UserID);
+        public bool UpdateBlog(Blog blog, UpdateBlogVM UpdatedBlogvm);
+        public bool ConfirmBlog(Blog blog, int decision);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
@@ -34,14 +33,13 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<CartVM> GetCartByUid(int userID)
+        public async Task<Cart> GetCartByUid(int userID)
         {
             //Cart cart = context.Carts.Where(c => c.UserId == userID).FirstOrDefault();
-            var user = context.UserAccounts.Where(u => u.UserId == userID)
-                .Include(user => user.Carts)
-                .FirstOrDefault();
-            var cart = user.Carts.FirstOrDefault();
-            return CartVM.CartToVewModel(cart);
+            Cart cart = context.Carts.Where(c => c.UserId == userID)
+                .Include(c => c.CartDetails).FirstOrDefault();
+
+            return cart;
         }
 
     }

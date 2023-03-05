@@ -17,6 +17,28 @@ namespace MOBY_API_Core6.Data_View_Model
         public bool UserStatus { get; set; }
         public DateTime UserDateCreate { get; set; }
         public DateTime? UserDateUpdate { get; set; }
+        public int CartID { get; set; }
+
+        public static UserAccountVM UserAccountToVewModel(UserAccount user, int cartid)
+        {
+            return new UserAccountVM
+            {
+                UserId = user.UserId,
+                UserCode = user.UserCode,
+                UserName = user.UserName,
+                UserGmail = user.UserGmail,
+                UserAddress = user.UserAddress,
+                UserPhone = user.UserPhone,
+                UserSex = user.UserSex,
+                UserDateOfBirth = user.UserDateOfBirth,
+                UserMoreInformation = user.UserMoreInformation,
+                UserImage = user.UserImage,
+                UserStatus = user.UserStatus,
+                UserDateCreate = user.UserDateCreate,
+                UserDateUpdate = user.UserDateUpdate,
+                CartID = cartid,
+            };
+        }
 
         public static UserAccountVM UserAccountToVewModel(UserAccount user)
         {
@@ -34,7 +56,8 @@ namespace MOBY_API_Core6.Data_View_Model
                 UserImage = user.UserImage,
                 UserStatus = user.UserStatus,
                 UserDateCreate = user.UserDateCreate,
-                UserDateUpdate = user.UserDateUpdate
+                UserDateUpdate = user.UserDateUpdate,
+
             };
         }
     }

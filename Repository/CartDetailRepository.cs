@@ -12,7 +12,7 @@ namespace MOBY_API_Core6.Repository
         {
             this.context = context;
         }
-        public async Task<List<CartDetailVM>> GetAllCartDetail(int cartID)
+        public List<CartDetailVM> GetAllCartDetail(int cartID)
         {
 
             List<CartDetail> listCartDetail = new List<CartDetail>();
@@ -30,14 +30,14 @@ namespace MOBY_API_Core6.Repository
             return listCartDetailMV;
         }
 
-        public async Task<CartDetail> GetCartDetailByCartDetailID(int CartDetail)
+        public CartDetail GetCartDetailByCartDetailID(int CartDetail)
         {
 
             CartDetail foundCartDetail = context.CartDetails.Where(cd => cd.CartDetailId == CartDetail).FirstOrDefault();
 
             return foundCartDetail;
         }
-        public async Task<List<CartDetailVM>> GetCartDetailByItemID(int itemID)
+        public List<CartDetailVM> GetCartDetailByItemID(int itemID)
         {
 
             List<CartDetail> foundCartDetail = context.CartDetails.Where(cd => cd.ItemId == itemID).ToList();
@@ -51,7 +51,7 @@ namespace MOBY_API_Core6.Repository
             return CartDetailToVM;
         }
 
-        public async Task<bool> CreateCartDetail(CreateCartDetailVM createdCartDetail)
+        public bool CreateCartDetail(CreateCartDetailVM createdCartDetail)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> UpdateCartDetail(CartDetail cartDetail, int quantity)
+        public bool UpdateCartDetail(CartDetail cartDetail, int quantity)
         {
             try
             {
