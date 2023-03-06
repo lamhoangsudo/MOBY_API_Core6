@@ -13,11 +13,11 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime? DateUpdate { get; set; }
         public bool EditStatus { get; set; }
         public bool CommentStatus { get; set; }
-        public List<ReplyVM> commentReply { get; set; }
+        public List<ReplyVM>? ListReply { get; set; }
 
         public static CommentVM CommentToVewModel(Comment cmt)
         {
-            return new CommentVM
+            var commendVM = new CommentVM
             {
                 CommentId = cmt.CommentId,
                 ItemId = cmt.ItemId,
@@ -26,9 +26,12 @@ namespace MOBY_API_Core6.Data_View_Model
                 CommentContent = cmt.CommentContent,
                 DateCreate = cmt.DateCreate,
                 DateUpdate = cmt.DateUpdate,
-
-
             };
+
+            var listReplies = cmt.Replies.Select(rep => ReplyVM.ReplyToVewModel(rep)).ToList();
+            commendVM.ListReply = listReplies;
+
+            return commendVM;
         }
     }
 }

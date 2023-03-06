@@ -24,7 +24,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                List<Comment> listAllComment = CmtDAO.GetAllComment();
+                List<CommentVM> listAllComment = await CmtDAO.GetAllComment();
                 return Ok(listAllComment);
             }
             catch (Exception ex)
@@ -41,12 +41,12 @@ namespace MOBY_API_Core6.Controllers
             {
                 if (id.BlogId != null)
                 {
-                    List<Comment> listAllComment = CmtDAO.GetCommentByBlogID(id.BlogId.Value);
+                    List<CommentVM> listAllComment = await CmtDAO.GetCommentByBlogID(id.BlogId.Value);
                     return Ok(listAllComment);
                 }
                 else if (id.ItemId != null)
                 {
-                    List<Comment> listAllComment = CmtDAO.GetCommentByItemID(id.ItemId.Value);
+                    List<CommentVM> listAllComment = await CmtDAO.GetCommentByItemID(id.ItemId.Value);
                     return Ok(listAllComment);
                 }
                 return BadRequest(ReturnMessage.create("no BlogID either ItemID"));
@@ -65,10 +65,12 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                if (CmtDAO.CreateComment(cmt, uid))
+
+                if (await CmtDAO.CreateComment(cmt, uid))
                 {
                     return Ok(ReturnMessage.create("success"));
                 }
+
                 return BadRequest(ReturnMessage.create("error at CreateComment"));
             }
             catch (Exception ex)
@@ -85,7 +87,7 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                if (CmtDAO.UpdateComment(cmt, uid))
+                if (await CmtDAO.UpdateComment(cmt, uid))
                 {
                     return Ok(ReturnMessage.create("success"));
                 }
@@ -105,7 +107,7 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                if (CmtDAO.DeleteComment(cmtid, uid))
+                if (await CmtDAO.DeleteComment(cmtid, uid))
                 {
                     return Ok(ReturnMessage.create("success"));
                 }

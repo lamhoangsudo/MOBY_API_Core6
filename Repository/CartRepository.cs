@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
@@ -16,16 +17,20 @@ namespace MOBY_API_Core6.Repository
             Cart cart = new Cart();
             cart.CartDateCreate = DateTime.Now;
             cart.UserId = userID;
-            context.Carts.Add(cart);
-            context.SaveChanges();
-            return true;
+            await context.Carts.AddAsync(cart);
+            if (await context.SaveChangesAsync() != 0)
+            {
+                return true;
+            }
+            return false;
 
         }
 
         public async Task<bool> CheackExistedCartByUid(int userID)
         {
-            Cart cart = new Cart();
-            cart = context.Carts.Where(c => c.UserId == userID).FirstOrDefault();
+            Cart? cart = await context.Carts
+                .Where(c => c.UserId == userID)
+                .FirstOrDefaultAsync();
             if (cart != null)
             {
                 return true;
@@ -33,11 +38,14 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<Cart> GetCartByUid(int userID)
+        public async Task<CartVM?> GetCartByUid(int userID)
         {
             //Cart cart = context.Carts.Where(c => c.UserId == userID).FirstOrDefault();
-            Cart cart = context.Carts.Where(c => c.UserId == userID)
-                .Include(c => c.CartDetails).FirstOrDefault();
+            CartVM? cart = await context.Carts
+                .Where(c => c.UserId == userID)
+                .Include(c => c.CartDetails)
+                .Select(c => CartVM.CartToVewModel(c))
+                .FirstOrDefaultAsync();
 
             return cart;
         }

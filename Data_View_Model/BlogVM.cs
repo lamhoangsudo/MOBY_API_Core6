@@ -14,9 +14,11 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime? BlogDateUpdate { get; set; }
         public int? BlogStatus { get; set; }
 
+        public List<CommentVM>? ListComment { get; set; }
         public static BlogVM BlogToVewModel(Blog blog)
         {
-            return new BlogVM
+
+            var blogView = new BlogVM
             {
                 BlogId = blog.BlogId,
                 BlogCategoryId = blog.BlogCategoryId,
@@ -28,6 +30,9 @@ namespace MOBY_API_Core6.Data_View_Model
                 BlogDateUpdate = blog.BlogDateUpdate,
                 BlogStatus = blog.BlogStatus
             };
+            var ListComment = blog.Comments.Select(b => CommentVM.CommentToVewModel(b)).ToList();
+            blogView.ListComment = ListComment;
+            return blogView;
         }
     }
 }

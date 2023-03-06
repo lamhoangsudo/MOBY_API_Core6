@@ -24,15 +24,16 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                if (!(await userDAO.CheckExistedUser(this.User.Claims)))
+                if (!(await userDAO.CheckExistedUser(this.User.Claims.First(i => i.Type == "user_id").Value)))
                 {
                     if (await userDAO.CreateUser(this.User.Claims, createUserVM))
                     {
-                        int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                        if (await cartDAO.CreateCart(uid))
+                        return Ok(ReturnMessage.create("success"));
+                        //int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                        /*if (await cartDAO.CreateCart(uid))
                         {
-                            return Ok(ReturnMessage.create("success"));
-                        }
+                            
+                        }*/
 
                     }
                 }
@@ -57,22 +58,29 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 //UserAccounts currentUser = new UserAccounts();
-                UserAccount currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                UserAccount? currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
 
-
-                if (await userDAO.EditUser(currentUser, accountVM))
+                if (currentUser != null)
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    if (await userDAO.EditUser(currentUser, accountVM))
+                    {
+                        return Ok(ReturnMessage.create("success"));
+                    }
                 }
+
+                return BadRequest(ReturnMessage.create("No User Found"));
+
+
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                Console.WriteLine(ex.ToString());
+                return BadRequest(ReturnMessage.create("error at UpdateUserProfile"));
 
             }
 
 
-            return BadRequest(ReturnMessage.create("error at UpdateUserProfile"));
+
         }
 
         [Authorize]
@@ -83,12 +91,19 @@ namespace MOBY_API_Core6.Controllers
             //UserAccounts currentUser = new UserAccounts();
             // UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
 
-            if (await userDAO.BanUser(uid))
+            try
             {
-                return Ok(ReturnMessage.create("success"));
-            }
+                if (await userDAO.BanUser(uid))
+                {
+                    return Ok(ReturnMessage.create("success"));
+                }
+                return BadRequest(ReturnMessage.create("error at BanUser"));
 
-            return BadRequest(ReturnMessage.create("error at BanUser"));
+            }
+            catch
+            {
+                return BadRequest(ReturnMessage.create("error at BanUser"));
+            }
         }
 
         [Authorize]
@@ -98,25 +113,39 @@ namespace MOBY_API_Core6.Controllers
         {
             //UserAccounts currentUser = new UserAccounts();
             //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
-            if (await userDAO.BanUser(uid))
+            try
             {
-                return Ok(ReturnMessage.create("success"));
-            }
+                if (await userDAO.UnbanUser(uid))
+                {
+                    return Ok(ReturnMessage.create("success"));
+                }
+                return BadRequest(ReturnMessage.create("error at UnbanUser"));
 
-            return BadRequest(ReturnMessage.create("error at UnBanUser"));
+            }
+            catch
+            {
+                return BadRequest(ReturnMessage.create("error at UnbanUser"));
+            }
         }
         [Authorize]
         [HttpGet]
         [Route("api/useraccount/all")]
-        public async Task<IActionResult> GetAllUser()
+        public async Task<IActionResult> GetAllUser([FromQuery] PaggingVM pagging)
         {
-            List<UserVM> list = await userDAO.GetAllUser();
+            try
+            {
+                List<UserVM> list = await userDAO.GetAllUser(pagging);
 
-            //UserAccounts currentUser = new UserAccounts();
-            //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
+                //UserAccounts currentUser = new UserAccounts();
+                //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
 
 
-            return Ok(list); ;
+                return Ok(list); ;
+            }
+            catch
+            {
+                return BadRequest(ReturnMessage.create("error at GetAllUser"));
+            }
         }
 
         [Authorize]
@@ -124,16 +153,25 @@ namespace MOBY_API_Core6.Controllers
         [Route("api/useraccount/token")]
         public async Task<IActionResult> GetUserInfo()
         {
-            UserAccount currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            Cart cart = currentUser.Carts.FirstOrDefault();
-
-            if (currentUser == null)
+            try
             {
-                return NotFound(ReturnMessage.create("account not found"));
+                UserAccount? currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (currentUser == null)
+                {
+                    return NotFound(ReturnMessage.create("account not found"));
+                }
+                Cart? cart = currentUser.Carts.FirstOrDefault();
+
+
+
+
+                //return Ok(UserAccountVM.UserAccountToVewModel(currentUser, cart.CartId));
+                return Ok(currentUser);
             }
-
-
-            return Ok(UserAccountVM.UserAccountToVewModel(currentUser, cart.CartId));
+            catch
+            {
+                return BadRequest(ReturnMessage.create("error at GetUserInfo"));
+            }
         }
 
         [Authorize]
@@ -141,9 +179,20 @@ namespace MOBY_API_Core6.Controllers
         [Route("api/useraccount")]
         public async Task<IActionResult> GetUserInfoByQuery([FromQuery] UserUidVM uid)
         {
-            UserAccount currentUser = await userDAO.FindUserByUid(uid.UserId);
+            try
+            {
+                UserAccount? currentUser = await userDAO.FindUserByUid(uid.UserId);
+                if (currentUser == null)
+                {
+                    return BadRequest(ReturnMessage.create("account not found"));
+                }
+                return Ok(UserAccountVM.UserAccountToVewModel(currentUser));
 
-            return Ok(UserAccountVM.UserAccountToVewModel(currentUser));
+            }
+            catch
+            {
+                return BadRequest(ReturnMessage.create("error at GetUserInfoByQuery"));
+            }
         }
     }
 }

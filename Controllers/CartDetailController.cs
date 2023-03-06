@@ -27,17 +27,17 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> GetAllCartDetail()
         {
             int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            Cart cart = await cartDAO.GetCartByUid(uid);
-            List<CartDetailVM> listCartDetail = cartDetailDAO.GetAllCartDetail(cart.CartId);
-            if (listCartDetail != null)
+            CartVM? cart = await cartDAO.GetCartByUid(uid);
+            if (cart != null)
             {
-                return Ok(listCartDetail);
-            }
-            else
-            {
-                return BadRequest(ReturnMessage.create("no CartDetail Found"));
-            }
+                List<CartDetailVM> listCartDetail = await cartDetailDAO.GetAllCartDetail(cart.CartId);
+                if (listCartDetail != null)
+                {
+                    return Ok(listCartDetail);
+                }
 
+            }
+            return BadRequest(ReturnMessage.create("no CartDetail Found"));
         }
         /*
         [Authorize]
@@ -68,7 +68,7 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> CreateCartDetail([FromBody] CreateCartDetailVM createdCartDetail)
         {
 
-            if (cartDetailDAO.CreateCartDetail(createdCartDetail))
+            if (await cartDetailDAO.CreateCartDetail(createdCartDetail))
             {
                 return Ok(ReturnMessage.create("Success"));
             }
@@ -81,14 +81,32 @@ namespace MOBY_API_Core6.Controllers
         [Route("api/cartdetail")]
         public async Task<IActionResult> UpdateCartDetail([FromBody] UpdateCartDetailVM CartDetail)
         {
-            var cacrtDetail = cartDetailDAO.GetCartDetailByCartDetailID(CartDetail.CartDetailId);
-            if (cartDetailDAO.UpdateCartDetail(cacrtDetail, CartDetail.CartDetailItemQuantity))
+            CartDetail? cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetail.CartDetailId);
+            if (cacrtDetail != null)
             {
-                return Ok(ReturnMessage.create("Success"));
+                if (await cartDetailDAO.UpdateCartDetail(cacrtDetail, CartDetail.CartDetailItemQuantity))
+                {
+                    return Ok(ReturnMessage.create("Success"));
+                }
             }
             return BadRequest(ReturnMessage.create("error at UpdateCartDetail"));
         }
 
+        [Authorize]
+        [HttpDelete]
+        [Route("api/cartdetail")]
+        public async Task<IActionResult> DeleteCartDetail([FromBody] CartDetailIdVM CartDetailid)
+        {
+            CartDetail? cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetailid.CartDetailId);
+            if (cacrtDetail != null)
+            {
+                if (await cartDetailDAO.DeleteCartDetail(cacrtDetail))
+                {
+                    return Ok(ReturnMessage.create("Success"));
+                }
+            }
+            return BadRequest(ReturnMessage.create("error at UpdateCartDetail"));
+        }
 
 
 
