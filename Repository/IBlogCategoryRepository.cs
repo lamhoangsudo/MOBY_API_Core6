@@ -6,7 +6,7 @@ namespace MOBY_API_Core6.Repository
     {
         public Task<List<BlogCategoryVM>> GetAllBlogCategory();
         public Task<bool> createBlogCategory(String name);
-        public Task<bool> checkNameBlogCategory(String name);
-        public Task<String> GetBlogCateNameByID(int blogCateId);
+
+        public Task<BlogCategoryVM?> GetBlogCateByID(int blogCateId);
     }
 }

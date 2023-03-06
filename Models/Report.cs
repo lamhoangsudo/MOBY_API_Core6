@@ -13,6 +13,7 @@ namespace MOBY_API_Core6.Models
         public int ReportStatus { get; set; }
         public string? ReportContent { get; set; }
         public string? Image { get; set; }
+        public string? ReasonDeny { get; set; }
 
         public virtual Item Item { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;

@@ -6,15 +6,18 @@ namespace MOBY_API_Core6.Data_View_Model
     {
         public int BlogCategoryId { get; set; }
         public string BlogCategoryName { get; set; } = null!;
+        public List<BlogVM>? blogList { get; set; }
 
         public static BlogCategoryVM BlogCategoryVMToVewModel(BlogCategory blogcate)
         {
-            return new BlogCategoryVM
+            var blogcateView = new BlogCategoryVM
             {
                 BlogCategoryId = blogcate.BlogCategoryId,
                 BlogCategoryName = blogcate.BlogCategoryName,
-
             };
+            var ListBlog = blogcate.Blogs.Select(bc => BlogVM.BlogToVewModel(bc)).ToList();
+            blogcateView.blogList = ListBlog;
+            return blogcateView;
         }
     }
 }

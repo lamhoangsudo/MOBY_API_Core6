@@ -22,6 +22,8 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<BriefItem> BriefItems { get; set; } = null!;
         public virtual DbSet<Cart> Carts { get; set; } = null!;
         public virtual DbSet<CartDetail> CartDetails { get; set; } = null!;
+        public virtual DbSet<CartDetailView> CartDetailViews { get; set; } = null!;
+        public virtual DbSet<CartView> CartViews { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<DetailItem> DetailItems { get; set; } = null!;
@@ -29,11 +31,14 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<Item> Items { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
+        public virtual DbSet<OrderDetailView> OrderDetailViews { get; set; } = null!;
+        public virtual DbSet<OrderView> OrderViews { get; set; } = null!;
         public virtual DbSet<Reply> Replies { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<SubCategory> SubCategories { get; set; } = null!;
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
+        public virtual DbSet<UserAddress> UserAddresses { get; set; } = null!;
         public virtual DbSet<ViewBlog> ViewBlogs { get; set; } = null!;
         public virtual DbSet<ViewReport> ViewReports { get; set; } = null!;
 
@@ -133,10 +138,6 @@ namespace MOBY_API_Core6.Models
             {
                 entity.Property(e => e.CartId).HasColumnName("CartID");
 
-                entity.Property(e => e.CartDateCreate)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("Cart_Date_Create");
-
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.User)
@@ -174,6 +175,100 @@ namespace MOBY_API_Core6.Models
                     .HasForeignKey(d => d.ItemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_CartDetailID_Items");
+            });
+
+            modelBuilder.Entity<CartDetailView>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("CartDetailView");
+
+                entity.Property(e => e.CartDetailDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Cart_Detail_Date_Create");
+
+                entity.Property(e => e.CartDetailDateUpdate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Cart_Detail_Date_Update");
+
+                entity.Property(e => e.CartDetailId).HasColumnName("Cart_DetailID");
+
+                entity.Property(e => e.CartDetailItemQuantity).HasColumnName("Cart_Detail_Item_Quantity");
+
+                entity.Property(e => e.CartId).HasColumnName("CartID");
+
+                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
+                entity.Property(e => e.CategoryName).HasColumnName("Category_Name");
+
+                entity.Property(e => e.ItemCode).HasColumnName("Item_Code");
+
+                entity.Property(e => e.ItemEstimateValue).HasColumnName("Item_Estimate_Value");
+
+                entity.Property(e => e.ItemExpiredTime)
+                    .HasColumnType("date")
+                    .HasColumnName("Item_Expired_Time");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.ItemMass).HasColumnName("Item_Mass");
+
+                entity.Property(e => e.ItemQuanlity).HasColumnName("Item_Quanlity");
+
+                entity.Property(e => e.ItemSalePrice).HasColumnName("Item_Sale_Price");
+
+                entity.Property(e => e.ItemShareAmount).HasColumnName("Item_Share_Amount");
+
+                entity.Property(e => e.ItemShippingAddress).HasColumnName("Item_Shipping_Address");
+
+                entity.Property(e => e.ItemSize).HasColumnName("Item_Size");
+
+                entity.Property(e => e.ItemSponsoredOrderShippingFee).HasColumnName("Item_Sponsored_Order_Shipping_Fee");
+
+                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
+
+                entity.Property(e => e.SubCategoryId).HasColumnName("Sub_CategoryID");
+
+                entity.Property(e => e.SubCategoryName).HasColumnName("Sub_Category_Name");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+            });
+
+            modelBuilder.Entity<CartView>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("CartView");
+
+                entity.Property(e => e.CartDetailDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Cart_Detail_Date_Create");
+
+                entity.Property(e => e.CartDetailDateUpdate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Cart_Detail_Date_Update");
+
+                entity.Property(e => e.CartDetailId).HasColumnName("Cart_DetailID");
+
+                entity.Property(e => e.CartDetailItemQuantity).HasColumnName("Cart_Detail_Item_Quantity");
+
+                entity.Property(e => e.CartId).HasColumnName("CartID");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.ItemSalePrice).HasColumnName("Item_Sale_Price");
+
+                entity.Property(e => e.ItemShareAmount).HasColumnName("Item_Share_Amount");
+
+                entity.Property(e => e.ItemSponsoredOrderShippingFee).HasColumnName("Item_Sponsored_Order_Shipping_Fee");
+
+                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -409,6 +504,112 @@ namespace MOBY_API_Core6.Models
                     .HasConstraintName("FK_OrderDetails_Orders");
             });
 
+            modelBuilder.Entity<OrderDetailView>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("OrderDetailView");
+
+                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
+                entity.Property(e => e.CategoryName).HasColumnName("Category_Name");
+
+                entity.Property(e => e.ItemDateCreated)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Item_Date_Created");
+
+                entity.Property(e => e.ItemDateUpdate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Item_Date_Update");
+
+                entity.Property(e => e.ItemEstimateValue).HasColumnName("Item_Estimate_Value");
+
+                entity.Property(e => e.ItemExpiredTime)
+                    .HasColumnType("date")
+                    .HasColumnName("Item_Expired_Time");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.ItemMass).HasColumnName("Item_Mass");
+
+                entity.Property(e => e.ItemQuanlity).HasColumnName("Item_Quanlity");
+
+                entity.Property(e => e.ItemSalePrice).HasColumnName("Item_Sale_Price");
+
+                entity.Property(e => e.ItemShareAmount).HasColumnName("Item_Share_Amount");
+
+                entity.Property(e => e.ItemShippingAddress).HasColumnName("Item_Shipping_Address");
+
+                entity.Property(e => e.ItemSize).HasColumnName("Item_Size");
+
+                entity.Property(e => e.ItemSponsoredOrderShippingFee).HasColumnName("Item_Sponsored_Order_Shipping_Fee");
+
+                entity.Property(e => e.ItemStatus).HasColumnName("Item_Status");
+
+                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
+
+                entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.SponsoredOrderShippingFee).HasColumnName("Sponsored_Order_Shipping_Fee");
+
+                entity.Property(e => e.SubCategoryId).HasColumnName("Sub_CategoryID");
+
+                entity.Property(e => e.SubCategoryName).HasColumnName("Sub_Category_Name");
+
+                entity.Property(e => e.UserAddress).HasColumnName("User_Address");
+
+                entity.Property(e => e.UserGmail).HasColumnName("User_Gmail");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+
+                entity.Property(e => e.UserPhone)
+                    .HasMaxLength(20)
+                    .HasColumnName("User_Phone")
+                    .IsFixedLength();
+            });
+
+            modelBuilder.Entity<OrderView>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("OrderView");
+
+                entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.ItemQuanlity).HasColumnName("Item_Quanlity");
+
+                entity.Property(e => e.ItemSalePrice).HasColumnName("Item_Sale_Price");
+
+                entity.Property(e => e.ItemSponsoredOrderShippingFee).HasColumnName("Item_Sponsored_Order_Shipping_Fee");
+
+                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
+
+                entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.SponsoredOrderShippingFee).HasColumnName("Sponsored_Order_Shipping_Fee");
+
+                entity.Property(e => e.UserAddress).HasColumnName("User_Address");
+
+                entity.Property(e => e.UserGmail).HasColumnName("User_Gmail");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+
+                entity.Property(e => e.UserPhone)
+                    .HasMaxLength(20)
+                    .HasColumnName("User_Phone")
+                    .IsFixedLength();
+            });
+
             modelBuilder.Entity<Reply>(entity =>
             {
                 entity.Property(e => e.ReplyId).HasColumnName("ReplyID");
@@ -540,6 +741,21 @@ namespace MOBY_API_Core6.Models
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_UserAccounts_Roles");
+            });
+
+            modelBuilder.Entity<UserAddress>(entity =>
+            {
+                entity.ToTable("UserAddress");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserAddresses)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserAddress_UserAccounts");
             });
 
             modelBuilder.Entity<ViewBlog>(entity =>

@@ -14,9 +14,9 @@ namespace MOBY_API_Core6.Repository
             _context = context;
         }
 
-        public async Task<CategoryVM> GetCategoryByID(int categoryID)
+        public async Task<CategoryVM?> GetCategoryByID(int categoryID)
         {
-            var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {categoryID}").ToList().SingleOrDefault();
+            var checkCategory = await _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_ID {categoryID}").SingleOrDefaultAsync();
             if (checkCategory != null)
             {
                 return new CategoryVM
@@ -35,13 +35,13 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<bool> CreateCategory(CreateCategoryVM categoryVM)
         {
-            var checkCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Name {categoryVM.categoryName}").ToList().SingleOrDefault();
+            var checkCategory = await _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Name {categoryVM.categoryName}").SingleOrDefaultAsync();
             if (checkCategory == null)
             {
-                var checkCreate = _context.Database.ExecuteSqlInterpolated($"EXEC create_Category {categoryVM.categoryName}, {categoryVM.categoryImage}");
+                var checkCreate = await _context.Database.ExecuteSqlInterpolatedAsync($"EXEC create_Category {categoryVM.categoryName}, {categoryVM.categoryImage}");
                 if (checkCreate != 0)
                 {
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     return true;
                 }
                 else
@@ -57,13 +57,13 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<bool> UpdateCategory(UpdateCategoryVM categoryVM)
         {
-            var checkUpdateCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Name {categoryVM.categoryName}").ToList().SingleOrDefault();
+            var checkUpdateCategory = await _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Name {categoryVM.categoryName}").SingleOrDefaultAsync();
             if (checkUpdateCategory == null)
             {
-                var checkUpdate = _context.Database.ExecuteSqlInterpolated($"EXEC update_Category {categoryVM.categoryID},{categoryVM.categoryName},{categoryVM.categoryImage}");
+                var checkUpdate = await _context.Database.ExecuteSqlInterpolatedAsync($"EXEC update_Category {categoryVM.categoryID},{categoryVM.categoryName},{categoryVM.categoryImage}");
                 if (checkUpdate != 0)
                 {
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     return true;
                 }
                 else
@@ -80,10 +80,10 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<bool> DeleteCategory(DeleteCategoryVM categoryVM)
         {
-            var checkDelete = _context.Database.ExecuteSqlInterpolated($"EXEC delete_Category {categoryVM.categoryID}");
+            var checkDelete = await _context.Database.ExecuteSqlInterpolatedAsync($"EXEC delete_Category {categoryVM.categoryID}");
             if (checkDelete != 0)
             {
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
             else
@@ -92,10 +92,12 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<CategoryVM>> GetAllCategoriesAndSubCategory()
+        public async Task<List<CategoryVM>?> GetAllCategoriesAndSubCategory()
         {
             List<CategoryVM> categoryVMs = new List<CategoryVM>();
-            var listCategory = _context.Categories.FromSqlRaw($"EXEC get_All_Category").ToList();
+            var listCategory = await _context.Categories
+                .FromSqlInterpolated($"EXEC get_All_Category")
+                .ToListAsync();
             foreach (var category in listCategory)
             {
                 CategoryVM vM = new CategoryVM();
@@ -103,42 +105,47 @@ namespace MOBY_API_Core6.Repository
                 vM.CategoryName = category.CategoryName;
                 vM.CategoryStatus = category.CategoryStatus;
                 vM.CategoryImage = category.CategoryImage;
-                var listSubCategory = _context.SubCategories.FromSqlInterpolated($"EXEC get_All_SubCategory {vM.CategoryId}").ToList().Select(subCategory => new SubCategoryVM
+                var listSubCategory = await _context.SubCategories
+                    .FromSqlInterpolated($"EXEC get_All_SubCategory {vM.CategoryId}")
+                    .Select(subCategory => new SubCategoryVM
                 {
                     SubCategoryId = subCategory.SubCategoryId,
                     SubCategoryName = subCategory.SubCategoryName,
                     SubCategoryStatus = subCategory.SubCategoryStatus,
                     CategoryId = subCategory.CategoryId,
-                });
-                vM.subCategoryVMs = listSubCategory.ToList();
+                }).ToListAsync();
+                vM.subCategoryVMs = listSubCategory;
                 categoryVMs.Add(vM);
             }
             return categoryVMs;
         }
 
-        public async Task<List<CategoryVM>> GetCategoriesByStatus(bool categoryStatus)
+        public async Task<List<CategoryVM>?> GetCategoriesByStatus(bool categoryStatus)
         {
-            var listCategory = _context.Categories.FromSqlInterpolated($"EXEC get_Category_By_Status {categoryStatus}").ToList().Select(category => new CategoryVM
-            {
-                CategoryId = category.CategoryId,
-                CategoryName = category.CategoryName,
-                CategoryImage = category.CategoryImage,
-                CategoryStatus = category.CategoryStatus,
-            });
-            return listCategory.ToList();
+            var listCategory = await _context.Categories
+                .FromSqlInterpolated($"EXEC get_Category_By_Status {categoryStatus}")
+                .Select(category => new CategoryVM { 
+                    CategoryId = category.CategoryId, 
+                    CategoryName = category.CategoryName, 
+                    CategoryImage = category.CategoryImage, 
+                    CategoryStatus = category.CategoryStatus })
+                .ToListAsync();
+            return listCategory;
         }
 
-        public async Task<List<CategoryVM>> GetCategoriesByName(string categoryName)
+        public async Task<List<CategoryVM>?> GetCategoriesByName(string categoryName)
         {
             categoryName = "%" + categoryName + "%";
-            var listCategory = _context.Categories.FromSqlInterpolated($"EXEC search_Category_By_Name {categoryName}").ToList().Select(category => new CategoryVM
+            var listCategory = await _context.Categories
+                .FromSqlInterpolated($"EXEC search_Category_By_Name {categoryName}")
+                .Select(category => new CategoryVM
             {
                 CategoryId = category.CategoryId,
                 CategoryName = category.CategoryName,
                 CategoryImage = category.CategoryImage,
                 CategoryStatus = category.CategoryStatus,
-            });
-            return listCategory.ToList();
+            }).ToListAsync();
+            return listCategory;
         }
     }
 }

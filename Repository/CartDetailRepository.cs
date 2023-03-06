@@ -12,10 +12,15 @@ namespace MOBY_API_Core6.Repository
         {
             this.context = context;
         }
-        public List<CartDetailVM> GetAllCartDetail(int cartID)
+        public async Task<List<CartDetailVM>> GetAllCartDetail(int cartID)
         {
-
-            List<CartDetail> listCartDetail = new List<CartDetail>();
+            List<CartDetailVM> listCartDetailMV = await context.CartDetails
+                .Where(cd => cd.CartId == cartID)
+                .Include(cd => cd.Item)
+                .ThenInclude(item => item.User)
+                .Select(cd => CartDetailVM.CartDetailToVewModel(cd))
+                .ToListAsync();
+            /*List<CartDetail> listCartDetail = new List<CartDetail>();
             List<CartDetailVM> listCartDetailMV = new List<CartDetailVM>();
             var cart = context.Carts.Where(c => c.CartId == cartID)
                 .Include(thisCart => thisCart.CartDetails).FirstOrDefault();
@@ -26,18 +31,20 @@ namespace MOBY_API_Core6.Repository
             {
                 crmv = CartDetailVM.CartDetailToVewModel(item);
                 listCartDetailMV.Add(crmv);
-            }
+            }*/
             return listCartDetailMV;
         }
 
-        public CartDetail GetCartDetailByCartDetailID(int CartDetail)
+        public async Task<CartDetail?> GetCartDetailByCartDetailID(int CartDetail)
         {
 
-            CartDetail foundCartDetail = context.CartDetails.Where(cd => cd.CartDetailId == CartDetail).FirstOrDefault();
+            CartDetail? foundCartDetail = await context.CartDetails
+                .Where(cd => cd.CartDetailId == CartDetail)
+                .FirstOrDefaultAsync();
 
             return foundCartDetail;
         }
-        public List<CartDetailVM> GetCartDetailByItemID(int itemID)
+        /*public List<CartDetailVM> GetCartDetailByItemID(int itemID)
         {
 
             List<CartDetail> foundCartDetail = context.CartDetails.Where(cd => cd.ItemId == itemID).ToList();
@@ -49,42 +56,46 @@ namespace MOBY_API_Core6.Repository
                 CartDetailToVM.Add(cdmv);
             }
             return CartDetailToVM;
-        }
+        }*/
 
-        public bool CreateCartDetail(CreateCartDetailVM createdCartDetail)
+        public async Task<bool> CreateCartDetail(CreateCartDetailVM createdCartDetail)
         {
-            try
-            {
-                CartDetail newCartDetail = new CartDetail();
-                newCartDetail.CartId = createdCartDetail.CartId;
-                newCartDetail.ItemId = createdCartDetail.ItemId;
-                newCartDetail.CartDetailDateCreate = DateTime.Now;
-                newCartDetail.CartDetailItemQuantity = createdCartDetail.CartDetailItemQuantity;
 
-                context.CartDetails.Add(newCartDetail);
-                context.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
+            CartDetail newCartDetail = new CartDetail();
+            newCartDetail.CartId = createdCartDetail.CartId;
+            newCartDetail.ItemId = createdCartDetail.ItemId;
+            newCartDetail.CartDetailDateCreate = DateTime.Now;
+            newCartDetail.CartDetailItemQuantity = createdCartDetail.CartDetailItemQuantity;
+
+            await context.CartDetails.AddAsync(newCartDetail);
+            if (await context.SaveChangesAsync() != 0)
             {
-                Console.WriteLine(ex.Message);
+                return true;
             }
             return false;
         }
 
-        public bool UpdateCartDetail(CartDetail cartDetail, int quantity)
+        public async Task<bool> UpdateCartDetail(CartDetail cartDetail, int quantity)
         {
-            try
-            {
-                cartDetail.CartDetailItemQuantity = quantity;
-                cartDetail.CartDetailDateUpdate = DateTime.Now;
 
-                context.SaveChanges();
+            cartDetail.CartDetailItemQuantity = quantity;
+            cartDetail.CartDetailDateUpdate = DateTime.Now;
+
+            if (await context.SaveChangesAsync() != 0)
+            {
                 return true;
             }
-            catch (Exception ex)
+            return false;
+        }
+
+        public async Task<bool> DeleteCartDetail(CartDetail cartDetail)
+        {
+
+            context.CartDetails.Remove(cartDetail);
+
+            if (await context.SaveChangesAsync() != 0)
             {
-                Console.WriteLine(ex.Message);
+                return true;
             }
             return false;
         }

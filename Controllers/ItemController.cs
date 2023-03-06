@@ -41,7 +41,7 @@ namespace Item.Controllers
         {
             try
             {
-                List<BriefItem> listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share, status, pageNumber, pageSize);
+                List<BriefItem>? listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share, status, pageNumber, pageSize);
                 if (listBriefItem == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -62,7 +62,7 @@ namespace Item.Controllers
         {
             try
             {
-                DetailItem itemDetail = await _itemRepository.GetItemDetail(itemID);
+                DetailItem? itemDetail = await _itemRepository.GetItemDetail(itemID);
                 if (itemDetail == null)
                 {
                     return NotFound(ReturnMessage.create("sản phẩm này không tồn tại"));
@@ -83,7 +83,7 @@ namespace Item.Controllers
         {
             try
             {
-                DetailItemRequest itemRequestDetail = await _itemRepository.GetRequestDetail(itemID);
+                DetailItemRequest? itemRequestDetail = await _itemRepository.GetRequestDetail(itemID);
                 if (itemRequestDetail == null)
                 {
                     return NotFound(ReturnMessage.create("yêu cầu này không tồn tại"));
@@ -104,7 +104,7 @@ namespace Item.Controllers
         {
             try
             {
-                List<BriefItem> listBriefItemByUserID = await _itemRepository.GetBriefItemByAndBriefRequestUserID(userID, status);
+                List<BriefItem>? listBriefItemByUserID = await _itemRepository.GetBriefItemByAndBriefRequestUserID(userID, status);
                 if (listBriefItemByUserID == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -125,7 +125,7 @@ namespace Item.Controllers
         {
             try
             {
-                List<BriefItem> listBriefItemByItemTitle = await _itemRepository.SearchBriefItemByTitle(itemTitle, status);
+                List<BriefItem>? listBriefItemByItemTitle = await _itemRepository.SearchBriefItemByTitle(itemTitle, status);
                 if (listBriefItemByItemTitle == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -146,7 +146,7 @@ namespace Item.Controllers
         {
             try
             {
-                List<BriefItem> listBriefItemBySubCategoryID = await _itemRepository.SearchBriefItemBySubCategoryID(subCategoryID, status);
+                List<BriefItem>? listBriefItemBySubCategoryID = await _itemRepository.SearchBriefItemBySubCategoryID(subCategoryID, status);
                 if (listBriefItemBySubCategoryID == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -167,7 +167,7 @@ namespace Item.Controllers
         {
             try
             {
-                List<BriefItem> listBriefItemByCategoryID = await _itemRepository.SearchBriefItemByCategoryID(categoryID, status);
+                List<BriefItem>? listBriefItemByCategoryID = await _itemRepository.SearchBriefItemByCategoryID(categoryID, status);
                 if (listBriefItemByCategoryID == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -230,7 +230,7 @@ namespace Item.Controllers
         {
             try
             {
-                List<BriefItem> listBriefItemAndBriefRequestByUserID = await _itemRepository.GetAllMyBriefItemAndBriefRequest(userID, share);
+                List<BriefItem>? listBriefItemAndBriefRequestByUserID = await _itemRepository.GetAllMyBriefItemAndBriefRequest(userID, share);
                 if (listBriefItemAndBriefRequestByUserID == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -251,7 +251,7 @@ namespace Item.Controllers
         {
             try
             {
-                List<BriefItem> listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize, userID);
+                List<BriefItem>? listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize, userID);
                 if (listAllShareRecently == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -272,7 +272,7 @@ namespace Item.Controllers
         {
             try
             {
-                List<BriefItem> listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize, userID);
+                List<BriefItem>? listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize, userID);
                 if (listAllShareFree == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -293,7 +293,7 @@ namespace Item.Controllers
         {
             try
             {
-                List<BriefItem> listAllMyShareAndRequest = await _itemRepository.GetAllMyShareAndRequest(userID, share, status, pageNumber, pageSize);
+                List<BriefItem>? listAllMyShareAndRequest = await _itemRepository.GetAllMyShareAndRequest(userID, share, status, pageNumber, pageSize);
                 if (listAllMyShareAndRequest == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -314,7 +314,7 @@ namespace Item.Controllers
         {
             try
             {
-                List<BriefItem> listAllShareNearYou = await _itemRepository.GetAllShareNearYou(location, pageNumber, pageSize, userID);
+                List<BriefItem>? listAllShareNearYou = await _itemRepository.GetAllShareNearYou(location, pageNumber, pageSize, userID);
                 if (listAllShareNearYou == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -331,20 +331,11 @@ namespace Item.Controllers
         }
 
         [HttpGet("GetItemDynamicFilters")]
-        public async Task<IActionResult> GetItemDynamicFilters(int pageNumber, int pageSize, int categoryID, string? titleName, string? location, float minPrice, float maxPrice, double maxUsable, double minUsable)
+        public async Task<IActionResult> GetItemDynamicFilters( int pageNumber, int pageSize, [FromQuery] DynamicFilterVM dynamicFilterVM)
         {
             try
             {
-                if (maxUsable == 0)
-                {
-                    maxUsable = 100;
-                }
-                if (minUsable == 0)
-                {
-                    minUsable = 40;
-                }
-                DynamicFilterVM dynamicFilterVM = new DynamicFilterVM(categoryID, titleName, location, minPrice, maxPrice, maxUsable, minUsable);
-                List<BriefItem> listItemDynamicFilters = await _itemRepository.GetItemDynamicFilters(pageNumber, pageSize, dynamicFilterVM);
+                List<BriefItem>? listItemDynamicFilters = await _itemRepository.GetItemDynamicFilters(pageNumber, pageSize, dynamicFilterVM);
                 if (listItemDynamicFilters == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);

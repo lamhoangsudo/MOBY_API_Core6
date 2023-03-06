@@ -14,6 +14,7 @@ namespace MOBY_API_Core6.Models
             Orders = new HashSet<Order>();
             Replies = new HashSet<Reply>();
             Reports = new HashSet<Report>();
+            UserAddresses = new HashSet<UserAddress>();
         }
 
         public int UserId { get; set; }
@@ -39,5 +40,6 @@ namespace MOBY_API_Core6.Models
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Reply> Replies { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
+        public virtual ICollection<UserAddress> UserAddresses { get; set; }
     }
 }

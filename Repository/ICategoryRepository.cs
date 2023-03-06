@@ -5,11 +5,11 @@ namespace MOBY_API_Core6.Repository
 {
     public interface ICategoryRepository
     {
-        Task<List<CategoryVM>> GetAllCategoriesAndSubCategory();
-        Task<List<CategoryVM>> GetCategoriesByStatus(bool categoryStatus);
-        Task<List<CategoryVM>> GetCategoriesByName(string categoryName);
+        Task<List<CategoryVM>?> GetAllCategoriesAndSubCategory();
+        Task<List<CategoryVM>?> GetCategoriesByStatus(bool categoryStatus);
+        Task<List<CategoryVM>?> GetCategoriesByName(string categoryName);
         Task<bool> CreateCategory(CreateCategoryVM categoryVM);
-        Task<CategoryVM> GetCategoryByID(int categoryID);
+        Task<CategoryVM?> GetCategoryByID(int categoryID);
         Task<bool> UpdateCategory(UpdateCategoryVM categoryVM);
         Task<bool> DeleteCategory(DeleteCategoryVM categoryVM);
     }

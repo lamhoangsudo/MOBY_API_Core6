@@ -11,7 +11,6 @@ namespace MOBY_API_Core6.Models
         }
 
         public int CartId { get; set; }
-        public DateTime? CartDateCreate { get; set; }
         public int? UserId { get; set; }
 
         public virtual UserAccount? User { get; set; }
