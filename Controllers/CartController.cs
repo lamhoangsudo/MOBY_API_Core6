@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
 
@@ -39,10 +40,8 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> GetCartByUid()
         {
             int currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            Cart currentCart = await cartDAO.GetCartByUid(currentUid);
+            CartVM? currentCart = await cartDAO.GetCartByUid(currentUid);
             return Ok(currentCart);
-
-
         }
     }
 }

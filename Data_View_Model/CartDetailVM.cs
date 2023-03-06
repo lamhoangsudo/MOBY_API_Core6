@@ -10,20 +10,26 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime CartDetailDateCreate { get; set; }
         public DateTime? CartDetailDateUpdate { get; set; }
         public int CartDetailItemQuantity { get; set; }
-
-
-        public static CartDetailVM CartDetailToVewModel(CartDetail cartd)
+        public ItemVM? ItemVM { get; set; }
+        public UserVM? UserVM { get; set; }
+        public static CartDetailVM CartDetailToVewModel(CartDetail cartdetail)
         {
-            return new CartDetailVM
+            var CartDetailVM = new CartDetailVM
             {
-                CartDetailId = cartd.CartDetailId,
-                CartId = cartd.CartId,
-                ItemId = cartd.ItemId,
-                CartDetailDateCreate = cartd.CartDetailDateCreate,
-                CartDetailDateUpdate = cartd.CartDetailDateUpdate,
-                CartDetailItemQuantity = cartd.CartDetailItemQuantity,
+                CartDetailId = cartdetail.CartDetailId,
+                CartId = cartdetail.CartId,
+                ItemId = cartdetail.ItemId,
+                CartDetailDateCreate = cartdetail.CartDetailDateCreate,
+                CartDetailDateUpdate = cartdetail.CartDetailDateUpdate,
+                CartDetailItemQuantity = cartdetail.CartDetailItemQuantity,
 
             };
+            var item = cartdetail.Item;
+            CartDetailVM.ItemVM = ItemVM.ItemToViewModel(item);
+            var user = cartdetail.Item.User;
+            CartDetailVM.UserVM = UserVM.UserAccountToVewModel(user);
+            return CartDetailVM;
+
         }
     }
 }

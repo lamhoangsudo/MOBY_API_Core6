@@ -23,7 +23,7 @@ namespace MOBY_API_Core6.Controllers
 
             try
             {
-                if (await userDAO.CheckExistedUser(this.User.Claims))
+                if (await userDAO.CheckExistedUser(this.User.Claims.First(i => i.Type == "user_id").Value))
                 {
                     //user existed 
                     return Ok(ReturnMessage.create("User existed"));
