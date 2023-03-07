@@ -15,7 +15,6 @@ namespace MOBY_API_Core6.Repository
         public async Task<bool> CreateCart(int userID)
         {
             Cart cart = new Cart();
-            cart.CartDateCreate = DateTime.Now;
             cart.UserId = userID;
             await context.Carts.AddAsync(cart);
             if (await context.SaveChangesAsync() != 0)

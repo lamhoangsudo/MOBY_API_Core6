@@ -90,7 +90,6 @@ namespace MOBY_API_Core6.Repository
 
             //new cart: 
             var cart = new Cart();
-            cart.CartDateCreate = DateTime.Now;
             newUser.Carts.Add(cart);
 
 

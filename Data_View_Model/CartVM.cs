@@ -15,7 +15,6 @@ namespace MOBY_API_Core6.Data_View_Model
             var cartvm = new CartVM
             {
                 CartId = cart.CartId,
-                CartDateCreate = cart.CartDateCreate,
                 UserId = cart.UserId
             };
             var ListCartDetail = cart.CartDetails.Select(cd => CartDetailVM.CartDetailToVewModel(cd)).ToList();
