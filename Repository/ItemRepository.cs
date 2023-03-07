@@ -611,13 +611,17 @@ namespace MOBY_API_Core6.Repository
                 string locationString = String.Concat(dynamicFilterVM.location.Where(c => !Char.IsWhiteSpace(c))).Replace("}", "");
                 query = query.Where(query => query.it.ItemShippingAddress.StartsWith(locationString));
             }
-            if (dynamicFilterVM.maxPrice != 0)
+            if (dynamicFilterVM.maxPrice != null && dynamicFilterVM.minPrice != null && dynamicFilterVM.maxPrice >= dynamicFilterVM.minPrice)
             {
                 query = query.Where(query => query.it.ItemSalePrice <= dynamicFilterVM.maxPrice && query.it.ItemSalePrice >= dynamicFilterVM.minPrice);
             }
-            else
+            if (dynamicFilterVM.maxPrice == null && dynamicFilterVM.minPrice != null)
             {
                 query = query.Where(query => query.it.ItemSalePrice >= dynamicFilterVM.minPrice);
+            }
+            if (dynamicFilterVM.minPrice == null && dynamicFilterVM.maxPrice != null)
+            {
+                query = query.Where(query => query.it.ItemSalePrice >= dynamicFilterVM.maxPrice);
             }
             query = query.Where(query => query.it.ItemSalePrice <= dynamicFilterVM.maxUsable && query.it.ItemSalePrice >= dynamicFilterVM.minUsable);
             listItemDynamicFilters = await query
@@ -647,5 +651,53 @@ namespace MOBY_API_Core6.Repository
             }
             return listItemDynamicFilters;
         }
+        public async Task<List<BriefItem>?> GetListAllOtherPersonRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize)
+        {
+            try
+            {
+                List<BriefItem> listBriefItemByUserID = new List<BriefItem>();
+                int itemsToSkip = (pageNumber - 1) * pageSize;
+                listBriefItemByUserID = await _context.BriefItems
+                    .Where(bf => bf.Share == share && bf.ItemStatus == status && bf.UserId != userID)
+                    .Skip(itemsToSkip)
+                    .Take(pageSize)
+                    .ToListAsync();
+                if (listBriefItemByUserID.Count == 0)
+                {
+                    errorMessage = "không có dữ liệu";
+                }
+                return listBriefItemByUserID;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<List<BriefItem>?> GetListAllMyRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize)
+        {
+            try
+            {
+                List<BriefItem> listBriefItemByUserID = new List<BriefItem>();
+                int itemsToSkip = (pageNumber - 1) * pageSize;
+                listBriefItemByUserID = await _context.BriefItems
+                    .Where(bf => bf.Share == share && bf.ItemStatus == status && bf.UserId == userID)
+                    .Skip(itemsToSkip)
+                    .Take(pageSize)
+                    .ToListAsync();
+                if (listBriefItemByUserID.Count == 0)
+                {
+                    errorMessage = "không có dữ liệu";
+                }
+                return listBriefItemByUserID;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return null;
+            }
+        }
     }
 }
+

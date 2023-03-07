@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
@@ -10,10 +11,12 @@ namespace Item.Controllers
     public class ItemController : ControllerBase
     {
         private readonly IItemRepository _itemRepository;
+        private readonly IUserRepository _userRepository;
 
-        public ItemController(IItemRepository itemRepository)
+        public ItemController(IItemRepository itemRepository, IUserRepository userRepository)
         {
             _itemRepository = itemRepository;
+            _userRepository = userRepository;
         }
 
         [HttpPost("CreateItem")]
@@ -316,11 +319,17 @@ namespace Item.Controllers
         }
 
         [HttpGet("GetAllShareNearYou")]
-        public async Task<IActionResult> GetAllShareNearYou(string location, int pageNumber, int pageSize, int userID)
+        public async Task<IActionResult> GetAllShareNearYou(int pageNumber, int pageSize)
         {
             try
             {
-                List<BriefItem>? listAllShareNearYou = await _itemRepository.GetAllShareNearYou(location, pageNumber, pageSize, userID);
+                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
+                UserAccount? user = await _userRepository.FindUserByUid(userID);
+                if (user == null)
+                {
+                    return BadRequest(ReturnMessage.create("tài khoảng không tồn tại"));
+                }
+                List<BriefItem>? listAllShareNearYou = await _itemRepository.GetAllShareNearYou(user.UserAddress, pageNumber, pageSize, userID);
                 if (listAllShareNearYou == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -357,5 +366,64 @@ namespace Item.Controllers
             }
         }
 
+        [Authorize]
+        [HttpGet("GetListAllOtherPersonRequestItem")]
+        public async Task<IActionResult> GetListAllOtherPersonRequestItem(bool share, bool status, int pageNumber, int pageSize)
+        {
+            int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
+            try
+            {
+                List<BriefItem>? listAllOtherPersonRequestItem = await _itemRepository.GetListAllOtherPersonRequestItem(share, status, userID, pageNumber, pageSize);
+                if (listAllOtherPersonRequestItem != null)
+                {
+                    if (listAllOtherPersonRequestItem.Count > 0)
+                    {
+                        return Ok(listAllOtherPersonRequestItem);
+                    }
+                    else
+                    {
+                        return NotFound(ReturnMessage.create("không có dữ liệu"));
+                    }
+                }
+                else
+                {
+                    return BadRequest(ItemRepository.errorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("GetListAllMyRequestItem")]
+        public async Task<IActionResult> GetListAllMyRequestItem(bool share, bool status, int pageNumber, int pageSize)
+        {
+            int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
+            try
+            {
+                List<BriefItem>? listAllMyRequestItem = await _itemRepository.GetListAllMyRequestItem(share, status, userID, pageNumber, pageSize);
+                if (listAllMyRequestItem != null)
+                {
+                    if (listAllMyRequestItem.Count > 0)
+                    {
+                        return Ok(listAllMyRequestItem);
+                    }
+                    else
+                    {
+                        return NotFound(ReturnMessage.create("không có dữ liệu"));
+                    }
+                }
+                else
+                {
+                    return BadRequest(ItemRepository.errorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }
