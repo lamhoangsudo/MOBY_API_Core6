@@ -1,4 +1,5 @@
-﻿using MOBY_API_Core6.Data_View_Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
@@ -19,21 +20,21 @@ namespace MOBY_API_Core6.Repository
             newRep.ReplyContent = rep.ReplyContent;
             newRep.DateCreate = DateTime.Now;
 
-            context.Add(newRep);
-            context.SaveChanges();
+            await context.AddAsync(newRep);
+            await context.SaveChangesAsync();
             return true;
         }
 
         public async Task<bool> UpdateReply(UpdateReplyVM rep, int userId)
         {
-            Reply currentRep = context.Replies.Where(r => r.ReplyId == rep.ReplyId && r.UserId == userId).FirstOrDefault();
+            Reply? currentRep = await context.Replies.Where(r => r.ReplyId == rep.ReplyId && r.UserId == userId).FirstOrDefaultAsync();
 
             if (currentRep != null)
             {
                 currentRep.ReplyContent = rep.ReplyContent;
                 currentRep.DateUpdate = DateTime.Now;
 
-                context.SaveChanges();
+                await context.SaveChangesAsync();
                 return true;
             }
             return false;
@@ -41,12 +42,12 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<bool> DeleteReply(GetReplyIDVM rep, int userId)
         {
-            Reply currentRep = context.Replies.Where(r => r.ReplyId == rep.ReplyId && r.UserId == userId).FirstOrDefault();
+            Reply? currentRep = await context.Replies.Where(r => r.ReplyId == rep.ReplyId && r.UserId == userId).FirstOrDefaultAsync();
 
             if (currentRep != null)
             {
                 context.Remove(currentRep);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
                 return true;
             }
             return false;
