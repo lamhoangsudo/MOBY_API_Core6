@@ -50,7 +50,7 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<string> addresses = await _userAddressRepository.getMylistAddress(userID);
+                List<string>? addresses = await _userAddressRepository.getMylistAddress(userID);
                 if (addresses != null)
                 {
                     return Ok(addresses);
