@@ -104,12 +104,12 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("GetBriefItemByAndBriefRequestUserID")]
-        public async Task<IActionResult> GetBriefItemByUserID(int userID, bool status)
+        [HttpGet("GetBriefItemByOrBriefRequestUserID")]
+        public async Task<IActionResult> GetBriefItemByOrBriefRequestUserID(int userID, bool status, bool share, int pageNumber, int pageSize)
         {
             try
             {
-                List<BriefItem>? listBriefItemByUserID = await _itemRepository.GetBriefItemByAndBriefRequestUserID(userID, status);
+                List<BriefItem>? listBriefItemByUserID = await _itemRepository.GetBriefItemByOrBriefRequestUserID(userID, status, share, pageNumber, pageSize);
                 if (listBriefItemByUserID == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -167,12 +167,12 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("SearchBriefItemByCategoryID")]
-        public async Task<IActionResult> SearchBriefItemByCategoryID(int categoryID, bool status)
+        [HttpGet("SearchBriefItemOrBriefRequestByCategoryID")]
+        public async Task<IActionResult> SearchBriefItemOrBriefRequestByCategoryID(int categoryID, bool status, bool share, int pageNumber, int pageSize)
         {
             try
             {
-                List<BriefItem>? listBriefItemByCategoryID = await _itemRepository.SearchBriefItemByCategoryID(categoryID, status);
+                List<BriefItem>? listBriefItemByCategoryID = await _itemRepository.SearchBriefItemOrBriefRequestByCategoryID(categoryID, status, share, pageNumber, pageSize);
                 if (listBriefItemByCategoryID == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);
@@ -297,11 +297,13 @@ namespace Item.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("GetAllMyShareAndRequest")]
-        public async Task<IActionResult> GetAllMyShareAndRequest(int userID, bool share, bool status, int pageNumber, int pageSize)
+        public async Task<IActionResult> GetAllMyShareAndRequest(bool share, bool status, int pageNumber, int pageSize)
         {
             try
             {
+                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
                 List<BriefItem>? listAllMyShareAndRequest = await _itemRepository.GetAllMyShareAndRequest(userID, share, status, pageNumber, pageSize);
                 if (listAllMyShareAndRequest == null)
                 {
@@ -318,6 +320,7 @@ namespace Item.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("GetAllShareNearYou")]
         public async Task<IActionResult> GetAllShareNearYou(int pageNumber, int pageSize)
         {

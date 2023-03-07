@@ -136,13 +136,16 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>?> GetBriefItemByAndBriefRequestUserID(int userID, bool status)
+        public async Task<List<BriefItem>?> GetBriefItemByOrBriefRequestUserID(int userID, bool status, bool share, int pageNumber, int pageSize)
         {
             try
             {
+                int itemsToSkip = (pageNumber - 1) * pageSize;
                 List<BriefItem> listBriefItemByUserID = new List<BriefItem>();
                 listBriefItemByUserID = await _context.BriefItems
-                    .Where(bf => bf.UserId == userID && bf.ItemStatus == status)
+                    .Where(bf => bf.UserId == userID && bf.ItemStatus == status && bf.Share == share)
+                    .Skip(itemsToSkip)
+                    .Take(pageSize)
                     .ToListAsync();
                 if (listBriefItemByUserID.Count == 0)
                 {
@@ -232,13 +235,18 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>?> SearchBriefItemByCategoryID(int categoryID, bool status)
+        public async Task<List<BriefItem>?> SearchBriefItemOrBriefRequestByCategoryID(int categoryID, bool status, bool share, int pageNumber, int pageSize)
         {
             try
             {
+                int itemsToSkip = (pageNumber - 1) * pageSize;
                 List<BriefItem> listBriefItemByCategoryID = new List<BriefItem>();
-                listBriefItemByCategoryID = await _context.BriefItems.Where(bf => bf.CategoryId == categoryID
-                && bf.ItemStatus == status)
+                listBriefItemByCategoryID = await _context.BriefItems
+                    .Where(bf => bf.CategoryId == categoryID 
+                    && bf.ItemStatus == status
+                    && bf.Share == share)
+                    .Skip(itemsToSkip)
+                    .Take(pageSize)
                     .ToListAsync();
                 if (listBriefItemByCategoryID.Count == 0)
                 {

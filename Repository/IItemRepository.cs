@@ -11,13 +11,13 @@ namespace MOBY_API_Core6.Repository
 
         Task<List<BriefItem>?> GetAllBriefItemAndBriefRequest(bool share, bool status, int pageNumber, int pageSize);
 
-        Task<List<BriefItem>?> GetBriefItemByAndBriefRequestUserID(int userID, bool status);
+        Task<List<BriefItem>?> GetBriefItemByOrBriefRequestUserID(int userID, bool status, bool share, int pageNumber, int pageSize);
 
         Task<List<BriefItem>?> SearchBriefItemByTitle(string itemTitle, bool status);
 
         Task<List<BriefItem>?> SearchBriefItemBySubCategoryID(int subCategoryID, bool status);
 
-        Task<List<BriefItem>?> SearchBriefItemByCategoryID(int categoryID, bool status);
+        Task<List<BriefItem>?> SearchBriefItemOrBriefRequestByCategoryID(int categoryID, bool status, bool share, int pageNumber, int pageSize);
 
         Task<DetailItem?> GetItemDetail(int itemID);
 
