@@ -10,14 +10,14 @@ namespace MOBY_API_Core6.Data_View_Model
         [Required]
         public int subCategoryId { get; set; }
         [Required]
-        public string itemTitle { get; set; }
+        public string? itemTitle { get; set; }
         [Required]
-        public string itemDetailedDescription { get; set; }
+        public string? itemDetailedDescription { get; set; }
         [Range(0, 100)]
         public double itemMass { get; set; }
         [DefaultValue(false)]
         public bool itemSize { get; set; }
-        public string itemQuanlity { get; set; }
+        public string? itemQuanlity { get; set; }
         [Range (40, 100)]
         [DefaultValue(40)]
         public double itemEstimateValue { get; set; }
@@ -28,9 +28,9 @@ namespace MOBY_API_Core6.Data_View_Model
         [DefaultValue(null)]
         public bool itemSponsoredOrderShippingFee { get; set; }
         [Required]
-        public string itemShippingAddress { get; set; }
+        public string? itemShippingAddress { get; set; }
         [Required]
-        public string image { get; set; }
+        public string? image { get; set; }
         [DefaultValue(null)]
         public string? stringDateTimeExpired { get; set; }
         [DefaultValue(true)]

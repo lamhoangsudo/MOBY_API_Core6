@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MOBY_API_Core6.Data_View_Model
 {
@@ -8,7 +9,8 @@ namespace MOBY_API_Core6.Data_View_Model
         public int userID { get; set; }
         [DefaultValue(1)]
         public int status { get; set; }
-        public string content { get; set; }
-        public string image { get; set; }
+        [Required]
+        public string? content { get; set; }
+        public string? image { get; set; }
     }
 }
