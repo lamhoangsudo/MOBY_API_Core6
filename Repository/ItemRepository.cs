@@ -65,7 +65,9 @@ namespace MOBY_API_Core6.Repository
                         ItemDetailedDescription = itemVM.itemDetailedDescription,
                         ItemMass = itemVM.itemMass,
                         ItemSize = itemVM.itemSize,
+#pragma warning disable CS8601 // Possible null reference assignment.
                         ItemQuanlity = itemVM.itemQuanlity,
+#pragma warning disable CS8601 // Possible null reference assignment.
                         ItemEstimateValue = itemVM.itemEstimateValue,
                         ItemSalePrice = itemVM.itemSalePrice,
                         ItemShareAmount = itemVM.itemShareAmount,
@@ -344,7 +346,9 @@ namespace MOBY_API_Core6.Repository
                         currentItem.ItemDetailedDescription = itemVM.itemDetailedDescription;
                         currentItem.ItemMass = itemVM.itemMass;
                         currentItem.ItemSize = itemVM.itemSize;
+#pragma warning disable CS8601 // Possible null reference assignment.
                         currentItem.ItemQuanlity = itemVM.itemQuanlity;
+#pragma warning restore CS8601 // Possible null reference assignment.
                         currentItem.ItemEstimateValue = itemVM.itemEstimateValue;
                         currentItem.ItemSalePrice = itemVM.itemSalePrice;
                         currentItem.ItemShareAmount = itemVM.itemShareAmount;
