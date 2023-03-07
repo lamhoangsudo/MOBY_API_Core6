@@ -1,4 +1,5 @@
-﻿using MOBY_API_Core6.Data_View_Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
@@ -15,8 +16,8 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                bool checkItem = _context.Items.Where(it => it.ItemId == reportVM.itemID && it.ItemStatus == true).Any();
-                bool checkUser = _context.UserAccounts.Where(us => us.UserId == reportVM.userID && us.UserStatus == true).Any();
+                bool checkItem = await _context.Items.Where(it => it.ItemId == reportVM.itemID && it.ItemStatus == true).AnyAsync();
+                bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.userID && us.UserStatus == true).AnyAsync();
                 if (checkItem == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
@@ -27,20 +28,20 @@ namespace MOBY_API_Core6.Repository
                     report.ReportStatus = reportVM.status;
                     report.ReportContent= reportVM.content;
                     report.Image = reportVM.image;
-                    _context.Reports.Add(report);
-                    _context.SaveChanges();
-                    return await Task.FromResult(true);
+                    await _context.Reports.AddAsync(report);
+                    await _context.SaveChangesAsync();
+                    return true;
                 }
                 else
                 {
                     errorMessage = "sản phẩm này không có tồn tại";
-                    return await Task.FromResult(false);
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
-                return await Task.FromResult(false);
+                return false;
             }
         }
 
@@ -48,24 +49,24 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefault();
+                Report? report =  await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
                 if (report != null)
                 {
                     report.ReportDateUpdate = DateTime.Now;
                     report.ReportStatus = reportVM.isApproved;
-                    _context.SaveChanges();
-                    return await Task.FromResult(true);
+                    await _context.SaveChangesAsync();
+                    return true;
                 }
                 else
                 {
                     errorMessage = "report này không tồn tại";
-                    return await Task.FromResult(false);
+                    return false;
                 }
             }
             catch (Exception ex) 
             {
                 errorMessage = ex.Message;
-                return await Task.FromResult(false);
+                return false;
             }
         }
 
@@ -73,24 +74,24 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefault();
+                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
                 if (report != null)
                 {
                     report.ReportDateUpdate = DateTime.Now;
                     report.ReportStatus = reportVM.isDeny;
-                    _context.SaveChanges();
-                    return await Task.FromResult(true);
+                    await _context.SaveChangesAsync();
+                    return true;
                 }
                 else
                 {
                     errorMessage = "report này không tồn tại";
-                    return await Task.FromResult(false);
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
-                return await Task.FromResult(false);
+                return false;
             }
         }
 
@@ -98,25 +99,25 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefault();
+                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
                 if (report != null)
                 {
                     report.ReportDateUpdate = DateTime.Now;
                     report.ReportContent = reportVM.content;
                     report.Image = reportVM.image;
-                    _context.SaveChanges();
-                    return await Task.FromResult(true);
+                    await _context.SaveChangesAsync();
+                    return true;
                 }
                 else
                 {
                     errorMessage = "report này không có tồn tại";
-                    return await Task.FromResult(false);
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
-                return await Task.FromResult(false);
+                return false;
             }
         }
 
@@ -124,24 +125,24 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report report = _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefault();
+                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
                 if (report != null)
                 {
                     report.ReportDateUpdate = DateTime.Now;
                     report.ReportStatus = reportVM.isDelete;
-                    _context.SaveChanges();
-                    return await Task.FromResult(true);
+                    await _context.SaveChangesAsync();
+                    return true;
                 }
                 else
                 {
                     errorMessage = "report này không tồn tại";
-                    return await Task.FromResult(false);
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
-                return await Task.FromResult(false);
+                return false;
             }
         }
 
@@ -150,8 +151,8 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 List<ViewReport> reports = new List<ViewReport>();
-                reports = _context.ViewReports.Where(rp => rp.ReportStatus == status).ToList();
-                return await Task.FromResult(reports);
+                reports = await _context.ViewReports.Where(rp => rp.ReportStatus == status).ToListAsync();
+                return reports;
             }
             catch (Exception ex)
             {
@@ -165,8 +166,8 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 List<ViewReport> reports = new List<ViewReport>();
-                reports = _context.ViewReports.Where(rp => rp.ReportStatus == status && rp.UserId == userid).ToList();
-                return await Task.FromResult(reports);
+                reports = await _context.ViewReports.Where(rp => rp.ReportStatus == status && rp.UserId == userid).ToListAsync();
+                return reports;
             }
             catch (Exception ex)
             {
@@ -180,8 +181,8 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 List<ViewReport> reports = new List<ViewReport>();
-                reports = _context.ViewReports.Where(rp => rp.UserId == userid).ToList();
-                return await Task.FromResult(reports);
+                reports = await _context.ViewReports.Where(rp => rp.UserId == userid).ToListAsync();
+                return reports;
             }
             catch (Exception ex)
             {
