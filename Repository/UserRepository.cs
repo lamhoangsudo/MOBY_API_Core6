@@ -63,7 +63,9 @@ namespace MOBY_API_Core6.Repository
             {
                 return Userfound.UserId;
             }
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             return Userfound.UserId;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 
 

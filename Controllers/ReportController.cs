@@ -100,14 +100,23 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                List<ViewReport> reports = await _reportRepository.GetAllReportByStatus(status);
-                if (reports.Count != 0)
+                List<ViewReport>? reports = await _reportRepository.GetAllReportByStatus(status);
+                if (reports != null)
                 {
-                    return Ok(reports);
+                    if (reports.Count != 0)
+                    {
+                        return Ok(reports);
+                    }
+                    else
+                    {
+                        return NotFound(ReturnMessage.create("không có report nào"));
+                    }
                 }
                 else
                 {
-                    return NotFound(ReturnMessage.create("không có report nào"));
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.create(ReportRepository.errorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
 
             }

@@ -28,7 +28,9 @@ namespace Item.Controllers
                 }
                 else
                 {
+#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.create(ItemRepository.errorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -195,7 +197,9 @@ namespace Item.Controllers
                 }
                 else
                 {
+#pragma warning disable CS8604 // Possible null reference argument.
                     return NotFound(ReturnMessage.create(ItemRepository.errorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -216,7 +220,9 @@ namespace Item.Controllers
                 }
                 else
                 {
+#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.create(ItemRepository.errorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
