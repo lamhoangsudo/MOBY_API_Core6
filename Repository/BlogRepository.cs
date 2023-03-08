@@ -16,6 +16,7 @@ namespace MOBY_API_Core6.Repository
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
             List<BlogVM> blogList = await context.Blogs.Where(b => b.BlogStatus == 1)
+                .OrderByDescending(b => b.BlogId)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
                 .Select(b => BlogVM.BlogToVewModel(b))
@@ -72,19 +73,9 @@ namespace MOBY_API_Core6.Repository
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
             List<BlogVM> blogList = await context.Blogs
                 .Where(b => b.BlogCategoryId == blogCateID && b.BlogStatus == 1)
+                .OrderByDescending(b => b.BlogId)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
-                .Select(b => BlogVM.BlogToVewModel(b))
-                .ToListAsync();
-
-            return blogList;
-        }
-        public async Task<List<BlogVM>> getNewBlogByBlogCateID(int blogCateID)
-        {
-            List<BlogVM> blogList = await context.Blogs
-                .Where(b => b.BlogCategoryId == blogCateID && b.BlogStatus == 1)
-                .OrderByDescending(b => b.BlogId)
-                .Take(5)
                 .Select(b => BlogVM.BlogToVewModel(b))
                 .ToListAsync();
 
@@ -167,6 +158,18 @@ namespace MOBY_API_Core6.Repository
         public async Task<bool> ConfirmBlog(Blog blog, int decision)
         {
             blog.BlogStatus = decision;
+            if (await context.SaveChangesAsync() != 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DenyBlog(Blog blog, int decision, String reason)
+        {
+            blog.BlogStatus = decision;
+            blog.ReasonDeny = reason;
             if (await context.SaveChangesAsync() != 0)
             {
                 return true;
