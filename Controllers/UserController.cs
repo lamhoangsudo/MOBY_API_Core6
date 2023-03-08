@@ -42,9 +42,9 @@ namespace MOBY_API_Core6.Controllers
                     return BadRequest(ReturnMessage.create("this user already exist"));
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
             return BadRequest(ReturnMessage.create("error at CreateAccount"));
@@ -74,13 +74,8 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                return BadRequest(ReturnMessage.create("error at UpdateUserProfile"));
-
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-
-
-
         }
 
         [Authorize]
@@ -100,9 +95,9 @@ namespace MOBY_API_Core6.Controllers
                 return BadRequest(ReturnMessage.create("error at BanUser"));
 
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at BanUser"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -122,9 +117,9 @@ namespace MOBY_API_Core6.Controllers
                 return BadRequest(ReturnMessage.create("error at UnbanUser"));
 
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at UnbanUser"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
         [Authorize]
@@ -142,9 +137,9 @@ namespace MOBY_API_Core6.Controllers
 
                 return Ok(list); ;
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at GetAllUser"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -168,9 +163,9 @@ namespace MOBY_API_Core6.Controllers
                 //return Ok(UserAccountVM.UserAccountToVewModel(currentUser, cart.CartId));
                 return Ok(currentUser);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at GetUserInfo"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -189,9 +184,9 @@ namespace MOBY_API_Core6.Controllers
                 return Ok(UserAccountVM.UserAccountToVewModel(currentUser));
 
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at GetUserInfoByQuery"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }

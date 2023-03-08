@@ -32,30 +32,11 @@ namespace MOBY_API_Core6.Controllers
                 return Ok(ListBlog);
 
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at getAllBlog"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
-        [HttpGet]
-        [Route("api/blog/new")]
-        public async Task<IActionResult> getNewBlog()
-        {
-            try
-            {
-                List<BlogVM> ListBlog = await BlogDAO.getNewBlog();
-
-                return Ok(ListBlog);
-
-            }
-            catch
-            {
-                return BadRequest(ReturnMessage.create("error at getNewBlog"));
-            }
-        }
-
-
 
         [HttpGet]
         [Route("api/blog")]
@@ -88,9 +69,9 @@ namespace MOBY_API_Core6.Controllers
                 }
                 return Ok(ReturnMessage.create("there no field so no blog"));
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at getBlogByQuery"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
@@ -108,8 +89,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                return BadRequest(ReturnMessage.create("error at getBlogByToken"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
@@ -132,9 +112,9 @@ namespace MOBY_API_Core6.Controllers
                     return BadRequest(ReturnMessage.create("error at CreateBlog"));
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at CreateBlog"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
@@ -158,9 +138,9 @@ namespace MOBY_API_Core6.Controllers
                 }
                 return BadRequest(ReturnMessage.create("error at UpdateBlog"));
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at UpdateBlog"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
@@ -187,9 +167,9 @@ namespace MOBY_API_Core6.Controllers
                 }
                 return BadRequest(ReturnMessage.create("error at AcceptBlog"));
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at AcceptBlog"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
@@ -197,15 +177,15 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpPatch]
         [Route("api/blog/deny")]
-        public async Task<IActionResult> DenyBlog([FromBody] BlogIdVM blogId)
+        public async Task<IActionResult> DenyBlog([FromBody] BlogIdDenyVM blogId)
         {
             try
             {
 
                 Blog? foundblog = await BlogDAO.getBlogByBlogID(blogId.BlogId);
-                if (foundblog != null)
+                if (foundblog != null && blogId.reason != null)
                 {
-                    if (await BlogDAO.ConfirmBlog(foundblog, 2))
+                    if (await BlogDAO.DenyBlog(foundblog, 2, blogId.reason))
                     {
                         return Ok(ReturnMessage.create("success"));
                     }
@@ -216,9 +196,9 @@ namespace MOBY_API_Core6.Controllers
                 }
                 return BadRequest(ReturnMessage.create("error at DenyBlog"));
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at DenyBlog"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
@@ -246,9 +226,9 @@ namespace MOBY_API_Core6.Controllers
                 }
                 return BadRequest(ReturnMessage.create("error at DeleteBlog"));
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest(ReturnMessage.create("error at DeleteBlog"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
         }
