@@ -79,7 +79,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ReasonDeny).HasColumnName("Reason_Deny");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.BlogCategory)
                     .WithMany(p => p.Blogs)
@@ -129,7 +129,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.SubCategoryStatus).HasColumnName("Sub_Category_Status");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
@@ -138,7 +138,7 @@ namespace MOBY_API_Core6.Models
             {
                 entity.Property(e => e.CartId).HasColumnName("CartID");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Carts)
@@ -231,7 +231,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.SubCategoryName).HasColumnName("Sub_Category_Name");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
@@ -266,7 +266,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
@@ -294,7 +294,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemId).HasColumnName("ItemID");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.Blog)
                     .WithMany(p => p.Comments)
@@ -361,7 +361,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.SubCategoryName).HasColumnName("Sub_Category_Name");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
@@ -404,7 +404,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.SubCategoryName).HasColumnName("Sub_Category_Name");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
@@ -451,7 +451,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.SubCategoryId).HasColumnName("Sub_CategoryID");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.SubCategory)
                     .WithMany(p => p.Items)
@@ -472,7 +472,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Orders)
@@ -562,7 +562,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.UserGmail).HasColumnName("User_Gmail");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
 
@@ -600,7 +600,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.UserGmail).HasColumnName("User_Gmail");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
 
@@ -620,7 +620,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.DateUpdate).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.Comment)
                     .WithMany(p => p.Replies)
@@ -653,7 +653,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.Item)
                     .WithMany(p => p.Reports)
@@ -699,7 +699,7 @@ namespace MOBY_API_Core6.Models
                 entity.HasKey(e => e.UserId)
                     .HasName("PK_User_Accounts");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.RoleId).HasColumnName("RoleID");
 
@@ -749,7 +749,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserAddresses)
@@ -786,7 +786,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
@@ -815,7 +815,7 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
 
-                entity.Property(e => e.UserId).HasColumnName("userID");
+                entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
             });
