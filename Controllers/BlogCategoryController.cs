@@ -31,25 +31,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return BadRequest(ReturnMessage.create("erro at GetALlBlogCategory"));
-            }
-        }
-
-        [HttpGet]
-        [Route("api/blogcategory/blog/new")]
-        public async Task<IActionResult> getNewBlogByBlogCategoryID(BlogCateGetVM blogCateID)
-        {
-            try
-            {
-                List<BlogVM> ListBlog = await BlogDAO.getNewBlogByBlogCateID(blogCateID.BlogCategoryId);
-
-                return Ok(ListBlog);
-
-            }
-            catch
-            {
-                return BadRequest(ReturnMessage.create("error at getNewBlogByBlogCategoryID"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -66,8 +48,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return BadRequest(ReturnMessage.create("erro at GetBlogCategoryByID"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
         [HttpPost]
@@ -88,8 +69,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                return BadRequest(ReturnMessage.create("error at create Blog Category"));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 

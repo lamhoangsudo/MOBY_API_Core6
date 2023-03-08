@@ -109,9 +109,9 @@ namespace MOBY_API_Core6.Controllers
                     return Ok(listCategory);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 

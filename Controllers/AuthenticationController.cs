@@ -38,8 +38,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                return BadRequest(ReturnMessage.create(ex.Message));
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
 
