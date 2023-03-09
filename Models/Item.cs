@@ -7,10 +7,10 @@ namespace MOBY_API_Core6.Models
     {
         public Item()
         {
-            CartDetails = new HashSet<CartDetail>();
             Comments = new HashSet<Comment>();
-            OrderDetails = new HashSet<OrderDetail>();
+            Orders = new HashSet<Order>();
             Reports = new HashSet<Report>();
+            RequestDetails = new HashSet<RequestDetail>();
         }
 
         public int ItemId { get; set; }
@@ -36,9 +36,9 @@ namespace MOBY_API_Core6.Models
 
         public virtual SubCategory SubCategory { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;
-        public virtual ICollection<CartDetail> CartDetails { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
+        public virtual ICollection<RequestDetail> RequestDetails { get; set; }
     }
 }

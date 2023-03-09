@@ -13,7 +13,7 @@ namespace MOBY_API_Core6.Models
         public DateTime? ReportDateUpdate { get; set; }
         public string UserName { get; set; } = null!;
         public string ItemTitle { get; set; } = null!;
-        public int ItemId { get; set; }
+        public int? ItemId { get; set; }
         public int UserId { get; set; }
     }
 }

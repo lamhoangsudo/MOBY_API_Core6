@@ -8,12 +8,12 @@ namespace MOBY_API_Core6.Models
         public UserAccount()
         {
             Blogs = new HashSet<Blog>();
-            Carts = new HashSet<Cart>();
             Comments = new HashSet<Comment>();
             Items = new HashSet<Item>();
             Orders = new HashSet<Order>();
             Replies = new HashSet<Reply>();
             Reports = new HashSet<Report>();
+            Requests = new HashSet<Request>();
             UserAddresses = new HashSet<UserAddress>();
         }
 
@@ -31,15 +31,16 @@ namespace MOBY_API_Core6.Models
         public bool UserStatus { get; set; }
         public DateTime UserDateCreate { get; set; }
         public DateTime? UserDateUpdate { get; set; }
+        public int Reputation { get; set; }
 
         public virtual Role Role { get; set; } = null!;
         public virtual ICollection<Blog> Blogs { get; set; }
-        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Item> Items { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<Reply> Replies { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
+        public virtual ICollection<Request> Requests { get; set; }
         public virtual ICollection<UserAddress> UserAddresses { get; set; }
     }
 }
