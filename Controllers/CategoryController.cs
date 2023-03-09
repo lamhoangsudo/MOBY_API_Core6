@@ -100,9 +100,17 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 var listCategory = await _categoryRepository.GetAllCategoriesAndSubCategory();
-                if (listCategory == null || listCategory.Count == 0)
+                if (listCategory.Count == 0)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound);
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return NotFound(ReturnMessage.create(CategoryRepository.errorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                }
+                if (listCategory == null)
+                {
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.create(CategoryRepository.errorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else
                 {

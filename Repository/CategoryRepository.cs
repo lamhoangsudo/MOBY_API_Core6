@@ -100,21 +100,29 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<List<CategoryVM>?> GetAllCategoriesAndSubCategory()
         {
-            List<CategoryVM> categoryVMs = new List<CategoryVM>();
-            var listCategory = await _context.Categories
-                .Include(ct => ct.SubCategories)
-                .Select(ct => new CategoryVM(
-                    ct.CategoryId,
-                    ct.CategoryName,
-                    ct.CategoryImage,
-                    ct.CategoryStatus,
-                    ct.SubCategories.Select(sc => new SubCategoryVM(
-                        sc.SubCategoryId,
-                        sc.SubCategoryName,
-                        sc.SubCategoryStatus
-                        )).ToList()
-                )).ToListAsync();
-            return categoryVMs;
+            try
+            {
+                List<CategoryVM> categoryVMs = new List<CategoryVM>();
+                categoryVMs = await _context.Categories
+                    .Include(ct => ct.SubCategories)
+                    .Select(ct => new CategoryVM(
+                        ct.CategoryId,
+                        ct.CategoryName,
+                        ct.CategoryImage,
+                        ct.CategoryStatus,
+                        ct.SubCategories.Select(sc => new SubCategoryVM(
+                            sc.SubCategoryId,
+                            sc.SubCategoryName,
+                            sc.SubCategoryStatus
+                            )).ToList()
+                    )).ToListAsync();
+                return categoryVMs;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return null;
+            }
         }
 
         public async Task<List<CategoryVM>?> GetCategoriesByStatus(bool categoryStatus)
