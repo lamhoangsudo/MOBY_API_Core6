@@ -326,7 +326,7 @@ namespace Item.Controllers
         {
             try
             {
-                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 UserAccount? user = await _userRepository.FindUserByUid(userID);
                 if (user == null)
                 {
@@ -349,7 +349,7 @@ namespace Item.Controllers
         }
 
         [HttpGet("GetItemDynamicFilters")]
-        public async Task<IActionResult> GetItemDynamicFilters( int pageNumber, int pageSize, [FromQuery] DynamicFilterVM dynamicFilterVM)
+        public async Task<IActionResult> GetItemDynamicFilters(int pageNumber, int pageSize, [FromQuery] DynamicFilterVM dynamicFilterVM)
         {
             try
             {
