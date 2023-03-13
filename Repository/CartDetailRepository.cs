@@ -12,13 +12,13 @@ namespace MOBY_API_Core6.Repository
         {
             this.context = context;
         }
-        public async Task<List<CartDetailVM>> GetAllCartDetail(int cartID)
+        public async Task<List<RequestDetailVM>> GetAllCartDetail(int cartID)
         {
-            List<CartDetailVM> listCartDetailMV = await context.CartDetails
+            List<RequestDetailVM> listCartDetailMV = await context.RequestDetails
                 .Where(cd => cd.CartId == cartID)
                 .Include(cd => cd.Item)
                 .ThenInclude(item => item.User)
-                .Select(cd => CartDetailVM.CartDetailToVewModel(cd))
+                .Select(cd => RequestDetailVM.CartDetailToVewModel(cd))
                 .ToListAsync();
             /*List<CartDetail> listCartDetail = new List<CartDetail>();
             List<CartDetailVM> listCartDetailMV = new List<CartDetailVM>();

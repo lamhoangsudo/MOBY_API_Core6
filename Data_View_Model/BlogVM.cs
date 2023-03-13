@@ -8,6 +8,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public int BlogCategoryId { get; set; }
         public int UserId { get; set; }
         public string BlogTitle { get; set; } = null!;
+        public string? Image { get; set; }
         public string? BlogDescription { get; set; }
         public string BlogContent { get; set; } = null!;
         public DateTime BlogDateCreate { get; set; }
@@ -24,6 +25,7 @@ namespace MOBY_API_Core6.Data_View_Model
                 BlogCategoryId = blog.BlogCategoryId,
                 UserId = blog.UserId,
                 BlogTitle = blog.BlogTitle,
+                Image = blog.Image,
                 BlogDescription = blog.BlogDescription,
                 BlogContent = blog.BlogContent,
                 BlogDateCreate = blog.BlogDateCreate,
