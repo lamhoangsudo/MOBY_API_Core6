@@ -11,8 +11,8 @@ namespace MOBY_API_Core6.Controllers
     public class CartController : ControllerBase
     {
         private readonly IUserRepository userDAO;
-        private readonly ICartRepository cartDAO;
-        public CartController(IUserRepository userDao, ICartRepository cartDAO)
+        private readonly IRequestRepository cartDAO;
+        public CartController(IUserRepository userDao, IRequestRepository cartDAO)
         {
             this.userDAO = userDao;
             this.cartDAO = cartDAO;
@@ -40,7 +40,7 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> GetCartByUid()
         {
             int currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            CartVM? currentCart = await cartDAO.GetCartByUid(currentUid);
+            RequestVM? currentCart = await cartDAO.GetCartByUid(currentUid);
             return Ok(currentCart);
         }
     }

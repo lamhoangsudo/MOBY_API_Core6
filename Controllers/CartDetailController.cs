@@ -11,10 +11,10 @@ namespace MOBY_API_Core6.Controllers
     public class CartDetailController : ControllerBase
     {
         private readonly IUserRepository userDAO;
-        private readonly ICartRepository cartDAO;
+        private readonly IRequestRepository cartDAO;
         private readonly ICartDetailRepository cartDetailDAO;
         private readonly IItemRepository itemDAO;
-        public CartDetailController(ICartDetailRepository cartDetailDAO, ICartRepository cartDAO, IUserRepository userDAO, IItemRepository itemDAO)
+        public CartDetailController(ICartDetailRepository cartDetailDAO, IRequestRepository cartDAO, IUserRepository userDAO, IItemRepository itemDAO)
         {
             this.userDAO = userDAO;
             this.cartDetailDAO = cartDetailDAO;
@@ -27,10 +27,10 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> GetAllCartDetail()
         {
             int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            CartVM? cart = await cartDAO.GetCartByUid(uid);
+            RequestVM? cart = await cartDAO.GetCartByUid(uid);
             if (cart != null)
             {
-                List<CartDetailVM> listCartDetail = await cartDetailDAO.GetAllCartDetail(cart.CartId);
+                List<RequestDetailVM> listCartDetail = await cartDetailDAO.GetAllCartDetail(cart.CartId);
                 if (listCartDetail != null)
                 {
                     return Ok(listCartDetail);

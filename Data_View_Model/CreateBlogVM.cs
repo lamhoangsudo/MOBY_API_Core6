@@ -7,6 +7,8 @@ namespace MOBY_API_Core6.Data_View_Model
     {
         [Required]
         public int BlogCategoryId { get; set; }
+        [DefaultValue("Blog Image")]
+        public string? Image { get; set; }
 
         [DefaultValue("String blogTittle")]
         public string BlogTitle { get; set; } = null!;

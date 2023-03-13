@@ -10,8 +10,8 @@ namespace MOBY_API_Core6.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository userDAO;
-        private readonly ICartRepository cartDAO;
-        public UserController(IUserRepository userDao, ICartRepository cartDAO)
+        private readonly IRequestRepository cartDAO;
+        public UserController(IUserRepository userDao, IRequestRepository cartDAO)
         {
             this.userDAO = userDao;
             this.cartDAO = cartDAO;
