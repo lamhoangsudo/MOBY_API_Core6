@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using Nancy;
-using Nancy.Json;
-using Newtonsoft.Json.Linq;
-using System.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -242,7 +237,7 @@ namespace MOBY_API_Core6.Repository
                 int itemsToSkip = (pageNumber - 1) * pageSize;
                 List<BriefItem> listBriefItemByCategoryID = new List<BriefItem>();
                 listBriefItemByCategoryID = await _context.BriefItems
-                    .Where(bf => bf.CategoryId == categoryID 
+                    .Where(bf => bf.CategoryId == categoryID
                     && bf.ItemStatus == status
                     && bf.Share == share)
                     .Skip(itemsToSkip)
@@ -265,7 +260,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                bool check = await _context.CartDetails.Where(cd => cd.ItemId == itemVM.itemID)
+                bool check = await _context.RequestDetails.Where(cd => cd.ItemId == itemVM.itemID)
                     .AnyAsync();
                 if (check)
                 {
@@ -301,7 +296,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                bool checkCurrentItem = await _context.CartDetails
+                bool checkCurrentItem = await _context.RequestDetails
                     .Where(cd => cd.ItemId == itemVM.itemID)
                     .AnyAsync();
                 if (checkCurrentItem)

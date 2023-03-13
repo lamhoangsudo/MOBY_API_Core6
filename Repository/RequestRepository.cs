@@ -12,7 +12,7 @@ namespace MOBY_API_Core6.Repository
         {
             this.context = context;
         }
-        public async Task<bool> CreateCart(int userID)
+        public async Task<bool> CreateRequest(int userID)
         {
             Request newRequest = new Request();
             newRequest.UserId = userID;
@@ -25,7 +25,7 @@ namespace MOBY_API_Core6.Repository
 
         }
 
-        public async Task<bool> CheackExistedCartByUid(int userID)
+        public async Task<bool> CheackExistedRequestByUid(int userID)
         {
 
             Request? existedRequest = await context.Requests
@@ -38,13 +38,13 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<RequestVM?> GetCartByUid(int userID)
+        public async Task<RequestVM?> GetRequestByUid(int userID)
         {
             //Cart cart = context.Carts.Where(c => c.UserId == userID).FirstOrDefault();
             RequestVM? cart = await context.Requests
                 .Where(c => c.UserId == userID)
                 .Include(c => c.RequestDetails)
-                .Select(c => RequestVM.CartToVewModel(c))
+                .Select(c => RequestVM.RequestToVewModel(c))
                 .FirstOrDefaultAsync();
 
             return cart;

@@ -14,7 +14,7 @@ namespace MOBY_API_Core6.Data_View_Model
 
         public ItemVM? ItemVM { get; set; }
         public UserVM? UserVM { get; set; }
-        public static RequestDetailVM CartDetailToVewModel(RequestDetail requestDetail)
+        public static RequestDetailVM RequestDetailToVewModel(RequestDetail requestDetail)
         {
             var RequestDetailVM = new RequestDetailVM
             {

@@ -13,6 +13,8 @@ namespace MOBY_API_Core6.Data_View_Model
 
         [DefaultValue("String blogTittle")]
         public string BlogTitle { get; set; } = null!;
+        [DefaultValue("Blog Image")]
+        public string? Image { get; set; }
         [DefaultValue("String BlogDescription")]
         public string? BlogDescription { get; set; }
         [DefaultValue("String BlogContent")]
