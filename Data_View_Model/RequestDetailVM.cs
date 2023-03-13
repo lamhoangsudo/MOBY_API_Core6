@@ -34,5 +34,26 @@ namespace MOBY_API_Core6.Data_View_Model
             return RequestDetailVM;
 
         }
+
+        public static RequestDetailVM RequestDetailToVewModel(RequestDetail requestDetail, Models.Item item, UserAccount user)
+        {
+            var RequestDetailVM = new RequestDetailVM
+            {
+                RequestDetailId = requestDetail.RequestDetailId,
+                RequestId = requestDetail.RequestId,
+                ItemId = requestDetail.ItemId,
+                DateCreate = requestDetail.DateCreate,
+                DateUpdate = requestDetail.DateUpdate,
+                ItemQuantity = requestDetail.ItemQuantity,
+                Status = requestDetail.Status,
+
+            };
+
+            RequestDetailVM.ItemVM = ItemVM.ItemToViewModel(item);
+
+            RequestDetailVM.UserVM = UserVM.UserAccountToVewModel(user);
+            return RequestDetailVM;
+
+        }
     }
 }

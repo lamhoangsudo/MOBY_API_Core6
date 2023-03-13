@@ -11,9 +11,12 @@
         public string Image { get; set; } = null!;
         public bool ItemStatus { get; set; }
 
+
+
         public static ItemVM ItemToViewModel(Models.Item item)
         {
-            return new ItemVM
+
+            var ItemVM = new ItemVM()
             {
                 ItemId = item.ItemId,
                 UserId = item.UserId,
@@ -23,8 +26,9 @@
                 ItemShareAmount = item.ItemShareAmount,
                 Image = item.Image,
                 ItemStatus = item.ItemStatus,
-
             };
+
+            return ItemVM;
         }
     }
 }

@@ -55,6 +55,7 @@ builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IReplyRepository, ReplyRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 builder.Services.AddSwaggerGen(swagger =>
 {

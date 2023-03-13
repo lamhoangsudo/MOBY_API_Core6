@@ -42,5 +42,7 @@ namespace MOBY_API_Core6.Repository
         Task<List<BriefItem>?> GetListAllOtherPersonRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize);
 
         Task<List<BriefItem>?> GetListAllMyRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize);
+        public Task<List<int>> getListItemIDByUserID(int userId);
+        public Task<int> getQuantityByItemID(int itemID);
     }
 }

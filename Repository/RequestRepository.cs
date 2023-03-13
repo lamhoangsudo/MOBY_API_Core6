@@ -44,6 +44,8 @@ namespace MOBY_API_Core6.Repository
             RequestVM? cart = await context.Requests
                 .Where(c => c.UserId == userID)
                 .Include(c => c.RequestDetails)
+                .ThenInclude(c => c.Item)
+                .ThenInclude(i => i.User)
                 .Select(c => RequestVM.RequestToVewModel(c))
                 .FirstOrDefaultAsync();
 

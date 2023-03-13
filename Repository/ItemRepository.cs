@@ -86,6 +86,17 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
+        public async Task<List<int>> getListItemIDByUserID(int userId)
+        {
+            List<int> ItemIDList = await _context.Items.Where(i => i.UserId == userId).Select(i => i.ItemId).ToListAsync();
+            return ItemIDList;
+        }
+        public async Task<int> getQuantityByItemID(int itemID)
+        {
+            int itemQuantity = await _context.Items.Where(i => i.ItemId == itemID).Select(i => i.ItemShareAmount).FirstOrDefaultAsync();
+            return itemQuantity;
+        }
+
         public async Task<List<BriefItem>?> GetAllBriefItemAndBriefRequest(bool share, bool status, int pageNumber, int pageSize)
         {
             try

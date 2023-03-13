@@ -19,8 +19,8 @@ namespace MOBY_API_Core6.Controllers
         }
         [Authorize]
         [HttpPost]
-        [Route("api/cart/create")]
-        public async Task<IActionResult> CreateCart()
+        [Route("api/request/create")]
+        public async Task<IActionResult> CreateRequest()
         {
             var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             if (await cartDAO.CheackExistedRequestByUid(currentUid))
@@ -31,13 +31,13 @@ namespace MOBY_API_Core6.Controllers
             {
                 return Ok(ReturnMessage.create("success"));
             }
-            return Ok(ReturnMessage.create("error at createCart"));
+            return Ok(ReturnMessage.create("error at CreateRequest"));
         }
 
         [Authorize]
         [HttpGet]
-        [Route("api/useraccount/cart")]
-        public async Task<IActionResult> GetCartByUid()
+        [Route("api/useraccount/request")]
+        public async Task<IActionResult> GetRequestByUid()
         {
             int currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             RequestVM? currentCart = await cartDAO.GetRequestByUid(currentUid);
