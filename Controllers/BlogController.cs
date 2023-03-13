@@ -40,7 +40,7 @@ namespace MOBY_API_Core6.Controllers
 
         [HttpGet]
         [Route("api/blog")]
-        public async Task<IActionResult> getBlogByQuery([FromQuery] BlogGetVM blogGetVM, PaggingVM pagging)
+        public async Task<IActionResult> getBlogByQuery([FromQuery] BlogGetVM blogGetVM, [FromQuery] PaggingVM pagging)
         {
             try
             {
