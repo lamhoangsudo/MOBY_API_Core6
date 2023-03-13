@@ -4,21 +4,21 @@ using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
 {
-    public class CartDetailRepository : ICartDetailRepository
+    public class RequestDetailRepository : IRequestDetailRepository
     {
         private readonly MOBYContext context;
 
-        public CartDetailRepository(MOBYContext context)
+        public RequestDetailRepository(MOBYContext context)
         {
             this.context = context;
         }
-        public async Task<List<RequestDetailVM>> GetAllCartDetail(int cartID)
+        public async Task<List<RequestDetailVM>> GetAllRequestDetail(int requestID)
         {
-            List<RequestDetailVM> listCartDetailMV = await context.RequestDetails
-                .Where(cd => cd.CartId == cartID)
+            List<RequestDetailVM> listRequestDetailMV = await context.RequestDetails
+                .Where(cd => cd.RequestId == requestID)
                 .Include(cd => cd.Item)
                 .ThenInclude(item => item.User)
-                .Select(cd => RequestDetailVM.CartDetailToVewModel(cd))
+                .Select(cd => RequestDetailVM.RequestDetailToVewModel(cd))
                 .ToListAsync();
             /*List<CartDetail> listCartDetail = new List<CartDetail>();
             List<CartDetailVM> listCartDetailMV = new List<CartDetailVM>();
@@ -32,17 +32,17 @@ namespace MOBY_API_Core6.Repository
                 crmv = CartDetailVM.CartDetailToVewModel(item);
                 listCartDetailMV.Add(crmv);
             }*/
-            return listCartDetailMV;
+            return listRequestDetailMV;
         }
 
-        public async Task<CartDetail?> GetCartDetailByCartDetailID(int CartDetail)
+        public async Task<RequestDetail?> GetRequestDetailByRequestDetailID(int requestID)
         {
 
-            CartDetail? foundCartDetail = await context.CartDetails
-                .Where(cd => cd.CartDetailId == CartDetail)
+            RequestDetail? foundRequestDetail = await context.RequestDetails
+                .Where(cd => cd.RequestDetailId == requestID)
                 .FirstOrDefaultAsync();
 
-            return foundCartDetail;
+            return foundRequestDetail;
         }
         /*public List<CartDetailVM> GetCartDetailByItemID(int itemID)
         {
@@ -58,16 +58,18 @@ namespace MOBY_API_Core6.Repository
             return CartDetailToVM;
         }*/
 
-        public async Task<bool> CreateCartDetail(CreateCartDetailVM createdCartDetail)
+        public async Task<bool> CreateRequestDetail(CreateRequestDetailVM createdRequestDetail)
         {
 
-            CartDetail newCartDetail = new CartDetail();
-            newCartDetail.CartId = createdCartDetail.CartId;
-            newCartDetail.ItemId = createdCartDetail.ItemId;
-            newCartDetail.CartDetailDateCreate = DateTime.Now;
-            newCartDetail.CartDetailItemQuantity = createdCartDetail.CartDetailItemQuantity;
+            RequestDetail newRquestDetail = new RequestDetail();
+            newRquestDetail.RequestId = createdRequestDetail.RequestId;
+            newRquestDetail.ItemId = createdRequestDetail.ItemId;
+            newRquestDetail.DateCreate = DateTime.Now;
+            newRquestDetail.ItemQuantity = createdRequestDetail.ItemQuantity;
+            newRquestDetail.Status = 0;
 
-            await context.CartDetails.AddAsync(newCartDetail);
+
+            await context.RequestDetails.AddAsync(newRquestDetail);
             if (await context.SaveChangesAsync() != 0)
             {
                 return true;
@@ -75,11 +77,11 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> UpdateCartDetail(CartDetail cartDetail, int quantity)
+        public async Task<bool> UpdateRequestDetail(RequestDetail requestDetail, int quantity)
         {
 
-            cartDetail.CartDetailItemQuantity = quantity;
-            cartDetail.CartDetailDateUpdate = DateTime.Now;
+            requestDetail.ItemQuantity = quantity;
+            requestDetail.DateUpdate = DateTime.Now;
 
             if (await context.SaveChangesAsync() != 0)
             {
@@ -88,10 +90,10 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> DeleteCartDetail(CartDetail cartDetail)
+        public async Task<bool> DeleteRequestDetail(RequestDetail requestDetail)
         {
 
-            context.CartDetails.Remove(cartDetail);
+            context.RequestDetails.Remove(requestDetail);
 
             if (await context.SaveChangesAsync() != 0)
             {

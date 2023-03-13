@@ -4,8 +4,8 @@ namespace MOBY_API_Core6.Repository
 {
     public interface IRequestRepository
     {
-        public Task<bool> CreateCart(int userID);
-        public Task<RequestVM?> GetCartByUid(int userID);
-        public Task<bool> CheackExistedCartByUid(int userID);
+        public Task<bool> CreateRequest(int userID);
+        public Task<RequestVM?> GetRequestByUid(int userID);
+        public Task<bool> CheackExistedRequestByUid(int userID);
     }
 }

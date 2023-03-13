@@ -8,36 +8,40 @@ namespace MOBY_API_Core6.Controllers
 {
 
     [ApiController]
-    public class CartDetailController : ControllerBase
+    public class RequestDetailController : ControllerBase
     {
         private readonly IUserRepository userDAO;
-        private readonly IRequestRepository cartDAO;
-        private readonly ICartDetailRepository cartDetailDAO;
+        private readonly IRequestRepository requestDAO;
+        private readonly IRequestDetailRepository requestDetailDAO;
         private readonly IItemRepository itemDAO;
-        public CartDetailController(ICartDetailRepository cartDetailDAO, IRequestRepository cartDAO, IUserRepository userDAO, IItemRepository itemDAO)
+        public RequestDetailController(IRequestDetailRepository cartDetailDAO, IRequestRepository cartDAO, IUserRepository userDAO, IItemRepository itemDAO)
         {
             this.userDAO = userDAO;
-            this.cartDetailDAO = cartDetailDAO;
-            this.cartDAO = cartDAO;
+            this.requestDetailDAO = cartDetailDAO;
+            this.requestDAO = cartDAO;
             this.itemDAO = itemDAO;
         }
         [Authorize]
         [HttpGet]
-        [Route("api/useraccount/cartdetail/all")]
-        public async Task<IActionResult> GetAllCartDetail()
+        [Route("api/useraccount/request/requestdetail/all")]
+        public async Task<IActionResult> GetAllRequestDetail()
         {
-            int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            RequestVM? cart = await cartDAO.GetCartByUid(uid);
-            if (cart != null)
+            try
             {
-                List<RequestDetailVM> listCartDetail = await cartDetailDAO.GetAllCartDetail(cart.CartId);
-                if (listCartDetail != null)
+                List<RequestDetailVM> listCartDetail = new List<RequestDetailVM>();
+                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                RequestVM? request = await requestDAO.GetRequestByUid(uid);
+                if (request != null)
                 {
-                    return Ok(listCartDetail);
+                    listCartDetail = await requestDetailDAO.GetAllRequestDetail(request.RequestId);
                 }
-
+                return Ok(listCartDetail);
             }
-            return BadRequest(ReturnMessage.create("no CartDetail Found"));
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
         }
         /*
         [Authorize]
@@ -64,51 +68,70 @@ namespace MOBY_API_Core6.Controllers
         */
         [Authorize]
         [HttpPost]
-        [Route("api/cartdetail/create")]
-        public async Task<IActionResult> CreateCartDetail([FromBody] CreateCartDetailVM createdCartDetail)
+        [Route("api/requestdetail/create")]
+        public async Task<IActionResult> CreateRequestDetail([FromBody] CreateRequestDetailVM createdRequestDetail)
         {
 
-            if (await cartDetailDAO.CreateCartDetail(createdCartDetail))
+            try
             {
-                return Ok(ReturnMessage.create("Success"));
+                if (await requestDetailDAO.CreateRequestDetail(createdRequestDetail))
+                {
+                    return Ok(ReturnMessage.create("Success"));
+                }
+                return BadRequest(ReturnMessage.create("error at CreateRequestDetail"));
             }
-            return BadRequest(ReturnMessage.create("error at CreateCartDetail"));
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
 
         [Authorize]
         [HttpPut]
-        [Route("api/cartdetail")]
-        public async Task<IActionResult> UpdateCartDetail([FromBody] UpdateCartDetailVM CartDetail)
+        [Route("api/requestdetail")]
+        public async Task<IActionResult> UpdateRequestDetail([FromBody] UpdateRequestDetailVM updatedRequestDetail)
         {
-            CartDetail? cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetail.CartDetailId);
-            if (cacrtDetail != null)
+            try
             {
-                if (await cartDetailDAO.UpdateCartDetail(cacrtDetail, CartDetail.CartDetailItemQuantity))
+                RequestDetail? requestDetail = await requestDetailDAO.GetRequestDetailByRequestDetailID(updatedRequestDetail.RequestDetailId);
+                if (requestDetail != null)
                 {
-                    return Ok(ReturnMessage.create("Success"));
+                    if (await requestDetailDAO.UpdateRequestDetail(requestDetail, updatedRequestDetail.ItemQuantity))
+                    {
+                        return Ok(ReturnMessage.create("Success"));
+                    }
                 }
+                return BadRequest(ReturnMessage.create("error at UpdateRequestDetail"));
             }
-            return BadRequest(ReturnMessage.create("error at UpdateCartDetail"));
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [Authorize]
         [HttpDelete]
-        [Route("api/cartdetail")]
-        public async Task<IActionResult> DeleteCartDetail([FromBody] CartDetailIdVM CartDetailid)
+        [Route("api/requestdetail")]
+        public async Task<IActionResult> DeleteRequestDetail([FromBody] RequestDetailIdVM requestDetailid)
         {
-            CartDetail? cacrtDetail = await cartDetailDAO.GetCartDetailByCartDetailID(CartDetailid.CartDetailId);
-            if (cacrtDetail != null)
+            try
             {
-                if (await cartDetailDAO.DeleteCartDetail(cacrtDetail))
+                RequestDetail? requestDetail = await requestDetailDAO.GetRequestDetailByRequestDetailID(requestDetailid.CartDetailId);
+                if (requestDetail != null)
                 {
-                    return Ok(ReturnMessage.create("Success"));
+                    if (await requestDetailDAO.DeleteRequestDetail(requestDetail))
+                    {
+                        return Ok(ReturnMessage.create("Success"));
+                    }
                 }
+                return BadRequest(ReturnMessage.create("error at UpdateCartDetail"));
             }
-            return BadRequest(ReturnMessage.create("error at UpdateCartDetail"));
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
-
-
 
         /*
         [Authorize]

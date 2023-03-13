@@ -34,7 +34,7 @@ namespace MOBY_API_Core6.Repository
         {
             UserAccount? foundAccount = await context.UserAccounts
                 .Where(u => u.UserCode == userCode)
-                .Include(u => u.Carts)
+                .Include(u => u.Requests)
                 .FirstOrDefaultAsync();
             return foundAccount;
         }
@@ -42,7 +42,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<UserAccount?> FindUserByUid(int uid)
         {
             UserAccount? foundAccount = await context.UserAccounts.Where(u => u.UserId == uid)
-                .Include(u => u.Carts)
+                .Include(u => u.Requests)
                 .FirstOrDefaultAsync();
             return foundAccount;
         }
@@ -91,8 +91,8 @@ namespace MOBY_API_Core6.Repository
             newUser.UserDateCreate = DateTime.Now;
 
             //new cart: 
-            var cart = new Cart();
-            newUser.Carts.Add(cart);
+            Models.Request request = new Models.Request();
+            newUser.Requests.Add(request);
 
 
             var addUser = context.UserAccounts.AddAsync(newUser);

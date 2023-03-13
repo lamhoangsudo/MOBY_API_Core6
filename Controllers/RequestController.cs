@@ -8,11 +8,11 @@ namespace MOBY_API_Core6.Controllers
 {
 
     [ApiController]
-    public class CartController : ControllerBase
+    public class RequestController : ControllerBase
     {
         private readonly IUserRepository userDAO;
         private readonly IRequestRepository cartDAO;
-        public CartController(IUserRepository userDao, IRequestRepository cartDAO)
+        public RequestController(IUserRepository userDao, IRequestRepository cartDAO)
         {
             this.userDAO = userDao;
             this.cartDAO = cartDAO;
@@ -23,11 +23,11 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> CreateCart()
         {
             var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            if (await cartDAO.CheackExistedCartByUid(currentUid))
+            if (await cartDAO.CheackExistedRequestByUid(currentUid))
             {
                 return Ok(ReturnMessage.create("this user already has a cart"));
             }
-            if (await cartDAO.CreateCart(currentUid))
+            if (await cartDAO.CreateRequest(currentUid))
             {
                 return Ok(ReturnMessage.create("success"));
             }
@@ -40,7 +40,7 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> GetCartByUid()
         {
             int currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            RequestVM? currentCart = await cartDAO.GetCartByUid(currentUid);
+            RequestVM? currentCart = await cartDAO.GetRequestByUid(currentUid);
             return Ok(currentCart);
         }
     }

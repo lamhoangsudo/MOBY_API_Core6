@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MOBY_API_Core6.Data_View_Model
 {
-    public class UpdateCartDetailVM
+    public class UpdateRequestDetailVM
     {
         [Required]
-        public int CartDetailId { get; set; }
+        public int RequestDetailId { get; set; }
         [DefaultValue(1)]
-        public int CartDetailItemQuantity { get; set; }
+        public int ItemQuantity { get; set; }
     }
 }

@@ -155,7 +155,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return NotFound(ReturnMessage.create("account not found"));
                 }
-                Cart? cart = currentUser.Carts.FirstOrDefault();
+                Request? request = currentUser.Requests.FirstOrDefault();
 
 
 

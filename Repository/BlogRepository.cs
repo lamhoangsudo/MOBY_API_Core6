@@ -115,6 +115,7 @@ namespace MOBY_API_Core6.Repository
             newblog.BlogCategoryId = blogvm.BlogCategoryId;
             newblog.UserId = UserID;
             newblog.BlogTitle = blogvm.BlogTitle;
+            newblog.Image = blogvm.Image;
             newblog.BlogDescription = blogvm.BlogDescription;
             newblog.BlogContent = blogvm.BlogContent;
             newblog.BlogDateCreate = DateTime.Now;
@@ -135,6 +136,7 @@ namespace MOBY_API_Core6.Repository
             {
                 blog.BlogCategoryId = blogvm.BlogCategoryId;
                 blog.BlogTitle = blogvm.BlogTitle;
+                blog.Image = blogvm.Image;
                 blog.BlogDescription = blogvm.BlogDescription;
                 blog.BlogContent = blogvm.BlogContent;
                 blog.BlogDateUpdate = DateTime.Now;
