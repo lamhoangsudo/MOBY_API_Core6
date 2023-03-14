@@ -2,6 +2,7 @@
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
+
 namespace MOBY_API_Core6.Repository
 {
     public class BlogRepository : IBlogRepository
@@ -24,16 +25,13 @@ namespace MOBY_API_Core6.Repository
 
             return blogList;
         }
-
-        public async Task<List<BlogVM>> getNewBlog()
+        public async Task<int> getAllBlogCount()
         {
-            List<BlogVM> blogList = await context.Blogs.Where(b => b.BlogStatus == 1)
-                .OrderByDescending(b => b.BlogId)
-                .Take(3)
-                .Select(b => BlogVM.BlogToVewModel(b))
-                .ToListAsync();
+            int count;
+            count = await context.Blogs.Where(b => b.BlogStatus == 1)
+                .CountAsync();
 
-            return blogList;
+            return count;
         }
 
         public async Task<List<BlogVM>> getAllUncheckBlog(PaggingVM pagging)
@@ -81,6 +79,14 @@ namespace MOBY_API_Core6.Repository
 
             return blogList;
         }
+        public async Task<int> getAllBlogCount(int blogCateID)
+        {
+            int count;
+            count = await context.Blogs.Where(b => b.BlogStatus == 1 && b.BlogCategoryId == blogCateID)
+                .CountAsync();
+
+            return count;
+        }
         public async Task<List<BlogVM>> getBlogByUserID(int userID, PaggingVM pagging)
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
@@ -94,6 +100,14 @@ namespace MOBY_API_Core6.Repository
 
             return blogList;
         }
+        public async Task<int> getBlogByUserIDCount(int userID)
+        {
+            int count;
+            count = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus == 1)
+                .CountAsync();
+
+            return count;
+        }
 
         public async Task<List<BlogVM>> getBlogBySelf(int userID, PaggingVM pagging)
         {
@@ -106,6 +120,15 @@ namespace MOBY_API_Core6.Repository
                 .ToListAsync();
 
             return blogList;
+        }
+
+        public async Task<int> getBlogByBySelfCount(int userID)
+        {
+            int count;
+            count = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus != 3)
+                .CountAsync();
+
+            return count;
         }
 
         public async Task<bool> CreateBlog(CreateBlogVM blogvm, int UserID)

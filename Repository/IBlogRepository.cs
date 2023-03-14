@@ -19,5 +19,9 @@ namespace MOBY_API_Core6.Repository
         public Task<bool> UpdateBlog(Blog blog, UpdateBlogVM UpdatedBlogvm);
         public Task<bool> ConfirmBlog(Blog blog, int decision);
         public Task<bool> DenyBlog(Blog blog, int decision, String reason);
+        public Task<int> getAllBlogCount();
+        public Task<int> getAllBlogCount(int blogCateID);
+        public Task<int> getBlogByUserIDCount(int userID);
+        public Task<int> getBlogByBySelfCount(int userID);
     }
 }
