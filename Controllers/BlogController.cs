@@ -28,8 +28,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 List<BlogVM> ListBlog = await BlogDAO.getAllBlog(pagging);
+                int totalBlog = await BlogDAO.getAllBlogCount();
+                PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
 
-                return Ok(ListBlog);
+                return Ok(result);
 
             }
             catch (Exception ex)
@@ -48,15 +50,17 @@ namespace MOBY_API_Core6.Controllers
                 if (blogGetVM.categoryId != null)
                 {
                     ListBlog = await BlogDAO.getBlogByBlogCateID(blogGetVM.categoryId.Value, pagging);
-
-                    return Ok(ListBlog);
+                    int totalBlog = await BlogDAO.getAllBlogCount(blogGetVM.categoryId.Value);
+                    PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
+                    return Ok(result);
 
                 }
                 else if (blogGetVM.userId != null)
                 {
                     ListBlog = await BlogDAO.getBlogByUserID(blogGetVM.userId.Value, pagging);
-
-                    return Ok(ListBlog);
+                    int totalBlog = await BlogDAO.getBlogByUserIDCount(blogGetVM.userId.Value);
+                    PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
+                    return Ok(result);
                 }
                 else if (blogGetVM.BlogId != null)
                 {
@@ -85,7 +89,9 @@ namespace MOBY_API_Core6.Controllers
             {
                 int UserID = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 List<BlogVM> ListBlog = await BlogDAO.getBlogBySelf(UserID, pagging);
-                return Ok(ListBlog);
+                int totalBlog = await BlogDAO.getBlogByBySelfCount(UserID);
+                PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
+                return Ok(result);
             }
             catch (Exception ex)
             {
