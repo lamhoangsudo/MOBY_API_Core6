@@ -166,6 +166,7 @@ namespace MOBY_API_Core6.Repository
                 if (blog.BlogStatus == 1 || blog.BlogStatus == 2)
                 {
                     blog.BlogStatus = 0;
+                    blog.ReasonDeny = null;
                 }
                 if (await context.SaveChangesAsync() != 0)
                 {

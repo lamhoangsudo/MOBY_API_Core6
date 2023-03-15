@@ -14,6 +14,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime BlogDateCreate { get; set; }
         public DateTime? BlogDateUpdate { get; set; }
         public int? BlogStatus { get; set; }
+        public string? ReasonDeny { get; set; }
 
         public List<CommentVM>? ListComment { get; set; }
         public static BlogVM BlogToVewModel(Blog blog)
@@ -30,7 +31,8 @@ namespace MOBY_API_Core6.Data_View_Model
                 BlogContent = blog.BlogContent,
                 BlogDateCreate = blog.BlogDateCreate,
                 BlogDateUpdate = blog.BlogDateUpdate,
-                BlogStatus = blog.BlogStatus
+                BlogStatus = blog.BlogStatus,
+                ReasonDeny = blog.ReasonDeny
             };
             var ListComment = blog.Comments.Select(b => CommentVM.CommentToVewModel(b)).ToList();
             blogView.ListComment = ListComment;
