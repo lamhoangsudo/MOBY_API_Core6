@@ -12,6 +12,9 @@ namespace MOBY_API_Core6.Models
         public DateTime? DateUpdate { get; set; }
         public int ItemQuantity { get; set; }
         public int Status { get; set; }
+        public bool? SponsoredOrderShippingFee { get; set; }
+        public string? Address { get; set; }
+        public string? Note { get; set; }
 
         public virtual Item Item { get; set; } = null!;
         public virtual Request Request { get; set; } = null!;

@@ -436,7 +436,11 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemId).HasColumnName("ItemID");
 
+                entity.Property(e => e.Note).HasMaxLength(100);
+
                 entity.Property(e => e.RequestId).HasColumnName("RequestID");
+
+                entity.Property(e => e.SponsoredOrderShippingFee).HasColumnName("Sponsored_Order_Shipping_Fee");
 
                 entity.HasOne(d => d.Item)
                     .WithMany(p => p.RequestDetails)
