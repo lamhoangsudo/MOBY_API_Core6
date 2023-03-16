@@ -7,10 +7,12 @@ namespace MOBY_API_Core6.Repository
     public class RequestDetailRepository : IRequestDetailRepository
     {
         private readonly MOBYContext context;
+        private readonly IOrderRepository orderDAO;
 
-        public RequestDetailRepository(MOBYContext context)
+        public RequestDetailRepository(MOBYContext context, IOrderRepository orderDAO)
         {
             this.context = context;
+            this.orderDAO = orderDAO;
         }
         /*public async Task<List<RequestDetailVM>> GetAllRequestDetail(int requestID)
         {
@@ -59,7 +61,6 @@ namespace MOBY_API_Core6.Repository
             {
                 if (request.RequestDetails.Count > 0)
                 {
-
                     RequestDetail? rd = request.RequestDetails.FirstOrDefault();
 
                     if (rd != null && request.User != null)
@@ -68,21 +69,18 @@ namespace MOBY_API_Core6.Repository
 
                         result.Add(requestDetailVMrequest);
                     }
-
-
                 }
-
             }
-
-
             return result;
         }
 
-        public async Task<RequestDetail?> GetRequestDetailByRequestDetailID(int requestID)
+
+
+        public async Task<RequestDetail?> GetRequestDetailByRequestDetailID(int requestDetailID)
         {
 
             RequestDetail? foundRequestDetail = await context.RequestDetails
-                .Where(cd => cd.RequestDetailId == requestID)
+                .Where(cd => cd.RequestDetailId == requestDetailID)
                 .Include(cd => cd.Item)
                 .FirstOrDefaultAsync();
 
@@ -104,13 +102,21 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<bool> CreateRequestDetail(CreateRequestDetailVM createdRequestDetail)
         {
+            ItemVM? itemfound = await context.Items.Where(i => i.ItemId == createdRequestDetail.ItemId)
+                .Select(i => ItemVM.ItemToViewModel(i)).FirstOrDefaultAsync();
+            if (itemfound == null)
+            {
+                return false;
+            }
 
             RequestDetail newRquestDetail = new RequestDetail();
             newRquestDetail.RequestId = createdRequestDetail.RequestId;
             newRquestDetail.ItemId = createdRequestDetail.ItemId;
             newRquestDetail.DateCreate = DateTime.Now;
-            newRquestDetail.ItemQuantity = createdRequestDetail.ItemQuantity;
+            newRquestDetail.ItemQuantity = 1;
             newRquestDetail.Status = 0;
+            newRquestDetail.SponsoredOrderShippingFee = itemfound.ItemSponsoredOrderShippingFee;
+            newRquestDetail.Address = createdRequestDetail.Address;
 
 
             await context.RequestDetails.AddAsync(newRquestDetail);
@@ -121,16 +127,29 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> UpdateRequestDetail(RequestDetail requestDetail, int quantity)
+        public async Task<bool> UpdateRequestDetail(RequestDetail requestDetail, UpdateRequestDetailVM updatedRequestDetail)
         {
             int quantityleft = await context.Items.Where(i => i.ItemId == requestDetail.ItemId)
                 .Select(i => i.ItemShareAmount)
                 .FirstOrDefaultAsync();
-            if (quantityleft < quantity)
+            if (quantityleft < updatedRequestDetail.ItemQuantity)
             {
                 return false;
             }
-            requestDetail.ItemQuantity = quantity;
+            requestDetail.ItemQuantity = updatedRequestDetail.ItemQuantity;
+
+            if (updatedRequestDetail.SponsoredOrderShippingFee != null)
+            {
+                requestDetail.SponsoredOrderShippingFee = updatedRequestDetail.SponsoredOrderShippingFee;
+            }
+            if (updatedRequestDetail.Address != null)
+            {
+                requestDetail.Address = updatedRequestDetail.Address;
+            }
+            if (updatedRequestDetail.Note != null)
+            {
+                requestDetail.Note = updatedRequestDetail.Note;
+            }
             requestDetail.DateUpdate = DateTime.Now;
 
             if (await context.SaveChangesAsync() != 0)
@@ -207,8 +226,16 @@ namespace MOBY_API_Core6.Repository
             }
             if (await context.SaveChangesAsync() != 0)
             {
+                RequestDetail? curremtRequestDetail = await context.RequestDetails
+                    .Where(rd => rd.RequestDetailId == requestDetailid.RequestDetailId)
+                    .Include(rd => rd.Request).FirstOrDefaultAsync();
+                if (curremtRequestDetail != null)
+                {
+                    await orderDAO.CreateOrder(curremtRequestDetail);
+                }
                 return true;
             }
+
             return false;
         }
 

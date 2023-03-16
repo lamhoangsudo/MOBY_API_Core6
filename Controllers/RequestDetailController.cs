@@ -65,9 +65,6 @@ namespace MOBY_API_Core6.Controllers
 
                 //for item in listItem 
                 //requestdetail nao co item == item nguoi ban
-
-
-
                 return Ok(result);
             }
             catch (Exception ex)
@@ -131,7 +128,7 @@ namespace MOBY_API_Core6.Controllers
                 if (requestDetail != null)
                 {
 
-                    if (await requestDetailDAO.UpdateRequestDetail(requestDetail, updatedRequestDetail.ItemQuantity))
+                    if (await requestDetailDAO.UpdateRequestDetail(requestDetail, updatedRequestDetail))
                     {
                         return Ok(ReturnMessage.create("Success"));
                     }

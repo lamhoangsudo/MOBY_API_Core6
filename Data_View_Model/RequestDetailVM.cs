@@ -11,6 +11,8 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime? DateUpdate { get; set; }
         public int ItemQuantity { get; set; }
         public int Status { get; set; }
+        public bool? SponsoredOrderShippingFee { get; set; }
+        public string? Note { get; set; }
 
         public ItemVM? ItemVM { get; set; }
         public UserVM? UserVM { get; set; }
@@ -25,12 +27,18 @@ namespace MOBY_API_Core6.Data_View_Model
                 DateUpdate = requestDetail.DateUpdate,
                 ItemQuantity = requestDetail.ItemQuantity,
                 Status = requestDetail.Status,
+                SponsoredOrderShippingFee = requestDetail.SponsoredOrderShippingFee,
+                Note = requestDetail.Note,
 
             };
             var item = requestDetail.Item;
             RequestDetailVM.ItemVM = ItemVM.ItemToViewModel(item);
-            var user = requestDetail.Item.User;
-            RequestDetailVM.UserVM = UserVM.UserAccountToVewModel(user);
+            if (requestDetail.Item.User != null)
+            {
+                var user = requestDetail.Item.User;
+                RequestDetailVM.UserVM = UserVM.UserAccountToVewModel(user);
+            }
+
             return RequestDetailVM;
 
         }
