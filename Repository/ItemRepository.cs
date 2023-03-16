@@ -625,19 +625,11 @@ namespace MOBY_API_Core6.Repository
                 string locationString = String.Concat(dynamicFilterVM.location.Where(c => !Char.IsWhiteSpace(c))).Replace("}", "");
                 query = query.Where(query => query.it.ItemShippingAddress.StartsWith(locationString));
             }
-            if (dynamicFilterVM.maxPrice != null && dynamicFilterVM.minPrice != null && dynamicFilterVM.maxPrice >= dynamicFilterVM.minPrice)
+            if (dynamicFilterVM.maxPrice >= dynamicFilterVM.minPrice)
             {
                 query = query.Where(query => query.it.ItemSalePrice <= dynamicFilterVM.maxPrice && query.it.ItemSalePrice >= dynamicFilterVM.minPrice);
             }
-            if (dynamicFilterVM.maxPrice == null && dynamicFilterVM.minPrice != null)
-            {
-                query = query.Where(query => query.it.ItemSalePrice >= dynamicFilterVM.minPrice);
-            }
-            if (dynamicFilterVM.minPrice == null && dynamicFilterVM.maxPrice != null)
-            {
-                query = query.Where(query => query.it.ItemSalePrice >= dynamicFilterVM.maxPrice);
-            }
-            //query = query.Where(query => query.it.ItemEstimateValue <= dynamicFilterVM.maxUsable && query.it.ItemEstimateValue >= dynamicFilterVM.minUsable);
+            query = query.Where(query => query.it.ItemEstimateValue <= dynamicFilterVM.maxUsable && query.it.ItemEstimateValue >= dynamicFilterVM.minUsable);
             listItemDynamicFilters = await query
                 .Skip(itemsToSkip)
                 .Take(pageSize)
