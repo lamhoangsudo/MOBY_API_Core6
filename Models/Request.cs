@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MOBY_API_Core6.Models
+﻿namespace MOBY_API_Core6.Models
 {
     public partial class Request
     {
@@ -11,7 +8,7 @@ namespace MOBY_API_Core6.Models
         }
 
         public int RequestId { get; set; }
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
 
         public virtual UserAccount? User { get; set; }
         public virtual ICollection<RequestDetail> RequestDetails { get; set; }

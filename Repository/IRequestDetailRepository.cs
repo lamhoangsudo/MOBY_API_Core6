@@ -7,7 +7,7 @@ namespace MOBY_API_Core6.Repository
     {
         //public Task<List<RequestDetailVM>> GetAllRequestDetail(int requestDetailID);
         public Task<bool> CreateRequestDetail(CreateRequestDetailVM createdRequestDetail);
-        public Task<bool> UpdateRequestDetail(RequestDetail requestDetail, int status);
+        public Task<bool> UpdateRequestDetail(RequestDetail requestDetail, UpdateRequestDetailVM updatedRequestDetail);
         public Task<RequestDetail?> GetRequestDetailByRequestDetailID(int requestDetailID);
         public Task<bool> DeleteRequestDetail(RequestDetail requestDetail);
         public Task<List<RequestDetailVM>> getRequestDetailByItemID(int itemid);
