@@ -637,7 +637,7 @@ namespace MOBY_API_Core6.Repository
             {
                 query = query.Where(query => query.it.ItemSalePrice >= dynamicFilterVM.maxPrice);
             }
-            query = query.Where(query => query.it.ItemSalePrice <= dynamicFilterVM.maxUsable && query.it.ItemSalePrice >= dynamicFilterVM.minUsable);
+            //query = query.Where(query => query.it.ItemEstimateValue <= dynamicFilterVM.maxUsable && query.it.ItemEstimateValue >= dynamicFilterVM.minUsable);
             listItemDynamicFilters = await query
                 .Skip(itemsToSkip)
                 .Take(pageSize)
