@@ -11,7 +11,6 @@ namespace MOBY_API_Core6.Models
         public int Quanlity { get; set; }
         public string Address { get; set; } = null!;
         public int Status { get; set; }
-        public bool SponsoredOrderShippingFee { get; set; }
         public string? ReasonDeny { get; set; }
         public string? Note { get; set; }
         public DateTime DateCreate { get; set; }

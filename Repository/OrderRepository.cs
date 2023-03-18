@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
@@ -12,32 +13,40 @@ namespace MOBY_API_Core6.Repository
             this.context = context;
         }
 
-        public async Task<List<Order>> GetOrderByRecieverID(int uid)
+        public async Task<List<Order>> GetOrderByRecieverID(int uid, PaggingVM pagging)
         {
-            List<Order> listOrder = await context.Orders.Where(o => o.UserId == uid).ToListAsync();
+            int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
+            List<Order> listOrder = await context.Orders.Where(o => o.UserId == uid)
+                .Include(o => o.User)
+                .Include(o => o.Item)
+                .Skip(itemsToSkip)
+                .Take(pagging.pageSize)
+                .ToListAsync();
             return listOrder;
         }
 
-        public async Task<List<Order>> GetOrderBySharerID(int uid)
+        public async Task<List<Order>> GetOrderBySharerID(int uid, PaggingVM pagging)
         {
-            List<Order> listOrder = await context.Orders.Include(o => o.Item).Where(o => o.Item.UserId == uid).ToListAsync();
+            int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
+            List<Order> listOrder = await context.Orders
+                .Where(o => o.Item.UserId == uid)
+                .Include(o => o.User)
+                .Include(o => o.Item)
+                .Skip(itemsToSkip)
+                .Take(pagging.pageSize)
+                .ToListAsync();
             return listOrder;
         }
 
-        public async Task<bool> CreateOrder(RequestDetail requestDetail)
+        public async Task<bool> CreateOrder(Request request)
         {
             Order newOrder = new Order();
 
-            newOrder.UserId = requestDetail.Request.UserId;
-            newOrder.ItemId = requestDetail.ItemId;
-            newOrder.Quanlity = requestDetail.ItemQuantity;
-#pragma warning disable CS8601 // Possible null reference assignment.
-            newOrder.Address = requestDetail.Address;
-#pragma warning restore CS8601 // Possible null reference assignment.
-#pragma warning disable CS8629 // Nullable value type may be null.
-            newOrder.SponsoredOrderShippingFee = requestDetail.SponsoredOrderShippingFee.Value;
-#pragma warning restore CS8629 // Nullable value type may be null.
-            newOrder.Note = requestDetail.Note;
+            newOrder.UserId = request.UserId;
+            newOrder.ItemId = request.ItemId;
+            newOrder.Quanlity = request.ItemQuantity;
+            newOrder.Address = request.Address;
+            newOrder.Note = request.Note;
             newOrder.Status = 0;
             newOrder.DateCreate = DateTime.Now;
 

@@ -8,6 +8,7 @@ namespace MOBY_API_Core6.Models
         public UserAccount()
         {
             Blogs = new HashSet<Blog>();
+            Carts = new HashSet<Cart>();
             Comments = new HashSet<Comment>();
             Items = new HashSet<Item>();
             Orders = new HashSet<Order>();
@@ -35,6 +36,7 @@ namespace MOBY_API_Core6.Models
 
         public virtual Role Role { get; set; } = null!;
         public virtual ICollection<Blog> Blogs { get; set; }
+        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Item> Items { get; set; }
         public virtual ICollection<Order> Orders { get; set; }

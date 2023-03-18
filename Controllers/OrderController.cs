@@ -25,9 +25,7 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<Order> listOrder = await orderDAO.GetOrderByRecieverID(uid);
-
-
+                List<Order> listOrder = await orderDAO.GetOrderByRecieverID(uid, pagging);
 
                 return Ok(listOrder);
 
@@ -46,7 +44,7 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<Order> listOrder = await orderDAO.GetOrderBySharerID(uid);
+                List<Order> listOrder = await orderDAO.GetOrderBySharerID(uid, pagging);
 
 
 
