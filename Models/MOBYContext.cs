@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace MOBY_API_Core6.Models
 {
@@ -20,6 +17,8 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<Blog> Blogs { get; set; } = null!;
         public virtual DbSet<BlogCategory> BlogCategories { get; set; } = null!;
         public virtual DbSet<BriefItem> BriefItems { get; set; } = null!;
+        public virtual DbSet<Cart> Carts { get; set; } = null!;
+        public virtual DbSet<CartDetail> CartDetails { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<DetailItem> DetailItems { get; set; } = null!;
@@ -29,7 +28,6 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<Reply> Replies { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
         public virtual DbSet<Request> Requests { get; set; } = null!;
-        public virtual DbSet<RequestDetail> RequestDetails { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<SubCategory> SubCategories { get; set; } = null!;
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
@@ -37,10 +35,15 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<ViewBlog> ViewBlogs { get; set; } = null!;
         public virtual DbSet<ViewReport> ViewReports { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
             modelBuilder.Entity<Banner>(entity =>
             {
                 entity.Property(e => e.BannerId)
@@ -127,6 +130,40 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
+            });
+
+            modelBuilder.Entity<Cart>(entity =>
+            {
+                entity.Property(e => e.CartId).HasColumnName("CartID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Carts)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Carts_UserAccounts");
+            });
+
+            modelBuilder.Entity<CartDetail>(entity =>
+            {
+                entity.Property(e => e.CartDetailId).HasColumnName("CartDetailID");
+
+                entity.Property(e => e.CartId).HasColumnName("CartID");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.HasOne(d => d.Cart)
+                    .WithMany(p => p.CartDetails)
+                    .HasForeignKey(d => d.CartId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CartDetails_Carts");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.CartDetails)
+                    .HasForeignKey(d => d.ItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CartDetails_Items");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -338,8 +375,6 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemId).HasColumnName("ItemID");
 
-                entity.Property(e => e.SponsoredOrderShippingFee).HasColumnName("Sponsored_Order_Shipping_Fee");
-
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.Item)
@@ -418,41 +453,25 @@ namespace MOBY_API_Core6.Models
             {
                 entity.Property(e => e.RequestId).HasColumnName("RequestID");
 
+                entity.Property(e => e.DateChangeStatus).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
                 entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.Requests)
+                    .HasForeignKey(d => d.ItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Requests_Items");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Requests)
                     .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Requests_UserAccounts");
-            });
-
-            modelBuilder.Entity<RequestDetail>(entity =>
-            {
-                entity.Property(e => e.RequestDetailId).HasColumnName("RequestDetailID");
-
-                entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.DateUpdate).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.ItemId).HasColumnName("ItemID");
-
-                entity.Property(e => e.Note).HasMaxLength(100);
-
-                entity.Property(e => e.RequestId).HasColumnName("RequestID");
-
-                entity.Property(e => e.SponsoredOrderShippingFee).HasColumnName("Sponsored_Order_Shipping_Fee");
-
-                entity.HasOne(d => d.Item)
-                    .WithMany(p => p.RequestDetails)
-                    .HasForeignKey(d => d.ItemId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CartDetailID_Items");
-
-                entity.HasOne(d => d.Request)
-                    .WithMany(p => p.RequestDetails)
-                    .HasForeignKey(d => d.RequestId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_RequestDetails_Requests");
             });
 
             modelBuilder.Entity<Role>(entity =>

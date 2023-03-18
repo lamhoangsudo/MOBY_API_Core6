@@ -10,8 +10,8 @@ namespace MOBY_API_Core6.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository userDAO;
-        private readonly IRequestRepository cartDAO;
-        public UserController(IUserRepository userDao, IRequestRepository cartDAO)
+        private readonly ICartRepository cartDAO;
+        public UserController(IUserRepository userDao, ICartRepository cartDAO)
         {
             this.userDAO = userDao;
             this.cartDAO = cartDAO;
@@ -66,6 +66,7 @@ namespace MOBY_API_Core6.Controllers
                     {
                         return Ok(ReturnMessage.create("success"));
                     }
+                    return BadRequest(ReturnMessage.create("error at updateUserAccount"));
                 }
 
                 return BadRequest(ReturnMessage.create("No User Found"));
@@ -155,13 +156,16 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return NotFound(ReturnMessage.create("account not found"));
                 }
-                Request? request = currentUser.Requests.FirstOrDefault();
-
-
+                Cart? currentcart = currentUser.Carts.FirstOrDefault();
+                if (currentcart == null)
+                {
+                    return NotFound(ReturnMessage.create("account not found cart"));
+                }
+                var userAccountVM = UserAccountVM.UserAccountToVewModel(currentUser, currentcart.CartId);
 
 
                 //return Ok(UserAccountVM.UserAccountToVewModel(currentUser, cart.CartId));
-                return Ok(currentUser);
+                return Ok(userAccountVM);
             }
             catch (Exception ex)
             {
@@ -181,7 +185,14 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.create("account not found"));
                 }
-                return Ok(UserAccountVM.UserAccountToVewModel(currentUser));
+                Cart? currentcart = currentUser.Carts.FirstOrDefault();
+                if (currentcart == null)
+                {
+                    return NotFound(ReturnMessage.create("account not found cart"));
+                }
+                var userAccountVM = UserAccountVM.UserAccountToVewModel(currentUser, currentcart.CartId);
+
+                return Ok(userAccountVM);
 
             }
             catch (Exception ex)

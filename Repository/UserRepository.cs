@@ -34,7 +34,7 @@ namespace MOBY_API_Core6.Repository
         {
             UserAccount? foundAccount = await context.UserAccounts
                 .Where(u => u.UserCode == userCode)
-                .Include(u => u.Requests)
+                .Include(u => u.Carts)
                 .FirstOrDefaultAsync();
             return foundAccount;
         }
@@ -42,7 +42,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<UserAccount?> FindUserByUid(int uid)
         {
             UserAccount? foundAccount = await context.UserAccounts.Where(u => u.UserId == uid)
-                .Include(u => u.Requests)
+                .Include(u => u.Carts)
                 .FirstOrDefaultAsync();
             return foundAccount;
         }
@@ -77,7 +77,7 @@ namespace MOBY_API_Core6.Repository
             UserAccount newUser = new UserAccount();
             newUser.UserCode = claims.First(i => i.Type == "user_id").Value;
             newUser.RoleId = 1;
-
+            newUser.Reputation = 80;
             newUser.UserName = claims.First(i => i.Type.Contains("identity/claims/name")).Value;
             newUser.UserGmail = claims.First(i => i.Type.Contains("emailaddress")).Value;
             newUser.UserAddress = createUserVM.UserAddress;
@@ -91,8 +91,12 @@ namespace MOBY_API_Core6.Repository
             newUser.UserDateCreate = DateTime.Now;
 
             //new cart: 
-            Models.Request request = new Models.Request();
-            newUser.Requests.Add(request);
+            Cart cart = new Cart
+            {
+                Address = newUser.UserAddress,
+
+            };
+            newUser.Carts.Add(cart);
 
 
             var addUser = context.UserAccounts.AddAsync(newUser);
@@ -108,13 +112,12 @@ namespace MOBY_API_Core6.Repository
         public async Task<bool> EditUser(UserAccount currentUser, UpdateAccountVM accountVM)
         {
             currentUser.UserName = accountVM.UserName;
-
             currentUser.UserAddress = accountVM.UserAddress;
             currentUser.UserPhone = accountVM.UserPhone;
             currentUser.UserSex = accountVM.UserSex;
             currentUser.UserDateOfBirth = DateTime.Parse(accountVM.UserDateOfBirth);
             currentUser.UserImage = accountVM.UserImage;
-            //currentUser.UserStatus = true;
+
             currentUser.UserMoreInformation = accountVM.UserMoreInformation;
             currentUser.UserDateUpdate = DateTime.Now;
 
