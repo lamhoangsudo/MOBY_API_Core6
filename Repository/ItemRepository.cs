@@ -271,7 +271,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                bool check = await _context.RequestDetails.Where(cd => cd.ItemId == itemVM.itemID)
+                bool check = await _context.Requests.Where(cd => cd.ItemId == itemVM.itemID && cd.Status == 0)
                     .AnyAsync();
                 if (check)
                 {
@@ -307,8 +307,8 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                bool checkCurrentItem = await _context.RequestDetails
-                    .Where(cd => cd.ItemId == itemVM.itemID)
+                bool checkCurrentItem = await _context.Requests
+                    .Where(cd => cd.ItemId == itemVM.itemID && cd.Status == 0)
                     .AnyAsync();
                 if (checkCurrentItem)
                 {

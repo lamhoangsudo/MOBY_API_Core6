@@ -11,37 +11,99 @@ namespace MOBY_API_Core6.Controllers
     public class RequestController : ControllerBase
     {
         private readonly IUserRepository userDAO;
-        private readonly IRequestRepository cartDAO;
-        public RequestController(IUserRepository userDao, IRequestRepository cartDAO)
+        private readonly ICartRepository cartDAO;
+        private readonly ICartDetailRepository cartDetailDAO;
+        private readonly IItemRepository itemDAO;
+        private readonly IRequestRepository requestDAO;
+        public RequestController(ICartDetailRepository cartDetailDAO, ICartRepository cartDAO, IUserRepository userDAO, IItemRepository itemDAO, IRequestRepository requestDAO)
         {
-            this.userDAO = userDao;
+            this.userDAO = userDAO;
+            this.cartDetailDAO = cartDetailDAO;
             this.cartDAO = cartDAO;
-        }
-        [Authorize]
-        [HttpPost]
-        [Route("api/request/create")]
-        public async Task<IActionResult> CreateRequest()
-        {
-            var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            if (await cartDAO.CheackExistedRequestByUid(currentUid))
-            {
-                return Ok(ReturnMessage.create("this user already has a cart"));
-            }
-            if (await cartDAO.CreateRequest(currentUid))
-            {
-                return Ok(ReturnMessage.create("success"));
-            }
-            return Ok(ReturnMessage.create("error at CreateRequest"));
+            this.itemDAO = itemDAO;
+            this.requestDAO = requestDAO;
         }
 
         [Authorize]
         [HttpGet]
-        [Route("api/useraccount/request")]
-        public async Task<IActionResult> GetRequestByUid()
+        [Route("api/useraccount/item/request")]
+        public async Task<IActionResult> GetAllRequestByItem()
         {
-            int currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-            RequestVM? currentCart = await cartDAO.GetRequestByUid(currentUid);
-            return Ok(currentCart);
+            try
+            {
+                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                List<int> itemIDList = await itemDAO.getListItemIDByUserID(uid);
+                List<RequestVM> result = new List<RequestVM>();
+                foreach (int itemID in itemIDList)
+                {
+                    List<RequestVM> requestDetailOf1ItemList = await requestDAO.getRequestByItemID(itemID);
+
+                    result.AddRange(requestDetailOf1ItemList);
+                }
+
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+        [Authorize]
+        [HttpPatch]
+        [Route("api/requestdetail/accept")]
+        public async Task<IActionResult> AcceptRequestDetail([FromBody] RequestIDVM requestIDVM)
+        {
+
+            try
+            {
+                Request? foundRequestDetail = await requestDAO.getRequestByRequestID(requestIDVM.RequestId);
+                if (foundRequestDetail == null)
+                {
+                    return BadRequest(ReturnMessage.create("error at request not found"));
+                }
+                if (await requestDAO.AcceptRequestDetail(foundRequestDetail))
+                {
+                    await requestDAO.DenyOtherRequestWhichPassItemQuantity(foundRequestDetail.ItemId);
+                    return Ok(ReturnMessage.create("Success"));
+                }
+                else
+                {
+                    return BadRequest(ReturnMessage.create("error at AcceptRequestDetail"));
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPatch]
+        [Route("api/requestdetail/deny")]
+        public async Task<IActionResult> DenyRequestDetail([FromBody] RequestIDVM requestIDVM)
+        {
+            try
+            {
+                Request? foundRequestDetail = await requestDAO.getRequestByRequestID(requestIDVM.RequestId);
+                if (foundRequestDetail == null)
+                {
+                    return BadRequest(ReturnMessage.create("error at request not found"));
+                }
+                if (await requestDAO.DenyRequestDetail(foundRequestDetail))
+                {
+                    return Ok(ReturnMessage.create("Success"));
+                }
+                return BadRequest(ReturnMessage.create("error at DenyRequestDetail"));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
         }
     }
 }

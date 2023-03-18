@@ -2,9 +2,9 @@
 
 namespace MOBY_API_Core6.Data_View_Model
 {
-    public class RequestDetailIdVM
+    public class CartDetailIdVM
     {
         [Required]
-        public int RequestDetailId { get; set; }
+        public int CartDetailid { get; set; }
     }
 }
