@@ -26,6 +26,20 @@ namespace MOBY_API_Core6.Repository
 
             return foundCartDetail;
         }
+        public async Task<bool> CheclExistCartDetail(CreateCartDetailVM createdcartDetail)
+        {
+
+            CartDetail? foundCartDetail = await context.CartDetails
+                .Where(cd => cd.CartId == createdcartDetail.CartId && cd.ItemId == createdcartDetail.ItemId)
+                .FirstOrDefaultAsync();
+            if (foundCartDetail != null)
+            {
+                foundCartDetail.ItemQuantity += 1;
+                await context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
         /*public List<CartDetailVM> GetCartDetailByItemID(int itemID)
         {
 
@@ -65,23 +79,23 @@ namespace MOBY_API_Core6.Repository
 
         }
 
-        public async Task<bool> UpdateCartDetail(CartDetail cartDetail, UpdateCartDetailVM updatedcartDetail)
+        public async Task<String> UpdateCartDetail(CartDetail cartDetail, UpdateCartDetailVM updatedcartDetail)
         {
             int quantityleft = await context.Items.Where(i => i.ItemId == cartDetail.ItemId)
                 .Select(i => i.ItemShareAmount)
                 .FirstOrDefaultAsync();
             if (quantityleft < updatedcartDetail.ItemQuantity)
             {
-                return false;
+                return "item available ammout is " + quantityleft + " ";
             }
             cartDetail.ItemQuantity = updatedcartDetail.ItemQuantity;
 
 
             if (await context.SaveChangesAsync() != 0)
             {
-                return true;
+                return "success";
             }
-            return false;
+            return "error";
         }
 
         public async Task<bool> DeleteCartDetail(CartDetail cartDetail)
@@ -141,20 +155,22 @@ namespace MOBY_API_Core6.Repository
             foreach (int id in requestDetailIDList.listCartDetailID)
             {
 
-                CartDetail? currentRequestDetail = await context.CartDetails.Where(cd => cd.CartDetailId == id).FirstOrDefaultAsync();
+                CartDetail? currentCartDetail = await context.CartDetails.Where(cd => cd.CartDetailId == id).FirstOrDefaultAsync();
 
-                if (currentRequestDetail != null)
+                if (currentCartDetail != null)
                 {
                     Request newRequest = new Request();
                     newRequest.UserId = uid;
-                    newRequest.ItemId = currentRequestDetail.ItemId;
-                    newRequest.ItemQuantity = currentRequestDetail.ItemQuantity;
+                    newRequest.ItemId = currentCartDetail.ItemId;
+                    newRequest.ItemQuantity = currentCartDetail.ItemQuantity;
                     newRequest.Address = address;
                     newRequest.Note = requestDetailIDList.note;
                     newRequest.DateCreate = DateTime.Now;
                     newRequest.Status = 0;
                     context.Requests.Add(newRequest);
+                    context.CartDetails.Remove(currentCartDetail);
                 }
+
             }
 
             if (await context.SaveChangesAsync() != 0)

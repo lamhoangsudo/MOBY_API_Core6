@@ -26,7 +26,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("api/useraccount/item/request")]
+        [Route("api/useraccount/item/request/sharer")]
         public async Task<IActionResult> GetAllRequestByItem()
         {
             try
@@ -43,6 +43,27 @@ namespace MOBY_API_Core6.Controllers
 
 
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("api/useraccount/request/reciever")]
+        public async Task<IActionResult> GetAllRequestByUserid()
+        {
+            try
+            {
+                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+
+
+                List<RequestVM> ListRequest = await requestDAO.getRequestByUserID(uid);
+
+                return Ok(ListRequest);
             }
             catch (Exception ex)
             {
