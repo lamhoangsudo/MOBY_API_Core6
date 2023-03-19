@@ -56,8 +56,11 @@ namespace MOBY_API_Core6.Repository
 
             await context.CartDetails.AddAsync(newCartDetail);
 
-            await context.SaveChangesAsync();
-            return true;
+            if (await context.SaveChangesAsync() != 0)
+            {
+                return true;
+            }
+
 
             return false;
         }

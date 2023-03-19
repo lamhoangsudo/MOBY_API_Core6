@@ -2,6 +2,7 @@
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
+
 namespace MOBY_API_Core6.Repository
 {
     public class RequestRepository : IRequestRepository
@@ -21,8 +22,9 @@ namespace MOBY_API_Core6.Repository
         {
             List<RequestVM> requests = await context.Requests
                 .Where(r => r.ItemId == itemid)
-                .Include(r => r.Item)
                 .Include(r => r.User)
+                .Include(r => r.Item)
+                .ThenInclude(i => i.User)
                 .Select(r => RequestVM.RequestToVewModel(r))
                 .ToListAsync();
             return requests;
@@ -37,11 +39,23 @@ namespace MOBY_API_Core6.Repository
 
             return requests;
         }
+        public async Task<RequestVM?> getRequestVMByRequestID(int requestID)
+        {
+            RequestVM? requests = await context.Requests
+                .Where(r => r.RequestId == requestID)
+                .Include(r => r.User)
+                .Include(r => r.Item)
+                .ThenInclude(i => i.User)
+                .Select(r => RequestVM.RequestToVewModel(r))
+                .FirstOrDefaultAsync();
+
+            return requests;
+        }
 
         public async Task<bool> AcceptRequestDetail(Request request)
         {
-
-            Models.Item? item = await context.Items.Where(i => i.ItemId == request.ItemId).FirstOrDefaultAsync();
+            Models.Item? item = request.Item;
+            //Models.Item? item = await context.Items.Where(i => i.ItemId == request.ItemId).FirstOrDefaultAsync();
             if (item != null)
             {
                 if (item.ItemShareAmount < request.ItemQuantity)
@@ -55,6 +69,7 @@ namespace MOBY_API_Core6.Repository
 
                 item.ItemShareAmount -= request.ItemQuantity;
                 request.Status = 1;
+                request.DateChangeStatus = DateTime.Now;
             }
 
             if (await context.SaveChangesAsync() != 0)
@@ -73,22 +88,22 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> DenyOtherRequestWhichPassItemQuantity(int itemID)
+        public async Task<bool> DenyOtherRequestWhichPassItemQuantity(Request request)
         {
-
-            Models.Item? currentItem = await context.Items.FindAsync(itemID);
+            Models.Item? currentItem = request.Item;
+            //Models.Item? currentItem = await context.Items.FindAsync(itemID);
             if (currentItem == null)
             {
                 return false;
             }
             List<Request> requests = await context.Requests
-                .Where(r => r.ItemId == itemID)
+                .Where(r => r.ItemId == currentItem.ItemId)
                 .ToListAsync();
             if (requests == null || requests.Count == 0)
             {
                 return true;
             }
-            foreach (Request request in requests)
+            foreach (Request request1 in requests)
             {
                 if (!currentItem.ItemStatus || currentItem.ItemShareAmount == 0)
                 {
@@ -110,6 +125,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<bool> DenyRequestDetail(Request request)
         {
             request.Status = 2;
+            request.DateChangeStatus = DateTime.Now;
             if (await context.SaveChangesAsync() != 0)
             {
                 return true;

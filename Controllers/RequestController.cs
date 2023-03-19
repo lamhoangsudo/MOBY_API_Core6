@@ -50,10 +50,36 @@ namespace MOBY_API_Core6.Controllers
             }
 
         }
+
+        [Authorize]
+        [HttpGet]
+        [Route("api/request")]
+        public async Task<IActionResult> GetRequestByRequestID([FromQuery] RequestIDVM requestIDVM)
+        {
+            try
+            {
+
+
+                RequestVM? result = await requestDAO.getRequestVMByRequestID(requestIDVM.RequestId);
+                if (result != null)
+                {
+                    Ok(result);
+                }
+
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+
+        }
+
         [Authorize]
         [HttpPatch]
         [Route("api/requestdetail/accept")]
-        public async Task<IActionResult> AcceptRequestDetail([FromBody] RequestIDVM requestIDVM)
+        public async Task<IActionResult> AcceptRequest([FromBody] RequestIDVM requestIDVM)
         {
 
             try
@@ -65,7 +91,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 if (await requestDAO.AcceptRequestDetail(foundRequestDetail))
                 {
-                    await requestDAO.DenyOtherRequestWhichPassItemQuantity(foundRequestDetail.ItemId);
+                    await requestDAO.DenyOtherRequestWhichPassItemQuantity(foundRequestDetail);
                     return Ok(ReturnMessage.create("Success"));
                 }
                 else
@@ -84,7 +110,7 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpPatch]
         [Route("api/requestdetail/deny")]
-        public async Task<IActionResult> DenyRequestDetail([FromBody] RequestIDVM requestIDVM)
+        public async Task<IActionResult> DenyRequest([FromBody] RequestIDVM requestIDVM)
         {
             try
             {

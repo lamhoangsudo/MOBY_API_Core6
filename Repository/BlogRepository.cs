@@ -45,6 +45,13 @@ namespace MOBY_API_Core6.Repository
 
             return blogList;
         }
+        public async Task<int> getAllUncheckBlogcount()
+        {
+
+            int blogListcount = await context.Blogs.Where(b => b.BlogStatus == 0).CountAsync();
+
+            return blogListcount;
+        }
         public async Task<Blog?> getBlogByBlogID(int id)
         {
 

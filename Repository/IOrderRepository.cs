@@ -5,10 +5,11 @@ namespace MOBY_API_Core6.Repository
 {
     public interface IOrderRepository
     {
-        public Task<List<Order>> GetOrderByRecieverID(int uid, PaggingVM pagging);
-        public Task<List<Order>> GetOrderBySharerID(int uid, PaggingVM pagging);
+        public Task<List<OrderBriefVM>> GetOrderByRecieverID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM);
+        public Task<List<OrderBriefVM>> GetOrderBySharerID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM);
         public Task<bool> CreateOrder(Request request);
         public Task<Order?> GetOrderByOrderID(int orderID);
+        public Task<OrderVM?> GetOrderVMByOrderID(int orderID);
         public Task<bool> UpdateStatusOrder(Order order, int status);
 
     }
