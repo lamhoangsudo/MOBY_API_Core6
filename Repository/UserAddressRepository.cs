@@ -1,6 +1,7 @@
-﻿using MOBY_API_Core6.Data_View_Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using System.Data.Entity;
+
 
 namespace MOBY_API_Core6.Repository
 {
@@ -23,10 +24,10 @@ namespace MOBY_API_Core6.Repository
                 userAddress.Address = myAddressVM.address;
 #pragma warning restore CS8601 // Possible null reference assignment.
                 userAddress.UserId = myAddressVM.userID;
-                await _context.AddAsync(userAddress);
+                await _context.UserAddresses.AddAsync(userAddress);
                 await _context.SaveChangesAsync();
                 return true;
-            } 
+            }
             catch (Exception ex)
             {
                 errorMessage = ex.Message;
@@ -38,14 +39,11 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                List<string> addresses = new List<string>();
-                var addresse = await _context.UserAddresses.Where(ua => ua.UserId == userID).ToListAsync();
-                foreach (var address in addresse)
-                {
-                    addresses.Add(address.Address);
-                }
+                List<string> addresses = await _context.UserAddresses.Where(ua => ua.UserId == userID).Select(ma => ma.Address).ToListAsync();
+
                 return addresses;
-            } catch (Exception ex) 
+            }
+            catch (Exception ex)
             {
                 errorMessage = ex.Message;
                 return null;
@@ -56,10 +54,14 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                UserAddress addresse = await _context.UserAddresses.Where(ua => ua.UserId == myAddressVM.userID && ua.Address.Equals(myAddressVM.address)).SingleOrDefaultAsync();
-                _context.Remove(addresse);
-                await _context.SaveChangesAsync();
-                return true;
+                UserAddress? addresse = await _context.UserAddresses.Where(ua => ua.UserId == myAddressVM.userID && ua.Address.Equals(myAddressVM.address)).SingleOrDefaultAsync();
+                if (addresse != null)
+                {
+                    _context.Remove(addresse);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
             }
             catch (Exception ex)
             {

@@ -41,6 +41,25 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpGet]
+        [Route("api/admin/blog")]
+        public async Task<IActionResult> getAllUncheckBlog([FromQuery] PaggingVM pagging)
+        {
+            try
+            {
+                List<BlogVM> ListBlog = await BlogDAO.getAllUncheckBlog(pagging);
+                int totalBlog = await BlogDAO.getAllUncheckBlogcount();
+                PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
+
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet]
         [Route("api/blog")]
         public async Task<IActionResult> getBlogByQuery([FromQuery] BlogGetVM blogGetVM, [FromQuery] PaggingVM pagging)
         {

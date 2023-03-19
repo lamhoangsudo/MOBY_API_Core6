@@ -9,6 +9,7 @@ namespace MOBY_API_Core6.Repository
         public Task<bool> DenyRequestDetail(Request request);
         public Task<List<RequestVM>> getRequestByItemID(int itemid);
         public Task<Request?> getRequestByRequestID(int requestID);
-        public Task<bool> DenyOtherRequestWhichPassItemQuantity(int itemID);
+        public Task<RequestVM?> getRequestVMByRequestID(int requestID);
+        public Task<bool> DenyOtherRequestWhichPassItemQuantity(Request request);
     }
 }

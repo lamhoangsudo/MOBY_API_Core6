@@ -20,12 +20,34 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpGet]
         [Route("api/useraccount/order/reciever")]
-        public async Task<IActionResult> GetOrderByRecieverID([FromQuery] PaggingVM pagging)
+        public async Task<IActionResult> GetOrderByRecieverID([FromQuery] PaggingVM pagging, [FromQuery] OrderStatusVM orderStatusVM)
         {
             try
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<Order> listOrder = await orderDAO.GetOrderByRecieverID(uid, pagging);
+                List<OrderBriefVM> listOrder = await orderDAO.GetOrderByRecieverID(uid, pagging, orderStatusVM);
+
+                return Ok(listOrder);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+
+        [Authorize]
+        [HttpGet]
+        [Route("api/useraccount/order/sharer")]
+        public async Task<IActionResult> GetOrderBySharerID([FromQuery] PaggingVM pagging, [FromQuery] OrderStatusVM orderStatusVM)
+        {
+            try
+            {
+                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                List<OrderBriefVM> listOrder = await orderDAO.GetOrderBySharerID(uid, pagging, orderStatusVM);
+
+
 
                 return Ok(listOrder);
 
@@ -38,17 +60,19 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("api/useraccount/order/sharer")]
-        public async Task<IActionResult> GetOrderBySharerID([FromQuery] PaggingVM pagging)
+        [Route("api/order")]
+        public async Task<IActionResult> GetOrderByOrderID([FromQuery] OrderidVM orderidVM)
         {
             try
             {
-                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<Order> listOrder = await orderDAO.GetOrderBySharerID(uid, pagging);
 
+                OrderVM? Order = await orderDAO.GetOrderVMByOrderID(orderidVM.OrderId);
 
-
-                return Ok(listOrder);
+                if (Order == null)
+                {
+                    return BadRequest(ReturnMessage.create("order not found"));
+                }
+                return Ok(Order);
 
             }
             catch (Exception ex)
@@ -59,22 +83,30 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPut]
-        [Route("api/useraccount/order/sharer")]
-        public async Task<IActionResult> UpdateOrder([FromQuery] PaggingVM pagging, int orderID, int status)
+        [Route("api/order")]
+        public async Task<IActionResult> UpdateOrder([FromBody] UpdateOrderVM updateOrderVM)
         {
             try
             {
-                Order? currentOrder = await orderDAO.GetOrderByOrderID(orderID);
+                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                Order? currentOrder = await orderDAO.GetOrderByOrderID(updateOrderVM.OrderId);
                 if (currentOrder == null)
                 {
-                    return BadRequest(ReturnMessage.create("oc cac"));
+                    return BadRequest(ReturnMessage.create("order not found"));
                 }
-                if (await orderDAO.UpdateStatusOrder(currentOrder, status))
+                if (currentOrder.Item != null)
+                {
+                    if (currentOrder.Item.UserId != uid)
+                    {
+                        return BadRequest(ReturnMessage.create("not an Item owwner,deny change order"));
+                    }
+                }
+                if (await orderDAO.UpdateStatusOrder(currentOrder, updateOrderVM.Status))
                 {
                     return Ok(ReturnMessage.create("success"));
                 }
 
-                return BadRequest(ReturnMessage.create("oc cac x2"));
+                return BadRequest(ReturnMessage.create("error at UpdateOrder"));
 
 
             }

@@ -5,13 +5,13 @@
         public int ItemId { get; set; }
         public int UserId { get; set; }
         public string ItemTitle { get; set; } = null!;
-        public bool? ItemSponsoredOrderShippingFee { get; set; }
+
         public double? ItemSalePrice { get; set; }
         public int ItemShareAmount { get; set; }
         public string Image { get; set; } = null!;
         public bool ItemStatus { get; set; }
 
-
+        public ItemOwnerVM? ItemOwnerVM { get; set; }
 
         public static ItemVM ItemToViewModel(Models.Item item)
         {
@@ -21,12 +21,17 @@
                 ItemId = item.ItemId,
                 UserId = item.UserId,
                 ItemTitle = item.ItemTitle,
-                ItemSponsoredOrderShippingFee = item.ItemSponsoredOrderShippingFee,
+
                 ItemSalePrice = item.ItemSalePrice,
                 ItemShareAmount = item.ItemShareAmount,
                 Image = item.Image,
                 ItemStatus = item.ItemStatus,
             };
+            if (item.User != null)
+            {
+                var user = item.User;
+                ItemVM.ItemOwnerVM = ItemOwnerVM.ItemOwnerToVewModel(user);
+            }
 
             return ItemVM;
         }

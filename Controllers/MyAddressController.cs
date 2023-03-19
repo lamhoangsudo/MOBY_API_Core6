@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
@@ -12,20 +11,21 @@ namespace MOBY_API_Core6.Controllers
     public class MyAddressController : ControllerBase
     {
         private IUserAddressRepository _userAddressRepository;
-
-        public MyAddressController(IUserAddressRepository userAddressRepository)
+        private readonly IUserRepository userDAO;
+        public MyAddressController(IUserAddressRepository userAddressRepository, IUserRepository userDAO)
         {
             _userAddressRepository = userAddressRepository;
+            this.userDAO = userDAO;
         }
 
         [Authorize]
         [HttpPost("NewAddress")]
-        public async Task<IActionResult> createNewAddress([FromBody] string location) 
+        public async Task<IActionResult> createNewAddress([FromBody] string location)
         {
             try
             {
-                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
-                MyAddressVM myAddressVM = new MyAddressVM(location, userID);
+                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                MyAddressVM myAddressVM = new MyAddressVM(location, uid);
                 bool check = await _userAddressRepository.createNewAddress(myAddressVM);
                 if (check)
                 {
@@ -37,7 +37,8 @@ namespace MOBY_API_Core6.Controllers
                     return BadRequest(ReturnMessage.create(UserAddressRepository.errorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
-            }catch (Exception ex) 
+            }
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
@@ -49,8 +50,8 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<string>? addresses = await _userAddressRepository.getMylistAddress(userID);
+                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                List<string>? addresses = await _userAddressRepository.getMylistAddress(uid);
                 if (addresses != null)
                 {
                     return Ok(addresses);
@@ -62,7 +63,7 @@ namespace MOBY_API_Core6.Controllers
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
@@ -74,8 +75,8 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
-                MyAddressVM myAddressVM = new MyAddressVM(location, userID);
+                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                MyAddressVM myAddressVM = new MyAddressVM(location, uid);
                 bool check = await _userAddressRepository.deleteMyAddress(myAddressVM);
                 if (check)
                 {

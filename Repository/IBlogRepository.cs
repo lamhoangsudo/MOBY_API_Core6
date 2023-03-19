@@ -8,6 +8,7 @@ namespace MOBY_API_Core6.Repository
         public Task<List<BlogVM>> getAllBlog(PaggingVM pagging);
         //public Task<List<BlogVM>> getNewBlog();
         public Task<List<BlogVM>> getAllUncheckBlog(PaggingVM pagging);
+        public Task<int> getAllUncheckBlogcount();
         public Task<Blog?> getBlogByBlogID(int id);
         public Task<Blog?> getBlogByBlogIDAndUserId(int blogId, int userId);
         //public Task<BlogVM> getBlogVMByBlogID(int id);

@@ -13,28 +13,62 @@ namespace MOBY_API_Core6.Repository
             this.context = context;
         }
 
-        public async Task<List<Order>> GetOrderByRecieverID(int uid, PaggingVM pagging)
+        public async Task<List<OrderBriefVM>> GetOrderByRecieverID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM)
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
-            List<Order> listOrder = await context.Orders.Where(o => o.UserId == uid)
+            List<OrderBriefVM> listOrder = new List<OrderBriefVM>();
+            if (orderStatusVM.OrderStatus == null)
+            {
+                listOrder = await context.Orders.Where(o => o.UserId == uid)
                 .Include(o => o.User)
                 .Include(o => o.Item)
+                .ThenInclude(i => i.User)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
+                .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
                 .ToListAsync();
+            }
+            else
+            {
+                listOrder = await context.Orders.Where(o => o.UserId == uid && o.Status == orderStatusVM.OrderStatus)
+                .Include(o => o.User)
+                .Include(o => o.Item)
+                .ThenInclude(i => i.User)
+                .Skip(itemsToSkip)
+                .Take(pagging.pageSize)
+                .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
+                .ToListAsync();
+            }
             return listOrder;
         }
 
-        public async Task<List<Order>> GetOrderBySharerID(int uid, PaggingVM pagging)
+        public async Task<List<OrderBriefVM>> GetOrderBySharerID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM)
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
-            List<Order> listOrder = await context.Orders
-                .Where(o => o.Item.UserId == uid)
+            List<OrderBriefVM> listOrder = new List<OrderBriefVM>();
+            if (orderStatusVM.OrderStatus == null)
+            {
+                listOrder = await context.Orders.Where(o => o.Item.UserId == uid)
                 .Include(o => o.User)
                 .Include(o => o.Item)
+                .ThenInclude(i => i.User)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
+                .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
                 .ToListAsync();
+            }
+            else
+            {
+                listOrder = await context.Orders
+                .Where(o => o.Item.UserId == uid && o.Status == orderStatusVM.OrderStatus)
+                .Include(o => o.User)
+                .Include(o => o.Item)
+                .ThenInclude(i => i.User)
+                .Skip(itemsToSkip)
+                .Take(pagging.pageSize)
+                .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
+                .ToListAsync();
+            }
             return listOrder;
         }
 
@@ -61,7 +95,21 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<Order?> GetOrderByOrderID(int orderID)
         {
-            Order? order = await context.Orders.FindAsync(orderID);
+            Order? order = await context.Orders.Where(o => o.OrderId == orderID)
+                .Include(o => o.Item)
+                .FirstOrDefaultAsync();
+
+            return order;
+        }
+
+        public async Task<OrderVM?> GetOrderVMByOrderID(int orderID)
+        {
+            OrderVM? order = await context.Orders.Where(o => o.OrderId == orderID)
+                .Include(o => o.User)
+                .Include(o => o.Item)
+                .ThenInclude(i => i.User)
+                .Select(o => OrderVM.OrderToViewModel(o))
+                .FirstOrDefaultAsync();
 
             return order;
         }
