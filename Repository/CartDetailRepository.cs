@@ -53,7 +53,6 @@ namespace MOBY_API_Core6.Repository
             newCartDetail.CartId = createdRequestDetail.CartId;
             newCartDetail.ItemId = createdRequestDetail.ItemId;
             newCartDetail.ItemQuantity = 1;
-
             await context.CartDetails.AddAsync(newCartDetail);
 
             if (await context.SaveChangesAsync() != 0)
@@ -63,6 +62,7 @@ namespace MOBY_API_Core6.Repository
 
 
             return false;
+
         }
 
         public async Task<bool> UpdateCartDetail(CartDetail cartDetail, UpdateCartDetailVM updatedcartDetail)
