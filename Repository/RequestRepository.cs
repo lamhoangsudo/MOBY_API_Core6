@@ -30,6 +30,18 @@ namespace MOBY_API_Core6.Repository
             return requests;
         }
 
+        public async Task<List<RequestVM>> getRequestByUserID(int userid)
+        {
+            List<RequestVM> requests = await context.Requests
+                .Where(r => r.UserId == userid)
+                .Include(r => r.User)
+                .Include(r => r.Item)
+                .ThenInclude(i => i.User)
+                .Select(r => RequestVM.RequestToVewModel(r))
+                .ToListAsync();
+            return requests;
+        }
+
         public async Task<Request?> getRequestByRequestID(int requestID)
         {
             Request? requests = await context.Requests

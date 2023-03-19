@@ -55,6 +55,10 @@ namespace MOBY_API_Core6.Controllers
 
             try
             {
+                if (await cartDetailDAO.CheclExistCartDetail(createdRequestDetail))
+                {
+                    return Ok(ReturnMessage.create("Success"));
+                }
                 if (await cartDetailDAO.CreateCartDetail(createdRequestDetail))
                 {
                     return Ok(ReturnMessage.create("Success"));
@@ -86,10 +90,20 @@ namespace MOBY_API_Core6.Controllers
                             return Ok(ReturnMessage.create("Success"));
                         }
                     }
-                    if (await cartDetailDAO.UpdateCartDetail(currentCartDetail, updatedCartDetail))
+                    String result = await cartDetailDAO.UpdateCartDetail(currentCartDetail, updatedCartDetail);
+                    if (result.Equals("success"))
                     {
                         return Ok(ReturnMessage.create("Success"));
                     }
+                    else if (result.Contains("item available ammout"))
+                    {
+                        return Ok(ReturnMessage.create(result));
+                    }
+                    else
+                    {
+                        return BadRequest(ReturnMessage.create("error at UpdateRequestDetail"));
+                    }
+
                 }
                 return BadRequest(ReturnMessage.create("error at UpdateRequestDetail"));
             }
