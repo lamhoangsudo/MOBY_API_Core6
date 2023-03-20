@@ -10,8 +10,9 @@
         public int ItemShareAmount { get; set; }
         public string Image { get; set; } = null!;
         public bool ItemStatus { get; set; }
-
+        public SubCategoryBriefVM? SubCategoryBriefVM { get; set; }
         public ItemOwnerVM? ItemOwnerVM { get; set; }
+
 
         public static ItemVM ItemToViewModel(Models.Item item)
         {
@@ -31,6 +32,11 @@
             {
                 var user = item.User;
                 ItemVM.ItemOwnerVM = ItemOwnerVM.ItemOwnerToVewModel(user);
+            }
+            if (item.SubCategory != null)
+            {
+                var subcate = item.SubCategory;
+                ItemVM.SubCategoryBriefVM = SubCategoryBriefVM.SubCategorToViewModel(subcate);
             }
 
             return ItemVM;

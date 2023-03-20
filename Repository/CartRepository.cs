@@ -68,6 +68,9 @@ namespace MOBY_API_Core6.Repository
                 .Include(c => c.CartDetails)
                 .ThenInclude(c => c.Item)
                 .ThenInclude(i => i.User)
+                .Include(c => c.CartDetails)
+                .ThenInclude(c => c.Item)
+                .ThenInclude(i => i.SubCategory)
                 .Select(c => CartVM.CartToVewModel(c))
                 .FirstOrDefaultAsync();
 

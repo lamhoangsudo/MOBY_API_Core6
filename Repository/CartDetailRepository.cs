@@ -126,6 +126,8 @@ namespace MOBY_API_Core6.Repository
                     .Where(cd => cd.CartDetailId == id)
                     .Include(cd => cd.Item)
                     .ThenInclude(i => i.User)
+                    .Include(cd => cd.Item)
+                    .ThenInclude(i => i.SubCategory)
                     .Select(cd => CartDetailVM.RequestDetailToVewModel(cd))
                     .FirstOrDefaultAsync();
 

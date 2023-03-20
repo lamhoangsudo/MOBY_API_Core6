@@ -42,12 +42,12 @@ namespace MOBY_API_Core6.Controllers
 
         [HttpGet]
         [Route("api/admin/blog")]
-        public async Task<IActionResult> getAllUncheckBlog([FromQuery] PaggingVM pagging)
+        public async Task<IActionResult> getAllUncheckBlog([FromQuery] PaggingVM pagging, [FromQuery] BlogStatusVM blogStatusVM)
         {
             try
             {
-                List<BlogVM> ListBlog = await BlogDAO.getAllUncheckBlog(pagging);
-                int totalBlog = await BlogDAO.getAllUncheckBlogcount();
+                List<BlogVM> ListBlog = await BlogDAO.getAllUncheckBlog(pagging, blogStatusVM);
+                int totalBlog = await BlogDAO.getAllUncheckBlogcount(blogStatusVM);
                 PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
 
                 return Ok(result);

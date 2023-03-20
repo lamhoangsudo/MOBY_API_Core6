@@ -34,21 +34,36 @@ namespace MOBY_API_Core6.Repository
             return count;
         }
 
-        public async Task<List<BlogVM>> getAllUncheckBlog(PaggingVM pagging)
+        public async Task<List<BlogVM>> getAllUncheckBlog(PaggingVM pagging, BlogStatusVM blogStatusVM)
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
-            List<BlogVM> blogList = await context.Blogs.Where(b => b.BlogStatus == 0)
-                .Skip(itemsToSkip)
-                .Take(pagging.pageSize)
-                .Select(b => BlogVM.BlogToVewModel(b))
-                .ToListAsync();
+            List<BlogVM> blogList = new List<BlogVM>();
+            if (blogStatusVM.BlogStatus == null)
+            {
+                blogList = await context.Blogs
+               .Skip(itemsToSkip)
+               .Take(pagging.pageSize)
+               .Select(b => BlogVM.BlogToVewModel(b))
+               .ToListAsync();
+
+                return blogList;
+            }
+            blogList = await context.Blogs.Where(b => b.BlogStatus == blogStatusVM.BlogStatus)
+               .Skip(itemsToSkip)
+               .Take(pagging.pageSize)
+               .Select(b => BlogVM.BlogToVewModel(b))
+               .ToListAsync();
 
             return blogList;
         }
-        public async Task<int> getAllUncheckBlogcount()
+        public async Task<int> getAllUncheckBlogcount(BlogStatusVM blogStatusVM)
         {
-
-            int blogListcount = await context.Blogs.Where(b => b.BlogStatus == 0).CountAsync();
+            int blogListcount;
+            if (blogStatusVM.BlogStatus == null)
+            {
+                blogListcount = await context.Blogs.CountAsync();
+            }
+            blogListcount = await context.Blogs.Where(b => b.BlogStatus == blogStatusVM.BlogStatus).CountAsync();
 
             return blogListcount;
         }
