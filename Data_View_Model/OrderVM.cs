@@ -14,6 +14,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public string? Note { get; set; }
         public DateTime DateCreate { get; set; }
         public DateTime? DatePackage { get; set; }
+        public String? daysLeftForReport { get; set; }
         public DateTime? DateReceived { get; set; }
         public DateTime? DatePunishment { get; set; }
         public ItemVM? ItemVM { get; set; }
@@ -36,6 +37,19 @@ namespace MOBY_API_Core6.Data_View_Model
                 DateReceived = order.DateReceived,
                 DatePunishment = order.DatePunishment,
             };
+            if (order.Status != 2)
+            {
+                var totalDays = DateTime.Now - order.DateCreate;
+                int totalDaysint = Convert.ToInt32(totalDays.TotalDays);
+                if (totalDaysint < 16)
+                {
+                    orderVM.daysLeftForReport = "sau " + (16 - totalDaysint) + " ngày nữa nếu bạn chưa nhận được hàng thì bạn có thể report đơn hàng này";
+                }
+                if (totalDaysint >= 16)
+                {
+                    orderVM.daysLeftForReport = "bạn có thể hủy đơn này nếu chưa nhận được hàng";
+                }
+            }
             var item = order.Item;
             orderVM.ItemVM = ItemVM.ItemToViewModel(item);
 

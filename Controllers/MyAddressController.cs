@@ -6,7 +6,7 @@ using MOBY_API_Core6.Repository;
 
 namespace MOBY_API_Core6.Controllers
 {
-    [Route("api/[controller]")]
+
     [ApiController]
     public class MyAddressController : ControllerBase
     {
@@ -19,23 +19,27 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpPost("NewAddress")]
-        public async Task<IActionResult> createNewAddress([FromBody] string location)
+        [HttpPost("api/useraddress")]
+        public async Task<IActionResult> createNewAddress([FromBody] CreateMyAddressVM createMyAddressVM)
         {
             try
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                MyAddressVM myAddressVM = new MyAddressVM(location, uid);
-                bool check = await _userAddressRepository.createNewAddress(myAddressVM);
-                if (check)
+
+                if (await _userAddressRepository.CheckExitedAddress(createMyAddressVM, uid))
                 {
-                    return Ok(ReturnMessage.create("đã thêm địa chỉ mới"));
+                    return BadRequest(ReturnMessage.create("this address already existed"));
+                }
+
+                if (await _userAddressRepository.createNewAddress(createMyAddressVM, uid))
+                {
+                    return Ok(ReturnMessage.create("success"));
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(UserAddressRepository.errorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
+
+                    return BadRequest(ReturnMessage.create("error at createNewAddress"));
+
                 }
             }
             catch (Exception ex)
@@ -45,22 +49,22 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpGet("MyAddress")]
+        [HttpGet("api/useraddress")]
         public async Task<IActionResult> myListAddress()
         {
             try
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<string>? addresses = await _userAddressRepository.getMylistAddress(uid);
+                List<MyAddressVM>? addresses = await _userAddressRepository.getMylistAddress(uid);
                 if (addresses != null)
                 {
                     return Ok(addresses);
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(UserAddressRepository.errorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
+
+                    return BadRequest(ReturnMessage.create("error at myListAddress"));
+
                 }
             }
             catch (Exception ex)
@@ -70,23 +74,23 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpDelete("DeleteAddress")]
-        public async Task<IActionResult> deleteNewAddress([FromBody] string location)
+        [HttpDelete("api/useraddress")]
+        public async Task<IActionResult> deleteNewAddress([FromBody] CreateMyAddressVM createMyAddressVM)
         {
             try
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                MyAddressVM myAddressVM = new MyAddressVM(location, uid);
-                bool check = await _userAddressRepository.deleteMyAddress(myAddressVM);
+
+                bool check = await _userAddressRepository.deleteMyAddress(createMyAddressVM, uid);
                 if (check)
                 {
-                    return Ok(ReturnMessage.create("đã xóa địa chỉ"));
+                    return Ok(ReturnMessage.create("success"));
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(UserAddressRepository.errorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
+
+                    return BadRequest(ReturnMessage.create("error at deleteNewAddress"));
+
                 }
             }
             catch (Exception ex)

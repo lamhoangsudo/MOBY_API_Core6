@@ -60,6 +60,56 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpGet]
+        [Route("api/useraccount/order/sharer/check")]
+        public async Task<IActionResult> ChecktOrderBySharerID()
+        {
+            try
+            {
+                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                bool checking = await orderDAO.checkOrderSharer(uid);
+
+                if (checking)
+                {
+                    return Ok(ReturnMessage.create("success"));
+                }
+                else
+                {
+                    return BadRequest(ReturnMessage.create("there no record change"));
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("api/useraccount/order/reciever/check")]
+        public async Task<IActionResult> ChecktOrderByRecieverID()
+        {
+            try
+            {
+                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                bool checking = await orderDAO.checkOrderReciever(uid);
+
+                if (checking)
+                {
+                    return Ok(ReturnMessage.create("success"));
+                }
+                else
+                {
+                    return BadRequest(ReturnMessage.create("there no record change"));
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet]
         [Route("api/order")]
         public async Task<IActionResult> GetOrderByOrderID([FromQuery] OrderidVM orderidVM)
         {
@@ -80,6 +130,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
 
         [Authorize]
         [HttpPut]
