@@ -141,6 +141,13 @@ namespace MOBY_API_Core6.Repository
 
             return accountListVM;
         }
+        public async Task<int> GetAllUserCount()
+        {
+
+            int totalCount = await context.UserAccounts.CountAsync();
+
+            return totalCount;
+        }
 
 
         public async Task<bool> BanUser(UserUidVM uid)

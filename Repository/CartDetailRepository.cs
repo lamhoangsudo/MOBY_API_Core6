@@ -54,13 +54,17 @@ namespace MOBY_API_Core6.Repository
             return CartDetailToVM;
         }*/
 
-        public async Task<bool> CreateCartDetail(CreateCartDetailVM createdRequestDetail)
+        public async Task<String> CreateCartDetail(CreateCartDetailVM createdRequestDetail, int uid)
         {
             ItemVM? itemfound = await context.Items.Where(i => i.ItemId == createdRequestDetail.ItemId)
                 .Select(i => ItemVM.ItemToViewModel(i)).FirstOrDefaultAsync();
             if (itemfound == null)
             {
-                return false;
+                return "item not found";
+            }
+            if (itemfound.UserId == uid)
+            {
+                return "can't add own item";
             }
 
             CartDetail newCartDetail = new CartDetail();
@@ -71,11 +75,11 @@ namespace MOBY_API_Core6.Repository
 
             if (await context.SaveChangesAsync() != 0)
             {
-                return true;
+                return "success";
             }
 
 
-            return false;
+            return "error at CreateRequestDetail";
 
         }
 
@@ -110,17 +114,17 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<List<CartDetailVM>> GetListCartDetailByListID(ListCartDetailID requestDetailIDList)
+        public async Task<List<CartDetailVM>> GetListCartDetailByListID(int[] listOfIds)
         {
 
             List<CartDetailVM> listCartDetail = new List<CartDetailVM>();
 
-            if (requestDetailIDList.listCartDetailID == null || requestDetailIDList.listCartDetailID.Count == 0)
+            if (listOfIds == null || listOfIds.Length == 0)
             {
                 return listCartDetail;
             }
 
-            foreach (int id in requestDetailIDList.listCartDetailID)
+            foreach (int id in listOfIds)
             {
                 CartDetailVM? currentRequestDetail = await context.CartDetails
                     .Where(cd => cd.CartDetailId == id)

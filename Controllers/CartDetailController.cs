@@ -25,16 +25,17 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpGet]
         [Route("api/cartdetail")]
-        public async Task<IActionResult> GetListCartDetailByListCartDetailid([FromBody] ListCartDetailID listCartDetailid)
+        public async Task<IActionResult> GetListCartDetailByListCartDetailid([FromQuery] int[] listOfIds)
         {
 
-            if (listCartDetailid.listCartDetailID == null || listCartDetailid.listCartDetailID.Count == 0)
+            if (listOfIds == null)
             {
                 return BadRequest(ReturnMessage.create("there no CartDetailid"));
             }
             try
             {
-                List<CartDetailVM> result = await cartDetailDAO.GetListCartDetailByListID(listCartDetailid);
+
+                List<CartDetailVM> result = await cartDetailDAO.GetListCartDetailByListID(listOfIds);
                 if (result != null)
                 {
                     return Ok(result);
@@ -55,15 +56,18 @@ namespace MOBY_API_Core6.Controllers
 
             try
             {
+
                 if (await cartDetailDAO.CheclExistCartDetail(createdRequestDetail))
                 {
                     return Ok(ReturnMessage.create("Success"));
                 }
-                if (await cartDetailDAO.CreateCartDetail(createdRequestDetail))
+                var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                String result = await cartDetailDAO.CreateCartDetail(createdRequestDetail, currentUid);
+                if (result.Equals("success"))
                 {
-                    return Ok(ReturnMessage.create("Success"));
+                    return Ok(ReturnMessage.create(result));
                 }
-                return BadRequest(ReturnMessage.create("error at CreateRequestDetail"));
+                return BadRequest(ReturnMessage.create(result));
             }
             catch (Exception ex)
             {
@@ -140,7 +144,7 @@ namespace MOBY_API_Core6.Controllers
 
 
         [Authorize]
-        [HttpPatch]
+        [HttpPost]
         [Route("api/cartdetail/confirm")]
         public async Task<IActionResult> ConfirmCartDetail([FromBody] ListCartDetailidToConfirm listCartDetailID)
         {
