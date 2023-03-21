@@ -130,13 +130,14 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                List<UserVM> list = await userDAO.GetAllUser(pagging);
-
+                List<UserVM> listUser = await userDAO.GetAllUser(pagging);
+                int totalUser = await userDAO.GetAllUserCount();
+                PaggingReturnVM<UserVM> result = new PaggingReturnVM<UserVM>(listUser, pagging, totalUser);
                 //UserAccounts currentUser = new UserAccounts();
                 //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
 
 
-                return Ok(list); ;
+                return Ok(result); ;
             }
             catch (Exception ex)
             {
