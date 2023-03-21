@@ -70,27 +70,41 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
-        public async Task<bool> deleteMyAddress(CreateMyAddressVM createMyAddressVM, int uid)
+        public async Task<UserAddress?> FindUserAddressByUserAddressID(int userAddressID, int userID)
         {
-            try
+
+            UserAddress? currentUserAddress = await _context.UserAddresses
+                .Where(ud => ud.Id == userAddressID && ud.UserId == userID)
+                .FirstOrDefaultAsync();
+            return currentUserAddress;
+        }
+
+        public async Task<bool> UpdateUserAddress(UpdateMyAddressVM updateMyAddressVM, UserAddress userAddress)
+        {
+
+
+            userAddress.Address = updateMyAddressVM.Address;
+
+
+            if (await _context.SaveChangesAsync() != 0)
             {
-                UserAddress? addresse = await _context.UserAddresses
-                    .Where(ua => ua.UserId == uid && ua.Address.Equals(createMyAddressVM.address))
-                    .FirstOrDefaultAsync();
-                if (addresse != null)
-                {
-                    _context.UserAddresses.Remove(addresse);
-                    await _context.SaveChangesAsync();
-                    return true;
-                }
-                return false;
+                return true;
             }
-            catch (Exception ex)
+            return false;
+        }
+
+        public async Task<bool> deleteMyAddress(UserAddress userAddress)
+        {
+
+
+            _context.UserAddresses.Remove(userAddress);
+            if (await _context.SaveChangesAsync() != 0)
             {
-                errorMessage = ex.Message;
-                return false;
+                return true;
             }
+
+            return false;
+
         }
     }
 }

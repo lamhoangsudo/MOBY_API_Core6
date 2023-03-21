@@ -80,11 +80,20 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<bool> DeleteComment(GetCommentIDVM cmt, int userId)
         {
-            Comment? currentcmt = await context.Comments.Where(cmt => cmt.CommentId == cmt.CommentId && cmt.UserId == userId).FirstOrDefaultAsync();
+            Comment? currentcmt = await context.Comments.Where(cmt => cmt.CommentId == cmt.CommentId && cmt.UserId == userId)
+                .Include(c => c.Replies).FirstOrDefaultAsync();
 
             if (currentcmt != null)
             {
-                context.Remove(currentcmt);
+                if (currentcmt.Replies != null && currentcmt.Replies.Count != 0)
+                {
+                    List<Reply> listRep = currentcmt.Replies.ToList();
+                    foreach (Reply rep in listRep)
+                    {
+                        context.Replies.Remove(rep);
+                    }
+                }
+                context.Comments.Remove(currentcmt);
                 if (await context.SaveChangesAsync() != 0)
                 {
                     return true;
