@@ -26,8 +26,9 @@ namespace MOBY_API_Core6.Controllers
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 List<OrderBriefVM> listOrder = await orderDAO.GetOrderByRecieverID(uid, pagging, orderStatusVM);
-
-                return Ok(listOrder);
+                int total = await orderDAO.GetOrderByRecieverIDCount(uid, orderStatusVM);
+                PaggingReturnVM<OrderBriefVM> result = new PaggingReturnVM<OrderBriefVM>(listOrder, pagging, total);
+                return Ok(result);
 
             }
             catch (Exception ex)
@@ -46,10 +47,9 @@ namespace MOBY_API_Core6.Controllers
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 List<OrderBriefVM> listOrder = await orderDAO.GetOrderBySharerID(uid, pagging, orderStatusVM);
-
-
-
-                return Ok(listOrder);
+                int total = await orderDAO.GetOrderBySharerIDCount(uid, orderStatusVM);
+                PaggingReturnVM<OrderBriefVM> result = new PaggingReturnVM<OrderBriefVM>(listOrder, pagging, total);
+                return Ok(result);
 
             }
             catch (Exception ex)

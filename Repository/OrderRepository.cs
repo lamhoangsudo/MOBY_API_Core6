@@ -42,16 +42,32 @@ namespace MOBY_API_Core6.Repository
             return listOrder;
         }
 
+        public async Task<int> GetOrderByRecieverIDCount(int uid, OrderStatusVM orderStatusVM)
+        {
+
+            int listOrderCount;
+            if (orderStatusVM.OrderStatus == null || orderStatusVM.OrderStatus.Equals(""))
+            {
+                listOrderCount = await context.Orders.Where(o => o.UserId == uid).CountAsync();
+            }
+            else
+            {
+                listOrderCount = await context.Orders.Where(o => o.UserId == uid && o.Status == orderStatusVM.OrderStatus).CountAsync();
+            }
+            return listOrderCount;
+        }
+
         public async Task<List<OrderBriefVM>> GetOrderBySharerID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM)
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
             List<OrderBriefVM> listOrder = new List<OrderBriefVM>();
             if (orderStatusVM.OrderStatus == null)
             {
-                listOrder = await context.Orders.Where(o => o.Item.UserId == uid)
+                listOrder = await context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Item)
                 .ThenInclude(i => i.User)
+                .Where(o => o.Item.UserId == uid)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
                 .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
@@ -60,10 +76,11 @@ namespace MOBY_API_Core6.Repository
             else
             {
                 listOrder = await context.Orders
-                .Where(o => o.Item.UserId == uid && o.Status == orderStatusVM.OrderStatus)
+
                 .Include(o => o.User)
                 .Include(o => o.Item)
                 .ThenInclude(i => i.User)
+                .Where(o => o.Item.UserId == uid && o.Status == orderStatusVM.OrderStatus)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
                 .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
@@ -71,6 +88,28 @@ namespace MOBY_API_Core6.Repository
             }
             return listOrder;
         }
+
+        public async Task<int> GetOrderBySharerIDCount(int uid, OrderStatusVM orderStatusVM)
+        {
+
+            int listOrderCount;
+            if (orderStatusVM.OrderStatus == null || orderStatusVM.OrderStatus.Equals(""))
+            {
+                listOrderCount = await context.Orders
+                .Include(o => o.Item)
+                .Where(o => o.Item.UserId == uid)
+                .CountAsync();
+            }
+            else
+            {
+                listOrderCount = await context.Orders
+                .Include(o => o.Item)
+                .Where(o => o.Item.UserId == uid && o.Status == orderStatusVM.OrderStatus)
+                .CountAsync();
+            }
+            return listOrderCount;
+        }
+
 
         public async Task<bool> checkOrderSharer(int uid)
         {
@@ -177,7 +216,7 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> CreateOrder(Request request)
+        public async Task<String> CreateOrder(Request request)
         {
             Order newOrder = new Order();
 
@@ -192,10 +231,10 @@ namespace MOBY_API_Core6.Repository
             await context.Orders.AddAsync(newOrder);
             if (await context.SaveChangesAsync() != 0)
             {
-                return true;
+                return "OrderID: " + newOrder.OrderId + "";
             }
 
-            return false;
+            return "";
         }
 
         public async Task<Order?> GetOrderByOrderID(int orderID)

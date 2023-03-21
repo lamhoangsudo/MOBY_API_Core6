@@ -99,7 +99,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("api/requestdetail/accept")]
+        [Route("api/request/accept")]
         public async Task<IActionResult> AcceptRequest([FromBody] RequestIDVM requestIDVM)
         {
 
@@ -110,14 +110,15 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.create("error at request not found"));
                 }
-                if (await requestDAO.AcceptRequestDetail(foundRequestDetail))
+                String result = await requestDAO.AcceptRequest(foundRequestDetail);
+                if (result.Contains("OrderID"))
                 {
                     await requestDAO.DenyOtherRequestWhichPassItemQuantity(foundRequestDetail);
-                    return Ok(ReturnMessage.create("Success"));
+                    return Ok(ReturnMessage.create(result));
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create("error at AcceptRequestDetail"));
+                    return BadRequest(ReturnMessage.create(result));
                 }
 
 
@@ -130,7 +131,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("api/requestdetail/deny")]
+        [Route("api/request/deny")]
         public async Task<IActionResult> DenyRequest([FromBody] RequestIDVM requestIDVM)
         {
             try
@@ -140,7 +141,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.create("error at request not found"));
                 }
-                if (await requestDAO.DenyRequestDetail(foundRequestDetail))
+                if (await requestDAO.DenyRequest(foundRequestDetail))
                 {
                     return Ok(ReturnMessage.create("Success"));
                 }
