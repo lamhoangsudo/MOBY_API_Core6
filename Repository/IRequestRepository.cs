@@ -5,8 +5,8 @@ namespace MOBY_API_Core6.Repository
 {
     public interface IRequestRepository
     {
-        public Task<bool> AcceptRequestDetail(Request request);
-        public Task<bool> DenyRequestDetail(Request request);
+        public Task<String> AcceptRequest(Request request);
+        public Task<bool> DenyRequest(Request request);
         public Task<List<RequestVM>> getRequestByItemID(int itemid);
         public Task<List<RequestVM>> getRequestByUserID(int userid);
         public Task<Request?> getRequestByRequestID(int requestID);

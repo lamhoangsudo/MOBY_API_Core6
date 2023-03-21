@@ -64,7 +64,7 @@ namespace MOBY_API_Core6.Repository
             return requests;
         }
 
-        public async Task<bool> AcceptRequestDetail(Request request)
+        public async Task<String> AcceptRequest(Request request)
         {
             Models.Item? item = request.Item;
             //Models.Item? item = await context.Items.Where(i => i.ItemId == request.ItemId).FirstOrDefaultAsync();
@@ -72,7 +72,7 @@ namespace MOBY_API_Core6.Repository
             {
                 if (item.ItemShareAmount < request.ItemQuantity)
                 {
-                    return false;
+                    return "Item ammount not available";
                 }
                 if (item.ItemShareAmount - request.ItemQuantity == 0)
                 {
@@ -91,13 +91,22 @@ namespace MOBY_API_Core6.Repository
                     .Include(r => r.Item).Include(r => r.User).FirstOrDefaultAsync();
                 if (curremtRequest != null)
                 {
-                    await orderDAO.CreateOrder(curremtRequest);
-
+                    String result = await orderDAO.CreateOrder(curremtRequest);
+                    if (result != null)
+                    {
+                        if (!(result.Equals("")))
+                        {
+                            return result;
+                        }
+                    }
+                    else
+                    {
+                        return "error at createOrder";
+                    }
                 }
-                return true;
             }
 
-            return false;
+            return "error at AcceptRequest";
         }
 
         public async Task<bool> DenyOtherRequestWhichPassItemQuantity(Request request)
@@ -134,7 +143,7 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> DenyRequestDetail(Request request)
+        public async Task<bool> DenyRequest(Request request)
         {
             request.Status = 2;
             request.DateChangeStatus = DateTime.Now;

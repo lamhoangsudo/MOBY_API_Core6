@@ -120,7 +120,7 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpDelete]
         [Route("api/cartdetail")]
-        public async Task<IActionResult> DeleteCartDetail([FromQuery] CartDetailIdVM cartDetailid)
+        public async Task<IActionResult> DeleteCartDetail([FromBody] CartDetailIdVM cartDetailid)
         {
             try
             {
