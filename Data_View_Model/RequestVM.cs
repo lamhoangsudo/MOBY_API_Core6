@@ -7,6 +7,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public int RequestId { get; set; }
         public int UserId { get; set; }
         public int ItemQuantity { get; set; }
+        public double? ItemPriceAtMoment { get; set; }
         public int ItemId { get; set; }
         public string Address { get; set; } = null!;
         public string? Note { get; set; }
@@ -23,6 +24,7 @@ namespace MOBY_API_Core6.Data_View_Model
                 RequestId = request.RequestId,
                 UserId = request.UserId,
                 ItemQuantity = request.ItemQuantity,
+                ItemPriceAtMoment = request.Price,
                 ItemId = request.ItemId,
                 Address = request.Address,
                 Note = request.Note,

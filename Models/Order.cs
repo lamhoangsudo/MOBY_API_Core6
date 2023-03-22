@@ -17,6 +17,7 @@ namespace MOBY_API_Core6.Models
         public DateTime? DatePackage { get; set; }
         public DateTime? DateReceived { get; set; }
         public DateTime? DatePunishment { get; set; }
+        public double Price { get; set; }
 
         public virtual Item Item { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;
