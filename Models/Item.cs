@@ -9,9 +9,9 @@ namespace MOBY_API_Core6.Models
         {
             CartDetails = new HashSet<CartDetail>();
             Comments = new HashSet<Comment>();
-            Orders = new HashSet<Order>();
+            OrderDetails = new HashSet<OrderDetail>();
             Reports = new HashSet<Report>();
-            Requests = new HashSet<Request>();
+            RequestDetails = new HashSet<RequestDetail>();
         }
 
         public int ItemId { get; set; }
@@ -39,8 +39,8 @@ namespace MOBY_API_Core6.Models
         public virtual UserAccount User { get; set; } = null!;
         public virtual ICollection<CartDetail> CartDetails { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
-        public virtual ICollection<Request> Requests { get; set; }
+        public virtual ICollection<RequestDetail> RequestDetails { get; set; }
     }
 }

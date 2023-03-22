@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MOBY_API_Core6.Models
 {
@@ -25,20 +28,18 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<DetailItemRequest> DetailItemRequests { get; set; } = null!;
         public virtual DbSet<Item> Items { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<Reply> Replies { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
         public virtual DbSet<Request> Requests { get; set; } = null!;
+        public virtual DbSet<RequestDetail> RequestDetails { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<SubCategory> SubCategories { get; set; } = null!;
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
         public virtual DbSet<UserAddress> UserAddresses { get; set; } = null!;
         public virtual DbSet<ViewBlog> ViewBlogs { get; set; } = null!;
-        public virtual DbSet<ViewReport> ViewReports { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -367,25 +368,36 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.DatePackage).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.DatePunishment).HasColumnType("smalldatetime");
-
                 entity.Property(e => e.DateReceived).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.ItemId).HasColumnName("ItemID");
-
                 entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Item)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.ItemId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Orders_Items");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Orders_UserAccounts1");
+            });
+
+            modelBuilder.Entity<OrderDetail>(entity =>
+            {
+                entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.ItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetails_Items");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetails_Orders");
             });
 
             modelBuilder.Entity<Reply>(entity =>
@@ -417,9 +429,15 @@ namespace MOBY_API_Core6.Models
             {
                 entity.Property(e => e.ReportId).HasColumnName("ReportID");
 
+                entity.Property(e => e.BlogId).HasColumnName("BlogID");
+
+                entity.Property(e => e.CommentId).HasColumnName("CommentID");
+
                 entity.Property(e => e.ItemId).HasColumnName("ItemID");
 
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.ReplyId).HasColumnName("ReplyID");
 
                 entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
 
@@ -427,18 +445,38 @@ namespace MOBY_API_Core6.Models
                     .HasColumnType("smalldatetime")
                     .HasColumnName("Report_Date_Create");
 
-                entity.Property(e => e.ReportDateUpdate)
+                entity.Property(e => e.ReportDateResolve)
                     .HasColumnType("smalldatetime")
-                    .HasColumnName("Report_Date_Update");
+                    .HasColumnName("Report_Date_Resolve");
 
                 entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
+                entity.HasOne(d => d.Blog)
+                    .WithMany(p => p.Reports)
+                    .HasForeignKey(d => d.BlogId)
+                    .HasConstraintName("FK_Reports_Blogs");
+
+                entity.HasOne(d => d.Comment)
+                    .WithMany(p => p.Reports)
+                    .HasForeignKey(d => d.CommentId)
+                    .HasConstraintName("FK_Reports_Comments");
+
                 entity.HasOne(d => d.Item)
                     .WithMany(p => p.Reports)
                     .HasForeignKey(d => d.ItemId)
                     .HasConstraintName("FK_Reports_Items");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.Reports)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK_Reports_Orders");
+
+                entity.HasOne(d => d.Reply)
+                    .WithMany(p => p.Reports)
+                    .HasForeignKey(d => d.ReplyId)
+                    .HasConstraintName("FK_Reports_Replies");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Reports)
@@ -455,21 +493,34 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.ItemId).HasColumnName("ItemID");
-
                 entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.Item)
-                    .WithMany(p => p.Requests)
-                    .HasForeignKey(d => d.ItemId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Requests_Items");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Requests)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Requests_UserAccounts");
+            });
+
+            modelBuilder.Entity<RequestDetail>(entity =>
+            {
+                entity.Property(e => e.RequestDetailId).HasColumnName("RequestDetailID");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.RequestId).HasColumnName("RequestID");
+
+                entity.HasOne(d => d.Item)
+                    .WithMany(p => p.RequestDetails)
+                    .HasForeignKey(d => d.ItemId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RequestDetails_Items");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.RequestDetails)
+                    .HasForeignKey(d => d.RequestId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RequestDetails_Requests");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -589,35 +640,6 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.BlogStatus).HasColumnName("Blog_Status");
 
                 entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.Property(e => e.UserName).HasColumnName("User_Name");
-            });
-
-            modelBuilder.Entity<ViewReport>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("ViewReport");
-
-                entity.Property(e => e.ItemId).HasColumnName("ItemID");
-
-                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
-
-                entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
-
-                entity.Property(e => e.ReportDateCreate)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("Report_Date_Create");
-
-                entity.Property(e => e.ReportDateUpdate)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("Report_Date_Update");
-
-                entity.Property(e => e.ReportId).HasColumnName("ReportID");
-
-                entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 

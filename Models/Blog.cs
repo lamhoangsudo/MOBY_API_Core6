@@ -8,6 +8,7 @@ namespace MOBY_API_Core6.Models
         public Blog()
         {
             Comments = new HashSet<Comment>();
+            Reports = new HashSet<Report>();
         }
 
         public int BlogId { get; set; }
@@ -25,5 +26,6 @@ namespace MOBY_API_Core6.Models
         public virtual BlogCategory BlogCategory { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
     }
 }

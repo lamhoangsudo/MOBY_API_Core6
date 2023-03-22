@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy",
-        builder => builder.WithOrigins("http://localhost:3001", "https://moby-customer.vercel.app")
+        builder => builder.WithOrigins("http://localhost:3001", "https://moby-customer.vercel.app", "https://moby-admin.vercel.app")
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials());
@@ -35,8 +35,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = projectId,
             ValidateLifetime = true
         };
-
-
     });
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 var connectionString = builder.Configuration.GetConnectionString("MobyDB");

@@ -8,6 +8,7 @@ namespace MOBY_API_Core6.Models
         public Comment()
         {
             Replies = new HashSet<Reply>();
+            Reports = new HashSet<Report>();
         }
 
         public int CommentId { get; set; }
@@ -22,5 +23,6 @@ namespace MOBY_API_Core6.Models
         public virtual Item? Item { get; set; }
         public virtual UserAccount User { get; set; } = null!;
         public virtual ICollection<Reply> Replies { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
     }
 }

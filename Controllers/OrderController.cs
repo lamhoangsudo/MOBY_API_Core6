@@ -147,9 +147,13 @@ namespace MOBY_API_Core6.Controllers
                 }
                 if (currentOrder.Item != null)
                 {
-                    if (currentOrder.Item.UserId != uid)
+                    if (currentOrder.UserId == uid && updateOrderVM.Status == 1)
                     {
-                        return BadRequest(ReturnMessage.create("not an Item owwner,deny change order"));
+                        return BadRequest(ReturnMessage.create("Package status must be from Sharer"));
+                    }
+                    if (currentOrder.Item.UserId == uid && updateOrderVM.Status == 2)
+                    {
+                        return BadRequest(ReturnMessage.create("Confirm must be Reciever"));
                     }
                 }
                 if (await orderDAO.UpdateStatusOrder(currentOrder, updateOrderVM.Status))
