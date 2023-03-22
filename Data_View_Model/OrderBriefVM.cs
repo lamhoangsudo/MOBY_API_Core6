@@ -9,6 +9,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public int UserId { get; set; }
         public int ItemId { get; set; }
         public int Quanlity { get; set; }
+        public double? ItemPriceAtMoment { get; set; }
         public int Status { get; set; }
         public DateTime DateCreate { get; set; }
         public ItemVM? ItemVM { get; set; }
@@ -21,6 +22,7 @@ namespace MOBY_API_Core6.Data_View_Model
                 OrderId = order.OrderId,
                 UserId = order.UserId,
                 Quanlity = order.Quanlity,
+                ItemPriceAtMoment = order.Price,
                 ItemId = order.ItemId,
                 DateCreate = order.DateCreate,
 

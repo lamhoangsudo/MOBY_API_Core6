@@ -42,8 +42,6 @@ namespace MOBY_API_Core6.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
-
             modelBuilder.Entity<Banner>(entity =>
             {
                 entity.Property(e => e.BannerId)

@@ -14,6 +14,7 @@ namespace MOBY_API_Core6.Models
         public DateTime DateCreate { get; set; }
         public int Status { get; set; }
         public DateTime? DateChangeStatus { get; set; }
+        public double Price { get; set; }
 
         public virtual Item Item { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;

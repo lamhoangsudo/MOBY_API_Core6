@@ -8,6 +8,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public int UserId { get; set; }
         public int ItemId { get; set; }
         public int Quanlity { get; set; }
+        public double? ItemPriceAtMoment { get; set; }
         public string Address { get; set; } = null!;
         public int Status { get; set; }
         public string? ReasonDeny { get; set; }
@@ -28,6 +29,7 @@ namespace MOBY_API_Core6.Data_View_Model
                 UserId = order.UserId,
                 ItemId = order.ItemId,
                 Quanlity = order.Quanlity,
+                ItemPriceAtMoment = order.Price,
                 Address = order.Address,
                 Status = order.Status,
                 ReasonDeny = order.ReasonDeny,

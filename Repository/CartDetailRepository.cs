@@ -161,7 +161,7 @@ namespace MOBY_API_Core6.Repository
             foreach (int id in requestDetailIDList.listCartDetailID)
             {
 
-                CartDetail? currentCartDetail = await context.CartDetails.Where(cd => cd.CartDetailId == id).FirstOrDefaultAsync();
+                CartDetail? currentCartDetail = await context.CartDetails.Where(cd => cd.CartDetailId == id).Include(cd => cd.Item).FirstOrDefaultAsync();
 
                 if (currentCartDetail != null)
                 {
@@ -169,6 +169,14 @@ namespace MOBY_API_Core6.Repository
                     newRequest.UserId = uid;
                     newRequest.ItemId = currentCartDetail.ItemId;
                     newRequest.ItemQuantity = currentCartDetail.ItemQuantity;
+                    if (currentCartDetail.Item.ItemSalePrice != null)
+                    {
+                        newRequest.Price = (double)currentCartDetail.Item.ItemSalePrice;
+                    }
+                    else
+                    {
+                        newRequest.Price = 0;
+                    }
                     newRequest.Address = address;
                     newRequest.Note = requestDetailIDList.note;
                     newRequest.DateCreate = DateTime.Now;

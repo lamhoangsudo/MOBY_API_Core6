@@ -223,6 +223,7 @@ namespace MOBY_API_Core6.Repository
             newOrder.UserId = request.UserId;
             newOrder.ItemId = request.ItemId;
             newOrder.Quanlity = request.ItemQuantity;
+            newOrder.Price = request.Price;
             newOrder.Address = request.Address;
             newOrder.Note = request.Note;
             newOrder.Status = 0;
