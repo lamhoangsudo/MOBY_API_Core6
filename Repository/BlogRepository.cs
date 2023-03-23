@@ -16,7 +16,10 @@ namespace MOBY_API_Core6.Repository
         public async Task<List<BlogVM>> getAllBlog(PaggingVM pagging)
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
-            List<BlogVM> blogList = await context.Blogs.Where(b => b.BlogStatus == 1)
+            List<BlogVM> blogList = await context.Blogs
+                .Include(b => b.BlogCategory)
+                .Include(b => b.User)
+                .Where(b => b.BlogStatus == 1)
                 .OrderByDescending(b => b.BlogId)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
@@ -34,24 +37,27 @@ namespace MOBY_API_Core6.Repository
             return count;
         }
 
-        public async Task<List<BlogVM>> getAllUncheckBlog(PaggingVM pagging, BlogStatusVM blogStatusVM)
+        public async Task<List<BlogBriefVM>> getAllUncheckBlog(PaggingVM pagging, BlogStatusVM blogStatusVM)
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
-            List<BlogVM> blogList = new List<BlogVM>();
+            List<BlogBriefVM> blogList = new List<BlogBriefVM>();
             if (blogStatusVM.BlogStatus == null)
             {
                 blogList = await context.Blogs
+               .Include(b => b.User)
                .Skip(itemsToSkip)
                .Take(pagging.pageSize)
-               .Select(b => BlogVM.BlogToVewModel(b))
+               .Select(b => BlogBriefVM.BlogBriefToVewModel(b))
                .ToListAsync();
 
                 return blogList;
             }
-            blogList = await context.Blogs.Where(b => b.BlogStatus == blogStatusVM.BlogStatus)
+            blogList = await context.Blogs
+               .Include(b => b.User)
+               .Where(b => b.BlogStatus == blogStatusVM.BlogStatus)
                .Skip(itemsToSkip)
                .Take(pagging.pageSize)
-               .Select(b => BlogVM.BlogToVewModel(b))
+               .Select(b => BlogBriefVM.BlogBriefToVewModel(b))
                .ToListAsync();
 
             return blogList;
@@ -67,12 +73,28 @@ namespace MOBY_API_Core6.Repository
 
             return blogListcount;
         }
+
         public async Task<Blog?> getBlogByBlogID(int id)
         {
 
             Blog? blogFound = await context.Blogs.Where(b => b.BlogId == id)
+                .FirstOrDefaultAsync();
+
+            return blogFound;
+        }
+
+        public async Task<BlogVM?> getBlogVMByBlogID(int id)
+        {
+
+            BlogVM? blogFound = await context.Blogs.Where(b => b.BlogId == id)
+                .Include(b => b.BlogCategory)
+                .Include(b => b.User)
+                .Include(b => b.Comments)
+                .ThenInclude(c => c.User)
                 .Include(b => b.Comments)
                 .ThenInclude(cmt => cmt.Replies)
+                .ThenInclude(rep => rep.User)
+                .Select(b => BlogVM.BlogToVewModel(b))
                 .FirstOrDefaultAsync();
 
             return blogFound;
@@ -91,8 +113,9 @@ namespace MOBY_API_Core6.Repository
         public async Task<List<BlogVM>> getBlogByBlogCateID(int blogCateID, PaggingVM pagging)
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
-            List<BlogVM> blogList = await context.Blogs
-                .Where(b => b.BlogCategoryId == blogCateID && b.BlogStatus == 1)
+            List<BlogVM> blogList = await context.Blogs.Where(b => b.BlogCategoryId == blogCateID && b.BlogStatus == 1)
+                .Include(b => b.BlogCategory)
+                .Include(b => b.User)
                 .OrderByDescending(b => b.BlogId)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
@@ -101,7 +124,7 @@ namespace MOBY_API_Core6.Repository
 
             return blogList;
         }
-        public async Task<int> getAllBlogCount(int blogCateID)
+        public async Task<int> getBlogByCateCount(int blogCateID)
         {
             int count;
             count = await context.Blogs.Where(b => b.BlogStatus == 1 && b.BlogCategoryId == blogCateID)
@@ -113,8 +136,9 @@ namespace MOBY_API_Core6.Repository
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
             List<BlogVM> blogList = new List<BlogVM>();
-            blogList = await context.Blogs
-                .Where(b => b.UserId == userID && b.BlogStatus == 1)
+            blogList = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus == 1)
+                .Include(b => b.BlogCategory)
+                .Include(b => b.User)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
                 .Select(b => BlogVM.BlogToVewModel(b))
@@ -134,8 +158,8 @@ namespace MOBY_API_Core6.Repository
         public async Task<List<BlogVM>> getBlogBySelf(int userID, PaggingVM pagging)
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
-            List<BlogVM> blogList = await context.Blogs
-                .Where(b => b.UserId == userID && b.BlogStatus != 3)
+            List<BlogVM> blogList = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus != 3).Include(b => b.BlogCategory)
+                .Include(b => b.BlogCategory)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
                 .Select(b => BlogVM.BlogToVewModel(b))

@@ -2,21 +2,18 @@
 
 namespace MOBY_API_Core6.Data_View_Model
 {
-    public class BlogCategoryVM
+    public class BlogCategoryVMForBlogVM
     {
         public int BlogCategoryId { get; set; }
         public string BlogCategoryName { get; set; } = null!;
-        public List<BlogBriefVM>? blogList { get; set; }
-
-        public static BlogCategoryVM BlogCategoryVMToVewModel(BlogCategory blogcate)
+        public static BlogCategoryVMForBlogVM BlogCategoryVMForBlogVMToVewModel(BlogCategory blogcate)
         {
-            var blogcateView = new BlogCategoryVM
+            var blogcateView = new BlogCategoryVMForBlogVM
             {
                 BlogCategoryId = blogcate.BlogCategoryId,
                 BlogCategoryName = blogcate.BlogCategoryName,
             };
-            var ListBlog = blogcate.Blogs.Select(bc => BlogBriefVM.BlogBriefToVewModel(bc)).ToList();
-            blogcateView.blogList = ListBlog;
+
             return blogcateView;
         }
     }

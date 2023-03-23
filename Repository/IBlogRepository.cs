@@ -7,9 +7,10 @@ namespace MOBY_API_Core6.Repository
     {
         public Task<List<BlogVM>> getAllBlog(PaggingVM pagging);
         //public Task<List<BlogVM>> getNewBlog();
-        public Task<List<BlogVM>> getAllUncheckBlog(PaggingVM pagging, BlogStatusVM blogStatusVM);
+        public Task<List<BlogBriefVM>> getAllUncheckBlog(PaggingVM pagging, BlogStatusVM blogStatusVM);
         public Task<int> getAllUncheckBlogcount(BlogStatusVM blogStatusVM);
         public Task<Blog?> getBlogByBlogID(int id);
+        public Task<BlogVM?> getBlogVMByBlogID(int id);
         public Task<Blog?> getBlogByBlogIDAndUserId(int blogId, int userId);
         //public Task<BlogVM> getBlogVMByBlogID(int id);
         public Task<List<BlogVM>> getBlogByBlogCateID(int blogCateID, PaggingVM pagging);
@@ -21,7 +22,7 @@ namespace MOBY_API_Core6.Repository
         public Task<bool> ConfirmBlog(Blog blog, int decision);
         public Task<bool> DenyBlog(Blog blog, int decision, String reason);
         public Task<int> getAllBlogCount();
-        public Task<int> getAllBlogCount(int blogCateID);
+        public Task<int> getBlogByCateCount(int blogCateID);
         public Task<int> getBlogByUserIDCount(int userID);
         public Task<int> getBlogByBySelfCount(int userID);
     }
