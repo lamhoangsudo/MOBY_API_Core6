@@ -12,10 +12,11 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime? DateUpdate { get; set; }
         public bool EditStatus { get; set; }
         public bool ReplyStatus { get; set; }
+        public UserVM? UserVM { get; set; }
 
         public static ReplyVM ReplyToVewModel(Reply rep)
         {
-            return new ReplyVM
+            ReplyVM replyVM = new ReplyVM()
             {
                 ReplyId = rep.ReplyId,
                 CommentId = rep.CommentId,
@@ -23,9 +24,10 @@ namespace MOBY_API_Core6.Data_View_Model
                 ReplyContent = rep.ReplyContent,
                 DateCreate = rep.DateCreate,
                 DateUpdate = rep.DateUpdate,
-
-
             };
+            var user = rep.User;
+            replyVM.UserVM = UserVM.UserAccountToVewModel(user);
+            return replyVM;
         }
     }
 }

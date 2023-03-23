@@ -13,7 +13,9 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime? DateUpdate { get; set; }
         public bool EditStatus { get; set; }
         public bool CommentStatus { get; set; }
+        public UserVM? UserVM { get; set; }
         public List<ReplyVM>? ListReply { get; set; }
+
 
         public static CommentVM CommentToVewModel(Comment cmt)
         {
@@ -27,7 +29,8 @@ namespace MOBY_API_Core6.Data_View_Model
                 DateCreate = cmt.DateCreate,
                 DateUpdate = cmt.DateUpdate,
             };
-
+            var user = cmt.User;
+            commendVM.UserVM = UserVM.UserAccountToVewModel(user);
             var listReplies = cmt.Replies.Select(rep => ReplyVM.ReplyToVewModel(rep)).ToList();
             commendVM.ListReply = listReplies;
 

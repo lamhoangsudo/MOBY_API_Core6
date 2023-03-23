@@ -46,9 +46,9 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                List<BlogVM> ListBlog = await BlogDAO.getAllUncheckBlog(pagging, blogStatusVM);
+                List<BlogBriefVM> ListBlog = await BlogDAO.getAllUncheckBlog(pagging, blogStatusVM);
                 int totalBlog = await BlogDAO.getAllUncheckBlogcount(blogStatusVM);
-                PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
+                PaggingReturnVM<BlogBriefVM> result = new PaggingReturnVM<BlogBriefVM>(ListBlog, pagging, totalBlog);
 
                 return Ok(result);
 
@@ -69,7 +69,7 @@ namespace MOBY_API_Core6.Controllers
                 if (blogGetVM.categoryId != null)
                 {
                     ListBlog = await BlogDAO.getBlogByBlogCateID(blogGetVM.categoryId.Value, pagging);
-                    int totalBlog = await BlogDAO.getAllBlogCount(blogGetVM.categoryId.Value);
+                    int totalBlog = await BlogDAO.getBlogByCateCount(blogGetVM.categoryId.Value);
                     PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
                     return Ok(result);
 
@@ -83,10 +83,10 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else if (blogGetVM.BlogId != null)
                 {
-                    Blog? foundBlog = await BlogDAO.getBlogByBlogID(blogGetVM.BlogId.Value);
+                    BlogVM? foundBlog = await BlogDAO.getBlogVMByBlogID(blogGetVM.BlogId.Value);
                     if (foundBlog != null)
                     {
-                        return Ok(BlogVM.BlogToVewModel(foundBlog));
+                        return Ok(foundBlog);
                     }
                     return Ok(foundBlog);
                 }
@@ -208,11 +208,18 @@ namespace MOBY_API_Core6.Controllers
             {
 
                 Blog? foundblog = await BlogDAO.getBlogByBlogID(blogId.BlogId);
-                if (foundblog != null && blogId.reason != null)
+                if (foundblog != null)
                 {
-                    if (await BlogDAO.DenyBlog(foundblog, 2, blogId.reason))
+                    if (blogId.reason != null && blogId.reason.Equals(""))
                     {
-                        return Ok(ReturnMessage.create("success"));
+                        if (await BlogDAO.DenyBlog(foundblog, 2, blogId.reason))
+                        {
+                            return Ok(ReturnMessage.create("success"));
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest(ReturnMessage.create("must have reason deny"));
                     }
                 }
                 else
