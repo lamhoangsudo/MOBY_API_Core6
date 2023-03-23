@@ -102,7 +102,7 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpDelete]
         [Route("api/comment/delete")]
-        public async Task<IActionResult> DeleteComment([FromQuery] GetCommentIDVM cmtid)
+        public async Task<IActionResult> DeleteComment([FromBody] GetCommentIDVM cmtid)
         {
             try
             {
