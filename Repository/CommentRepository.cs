@@ -16,6 +16,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<List<CommentVM>> GetAllComment()
         {
             List<CommentVM> ListComment = await context.Comments
+                .Include(c => c.User)
                 .Include(c => c.Replies)
                 .Select(c => CommentVM.CommentToVewModel(c))
                 .ToListAsync();
@@ -26,6 +27,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<List<CommentVM>> GetCommentByBlogID(int id)
         {
             List<CommentVM> ListComment = await context.Comments.Where(cmt => cmt.BlogId == id)
+                .Include(c => c.User)
                 .Include(c => c.Replies)
                 .Select(c => CommentVM.CommentToVewModel(c))
                 .ToListAsync();
@@ -37,6 +39,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<List<CommentVM>> GetCommentByItemID(int id)
         {
             List<CommentVM> ListComment = await context.Comments.Where(cmt => cmt.ItemId == id)
+                .Include(c => c.User)
                 .Include(c => c.Replies)
                 .Select(c => CommentVM.CommentToVewModel(c))
                 .ToListAsync();
