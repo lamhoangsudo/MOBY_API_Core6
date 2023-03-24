@@ -16,6 +16,7 @@ namespace MOBY_API_Core6.Repository
         {
             List<BlogCategoryVM> blogCategories = await context.BlogCategories
                 .Include(bc => bc.Blogs.Where(b => b.BlogStatus == 1))
+                .ThenInclude(b => b.User)
                 .Select(bc => BlogCategoryVM.BlogCategoryVMToVewModel(bc))
                 .ToListAsync();
 
@@ -42,6 +43,7 @@ namespace MOBY_API_Core6.Repository
             BlogCategoryVM? foundBlogCate = await context.BlogCategories
                 .Where(bc => bc.BlogCategoryId == blogCateId)
                 .Include(bc => bc.Blogs.Where(b => b.BlogStatus == 1))
+                .ThenInclude(b => b.User)
                 .Select(bc => BlogCategoryVM.BlogCategoryVMToVewModel(bc))
                 .FirstOrDefaultAsync();
 
