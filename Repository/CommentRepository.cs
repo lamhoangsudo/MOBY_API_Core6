@@ -16,7 +16,9 @@ namespace MOBY_API_Core6.Repository
         public async Task<List<CommentVM>> GetAllComment()
         {
             List<CommentVM> ListComment = await context.Comments
+                .Include(c => c.User)
                 .Include(c => c.Replies)
+                .ThenInclude(rep => rep.User)
                 .Select(c => CommentVM.CommentToVewModel(c))
                 .ToListAsync();
 
@@ -26,7 +28,9 @@ namespace MOBY_API_Core6.Repository
         public async Task<List<CommentVM>> GetCommentByBlogID(int id)
         {
             List<CommentVM> ListComment = await context.Comments.Where(cmt => cmt.BlogId == id)
+                .Include(c => c.User)
                 .Include(c => c.Replies)
+                .ThenInclude(rep => rep.User)
                 .Select(c => CommentVM.CommentToVewModel(c))
                 .ToListAsync();
 
@@ -37,7 +41,9 @@ namespace MOBY_API_Core6.Repository
         public async Task<List<CommentVM>> GetCommentByItemID(int id)
         {
             List<CommentVM> ListComment = await context.Comments.Where(cmt => cmt.ItemId == id)
+                .Include(c => c.User)
                 .Include(c => c.Replies)
+                .ThenInclude(rep => rep.User)
                 .Select(c => CommentVM.CommentToVewModel(c))
                 .ToListAsync();
             return ListComment;
@@ -60,13 +66,13 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> UpdateComment(UpdateCommentVM cmt, int userId)
+        public async Task<bool> UpdateComment(UpdateCommentVM comment, int userId)
         {
-            Comment? currentcmt = await context.Comments.Where(cmt => cmt.CommentId == cmt.CommentId && cmt.UserId == userId).FirstOrDefaultAsync();
+            Comment? currentcmt = await context.Comments.Where(c => c.CommentId == comment.CommentId && c.UserId == userId).FirstOrDefaultAsync();
 
             if (currentcmt != null)
             {
-                currentcmt.CommentContent = cmt.CommentContent;
+                currentcmt.CommentContent = comment.CommentContent;
                 currentcmt.DateUpdate = DateTime.Now;
 
                 if (await context.SaveChangesAsync() != 0)
@@ -80,7 +86,7 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<bool> DeleteComment(GetCommentIDVM cmt, int userId)
         {
-            Comment? currentcmt = await context.Comments.Where(cmt => cmt.CommentId == cmt.CommentId && cmt.UserId == userId)
+            Comment? currentcmt = await context.Comments.Where(c => c.CommentId == cmt.CommentId && c.UserId == userId)
                 .Include(c => c.Replies).FirstOrDefaultAsync();
 
             if (currentcmt != null)
