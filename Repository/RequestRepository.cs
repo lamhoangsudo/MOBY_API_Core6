@@ -3,6 +3,7 @@ using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
 
+
 namespace MOBY_API_Core6.Repository
 {
     public class RequestRepository : IRequestRepository
@@ -18,24 +19,36 @@ namespace MOBY_API_Core6.Repository
 
         }
 
-        public async Task<List<RequestVM>> getRequestByItemID(int itemid)
+        public async Task<List<RequestVM>> getRequestBySharerID(int uid)
         {
             List<RequestVM> requests = await context.Requests
-                .Where(r => r.ItemId == itemid)
                 .Include(r => r.User)
-                .Include(r => r.Item)
-                .ThenInclude(i => i.User)
+                    .Include(r => r.RequestDetails)
+                    .ThenInclude(rd => rd.Item)
+                    .ThenInclude(i => i.User)
+                    .Where(r => r.RequestDetails.Any(rd => rd.Item.UserId == uid))
+                    .Select(r => RequestVM.RequestToVewModel(r))
+                    .ToListAsync();
+            /*List<RequestVM> requests = await context.Requests
+                .Include(r => r.RequestDetails.Join(context.Items, rd => rd.ItemId, it => it.ItemId, (rd, it) => new { rd, it })
+                .Join(context.UserAccounts, rdit => rdit.it.UserId, us => us.UserId, (rdit, us) => new { rdit, us })
+                .Where(rditus => rditus.rdit.it.UserId == uid))
+
                 .Select(r => RequestVM.RequestToVewModel(r))
-                .ToListAsync();
+                .ToListAsync();*/
+
+
+
             return requests;
         }
 
-        public async Task<List<RequestVM>> getRequestByUserID(int userid)
+        public async Task<List<RequestVM>> getRequestByRecieverID(int userid)
         {
             List<RequestVM> requests = await context.Requests
                 .Where(r => r.UserId == userid)
                 .Include(r => r.User)
-                .Include(r => r.Item)
+                .Include(r => r.RequestDetails)
+                .ThenInclude(rd => rd.Item)
                 .ThenInclude(i => i.User)
                 .Select(r => RequestVM.RequestToVewModel(r))
                 .ToListAsync();
@@ -46,7 +59,8 @@ namespace MOBY_API_Core6.Repository
         {
             Request? requests = await context.Requests
                 .Where(r => r.RequestId == requestID)
-                .Include(r => r.Item)
+                .Include(r => r.RequestDetails)
+                .ThenInclude(rd => rd.Item)
                 .FirstOrDefaultAsync();
 
             return requests;
@@ -56,7 +70,8 @@ namespace MOBY_API_Core6.Repository
             RequestVM? requests = await context.Requests
                 .Where(r => r.RequestId == requestID)
                 .Include(r => r.User)
-                .Include(r => r.Item)
+                .Include(r => r.RequestDetails)
+                .ThenInclude(rd => rd.Item)
                 .ThenInclude(i => i.User)
                 .Select(r => RequestVM.RequestToVewModel(r))
                 .FirstOrDefaultAsync();
@@ -64,94 +79,12 @@ namespace MOBY_API_Core6.Repository
             return requests;
         }
 
-        public async Task<String> AcceptRequest(Request request)
+        public async Task<bool> SaveRequest()
         {
-            Models.Item? item = request.Item;
-            //Models.Item? item = await context.Items.Where(i => i.ItemId == request.ItemId).FirstOrDefaultAsync();
-            if (item != null)
-            {
-                if (item.ItemShareAmount < request.ItemQuantity)
-                {
-                    return "Item ammount not available";
-                }
-                if (item.ItemShareAmount - request.ItemQuantity == 0)
-                {
-                    item.ItemStatus = false;
-                }
-
-                item.ItemShareAmount -= request.ItemQuantity;
-                request.Status = 1;
-                request.DateChangeStatus = DateTime.Now;
-            }
-
-            if (await context.SaveChangesAsync() != 0)
-            {
-                Request? curremtRequest = await context.Requests
-                    .Where(r => r.RequestId == request.RequestId)
-                    .Include(r => r.Item).Include(r => r.User).FirstOrDefaultAsync();
-                if (curremtRequest != null)
-                {
-                    String result = await orderDAO.CreateOrder(curremtRequest);
-                    if (result != null)
-                    {
-                        if (!(result.Equals("")))
-                        {
-                            return result;
-                        }
-                    }
-                    else
-                    {
-                        return "error at createOrder";
-                    }
-                }
-            }
-
-            return "error at AcceptRequest";
+            await context.SaveChangesAsync();
+            return true;
         }
 
-        public async Task<bool> DenyOtherRequestWhichPassItemQuantity(Request request)
-        {
-            Models.Item? currentItem = request.Item;
-            //Models.Item? currentItem = await context.Items.FindAsync(itemID);
-            if (currentItem == null)
-            {
-                return false;
-            }
-            List<Request> requests = await context.Requests
-                .Where(r => r.ItemId == currentItem.ItemId)
-                .ToListAsync();
-            if (requests == null || requests.Count == 0)
-            {
-                return true;
-            }
-            foreach (Request request1 in requests)
-            {
-                if (!currentItem.ItemStatus || currentItem.ItemShareAmount == 0)
-                {
-                    request.Status = 2;
-                }
-                if (request.ItemQuantity > currentItem.ItemShareAmount)
-                {
-                    request.Status = 2;
-                }
-            }
 
-            if (await context.SaveChangesAsync() != 0)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<bool> DenyRequest(Request request)
-        {
-            request.Status = 2;
-            request.DateChangeStatus = DateTime.Now;
-            if (await context.SaveChangesAsync() != 0)
-            {
-                return true;
-            }
-            return false;
-        }
     }
 }

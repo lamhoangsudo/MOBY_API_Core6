@@ -5,12 +5,14 @@ namespace MOBY_API_Core6.Repository
 {
     public interface IRequestRepository
     {
-        public Task<String> AcceptRequest(Request request);
-        public Task<bool> DenyRequest(Request request);
-        public Task<List<RequestVM>> getRequestByItemID(int itemid);
-        public Task<List<RequestVM>> getRequestByUserID(int userid);
+        //public Task<String> AcceptRequest(Request request);
+        //public Task<bool> DenyRequest(Request request);
+        public Task<List<RequestVM>> getRequestBySharerID(int itemid);
+        public Task<List<RequestVM>> getRequestByRecieverID(int userid);
         public Task<Request?> getRequestByRequestID(int requestID);
         public Task<RequestVM?> getRequestVMByRequestID(int requestID);
-        public Task<bool> DenyOtherRequestWhichPassItemQuantity(Request request);
+        public Task<bool> SaveRequest();
+        //public Task<bool> ConfirmRequest(Request request);
+        //public Task<bool> DenyOtherRequestWhichPassItemQuantity(Request request);
     }
 }
