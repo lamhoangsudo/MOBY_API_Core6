@@ -10,7 +10,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public int ItemQuantity { get; set; }
 
         public ItemVM? ItemVM { get; set; }
-        public UserVM? UserVM { get; set; }
+
         public static CartDetailVM RequestDetailToVewModel(CartDetail cartDetail)
         {
             var CartDetailVM = new CartDetailVM
@@ -23,17 +23,13 @@ namespace MOBY_API_Core6.Data_View_Model
             };
             var item = cartDetail.Item;
             CartDetailVM.ItemVM = ItemVM.ItemToViewModel(item);
-            if (cartDetail.Item.User != null)
-            {
-                var user = cartDetail.Item.User;
-                CartDetailVM.UserVM = UserVM.UserAccountToVewModel(user);
-            }
+
 
             return CartDetailVM;
 
         }
 
-        public static CartDetailVM RequestDetailToVewModel(CartDetail cartDetail, Models.Item item, UserAccount user)
+        public static CartDetailVM RequestDetailToVewModel(CartDetail cartDetail, Models.Item item)
         {
             var RequestDetailVM = new CartDetailVM
             {
@@ -46,7 +42,7 @@ namespace MOBY_API_Core6.Data_View_Model
 
             RequestDetailVM.ItemVM = ItemVM.ItemToViewModel(item);
 
-            RequestDetailVM.UserVM = UserVM.UserAccountToVewModel(user);
+
             return RequestDetailVM;
 
         }

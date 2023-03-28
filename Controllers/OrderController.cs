@@ -145,17 +145,20 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.create("order not found"));
                 }
-                if (currentOrder.Item != null)
+
+
+                if (currentOrder.UserId == uid && updateOrderVM.Status == 1)
                 {
-                    if (currentOrder.UserId == uid && updateOrderVM.Status == 1)
-                    {
-                        return BadRequest(ReturnMessage.create("Package status must be from Sharer"));
-                    }
-                    if (currentOrder.Item.UserId == uid && updateOrderVM.Status == 2)
-                    {
-                        return BadRequest(ReturnMessage.create("Confirm must be Reciever"));
-                    }
+                    return BadRequest(ReturnMessage.create("Package status must be from Sharer"));
                 }
+
+                if (currentOrder.OrderDetails.First().Item.UserId == uid && currentOrder.Status == 2)
+                {
+                    return BadRequest(ReturnMessage.create("Recieve status must be from Reciever"));
+                }
+
+
+
                 if (await orderDAO.UpdateStatusOrder(currentOrder, updateOrderVM.Status))
                 {
                     return Ok(ReturnMessage.create("success"));

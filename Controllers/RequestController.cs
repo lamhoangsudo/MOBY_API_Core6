@@ -10,39 +10,39 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class RequestController : ControllerBase
     {
-        private readonly IUserRepository userDAO;
-        private readonly ICartRepository cartDAO;
-        private readonly ICartDetailRepository cartDetailDAO;
-        private readonly IItemRepository itemDAO;
-        private readonly IRequestRepository requestDAO;
-        public RequestController(ICartDetailRepository cartDetailDAO, ICartRepository cartDAO, IUserRepository userDAO, IItemRepository itemDAO, IRequestRepository requestDAO)
+        private readonly IUserRepository userRepository;
+        private readonly IOrderRepository orderRepository;
+        private readonly IRequestRepository requestRepository;
+        private readonly IRequestDetailRepository requestDetailRepository;
+        public RequestController(IUserRepository userRepository, IRequestRepository requestRepository, IOrderRepository orderRepository, IRequestDetailRepository requestDetailRepository)
         {
-            this.userDAO = userDAO;
-            this.cartDetailDAO = cartDetailDAO;
-            this.cartDAO = cartDAO;
-            this.itemDAO = itemDAO;
-            this.requestDAO = requestDAO;
+
+            this.userRepository = userRepository;
+            this.orderRepository = orderRepository;
+            this.requestRepository = requestRepository;
+            this.requestDetailRepository = requestDetailRepository;
         }
 
         [Authorize]
         [HttpGet]
         [Route("api/useraccount/item/request/sharer")]
-        public async Task<IActionResult> GetAllRequestByItem()
+        public async Task<IActionResult> GetAllRequestBySharerID()
         {
             try
             {
-                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<int> itemIDList = await itemDAO.getListItemIDByUserID(uid);
+                int uid = await userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                List<RequestVM> requestDetailOf1ItemList = await requestRepository.getRequestBySharerID(uid);
+                /*List<int> itemIDList = await itemDAO.getListItemIDByUserID(uid);
                 List<RequestVM> result = new List<RequestVM>();
                 foreach (int itemID in itemIDList)
                 {
-                    List<RequestVM> requestDetailOf1ItemList = await requestDAO.getRequestByItemID(itemID);
+
 
                     result.AddRange(requestDetailOf1ItemList);
-                }
+                }*/
 
 
-                return Ok(result);
+                return Ok(requestDetailOf1ItemList);
             }
             catch (Exception ex)
             {
@@ -58,10 +58,10 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
 
 
-                List<RequestVM> ListRequest = await requestDAO.getRequestByUserID(uid);
+                List<RequestVM> ListRequest = await requestRepository.getRequestByRecieverID(uid);
 
                 return Ok(ListRequest);
             }
@@ -81,7 +81,7 @@ namespace MOBY_API_Core6.Controllers
             {
 
 
-                RequestVM? result = await requestDAO.getRequestVMByRequestID(requestIDVM.RequestId);
+                RequestVM? result = await requestRepository.getRequestVMByRequestID(requestIDVM.RequestId);
                 if (result != null)
                 {
                     Ok(result);
@@ -99,28 +99,54 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPatch]
-        [Route("api/request/accept")]
-        public async Task<IActionResult> AcceptRequest([FromBody] RequestIDVM requestIDVM)
+        [Route("api/request/confirm")]
+        public async Task<IActionResult> ConfirmRequest([FromBody] RequestConfirmVM requestConfirmVM)
         {
 
             try
             {
-                Request? foundRequestDetail = await requestDAO.getRequestByRequestID(requestIDVM.RequestId);
-                if (foundRequestDetail == null)
+
+                Request? foundRequest = await requestRepository.getRequestByRequestID(requestConfirmVM.RequestID);
+                if (foundRequest == null)
                 {
                     return BadRequest(ReturnMessage.create("error at request not found"));
                 }
-                String result = await requestDAO.AcceptRequest(foundRequestDetail);
-                if (result.Contains("OrderID"))
+
+                List<RequestDetail> requestDetailList = foundRequest.RequestDetails.ToList();
+                List<RequestDetail> acceptedRequestDetail = new List<RequestDetail>();
+
+                foreach (RequestDetail requestDetail in requestDetailList)
                 {
-                    await requestDAO.DenyOtherRequestWhichPassItemQuantity(foundRequestDetail);
-                    return Ok(ReturnMessage.create(result));
+                    if (requestConfirmVM.ListRequestDetailID.Contains(requestDetail.RequestDetailId))
+                    {
+                        //accept requestDetail + autoCheckDeny
+                        requestDetailRepository.AcceptRequestDetail(requestDetail);
+                        await requestDetailRepository.DenyOtherRequestWhichPassItemQuantity(requestDetail);
+                        acceptedRequestDetail.Add(requestDetail);
+                    }
+                    else
+                    {
+                        //denyrequestDetail
+                        requestDetailRepository.DenyRequestDetail(requestDetail);
+                    }
+                }
+
+                await requestRepository.SaveRequest();
+                String note;
+                if (foundRequest.Note == null)
+                {
+                    note = "";
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create(result));
+                    note = foundRequest.Note;
                 }
 
+                if (await orderRepository.CreateOrder(foundRequest.UserId, foundRequest.Address, note, acceptedRequestDetail))
+                {
+                    return Ok(ReturnMessage.create("success"));
+                }
+                return BadRequest(ReturnMessage.create("error at ConfirmRequest"));
 
             }
             catch (Exception ex)
@@ -129,29 +155,6 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPatch]
-        [Route("api/request/deny")]
-        public async Task<IActionResult> DenyRequest([FromBody] RequestIDVM requestIDVM)
-        {
-            try
-            {
-                Request? foundRequestDetail = await requestDAO.getRequestByRequestID(requestIDVM.RequestId);
-                if (foundRequestDetail == null)
-                {
-                    return BadRequest(ReturnMessage.create("error at request not found"));
-                }
-                if (await requestDAO.DenyRequest(foundRequestDetail))
-                {
-                    return Ok(ReturnMessage.create("Success"));
-                }
-                return BadRequest(ReturnMessage.create("error at DenyRequestDetail"));
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
 
-        }
     }
 }

@@ -146,9 +146,9 @@ namespace MOBY_API_Core6.Repository
         }
 
 
-        public async Task<bool> ConfirmCartDetail(ListCartDetailidToConfirm requestDetailIDList, int uid)
+        public async Task<bool> ConfirmCartDetail(ListCartDetailidToConfirm cartDetailIDList, int uid)
         {
-            if (requestDetailIDList.listCartDetailID == null || requestDetailIDList.listCartDetailID.Count == 0)
+            if (cartDetailIDList.listCartDetailID == null || cartDetailIDList.listCartDetailID.Count == 0)
             {
                 return false;
             }
@@ -158,33 +158,55 @@ namespace MOBY_API_Core6.Repository
             {
                 return false;
             }
-            foreach (int id in requestDetailIDList.listCartDetailID)
+
+            List<CartDetail> currentCartDetails = await context.CartDetails.Where(cd => cartDetailIDList.listCartDetailID!.Contains(cd.CartDetailId))
+                .Include(cd => cd.Item)
+                .ToListAsync();
+
+            Dictionary<int, List<CartDetail>> cartDetailsByReciverId = new Dictionary<int, List<CartDetail>>();
+
+            foreach (var cartDetail in currentCartDetails)
             {
+                var recieverId = cartDetail.Item.UserId;
 
-                CartDetail? currentCartDetail = await context.CartDetails.Where(cd => cd.CartDetailId == id).Include(cd => cd.Item).FirstOrDefaultAsync();
 
-                if (currentCartDetail != null)
+                if (cartDetailsByReciverId.ContainsKey(recieverId))
                 {
-                    Request newRequest = new Request();
-                    newRequest.UserId = uid;
-                    newRequest.ItemId = currentCartDetail.ItemId;
-                    newRequest.ItemQuantity = currentCartDetail.ItemQuantity;
-                    if (currentCartDetail.Item.ItemSalePrice != null)
-                    {
-                        newRequest.Price = (double)currentCartDetail.Item.ItemSalePrice;
-                    }
-                    else
-                    {
-                        newRequest.Price = 0;
-                    }
-                    newRequest.Address = address;
-                    newRequest.Note = requestDetailIDList.note;
-                    newRequest.DateCreate = DateTime.Now;
-                    newRequest.Status = 0;
-                    context.Requests.Add(newRequest);
-                    context.CartDetails.Remove(currentCartDetail);
+                    cartDetailsByReciverId[recieverId].Add(cartDetail);
                 }
+                else
+                {
+                    var newList = new List<CartDetail>() { cartDetail };
+                    cartDetailsByReciverId.Add(recieverId, newList);
+                }
+            }
 
+
+            foreach (var key in cartDetailsByReciverId.Keys)
+            {
+                Request newRequest = new Request();
+                newRequest.UserId = uid;
+                newRequest.Address = address;
+                newRequest.Note = cartDetailIDList.note;
+                newRequest.DateCreate = DateTime.Now;
+                newRequest.Status = 0;
+
+                List<RequestDetail> listRequestDetail = cartDetailsByReciverId[key].Select(cd => new RequestDetail
+                {
+                    ItemId = cd.ItemId,
+
+                    Price = (cd.Item.ItemSalePrice == null) ? 0 : cd.Item.ItemSalePrice.Value,
+                    Quantity = cd.ItemQuantity,
+                    Status = 0
+                }).ToList();
+                newRequest.RequestDetails = listRequestDetail;
+
+
+                context.Requests.Add(newRequest);
+                foreach (CartDetail cartDetail in cartDetailsByReciverId[key])
+                {
+                    context.CartDetails.Remove(cartDetail);
+                }
             }
 
             if (await context.SaveChangesAsync() != 0)
