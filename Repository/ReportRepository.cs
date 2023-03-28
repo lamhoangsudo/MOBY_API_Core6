@@ -8,7 +8,7 @@ namespace MOBY_API_Core6.Repository
     {
         public static string? errorMessage;
         private readonly MOBYContext _context;
-        public ReportRepository(MOBYContext context) 
+        public ReportRepository(MOBYContext context)
         {
             _context = context;
         }
@@ -26,8 +26,8 @@ namespace MOBY_API_Core6.Repository
                     report.ItemId = reportVM.itemID;
                     report.UserId = reportVM.userID;
                     report.ReportStatus = reportVM.status;
-                    report.ReportContent= reportVM.content;
-                    report.Image = reportVM.image;
+                    report.ReportContent = reportVM.content;
+                    report.Evident = reportVM.image;
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
                     return true;
@@ -49,10 +49,10 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report? report =  await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
+                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
                 if (report != null)
                 {
-                    report.ReportDateUpdate = DateTime.Now;
+                    report.ReportDateResolve = DateTime.Now;
                     report.ReportStatus = reportVM.isApproved;
                     await _context.SaveChangesAsync();
                     return true;
@@ -63,7 +63,7 @@ namespace MOBY_API_Core6.Repository
                     return false;
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 errorMessage = ex.Message;
                 return false;
@@ -77,7 +77,7 @@ namespace MOBY_API_Core6.Repository
                 Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
                 if (report != null)
                 {
-                    report.ReportDateUpdate = DateTime.Now;
+                    report.ReportDateResolve = DateTime.Now;
                     report.ReportStatus = reportVM.isDeny;
                     await _context.SaveChangesAsync();
                     return true;
@@ -102,9 +102,9 @@ namespace MOBY_API_Core6.Repository
                 Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
                 if (report != null)
                 {
-                    report.ReportDateUpdate = DateTime.Now;
+                    report.ReportDateResolve = DateTime.Now;
                     report.ReportContent = reportVM.content;
-                    report.Image = reportVM.image;
+                    report.Evident = reportVM.image;
                     await _context.SaveChangesAsync();
                     return true;
                 }
@@ -128,7 +128,7 @@ namespace MOBY_API_Core6.Repository
                 Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
                 if (report != null)
                 {
-                    report.ReportDateUpdate = DateTime.Now;
+                    report.ReportDateResolve = DateTime.Now;
                     report.ReportStatus = reportVM.isDelete;
                     await _context.SaveChangesAsync();
                     return true;
@@ -146,7 +146,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<ViewReport>?> GetAllReportByStatus(int status)
+        /*public async Task<List<ViewReport>?> GetAllReportByStatus(int status)
         {
             try
             {
@@ -189,6 +189,6 @@ namespace MOBY_API_Core6.Repository
                 errorMessage = ex.Message;
                 return null;
             }
-        }
+        }*/
     }
 }

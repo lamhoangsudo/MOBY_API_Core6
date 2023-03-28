@@ -11,7 +11,7 @@ namespace MOBY_API_Core6.Repository
         public Task<int> GetOrderBySharerIDCount(int uid, OrderStatusVM orderStatusVM);
         public Task<bool> checkOrderSharer(int uid);
         public Task<bool> checkOrderReciever(int uid);
-        public Task<String> CreateOrder(Request request);
+        public Task<bool> CreateOrder(int uid, String Address, String note, List<RequestDetail> accteptedRequestDetail);
         public Task<Order?> GetOrderByOrderID(int orderID);
         public Task<OrderVM?> GetOrderVMByOrderID(int orderID);
         public Task<bool> UpdateStatusOrder(Order order, int status);

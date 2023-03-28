@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MOBY_API_Core6.Models
+﻿namespace MOBY_API_Core6.Models
 {
     public partial class RequestDetail
     {

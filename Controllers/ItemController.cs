@@ -146,12 +146,12 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("SearchBriefItemBySubCategoryID")]
-        public async Task<IActionResult> SearchBriefItemBySubCategoryID(int subCategoryID, bool status)
+        [HttpGet("SearchBriefItemByOrBriefRequestBySubCategoryID")]
+        public async Task<IActionResult> SearchBriefItemByOrBriefRequestBySubCategoryID(int subCategoryID, bool status, bool share, int pageNumber, int pageSize)
         {
             try
             {
-                List<BriefItem>? listBriefItemBySubCategoryID = await _itemRepository.SearchBriefItemBySubCategoryID(subCategoryID, status);
+                List<BriefItem>? listBriefItemBySubCategoryID = await _itemRepository.SearchBriefItemByOrBriefRequestBySubCategoryID(subCategoryID, status, share, pageNumber, pageSize);
                 if (listBriefItemBySubCategoryID == null)
                 {
                     return BadRequest(ItemRepository.errorMessage);

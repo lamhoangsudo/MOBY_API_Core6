@@ -1,5 +1,4 @@
 ﻿using MOBY_API_Core6.Data_View_Model;
-using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -10,11 +9,11 @@ namespace MOBY_API_Core6.Repository
         Task<bool> UpdateReport(UpdateReportVM reportVM);
 
         Task<bool> ApprovedReport(ApprovedReportVM reportVM);
-        
+
         Task<bool> DenyReport(DenyReportVM reportVM);
 
-        Task<List<ViewReport>?> GetAllReportByStatus(int status);
+        //Task<List<ViewReport>?> GetAllReportByStatus(int status);
 
-        Task<List<ViewReport>?> GetAllReportByUserAndStatus(int status, int userid);
+        //Task<List<ViewReport>?> GetAllReportByUserAndStatus(int status, int userid);
     }
 }

@@ -15,7 +15,7 @@ namespace MOBY_API_Core6.Repository
 
         Task<List<BriefItem>?> SearchBriefItemByTitle(string itemTitle, bool status);
 
-        Task<List<BriefItem>?> SearchBriefItemBySubCategoryID(int subCategoryID, bool status);
+        Task<List<BriefItem>?> SearchBriefItemByOrBriefRequestBySubCategoryID(int subCategoryID, bool status, bool share, int pageNumber, int pageSize);
 
         Task<List<BriefItem>?> SearchBriefItemOrBriefRequestByCategoryID(int categoryID, bool status, bool share, int pageNumber, int pageSize);
 

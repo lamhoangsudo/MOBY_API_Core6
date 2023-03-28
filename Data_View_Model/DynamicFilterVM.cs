@@ -18,5 +18,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public double maxUsable { get; set; }
         [DefaultValue(40)]
         public double minUsable { get; set; }
+        [DefaultValue(null)]
+        public bool? share { get; set; }
     }
 }
