@@ -4,7 +4,15 @@ namespace MOBY_API_Core6.Repository
 {
     public interface IReportRepository
     {
-        Task<bool> CreateReport(CreateReportVM reportVM);
+        Task<bool> CreateItemReport(CreateReportVM reportVM);
+
+        Task<bool> CreateOrderReport(CreateReportVM reportVM);
+
+        Task<bool> CreateCommentReport(CreateReportVM reportVM);
+
+        Task<bool> CreateReplyReport(CreateReportVM reportVM);
+
+        Task<bool> CreateBlogReport(CreateReportVM reportVM);
 
         Task<bool> UpdateReport(UpdateReportVM reportVM);
 

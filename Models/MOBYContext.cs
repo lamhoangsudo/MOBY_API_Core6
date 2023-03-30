@@ -38,8 +38,13 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
         public virtual DbSet<UserAddress> UserAddresses { get; set; } = null!;
         public virtual DbSet<ViewBlog> ViewBlogs { get; set; } = null!;
+        public virtual DbSet<ViewReportBlog> ViewReportBlogs { get; set; } = null!;
+        public virtual DbSet<ViewReportComment> ViewReportComments { get; set; } = null!;
+        public virtual DbSet<ViewReportItem> ViewReportItems { get; set; } = null!;
+        public virtual DbSet<ViewReportOrder> ViewReportOrders { get; set; } = null!;
+        public virtual DbSet<ViewReportReply> ViewReportReplies { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -640,6 +645,83 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.BlogStatus).HasColumnName("Blog_Status");
 
                 entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+            });
+
+            modelBuilder.Entity<ViewReportBlog>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("ViewReportBlog");
+
+                entity.Property(e => e.BlogId).HasColumnName("BlogID");
+
+                entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
+
+                entity.Property(e => e.ReportId).HasColumnName("ReportID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+            });
+
+            modelBuilder.Entity<ViewReportComment>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("ViewReportComment");
+
+                entity.Property(e => e.CommentId).HasColumnName("CommentID");
+
+                entity.Property(e => e.ReportId).HasColumnName("ReportID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+            });
+
+            modelBuilder.Entity<ViewReportItem>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("ViewReportItem");
+
+                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
+
+                entity.Property(e => e.ReportId).HasColumnName("ReportID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+            });
+
+            modelBuilder.Entity<ViewReportOrder>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("ViewReportOrder");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.ReportId).HasColumnName("ReportID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+            });
+
+            modelBuilder.Entity<ViewReportReply>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("ViewReportReply");
+
+                entity.Property(e => e.ReplyId).HasColumnName("ReplyID");
+
+                entity.Property(e => e.ReportId).HasColumnName("ReportID");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 

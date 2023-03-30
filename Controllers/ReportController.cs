@@ -14,12 +14,12 @@ namespace MOBY_API_Core6.Controllers
         {
             _reportRepository = reportRepository;
         }
-        [HttpPost("CreateReport")]
+        [HttpPost("CreateItemReport")]
         public async Task<IActionResult> CreateReport([FromBody] CreateReportVM reportVM)
         {
             try
             {
-                bool checkCreate = await _reportRepository.CreateReport(reportVM);
+                bool checkCreate = await _reportRepository.CreateItemReport(reportVM);
                 if (checkCreate)
                 {
                     return Ok(ReturnMessage.create("đã tạo thành công"));
