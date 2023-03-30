@@ -152,8 +152,17 @@ namespace MOBY_API_Core6.Repository
             {
                 return false;
             }
-            String? address = await context.Carts.Where(c => c.UserId == uid)
+            String? address;
+            if (cartDetailIDList.address == null || cartDetailIDList.address == "")
+            {
+                address = await context.Carts.Where(c => c.UserId == uid)
                 .Select(c => c.Address).FirstOrDefaultAsync();
+            }
+            else
+            {
+                address = cartDetailIDList.address;
+            }
+
             if (address == null || address == "")
             {
                 return false;
