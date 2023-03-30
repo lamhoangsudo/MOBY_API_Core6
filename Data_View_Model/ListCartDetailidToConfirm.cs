@@ -2,6 +2,7 @@
 {
     public class ListCartDetailidToConfirm
     {
+        public String? address { get; set; }
         public String? note { get; set; }
         public List<int>? listCartDetailID { get; set; }
     }

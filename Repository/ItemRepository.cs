@@ -475,7 +475,11 @@ namespace MOBY_API_Core6.Repository
                     && bf.ItemSalePrice == 0
                     && bf.UserId != userID);
                 int total = query.Count();
-                int page = total / pageSize;
+                int totalPage = total / pageSize;
+                if (total % pageSize != 0)
+                {
+                    totalPage = totalPage + 1;
+                }
                 listMyShareAndRequest = await query
                     .Skip(itemsToSkip)
                     .Take(pageSize)
@@ -509,7 +513,11 @@ namespace MOBY_API_Core6.Repository
                     , (bf, it) => new { bf, it })
                     .OrderByDescending(bfit => bfit.it.ItemDateCreated);
                 int total = query.Count();
-                int page = total / pageSize;
+                int totalPage = total / pageSize;
+                if (total % pageSize != 0)
+                {
+                    totalPage = totalPage + 1;
+                }
                 listShareRecently = await query
                     .Skip(itemsToSkip)
                     .Take(pageSize)
@@ -559,7 +567,11 @@ namespace MOBY_API_Core6.Repository
                     && bfit.bf.ItemStatus == true
                     && bfit.bf.UserId != userID);
                 int total = query.Count();
-                int page = total / pageSize;
+                int totalPage = total / pageSize;
+                if (total % pageSize != 0)
+                {
+                    totalPage = totalPage + 1;
+                }
                 listShareRecently = await query
                     .Skip(itemsToSkip)
                     .Take(pageSize)
@@ -651,7 +663,11 @@ namespace MOBY_API_Core6.Repository
             }
             query = query.Where(query => query.it.ItemEstimateValue <= dynamicFilterVM.maxUsable && query.it.ItemEstimateValue >= dynamicFilterVM.minUsable);
             int total = query.Count();
-            int page = total / pageSize;
+            int totalPage = total / pageSize;
+            if (total % pageSize != 0)
+            {
+                totalPage = totalPage + 1;
+            }
             listItemDynamicFilters = await query
                 .Skip(itemsToSkip)
                 .Take(pageSize)
