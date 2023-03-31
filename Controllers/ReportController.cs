@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
@@ -16,11 +17,14 @@ namespace MOBY_API_Core6.Controllers
             _reportRepository = reportRepository;
         }
 
+        [Authorize]
         [HttpPost("CreateReport")]
         public async Task<IActionResult> CreateReport([FromBody] CreateReportVM reportVM)
         {
             try
             {
+                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
+                reportVM.userID = userID;
                 bool checkCreate = false;
 #pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
                 if (reportVM.itemID != null)
@@ -59,6 +63,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("UpdateReport")]
         public async Task<IActionResult> UpdateReport([FromBody] UpdateReportVM reportVM)
         {
@@ -122,12 +127,33 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpGet("GetReport/Status")]
-        public async Task<IActionResult> GetAllReportByStatus(int status)
+        [HttpPatch("DeleteReport")]
+        public async Task<IActionResult> DeleteReport([FromBody] DeleteReportVM reportVM)
+        {
+            try
+            { 
+                bool checkDelete = await _reportRepository.DeleteReport(reportVM);
+                if (checkDelete)
+                {
+                    return Ok(ReturnMessage.create("đã hủy"));
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.errorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("GetAllReport")]
+        public async Task<IActionResult> GetAllReport(int pageNumber, int pageSize)
         {
             try
             {
-                List<ViewReport>? reports = await _reportRepository.GetAllReportByStatus(status);
+                List<ViewReport>? reports = await _reportRepository.GetAllReport(pageNumber, pageSize);
                 if (reports != null)
                 {
                     if (reports.Count != 0)
@@ -150,7 +176,100 @@ namespace MOBY_API_Core6.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
+        }
 
+        [HttpGet("GetReport/Status")]
+        public async Task<IActionResult> GetAllReportByStatus(int status, int pageNumber, int pageSize)
+        {
+            try
+            {
+                List<ViewReport>? reports = await _reportRepository.GetAllReportByStatus(status, pageNumber, pageSize);
+                if (reports != null)
+                {
+                    if (reports.Count != 0)
+                    {
+                        return Ok(reports);
+                    }
+                    else
+                    {
+                        return NotFound(ReturnMessage.create("không có report nào"));
+                    }
+                }
+                else
+                {
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.create(ReportRepository.errorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("GetAllReportByUser")]
+        public async Task<IActionResult> GetAllReportByUser(int pageNumber, int pageSize)
+        {
+            try
+            {
+                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
+                List<ViewReport>? reports = await _reportRepository.GetAllReportByUser(userID, pageNumber, pageSize);
+                if (reports != null)
+                {
+                    if (reports.Count != 0)
+                    {
+                        return Ok(reports);
+                    }
+                    else
+                    {
+                        return NotFound(ReturnMessage.create("không có report nào"));
+                    }
+                }
+                else
+                {
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.create(ReportRepository.errorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("GetAllReportByUserAndStatus")]
+        public async Task<IActionResult> GetAllReportByUserAndStatus(int status, int pageNumber, int pageSize)
+        {
+            try
+            {
+                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
+                List<ViewReport>? reports = await _reportRepository.GetAllReportByUserAndStatus(status, userID, pageNumber, pageSize);
+                if (reports != null)
+                {
+                    if (reports.Count != 0)
+                    {
+                        return Ok(reports);
+                    }
+                    else
+                    {
+                        return NotFound(ReturnMessage.create("không có report nào"));
+                    }
+                }
+                else
+                {
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.create(ReportRepository.errorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

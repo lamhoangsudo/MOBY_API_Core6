@@ -15,11 +15,11 @@ namespace MOBY_API_Core6.Data_View_Model
         public int replyID { get; set; }
         [DefaultValue(null)]
         public int blogID { get; set; }
-        [Required]
+        [ReadOnly(true)]
         public int userID { get; set; }
         [Required]
         public string? title { get; set; }
-        [DefaultValue(1)]
+        [DefaultValue(0)]
         public int status { get; set; }
         [Required]
         public string? content { get; set; }

@@ -21,8 +21,14 @@ namespace MOBY_API_Core6.Repository
 
         Task<bool> DenyReport(DenyReportVM reportVM);
 
-        Task<List<ViewReport>?> GetAllReportByStatus(int status);
+        Task<bool> DeleteReport(DeleteReportVM reportVM);
 
-        Task<List<ViewReport>?> GetAllReportByUserAndStatus(int status, int userid);
+        Task<List<ViewReport>?> GetAllReport(int pageNumber, int pageSize);
+
+        Task<List<ViewReport>?> GetAllReportByStatus(int status, int pageNumber, int pageSize);
+
+        Task<List<ViewReport>?> GetAllReportByUserAndStatus(int status, int userid, int pageNumber, int pageSize);
+
+        Task<List<ViewReport>?> GetAllReportByUser(int userid, int pageNumber, int pageSize);
     }
 }

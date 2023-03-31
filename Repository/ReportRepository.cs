@@ -427,13 +427,23 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-
-        public async Task<List<ViewReport>?> GetAllReportByStatus(int status)
+        public async Task<List<ViewReport>?> GetAllReport(int pageNumber, int pageSize)
         {
             try
             {
+                int itemsToSkip = (pageNumber - 1) * pageSize;
                 List<ViewReport> reports = new List<ViewReport>();
-                reports = await _context.ViewReports.Where(rp => rp.ReportStatus == status).ToListAsync();
+                var query = _context.ViewReports;
+                int total = query.Count();
+                int totalPage = total / pageSize;
+                if (total % pageSize != 0)
+                {
+                    totalPage = totalPage + 1;
+                }
+                reports = await query
+                    .Skip(itemsToSkip)
+                    .Take(pageSize)
+                    .ToListAsync();
                 return reports;
             }
             catch (Exception ex)
@@ -443,12 +453,23 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<ViewReport>?> GetAllReportByUserAndStatus(int status, int userid)
+        public async Task<List<ViewReport>?> GetAllReportByStatus(int status, int pageNumber, int pageSize)
         {
             try
             {
+                int itemsToSkip = (pageNumber - 1) * pageSize;
                 List<ViewReport> reports = new List<ViewReport>();
-                reports = await _context.ViewReports.Where(rp => rp.ReportStatus == status && rp.UserId == userid).ToListAsync();
+                var query = _context.ViewReports.Where(rp => rp.ReportStatus == status);
+                int total = query.Count();
+                int totalPage = total / pageSize;
+                if (total % pageSize != 0)
+                {
+                    totalPage = totalPage + 1;
+                }
+                reports = await query
+                    .Skip(itemsToSkip)
+                    .Take(pageSize)
+                    .ToListAsync();
                 return reports;
             }
             catch (Exception ex)
@@ -458,12 +479,49 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<ViewReport>?> GetAllReportByUser(int userid)
+        public async Task<List<ViewReport>?> GetAllReportByUserAndStatus(int status, int userid, int pageNumber, int pageSize)
         {
             try
             {
+                int itemsToSkip = (pageNumber - 1) * pageSize;
                 List<ViewReport> reports = new List<ViewReport>();
-                reports = await _context.ViewReports.Where(rp => rp.UserId == userid).ToListAsync();
+                var query = _context.ViewReports.Where(rp => rp.ReportStatus == status && rp.UserId == userid);
+                int total = query.Count();
+                int totalPage = total / pageSize;
+                if (total % pageSize != 0)
+                {
+                    totalPage = totalPage + 1;
+                }
+                reports = await query
+                    .Skip(itemsToSkip)
+                    .Take(pageSize)
+                    .ToListAsync();
+                return reports;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<List<ViewReport>?> GetAllReportByUser(int userid, int pageNumber, int pageSize)
+        {
+            try
+            {
+                int itemsToSkip = (pageNumber - 1) * pageSize;
+                List<ViewReport> reports = new List<ViewReport>();
+                var query = _context.ViewReports.Where(rp => rp.UserId == userid);
+                int total = query.Count();
+                int totalPage = total / pageSize;
+                if (total % pageSize != 0)
+                {
+                    totalPage = totalPage + 1;
+                }
+                reports = await query
+                    .Skip(itemsToSkip)
+                    .Take(pageSize)
+                    .ToListAsync();
                 return reports;
             }
             catch (Exception ex)
