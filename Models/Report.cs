@@ -12,9 +12,9 @@ namespace MOBY_API_Core6.Models
         public int? CommentId { get; set; }
         public int? ReplyId { get; set; }
         public int? BlogId { get; set; }
-        public string Description { get; set; } = null!;
+        public string Title { get; set; } = null!;
         public string Evident { get; set; } = null!;
-        public string? ReportContent { get; set; }
+        public string ReportContent { get; set; } = null!;
         public DateTime ReportDateCreate { get; set; }
         public DateTime? ReportDateResolve { get; set; }
         public int ReportStatus { get; set; }

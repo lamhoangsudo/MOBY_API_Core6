@@ -10,16 +10,40 @@ namespace MOBY_API_Core6.Controllers
     public class ReportController : ControllerBase
     {
         public readonly IReportRepository _reportRepository;
+
         public ReportController(IReportRepository reportRepository)
         {
             _reportRepository = reportRepository;
         }
-        [HttpPost("CreateItemReport")]
+
+        [HttpPost("CreateReport")]
         public async Task<IActionResult> CreateReport([FromBody] CreateReportVM reportVM)
         {
             try
             {
-                bool checkCreate = await _reportRepository.CreateItemReport(reportVM);
+                bool checkCreate = false;
+#pragma warning disable CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
+                if (reportVM.itemID != null)
+                {
+                    checkCreate = await _reportRepository.CreateItemReport(reportVM);
+                }
+                else if (reportVM.orderID != null)
+                {
+                    checkCreate = await _reportRepository.CreateOrderReport(reportVM);
+                }
+                else if (reportVM.commentID != null)
+                {
+                    checkCreate = await _reportRepository.CreateCommentReport(reportVM);
+                }
+                else if (reportVM.replyID != null)
+                {
+                    checkCreate = await _reportRepository.CreateReplyReport(reportVM);
+                }
+                else if (reportVM.blogID != null)
+                {
+                    checkCreate = await _reportRepository.CreateBlogReport(reportVM);
+                }
+#pragma warning restore CS0472 // The result of the expression is always the same since a value of this type is never equal to 'null'
                 if (checkCreate)
                 {
                     return Ok(ReturnMessage.create("đã tạo thành công"));
@@ -34,6 +58,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
         [HttpPut("UpdateReport")]
         public async Task<IActionResult> UpdateReport([FromBody] UpdateReportVM reportVM)
         {
@@ -54,6 +79,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
         [HttpPatch("ApprovedReport")]
         public async Task<IActionResult> ApprovedReport([FromBody] ApprovedReportVM reportVM)
         {
@@ -74,6 +100,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
         [HttpPatch("DenyReport")]
         public async Task<IActionResult> DenyReport([FromBody] DenyReportVM reportVM)
         {
@@ -94,7 +121,8 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        /*[HttpGet("GetReport/Status")]
+
+        [HttpGet("GetReport/Status")]
         public async Task<IActionResult> GetAllReportByStatus(int status)
         {
             try
@@ -117,13 +145,12 @@ namespace MOBY_API_Core6.Controllers
                     return BadRequest(ReturnMessage.create(ReportRepository.errorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
-
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
-        }*/
+        }
     }
 }

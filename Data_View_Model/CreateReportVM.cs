@@ -17,6 +17,8 @@ namespace MOBY_API_Core6.Data_View_Model
         public int blogID { get; set; }
         [Required]
         public int userID { get; set; }
+        [Required]
+        public string? title { get; set; }
         [DefaultValue(1)]
         public int status { get; set; }
         [Required]

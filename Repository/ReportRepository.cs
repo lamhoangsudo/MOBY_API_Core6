@@ -25,9 +25,14 @@ namespace MOBY_API_Core6.Repository
                     report.ReportDateCreate = dateTimeCreate;
                     report.ItemId = reportVM.itemID;
                     report.UserId = reportVM.userID;
+#pragma warning disable CS8601 // Possible null reference assignment.
+                    report.Title = reportVM.title;
+#pragma warning restore CS8601 // Possible null reference assignment.
                     report.ReportStatus = reportVM.status;
+#pragma warning disable CS8601 // Possible null reference assignment.
                     report.ReportContent = reportVM.content;
                     report.Evident = reportVM.image;
+#pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
                     return true;
@@ -58,9 +63,12 @@ namespace MOBY_API_Core6.Repository
                     report.ReportDateCreate = dateTimeCreate;
                     report.ItemId = reportVM.itemID;
                     report.UserId = reportVM.userID;
-                    report.ReportStatus = reportVM.status;
-                    report.ReportContent = reportVM.content;
 #pragma warning disable CS8601 // Possible null reference assignment.
+                    report.Title = reportVM.title;
+#pragma warning restore CS8601 // Possible null reference assignment.
+                    report.ReportStatus = reportVM.status;
+#pragma warning disable CS8601 // Possible null reference assignment.
+                    report.ReportContent = reportVM.content;
                     report.Evident = reportVM.image;
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
@@ -93,9 +101,12 @@ namespace MOBY_API_Core6.Repository
                     report.ReportDateCreate = dateTimeCreate;
                     report.CommentId = reportVM.commentID;
                     report.UserId = reportVM.userID;
-                    report.ReportStatus = reportVM.status;
-                    report.ReportContent = reportVM.content;
 #pragma warning disable CS8601 // Possible null reference assignment.
+                    report.Title = reportVM.title;
+#pragma warning restore CS8601 // Possible null reference assignment.
+                    report.ReportStatus = reportVM.status;
+#pragma warning disable CS8601 // Possible null reference assignment.
+                    report.ReportContent = reportVM.content;
                     report.Evident = reportVM.image;
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
@@ -128,9 +139,12 @@ namespace MOBY_API_Core6.Repository
                     report.ReportDateCreate = dateTimeCreate;
                     report.ReplyId = reportVM.replyID;
                     report.UserId = reportVM.userID;
-                    report.ReportStatus = reportVM.status;
-                    report.ReportContent = reportVM.content;
 #pragma warning disable CS8601 // Possible null reference assignment.
+                    report.Title = reportVM.title;
+#pragma warning restore CS8601 // Possible null reference assignment.
+                    report.ReportStatus = reportVM.status;
+#pragma warning disable CS8601 // Possible null reference assignment.
+                    report.ReportContent = reportVM.content;
                     report.Evident = reportVM.image;
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
@@ -163,9 +177,12 @@ namespace MOBY_API_Core6.Repository
                     report.ReportDateCreate = dateTimeCreate;
                     report.BlogId = reportVM.blogID;
                     report.UserId = reportVM.userID;
-                    report.ReportStatus = reportVM.status;
-                    report.ReportContent = reportVM.content;
 #pragma warning disable CS8601 // Possible null reference assignment.
+                    report.Title = reportVM.title;
+#pragma warning restore CS8601 // Possible null reference assignment.
+                    report.ReportStatus = reportVM.status;
+#pragma warning disable CS8601 // Possible null reference assignment.
+                    report.ReportContent = reportVM.content;
                     report.Evident = reportVM.image;
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
@@ -199,8 +216,12 @@ namespace MOBY_API_Core6.Repository
                     {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                         UserAccount userAccount = await query
-                            .Join(_context.Items, ua => ua.UserId, it => it.UserId, (ua, it) => new { ua, it })
-                            .Where(uait => uait.it.ItemId == report.ItemId && uait.ua.UserStatus == true && uait.ua.Reputation != 0)
+                            .Join(_context.Items, ua => ua.UserId, 
+                            it => it.UserId, 
+                            (ua, it) => new { ua, it })
+                            .Where(uait => uait.it.ItemId == report.ItemId 
+                            && uait.ua.UserStatus == true 
+                            && uait.ua.Reputation != 0)
                             .Select(uait => uait.ua)
                             .FirstOrDefaultAsync();
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable ty
@@ -217,10 +238,21 @@ namespace MOBY_API_Core6.Repository
                     {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                         UserAccount userAccount = await query
-                            .Join(_context.Items, ua => ua.UserId, it => it.UserId, (ua, it) => new { ua, it })
-                            .Join(_context.OrderDetails, uait => uait.it.ItemId, ord => ord.ItemId, (uait, ord) => new { uait, ord })
-                            .Join(_context.Orders, uaitord => uaitord.ord.OrderId, or => or.OrderId, (uaitord, or) => new { uaitord, or })
-                            .Where(uaitordor => uaitordor.or.OrderId == report.OrderId && uaitordor.or.Status != 0 && uaitordor.uaitord.uait.ua.UserStatus == true && uaitordor.uaitord.uait.ua.Reputation != 0)
+                            .Join(_context.Items, ua => ua.UserId, 
+                            it => it.UserId, 
+                            (ua, it) => new { ua, it })
+                            .Join(_context.OrderDetails, 
+                            uait => uait.it.ItemId, 
+                            ord => ord.ItemId, 
+                            (uait, ord) => new { uait, ord })
+                            .Join(_context.Orders, 
+                            uaitord => uaitord.ord.OrderId, 
+                            or => or.OrderId, 
+                            (uaitord, or) => new { uaitord, or })
+                            .Where(uaitordor => uaitordor.or.OrderId == report.OrderId 
+                            && uaitordor.or.Status != 0 
+                            && uaitordor.uaitord.uait.ua.UserStatus == true 
+                            && uaitordor.uaitord.uait.ua.Reputation != 0)
                             .Select(uaitordor => uaitordor.uaitord.uait.ua)
                             .FirstOrDefaultAsync();
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
@@ -238,7 +270,9 @@ namespace MOBY_API_Core6.Repository
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                         UserAccount userAccount = await query
                             .Join(_context.Blogs, ua => ua.UserId, bg => bg.UserId, (ua, bg) => new { ua, bg })
-                            .Where(uabg => uabg.bg.BlogId == report.BlogId && uabg.ua.UserStatus == true && uabg.ua.Reputation != 0)
+                            .Where(uabg => uabg.bg.BlogId == report.BlogId 
+                            && uabg.ua.UserStatus == true 
+                            && uabg.ua.Reputation != 0)
                             .Select(uabg => uabg.ua)
                             .FirstOrDefaultAsync();
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
@@ -255,8 +289,13 @@ namespace MOBY_API_Core6.Repository
                     {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                         UserAccount userAccount = await query
-                            .Join(_context.Comments, ua => ua.UserId, cm => cm.UserId, (ua, cm) => new { ua, cm })
-                            .Where(uacm => uacm.cm.CommentId == report.CommentId && uacm.ua.UserStatus == true && uacm.ua.Reputation != 0)
+                            .Join(_context.Comments, 
+                            ua => ua.UserId, 
+                            cm => cm.UserId, 
+                            (ua, cm) => new { ua, cm })
+                            .Where(uacm => uacm.cm.CommentId == report.CommentId 
+                            && uacm.ua.UserStatus == true 
+                            && uacm.ua.Reputation != 0)
                             .Select(uacm => uacm.ua)
                             .FirstOrDefaultAsync();
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
@@ -273,8 +312,13 @@ namespace MOBY_API_Core6.Repository
                     {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                         UserAccount userAccount = await query
-                            .Join(_context.Replies, ua => ua.UserId, rp => rp.UserId, (ua, rp) => new { ua, rp })
-                            .Where(uarp => uarp.rp.ReplyId == report.ReportId && uarp.ua.UserStatus == true && uarp.ua.Reputation != 0)
+                            .Join(_context.Replies, 
+                            ua => ua.UserId, 
+                            rp => rp.UserId, 
+                            (ua, rp) => new { ua, rp })
+                            .Where(uarp => uarp.rp.ReplyId == report.ReportId 
+                            && uarp.ua.UserStatus == true 
+                            && uarp.ua.Reputation != 0)
                             .Select(uarp => uarp.ua)
                             .FirstOrDefaultAsync();
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
@@ -312,6 +356,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     report.ReportDateResolve = DateTime.Now;
                     report.ReportStatus = reportVM.isDeny;
+                    report.ReasonDeny = reportVM.reason;
                     await _context.SaveChangesAsync();
                     return true;
                 }
@@ -336,8 +381,9 @@ namespace MOBY_API_Core6.Repository
                 if (report != null)
                 {
                     report.ReportDateResolve = DateTime.Now;
-                    report.ReportContent = reportVM.content;
 #pragma warning disable CS8601 // Possible null reference assignment.
+                    report.ReportContent = reportVM.content;
+                    report.Title = reportVM.title;
                     report.Evident = reportVM.image;
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.SaveChangesAsync();
@@ -382,8 +428,7 @@ namespace MOBY_API_Core6.Repository
         }
 
 
-
-        /*public async Task<List<ViewReport>?> GetAllReportByStatus(int status)
+        public async Task<List<ViewReport>?> GetAllReportByStatus(int status)
         {
             try
             {
@@ -426,6 +471,6 @@ namespace MOBY_API_Core6.Repository
                 errorMessage = ex.Message;
                 return null;
             }
-        }*/
+        }
     }
 }

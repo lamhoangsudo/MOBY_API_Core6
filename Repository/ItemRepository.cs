@@ -67,7 +67,6 @@ namespace MOBY_API_Core6.Repository
                         ItemEstimateValue = itemVM.itemEstimateValue,
                         ItemSalePrice = itemVM.itemSalePrice,
                         ItemShareAmount = itemVM.itemShareAmount,
-                        ItemSponsoredOrderShippingFee = itemVM.itemSponsoredOrderShippingFee,
                         ItemExpiredTime = dateTimeExpired,
                         ItemShippingAddress = itemVM.itemShippingAddress,
                         ItemDateCreated = dateTimeCreate,
@@ -373,7 +372,6 @@ namespace MOBY_API_Core6.Repository
                     currentItem.ItemEstimateValue = itemVM.itemEstimateValue;
                     currentItem.ItemSalePrice = itemVM.itemSalePrice;
                     currentItem.ItemShareAmount = itemVM.itemShareAmount;
-                    currentItem.ItemSponsoredOrderShippingFee = itemVM.itemSponsoredOrderShippingFee;
                     currentItem.ItemShippingAddress = itemVM.itemShippingAddress;
                     currentItem.Image = itemVM.image;
                     currentItem.ItemExpiredTime = dateTimeExpired;

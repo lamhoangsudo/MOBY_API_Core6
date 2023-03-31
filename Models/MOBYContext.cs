@@ -38,6 +38,7 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<UserAccount> UserAccounts { get; set; } = null!;
         public virtual DbSet<UserAddress> UserAddresses { get; set; } = null!;
         public virtual DbSet<ViewBlog> ViewBlogs { get; set; } = null!;
+        public virtual DbSet<ViewReport> ViewReports { get; set; } = null!;
         public virtual DbSet<ViewReportBlog> ViewReportBlogs { get; set; } = null!;
         public virtual DbSet<ViewReportComment> ViewReportComments { get; set; } = null!;
         public virtual DbSet<ViewReportItem> ViewReportItems { get; set; } = null!;
@@ -250,8 +251,6 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemSize).HasColumnName("Item_Size");
 
-                entity.Property(e => e.ItemSponsoredOrderShippingFee).HasColumnName("Item_Sponsored_Order_Shipping_Fee");
-
                 entity.Property(e => e.ItemStatus).HasColumnName("Item_Status");
 
                 entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
@@ -292,8 +291,6 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.ItemShareAmount).HasColumnName("Item_Share_Amount");
 
                 entity.Property(e => e.ItemShippingAddress).HasColumnName("Item_Shipping_Address");
-
-                entity.Property(e => e.ItemSponsoredOrderShippingFee).HasColumnName("Item_Sponsored_Order_Shipping_Fee");
 
                 entity.Property(e => e.ItemStatus).HasColumnName("Item_Status");
 
@@ -341,8 +338,6 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.ItemShippingAddress).HasColumnName("Item_Shipping_Address");
 
                 entity.Property(e => e.ItemSize).HasColumnName("Item_Size");
-
-                entity.Property(e => e.ItemSponsoredOrderShippingFee).HasColumnName("Item_Sponsored_Order_Shipping_Fee");
 
                 entity.Property(e => e.ItemStatus).HasColumnName("Item_Status");
 
@@ -455,6 +450,8 @@ namespace MOBY_API_Core6.Models
                     .HasColumnName("Report_Date_Resolve");
 
                 entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
+
+                entity.Property(e => e.Title).HasMaxLength(100);
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -645,6 +642,29 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.BlogStatus).HasColumnName("Blog_Status");
 
                 entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserName).HasColumnName("User_Name");
+            });
+
+            modelBuilder.Entity<ViewReport>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("ViewReport");
+
+                entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
+
+                entity.Property(e => e.ReportDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Create");
+
+                entity.Property(e => e.ReportId).HasColumnName("ReportID");
+
+                entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
+
+                entity.Property(e => e.Title).HasMaxLength(100);
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 

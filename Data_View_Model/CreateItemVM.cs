@@ -25,8 +25,6 @@ namespace MOBY_API_Core6.Data_View_Model
         public double itemSalePrice { get; set; }
         [DefaultValue(1)]
         public int itemShareAmount { get; set; }
-        [DefaultValue(null)]
-        public bool? itemSponsoredOrderShippingFee { get; set; }
         [Required]
         public string itemShippingAddress { get; set; }
         [Required]
@@ -36,7 +34,7 @@ namespace MOBY_API_Core6.Data_View_Model
         [DefaultValue(true)]
         public bool share { get; set; }
 
-        public CreateItemVM(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string? itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, bool? itemSponsoredOrderShippingFee, string itemShippingAddress, string image, string? stringDateTimeExpired, bool share)
+        public CreateItemVM(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string? itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, string itemShippingAddress, string image, string? stringDateTimeExpired, bool share)
         {
             this.userId = userId;
             this.subCategoryId = subCategoryId;
@@ -48,7 +46,6 @@ namespace MOBY_API_Core6.Data_View_Model
             this.itemEstimateValue = itemEstimateValue;
             this.itemSalePrice = itemSalePrice;
             this.itemShareAmount = itemShareAmount;
-            this.itemSponsoredOrderShippingFee = itemSponsoredOrderShippingFee;
             this.itemShippingAddress = itemShippingAddress;
             this.image = image;
             this.stringDateTimeExpired = stringDateTimeExpired;
