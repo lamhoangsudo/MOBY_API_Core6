@@ -26,12 +26,13 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpGet]
         [Route("api/useraccount/item/request/sharer")]
-        public async Task<IActionResult> GetAllRequestBySharerID()
+        public async Task<IActionResult> GetAllRequestBySharerID([FromQuery] RequestStatusVM requestStatus)
         {
             try
             {
+
                 int uid = await userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<RequestVM> requestDetailOf1ItemList = await requestRepository.getRequestBySharerID(uid);
+                List<RequestVM> requestDetailOf1ItemList = await requestRepository.getRequestBySharerID(uid, requestStatus.requestStatus);
                 /*List<int> itemIDList = await itemDAO.getListItemIDByUserID(uid);
                 List<RequestVM> result = new List<RequestVM>();
                 foreach (int itemID in itemIDList)
@@ -54,14 +55,14 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpGet]
         [Route("api/useraccount/request/reciever")]
-        public async Task<IActionResult> GetAllRequestByUserid()
+        public async Task<IActionResult> GetAllRequestByUserid([FromQuery] RequestStatusVM requestStatus)
         {
             try
             {
                 int uid = await userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
 
 
-                List<RequestVM> ListRequest = await requestRepository.getRequestByRecieverID(uid);
+                List<RequestVM> ListRequest = await requestRepository.getRequestByRecieverID(uid, requestStatus.requestStatus);
 
                 return Ok(ListRequest);
             }
@@ -98,7 +99,7 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpPatch]
+        [HttpPost]
         [Route("api/request/confirm")]
         public async Task<IActionResult> ConfirmRequest([FromBody] RequestConfirmVM requestConfirmVM)
         {
@@ -130,19 +131,10 @@ namespace MOBY_API_Core6.Controllers
                         requestDetailRepository.DenyRequestDetail(requestDetail);
                     }
                 }
-
+                foundRequest.DateChangeStatus = DateTime.Now;
+                foundRequest.Status = 1;
                 await requestRepository.SaveRequest();
-                String note;
-                if (foundRequest.Note == null)
-                {
-                    note = "";
-                }
-                else
-                {
-                    note = foundRequest.Note;
-                }
-
-                if (await orderRepository.CreateOrder(foundRequest.UserId, foundRequest.Address, note, acceptedRequestDetail))
+                if (await orderRepository.CreateOrder(foundRequest.UserId, foundRequest.Address, foundRequest.Note, acceptedRequestDetail))
                 {
                     return Ok(ReturnMessage.create("success"));
                 }
@@ -155,6 +147,32 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost]
+        [Route("api/request/deny")]
+        public async Task<IActionResult> DenyRequest([FromBody] RequestIDVM requestIDVM)
+        {
 
+            try
+            {
+
+                Request? foundRequest = await requestRepository.getRequestByRequestID(requestIDVM.RequestId);
+                if (foundRequest == null)
+                {
+                    return BadRequest(ReturnMessage.create("error at request not found"));
+                }
+                if (await requestRepository.DenyRequest(foundRequest))
+                {
+                    return Ok(ReturnMessage.create("success"));
+                }
+                return BadRequest(ReturnMessage.create("error at DenyRequest"));
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }
