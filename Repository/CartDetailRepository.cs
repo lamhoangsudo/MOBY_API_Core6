@@ -153,6 +153,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
             String? address;
+            String? note = cartDetailIDList.note;
             if (cartDetailIDList.address == null || cartDetailIDList.address == "")
             {
                 address = await context.Carts.Where(c => c.UserId == uid)
@@ -196,6 +197,7 @@ namespace MOBY_API_Core6.Repository
                 Request newRequest = new Request();
                 newRequest.UserId = uid;
                 newRequest.Address = address;
+                newRequest.Note = note;
                 newRequest.Note = cartDetailIDList.note;
                 newRequest.DateCreate = DateTime.Now;
                 newRequest.Status = 0;

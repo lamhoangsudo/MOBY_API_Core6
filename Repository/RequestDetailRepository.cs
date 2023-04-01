@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
 namespace MOBY_API_Core6.Repository
@@ -12,8 +13,32 @@ namespace MOBY_API_Core6.Repository
         public RequestDetailRepository(MOBYContext context)
         {
             this.context = context;
+        }
 
 
+        public async Task<List<RequestDetailVM>> getRequestDetailBySharerID(int uid, int status)
+        {
+            List<RequestDetailVM>? listRequestDetail = await context.RequestDetails
+                .Include(rd => rd.Item)
+                .ThenInclude(i => i.User)
+                .Where(rd => rd.Item.UserId == uid && rd.Status == status)
+                .Select(rd => RequestDetailVM.RequestDetailToVewModel(rd))
+                .ToListAsync();
+
+            return listRequestDetail;
+        }
+
+        public async Task<List<RequestDetailVM>> getRequestDetailByRecieverID(int uid, int status)
+        {
+            List<RequestDetailVM>? listRequestDetail = await context.RequestDetails
+                .Include(rd => rd.Request)
+                .Include(rd => rd.Item)
+                .ThenInclude(i => i.User)
+                .Where(rd => rd.Request.UserId == uid && rd.Status == status)
+                .Select(rd => RequestDetailVM.RequestDetailToVewModelIncludeIntemOwner(rd))
+                .ToListAsync();
+
+            return listRequestDetail;
         }
 
         public bool AcceptRequestDetail(RequestDetail requestDetail)
@@ -52,7 +77,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
             List<RequestDetail> requestDetails = await context.RequestDetails
-                .Where(rd => rd.ItemId == currentItem.ItemId).ToListAsync();
+                .Where(rd => rd.ItemId == currentItem.ItemId && rd.Status == 0).ToListAsync();
 
             if (requestDetails == null || requestDetails.Count == 0)
             {
@@ -60,14 +85,11 @@ namespace MOBY_API_Core6.Repository
             }
             foreach (RequestDetail rd in requestDetails)
             {
-                if (!currentItem.ItemStatus || currentItem.ItemShareAmount == 0)
+                if (!currentItem.ItemStatus || currentItem.ItemShareAmount == 0 || rd.Quantity > currentItem.ItemShareAmount)
                 {
                     rd.Status = 2;
                 }
-                if (rd.Quantity > currentItem.ItemShareAmount)
-                {
-                    rd.Status = 2;
-                }
+
             }
 
 
