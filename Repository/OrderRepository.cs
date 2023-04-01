@@ -13,7 +13,7 @@ namespace MOBY_API_Core6.Repository
             this.context = context;
         }
 
-        public async Task<bool> CreateOrder(int uid, String Address, String note, List<RequestDetail> accteptedRequestDetail)
+        public async Task<bool> CreateOrder(int uid, String Address, String? note, List<RequestDetail> accteptedRequestDetail)
         {
 
             Order newOrder = new Order();

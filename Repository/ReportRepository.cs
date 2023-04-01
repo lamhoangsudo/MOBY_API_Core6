@@ -402,7 +402,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<bool> DeleteReport(DeleteReport reportVM)
+        public async Task<bool> DeleteReport(DeleteReportVM reportVM)
         {
             try
             {

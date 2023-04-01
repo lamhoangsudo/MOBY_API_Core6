@@ -19,14 +19,14 @@ namespace MOBY_API_Core6.Repository
 
         }
 
-        public async Task<List<RequestVM>> getRequestBySharerID(int uid)
+        public async Task<List<RequestVM>> getRequestBySharerID(int uid, int status)
         {
             List<RequestVM> requests = await context.Requests
                 .Include(r => r.User)
                     .Include(r => r.RequestDetails)
                     .ThenInclude(rd => rd.Item)
                     .ThenInclude(i => i.User)
-                    .Where(r => r.RequestDetails.Any(rd => rd.Item.UserId == uid))
+                    .Where(r => r.Status == status && r.RequestDetails.Any(rd => rd.Item.UserId == uid))
                     .Select(r => RequestVM.RequestToVewModel(r))
                     .ToListAsync();
             /*List<RequestVM> requests = await context.Requests
@@ -42,10 +42,10 @@ namespace MOBY_API_Core6.Repository
             return requests;
         }
 
-        public async Task<List<RequestVM>> getRequestByRecieverID(int userid)
+        public async Task<List<RequestVM>> getRequestByRecieverID(int uid, int status)
         {
             List<RequestVM> requests = await context.Requests
-                .Where(r => r.UserId == userid)
+                .Where(r => r.UserId == uid && r.Status == status)
                 .Include(r => r.User)
                 .Include(r => r.RequestDetails)
                 .ThenInclude(rd => rd.Item)
@@ -77,6 +77,12 @@ namespace MOBY_API_Core6.Repository
                 .FirstOrDefaultAsync();
 
             return requests;
+        }
+        public async Task<bool> DenyRequest(Request request)
+        {
+            request.Status = 2;
+            await context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<bool> SaveRequest()
