@@ -4,7 +4,7 @@
     {
         public int? categoryId { get; set; }
         public int? userId { get; set; }
-
+        public string? tittle { get; set; }
         public int? BlogId { get; set; }
     }
 }
