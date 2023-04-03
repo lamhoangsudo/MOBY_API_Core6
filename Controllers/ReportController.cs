@@ -54,7 +54,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.errorMessage);
+                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.ErrorMessage);
                 }
             }
             catch (Exception ex)
@@ -76,7 +76,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.errorMessage);
+                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.ErrorMessage);
                 }
             }
             catch (Exception ex)
@@ -97,7 +97,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.errorMessage);
+                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.ErrorMessage);
                 }
             }
             catch (Exception ex)
@@ -118,7 +118,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.errorMessage);
+                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.ErrorMessage);
                 }
             }
             catch (Exception ex)
@@ -139,7 +139,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.errorMessage);
+                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.ErrorMessage);
                 }
             }
             catch (Exception ex)
@@ -168,7 +168,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(ReportRepository.errorMessage));
+                    return BadRequest(ReturnMessage.create(ReportRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -198,7 +198,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(ReportRepository.errorMessage));
+                    return BadRequest(ReturnMessage.create(ReportRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -230,7 +230,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(ReportRepository.errorMessage));
+                    return BadRequest(ReturnMessage.create(ReportRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -262,7 +262,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(ReportRepository.errorMessage));
+                    return BadRequest(ReturnMessage.create(ReportRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }

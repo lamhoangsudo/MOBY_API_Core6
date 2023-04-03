@@ -37,7 +37,7 @@ namespace MOBY_API_Core6.Repository
 
         Task<List<BriefItem>?> GetAllShareNearYou(string location, int pageNumber, int pageSize, int userID);
 
-        Task<List<BriefItem>?> GetItemDynamicFilters(int pageNumber, int pageSize, DynamicFilterVM dynamicFilterVM);
+        Task<ListVM?> GetItemDynamicFilters(DynamicFilterVM dynamicFilterVM);
 
         Task<List<BriefItem>?> GetListAllOtherPersonRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize);
 

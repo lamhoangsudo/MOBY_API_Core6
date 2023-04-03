@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace MOBY_API_Core6.Data_View_Model
 {
@@ -20,5 +21,9 @@ namespace MOBY_API_Core6.Data_View_Model
         public double minUsable { get; set; }
         [DefaultValue(null)]
         public bool? share { get; set; }
+        [Required]
+        public int pageNumber { get; set; }
+        [Required]
+        public int pageSize { get; set; }
     }
 }

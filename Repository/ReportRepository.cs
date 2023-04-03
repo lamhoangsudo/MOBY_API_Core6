@@ -6,8 +6,10 @@ namespace MOBY_API_Core6.Repository
 {
     public class ReportRepository : IReportRepository
     {
-        public static string? errorMessage;
         private readonly MOBYContext _context;
+
+        public static string? ErrorMessage { get; set; }
+
         public ReportRepository(MOBYContext context)
         {
             _context = context;
@@ -21,17 +23,19 @@ namespace MOBY_API_Core6.Repository
                 if (checkItem == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
-                    Report report = new Report();
-                    report.ReportDateCreate = dateTimeCreate;
-                    report.ItemId = reportVM.itemID;
-                    report.UserId = reportVM.userID;
+                    Report report = new()
+                    {
+                        ReportDateCreate = dateTimeCreate,
+                        ItemId = reportVM.itemID,
+                        UserId = reportVM.userID,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    report.Title = reportVM.title;
+                        Title = reportVM.title,
 #pragma warning restore CS8601 // Possible null reference assignment.
-                    report.ReportStatus = reportVM.status;
+                        ReportStatus = reportVM.status,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    report.ReportContent = reportVM.content;
-                    report.Evident = reportVM.image;
+                        ReportContent = reportVM.content,
+                        Evident = reportVM.image
+                    };
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
@@ -39,13 +43,13 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    errorMessage = "sản phẩm này không có tồn tại";
+                    ErrorMessage = "sản phẩm này không có tồn tại";
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -59,17 +63,19 @@ namespace MOBY_API_Core6.Repository
                 if (checkOrder == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
-                    Report report = new Report();
-                    report.ReportDateCreate = dateTimeCreate;
-                    report.ItemId = reportVM.itemID;
-                    report.UserId = reportVM.userID;
+                    Report report = new()
+                    {
+                        ReportDateCreate = dateTimeCreate,
+                        ItemId = reportVM.itemID,
+                        UserId = reportVM.userID,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    report.Title = reportVM.title;
+                        Title = reportVM.title,
 #pragma warning restore CS8601 // Possible null reference assignment.
-                    report.ReportStatus = reportVM.status;
+                        ReportStatus = reportVM.status,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    report.ReportContent = reportVM.content;
-                    report.Evident = reportVM.image;
+                        ReportContent = reportVM.content,
+                        Evident = reportVM.image
+                    };
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
@@ -77,13 +83,13 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    errorMessage = "sản phẩm này không có tồn tại";
+                    ErrorMessage = "sản phẩm này không có tồn tại";
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -97,17 +103,19 @@ namespace MOBY_API_Core6.Repository
                 if (checkComment == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
-                    Report report = new Report();
-                    report.ReportDateCreate = dateTimeCreate;
-                    report.CommentId = reportVM.commentID;
-                    report.UserId = reportVM.userID;
+                    Report report = new()
+                    {
+                        ReportDateCreate = dateTimeCreate,
+                        CommentId = reportVM.commentID,
+                        UserId = reportVM.userID,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    report.Title = reportVM.title;
+                        Title = reportVM.title,
 #pragma warning restore CS8601 // Possible null reference assignment.
-                    report.ReportStatus = reportVM.status;
+                        ReportStatus = reportVM.status,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    report.ReportContent = reportVM.content;
-                    report.Evident = reportVM.image;
+                        ReportContent = reportVM.content,
+                        Evident = reportVM.image
+                    };
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
@@ -115,13 +123,13 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    errorMessage = "sản phẩm này không có tồn tại";
+                    ErrorMessage = "sản phẩm này không có tồn tại";
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -135,17 +143,19 @@ namespace MOBY_API_Core6.Repository
                 if (checkReply == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
-                    Report report = new Report();
-                    report.ReportDateCreate = dateTimeCreate;
-                    report.ReplyId = reportVM.replyID;
-                    report.UserId = reportVM.userID;
+                    Report report = new()
+                    {
+                        ReportDateCreate = dateTimeCreate,
+                        ReplyId = reportVM.replyID,
+                        UserId = reportVM.userID,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    report.Title = reportVM.title;
+                        Title = reportVM.title,
 #pragma warning restore CS8601 // Possible null reference assignment.
-                    report.ReportStatus = reportVM.status;
+                        ReportStatus = reportVM.status,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    report.ReportContent = reportVM.content;
-                    report.Evident = reportVM.image;
+                        ReportContent = reportVM.content,
+                        Evident = reportVM.image
+                    };
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
@@ -153,13 +163,13 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    errorMessage = "sản phẩm này không có tồn tại";
+                    ErrorMessage = "sản phẩm này không có tồn tại";
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -173,17 +183,19 @@ namespace MOBY_API_Core6.Repository
                 if (checkBlog == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
-                    Report report = new Report();
-                    report.ReportDateCreate = dateTimeCreate;
-                    report.BlogId = reportVM.blogID;
-                    report.UserId = reportVM.userID;
+                    Report report = new()
+                    {
+                        ReportDateCreate = dateTimeCreate,
+                        BlogId = reportVM.blogID,
+                        UserId = reportVM.userID,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    report.Title = reportVM.title;
+                        Title = reportVM.title,
 #pragma warning restore CS8601 // Possible null reference assignment.
-                    report.ReportStatus = reportVM.status;
+                        ReportStatus = reportVM.status,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    report.ReportContent = reportVM.content;
-                    report.Evident = reportVM.image;
+                        ReportContent = reportVM.content,
+                        Evident = reportVM.image
+                    };
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
@@ -191,13 +203,13 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    errorMessage = "sản phẩm này không có tồn tại";
+                    ErrorMessage = "sản phẩm này không có tồn tại";
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -206,32 +218,41 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
+                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.ReportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
                 if (report != null)
                 {
                     report.ReportDateResolve = DateTime.Now;
-                    report.ReportStatus = reportVM.isApproved;
+                    report.ReportStatus = reportVM.IsApproved;
                     var query = _context.UserAccounts;
                     if (report.ItemId != null)
                     {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                         UserAccount userAccount = await query
-                            .Join(_context.Items, ua => ua.UserId, 
-                            it => it.UserId, 
+                            .Join(_context.Items, ua => ua.UserId,
+                            it => it.UserId,
                             (ua, it) => new { ua, it })
-                            .Where(uait => uait.it.ItemId == report.ItemId 
-                            && uait.ua.UserStatus == true 
+                            .Where(uait => uait.it.ItemId == report.ItemId
+                            && uait.ua.UserStatus == true
                             && uait.ua.Reputation != 0)
                             .Select(uait => uait.ua)
                             .FirstOrDefaultAsync();
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable ty
                         if (userAccount != null)
                         {
-                            userAccount.Reputation = userAccount.Reputation - 10;
+                            userAccount.Reputation -= 10;
                             if (userAccount.Reputation < 0)
                             {
                                 userAccount.Reputation = 0;
                             }
+                        }
+                        Models.Item? item = await _context.Items.Where(it => it.ItemId == report.ItemId).FirstOrDefaultAsync();
+                        if (item != null && item.ItemStatus == true)
+                        {
+                            item.ItemStatus = false;
+                        }
+                        else
+                        {
+                            ErrorMessage = "sản phẩm này đã bị xóa";
                         }
                     }
                     else if (report.OrderId != null)
@@ -258,11 +279,20 @@ namespace MOBY_API_Core6.Repository
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                         if (userAccount != null)
                         {
-                            userAccount.Reputation = userAccount.Reputation - 10;
+                            userAccount.Reputation -= 10;
                             if (userAccount.Reputation < 0)
                             {
                                 userAccount.Reputation = 0;
                             }
+                        }
+                        Order? order = await _context.Orders.Where(or => or.OrderId == report.OrderId).FirstOrDefaultAsync();
+                        if (order != null && order.Status != 0)
+                        {
+                            order.Status = 3;
+                        }
+                        else
+                        {
+                            ErrorMessage = "Đơn hàng này đã bị hủy";
                         }
                     }
                     else if (report.BlogId != null)
@@ -278,11 +308,20 @@ namespace MOBY_API_Core6.Repository
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                         if (userAccount != null)
                         {
-                            userAccount.Reputation = userAccount.Reputation - 10;
+                            userAccount.Reputation -= 10;
                             if (userAccount.Reputation < 0)
                             {
                                 userAccount.Reputation = 0;
                             }
+                        }
+                        Blog? blog = await _context.Blogs.Where(bg => bg.BlogId == report.BlogId).FirstOrDefaultAsync();
+                        if (blog != null && blog.BlogStatus == 0)
+                        {
+                            blog.BlogStatus = 0;
+                        }
+                        else
+                        {
+                            ErrorMessage = "bài blog này đã bị xóa";
                         }
                     }
                     else if (report.CommentId != null)
@@ -301,7 +340,7 @@ namespace MOBY_API_Core6.Repository
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                         if (userAccount != null)
                         {
-                            userAccount.Reputation = userAccount.Reputation - 10;
+                            userAccount.Reputation -= 10;
                             if (userAccount.Reputation < 0)
                             {
                                 userAccount.Reputation = 0;
@@ -324,7 +363,7 @@ namespace MOBY_API_Core6.Repository
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                         if (userAccount != null)
                         {
-                            userAccount.Reputation = userAccount.Reputation - 10;
+                            userAccount.Reputation -= 10;
                             if (userAccount.Reputation < 0)
                             {
                                 userAccount.Reputation = 0;
@@ -336,13 +375,13 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    errorMessage = "report này không tồn tại";
+                    ErrorMessage = "report này không tồn tại";
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -362,13 +401,13 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    errorMessage = "report này không tồn tại";
+                    ErrorMessage = "report này không tồn tại";
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -391,13 +430,13 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    errorMessage = "report này không có tồn tại";
+                    ErrorMessage = "report này không có tồn tại";
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -416,13 +455,13 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    errorMessage = "report này không tồn tại";
+                    ErrorMessage = "report này không tồn tại";
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -432,13 +471,13 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<ViewReport> reports = new List<ViewReport>();
+                List<ViewReport> reports = new();
                 var query = _context.ViewReports;
                 int total = query.Count();
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)
                 {
-                    totalPage = totalPage + 1;
+                    ++totalPage;
                 }
                 reports = await query
                     .Skip(itemsToSkip)
@@ -448,7 +487,7 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -458,13 +497,13 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<ViewReport> reports = new List<ViewReport>();
+                List<ViewReport> reports = new();
                 var query = _context.ViewReports.Where(rp => rp.ReportStatus == status);
                 int total = query.Count();
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)
                 {
-                    totalPage = totalPage + 1;
+                    ++totalPage;
                 }
                 reports = await query
                     .Skip(itemsToSkip)
@@ -474,7 +513,7 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -484,13 +523,13 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<ViewReport> reports = new List<ViewReport>();
+                List<ViewReport> reports = new();
                 var query = _context.ViewReports.Where(rp => rp.ReportStatus == status && rp.UserId == userid);
                 int total = query.Count();
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)
                 {
-                    totalPage = totalPage + 1;
+                    ++totalPage;
                 }
                 reports = await query
                     .Skip(itemsToSkip)
@@ -500,7 +539,7 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -510,13 +549,13 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<ViewReport> reports = new List<ViewReport>();
+                List<ViewReport> reports = new();
                 var query = _context.ViewReports.Where(rp => rp.UserId == userid);
                 int total = query.Count();
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)
                 {
-                    totalPage = totalPage + 1;
+                    ++totalPage;
                 }
                 reports = await query
                     .Skip(itemsToSkip)
@@ -526,7 +565,7 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }

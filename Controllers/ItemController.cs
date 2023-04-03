@@ -32,7 +32,7 @@ namespace Item.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(ItemRepository.errorMessage));
+                    return BadRequest(ReturnMessage.create(ItemRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -49,7 +49,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share, status, pageNumber, pageSize);
                 if (listBriefItem == null)
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
                 else
                 {
@@ -112,7 +112,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItemByUserID = await _itemRepository.GetBriefItemByOrBriefRequestUserID(userID, status, share, pageNumber, pageSize);
                 if (listBriefItemByUserID == null)
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
                 else
                 {
@@ -133,7 +133,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItemByItemTitle = await _itemRepository.SearchBriefItemByTitle(itemTitle, status);
                 if (listBriefItemByItemTitle == null)
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
                 else
                 {
@@ -154,7 +154,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItemBySubCategoryID = await _itemRepository.SearchBriefItemByOrBriefRequestBySubCategoryID(subCategoryID, status, share, pageNumber, pageSize);
                 if (listBriefItemBySubCategoryID == null)
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
                 else
                 {
@@ -175,7 +175,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItemByCategoryID = await _itemRepository.SearchBriefItemOrBriefRequestByCategoryID(categoryID, status, share, pageNumber, pageSize);
                 if (listBriefItemByCategoryID == null)
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
                 else
                 {
@@ -201,7 +201,7 @@ namespace Item.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return NotFound(ReturnMessage.create(ItemRepository.errorMessage));
+                    return NotFound(ReturnMessage.create(ItemRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -224,7 +224,7 @@ namespace Item.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(ItemRepository.errorMessage));
+                    return BadRequest(ReturnMessage.create(ItemRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -242,7 +242,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItemAndBriefRequestByUserID = await _itemRepository.GetAllMyBriefItemAndBriefRequest(userID, share);
                 if (listBriefItemAndBriefRequestByUserID == null)
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
                 else
                 {
@@ -263,7 +263,7 @@ namespace Item.Controllers
                 List<BriefItem>? listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize, userID);
                 if (listAllShareRecently == null)
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
                 else
                 {
@@ -284,7 +284,7 @@ namespace Item.Controllers
                 List<BriefItem>? listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize, userID);
                 if (listAllShareFree == null)
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
                 else
                 {
@@ -307,7 +307,7 @@ namespace Item.Controllers
                 List<BriefItem>? listAllMyShareAndRequest = await _itemRepository.GetAllMyShareAndRequest(userID, share, status, pageNumber, pageSize);
                 if (listAllMyShareAndRequest == null)
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
                 else
                 {
@@ -335,7 +335,7 @@ namespace Item.Controllers
                 List<BriefItem>? listAllShareNearYou = await _itemRepository.GetAllShareNearYou(user.UserAddress, pageNumber, pageSize, userID);
                 if (listAllShareNearYou == null)
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
                 else
                 {
@@ -348,19 +348,19 @@ namespace Item.Controllers
             }
         }
 
-        [HttpGet("GetItemDynamicFilters")]
-        public async Task<IActionResult> GetItemDynamicFilters(int pageNumber, int pageSize, [FromQuery] DynamicFilterVM dynamicFilterVM)
+        [HttpPost("GetItemDynamicFilters")]
+        public async Task<IActionResult> GetItemDynamicFilters([FromBody] DynamicFilterVM dynamicFilterVM)
         {
             try
             {
-                List<BriefItem>? listItemDynamicFilters = await _itemRepository.GetItemDynamicFilters(pageNumber, pageSize, dynamicFilterVM);
-                if (listItemDynamicFilters == null)
+                ListVM? listVM = await _itemRepository.GetItemDynamicFilters(dynamicFilterVM);
+                if (listVM == null)
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
                 else
                 {
-                    return Ok(listItemDynamicFilters);
+                    return Ok(listVM);
                 }
             }
             catch (Exception ex)
@@ -390,7 +390,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
             }
             catch (Exception ex)
@@ -420,7 +420,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-                    return BadRequest(ItemRepository.errorMessage);
+                    return BadRequest(ItemRepository.ErrorMessage);
                 }
             }
             catch (Exception ex)

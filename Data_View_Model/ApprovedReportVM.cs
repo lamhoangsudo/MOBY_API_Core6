@@ -6,9 +6,9 @@ namespace MOBY_API_Core6.Data_View_Model
     public class ApprovedReportVM
     {
         [Required]
-        public int reportID { get; set; }
+        public int ReportID { get; set; }
         [DefaultValue (1)]
         [ReadOnly(true)]
-        public int isApproved { get; set; }
+        public int IsApproved { get; set; }
     }
 }

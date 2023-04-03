@@ -7,8 +7,10 @@ namespace MOBY_API_Core6.Repository
 {
     public class ItemRepository : IItemRepository
     {
-        public static string? errorMessage;
         private readonly MOBYContext _context;
+
+        public static string? ErrorMessage { get; set; }
+
         public ItemRepository(MOBYContext context)
         {
             _context = context;
@@ -25,7 +27,7 @@ namespace MOBY_API_Core6.Repository
                     .SingleOrDefaultAsync();
                 if (checkSubCategoryExists == null || checkUserExist == null)
                 {
-                    errorMessage = "danh mục or tài khoản bạn nhập không tồn tại";
+                    ErrorMessage = "danh mục or tài khoản bạn nhập không tồn tại";
                     return false;
                 }
                 else
@@ -40,13 +42,13 @@ namespace MOBY_API_Core6.Repository
                             bool check = dateTimeExpired > dateTimeCreate;
                             if (check == false)
                             {
-                                errorMessage = "bạn đã nhập ngày hết hạn sau ngày tạo";
+                                ErrorMessage = "bạn đã nhập ngày hết hạn sau ngày tạo";
                                 return false;
                             }
                         }
                         catch
                         {
-                            errorMessage = "bạn đã nhập sai format ngày, fotmat của chúng tôi là yyyy/mm/dd";
+                            ErrorMessage = "bạn đã nhập sai format ngày, fotmat của chúng tôi là yyyy/mm/dd";
                             return false;
                         }
 
@@ -63,7 +65,6 @@ namespace MOBY_API_Core6.Repository
                         ItemSize = itemVM.itemSize,
 #pragma warning disable CS8601 // Possible null reference assignment.
                         ItemQuanlity = itemVM.itemQuanlity,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         ItemEstimateValue = itemVM.itemEstimateValue,
                         ItemSalePrice = itemVM.itemSalePrice,
                         ItemShareAmount = itemVM.itemShareAmount,
@@ -81,7 +82,7 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = "có lỗi khi tạo sản phẩm này" + ex.Message;
+                ErrorMessage = "có lỗi khi tạo sản phẩm này" + ex.Message;
                 return false;
             }
         }
@@ -111,13 +112,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listBriefItem.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listBriefItem;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -132,13 +133,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listBriefItemByTitle.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listBriefItemByTitle;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -156,13 +157,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listBriefItemByUserID.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listBriefItemByUserID;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -177,13 +178,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listBriefItemByUserID.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listBriefItemByUserID;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -199,7 +200,7 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -216,7 +217,7 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -236,13 +237,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listBriefItemBySubCategoryID.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listBriefItemBySubCategoryID;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -262,13 +263,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listBriefItemByCategoryID.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listBriefItemByCategoryID;
             }
             catch (Exception ex)
             {
-                errorMessage += ex.Message;
+                ErrorMessage += ex.Message;
                 return null;
             }
         }
@@ -281,7 +282,7 @@ namespace MOBY_API_Core6.Repository
                     .AnyAsync();
                 if (check)
                 {
-                    errorMessage = "sản phẩm của bạn đang có người muốn nhận nên bạn không thể xóa sản phẩm này";
+                    ErrorMessage = "sản phẩm của bạn đang có người muốn nhận nên bạn không thể xóa sản phẩm này";
                     return false;
                 }
                 else
@@ -297,7 +298,7 @@ namespace MOBY_API_Core6.Repository
                     }
                     else
                     {
-                        errorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
+                        ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
                         return false;
                     }
                 }
@@ -331,12 +332,12 @@ namespace MOBY_API_Core6.Repository
                     .SingleOrDefaultAsync();
                 if (currentItem == null || currentItem.ItemStatus == false)
                 {
-                    errorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
+                    ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
                     return false;
                 }
                 if (checkSubCategoryExists == null)
                 {
-                    errorMessage = "danh mục bạn chọn không còn tồn tại trong dữ liệu, mong bạn chọn danh mục khác";
+                    ErrorMessage = "danh mục bạn chọn không còn tồn tại trong dữ liệu, mong bạn chọn danh mục khác";
                     return false;
                 }
                 else
@@ -351,14 +352,14 @@ namespace MOBY_API_Core6.Repository
                             bool checkDate = dateTimeExpired > dateTimeUpdate;
                             if (checkDate == false)
                             {
-                                errorMessage = "bạn đã nhập ngày hết hạn sau ngày cập nhật";
+                                ErrorMessage = "bạn đã nhập ngày hết hạn sau ngày cập nhật";
                                 return false;
                             }
                         }
                     }
                     catch
                     {
-                        errorMessage = "bạn đã nhập sai format ngày, fotmat của chúng tôi là yyyy/mm/dd";
+                        ErrorMessage = "bạn đã nhập sai format ngày, fotmat của chúng tôi là yyyy/mm/dd";
                         return false;
                     }
                     currentItem.SubCategoryId = itemVM.subCategoryId;
@@ -384,7 +385,7 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = "có lỗi khi cập nhật sản phẩm này" + ex.Message;
+                ErrorMessage = "có lỗi khi cập nhật sản phẩm này" + ex.Message;
                 return false;
             }
         }
@@ -400,13 +401,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listBriefItemAndBriefRequestByUserID.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listBriefItemAndBriefRequestByUserID;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -423,13 +424,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listBriefItemAndBriefRequestByUserID.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listBriefItemAndBriefRequestByUserID;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -450,13 +451,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listMyShareAndRequest.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listMyShareAndRequest;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -476,7 +477,7 @@ namespace MOBY_API_Core6.Repository
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)
                 {
-                    totalPage = totalPage + 1;
+                    ++totalPage;
                 }
                 listMyShareAndRequest = await query
                     .Skip(itemsToSkip)
@@ -484,13 +485,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listMyShareAndRequest.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listMyShareAndRequest;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -514,7 +515,7 @@ namespace MOBY_API_Core6.Repository
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)
                 {
-                    totalPage = totalPage + 1;
+                    ++totalPage;
                 }
                 listShareRecently = await query
                     .Skip(itemsToSkip)
@@ -539,13 +540,13 @@ namespace MOBY_API_Core6.Repository
                     }).ToListAsync();
                 if (listShareRecently.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listShareRecently;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -568,7 +569,7 @@ namespace MOBY_API_Core6.Repository
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)
                 {
-                    totalPage = totalPage + 1;
+                    ++totalPage;
                 }
                 listShareRecently = await query
                     .Skip(itemsToSkip)
@@ -593,13 +594,13 @@ namespace MOBY_API_Core6.Repository
                     }).ToListAsync();
                 if (listShareRecently.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listShareRecently;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -633,65 +634,81 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>?> GetItemDynamicFilters(int pageNumber, int pageSize, DynamicFilterVM dynamicFilterVM)
+        public async Task<ListVM?> GetItemDynamicFilters(DynamicFilterVM dynamicFilterVM)
         {
-            int itemsToSkip = (pageNumber - 1) * pageSize;
-            List<BriefItem> listItemDynamicFilters = new List<BriefItem>();
-            var query = _context.BriefItems.Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it });
-            if (dynamicFilterVM.categoryID != 0)
+            try
             {
-                query = query.Where(query => query.bf.CategoryId == dynamicFilterVM.categoryID);
-            }
-            if (!String.IsNullOrEmpty(dynamicFilterVM.titleName) && !String.IsNullOrWhiteSpace(dynamicFilterVM.titleName))
-            {
-                query = query.Where(query => query.bf.ItemTitle.Contains(dynamicFilterVM.titleName));
-            }
-            if (dynamicFilterVM.location != null)
-            {
-                string locationString = String.Concat(dynamicFilterVM.location.Where(c => !Char.IsWhiteSpace(c))).Replace("}", "");
-                query = query.Where(query => query.it.ItemShippingAddress.StartsWith(locationString));
-            }
-            if (dynamicFilterVM.maxPrice >= dynamicFilterVM.minPrice)
-            {
-                query = query.Where(query => query.it.ItemSalePrice <= dynamicFilterVM.maxPrice && query.it.ItemSalePrice >= dynamicFilterVM.minPrice);
-            }
-            if (dynamicFilterVM.share != null)
-            {
-                query = query.Where(query => query.it.Share == dynamicFilterVM.share);
-            }
-            query = query.Where(query => query.it.ItemEstimateValue <= dynamicFilterVM.maxUsable && query.it.ItemEstimateValue >= dynamicFilterVM.minUsable);
-            int total = query.Count();
-            int totalPage = total / pageSize;
-            if (total % pageSize != 0)
-            {
-                totalPage = totalPage + 1;
-            }
-            listItemDynamicFilters = await query
-                .Skip(itemsToSkip)
-                .Take(pageSize)
-                .Select(bfit => new BriefItem
+                int itemsToSkip = (dynamicFilterVM.pageNumber - 1) * dynamicFilterVM.pageSize;
+                List<BriefItem> listItemDynamicFilters = new List<BriefItem>();
+                var query = _context.BriefItems.Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it });
+                if (dynamicFilterVM.categoryID != 0)
                 {
-                    CategoryId = bfit.bf.CategoryId,
-                    CategoryName = bfit.bf.CategoryName,
-                    CategoryStatus = bfit.bf.CategoryStatus,
-                    SubCategoryId = bfit.bf.SubCategoryId,
-                    ItemId = bfit.bf.ItemId,
-                    Image = bfit.bf.Image,
-                    ItemCode = bfit.bf.ItemCode,
-                    ItemSalePrice = bfit.bf.ItemSalePrice,
-                    ItemStatus = bfit.bf.ItemStatus,
-                    ItemTitle = bfit.bf.ItemTitle,
-                    Share = bfit.bf.Share,
-                    SubCategoryName = bfit.bf.SubCategoryName,
-                    SubCategoryStatus = bfit.bf.SubCategoryStatus,
-                    UserId = bfit.bf.UserId,
-                    UserName = bfit.bf.UserName
-                }).ToListAsync();
-            if (listItemDynamicFilters.Count == 0)
-            {
-                errorMessage = "không có dữ liệu";
+                    query = query.Where(query => query.bf.CategoryId == dynamicFilterVM.categoryID);
+                }
+                if (!String.IsNullOrEmpty(dynamicFilterVM.titleName) && !String.IsNullOrWhiteSpace(dynamicFilterVM.titleName))
+                {
+                    query = query.Where(query => query.bf.ItemTitle.Contains(dynamicFilterVM.titleName));
+                }
+                if (dynamicFilterVM.location != null)
+                {
+                    string locationString = String.Concat(dynamicFilterVM.location.Where(c => !Char.IsWhiteSpace(c))).Replace("}", "");
+                    query = query.Where(query => query.it.ItemShippingAddress.StartsWith(locationString));
+                }
+                if (dynamicFilterVM.maxPrice >= dynamicFilterVM.minPrice)
+                {
+                    query = query.Where(query => query.it.ItemSalePrice <= dynamicFilterVM.maxPrice && query.it.ItemSalePrice >= dynamicFilterVM.minPrice);
+                }
+                if (dynamicFilterVM.share != null)
+                {
+                    query = query.Where(query => query.it.Share == dynamicFilterVM.share);
+                }
+                query = query.Where(query => query.it.ItemEstimateValue <= dynamicFilterVM.maxUsable && query.it.ItemEstimateValue >= dynamicFilterVM.minUsable);
+                int total = query.Count();
+                int totalPage = total / dynamicFilterVM.pageSize;
+                if (total % dynamicFilterVM.pageSize != 0)
+                {
+                    ++totalPage;
+                }
+                listItemDynamicFilters = await query
+                    .Skip(itemsToSkip)
+                    .Take(dynamicFilterVM.pageSize)
+                    .Select(bfit => new BriefItem
+                    {
+                        CategoryId = bfit.bf.CategoryId,
+                        CategoryName = bfit.bf.CategoryName,
+                        CategoryStatus = bfit.bf.CategoryStatus,
+                        SubCategoryId = bfit.bf.SubCategoryId,
+                        ItemId = bfit.bf.ItemId,
+                        Image = bfit.bf.Image,
+                        ItemCode = bfit.bf.ItemCode,
+                        ItemSalePrice = bfit.bf.ItemSalePrice,
+                        ItemStatus = bfit.bf.ItemStatus,
+                        ItemTitle = bfit.bf.ItemTitle,
+                        Share = bfit.bf.Share,
+                        SubCategoryName = bfit.bf.SubCategoryName,
+                        SubCategoryStatus = bfit.bf.SubCategoryStatus,
+                        UserId = bfit.bf.UserId,
+                        UserName = bfit.bf.UserName
+                    }).ToListAsync();
+                if (listItemDynamicFilters.Count == 0)
+                {
+                    total = 0;
+                    totalPage = 0;
+                    ErrorMessage = "không có dữ liệu";
+                }
+                ListVM listVM = new()
+                {
+                    total = total,
+                    totalPage = totalPage,
+                    briefItems = listItemDynamicFilters
+                };
+                return listVM;
             }
-            return listItemDynamicFilters;
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
         }
 
         public async Task<List<BriefItem>?> GetListAllOtherPersonRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize)
@@ -707,13 +724,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listBriefItemByUserID.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listBriefItemByUserID;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
@@ -731,13 +748,13 @@ namespace MOBY_API_Core6.Repository
                     .ToListAsync();
                 if (listBriefItemByUserID.Count == 0)
                 {
-                    errorMessage = "không có dữ liệu";
+                    ErrorMessage = "không có dữ liệu";
                 }
                 return listBriefItemByUserID;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
