@@ -27,9 +27,9 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                List<BlogVM> ListBlog = await BlogDAO.getAllBlog(pagging);
+                List<BlogSimpleVM> ListBlog = await BlogDAO.getAllBlog(pagging);
                 int totalBlog = await BlogDAO.getAllBlogCount();
-                PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
+                PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
 
                 return Ok(result);
 
@@ -39,6 +39,8 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+
 
         [HttpGet]
         [Route("api/admin/blog")]
@@ -65,12 +67,12 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                List<BlogVM> ListBlog = new List<BlogVM>();
+                List<BlogSimpleVM> ListBlog = new List<BlogSimpleVM>();
                 if (blogGetVM.categoryId != null)
                 {
                     ListBlog = await BlogDAO.getBlogByBlogCateID(blogGetVM.categoryId.Value, pagging);
                     int totalBlog = await BlogDAO.getBlogByCateCount(blogGetVM.categoryId.Value);
-                    PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
+                    PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
                     return Ok(result);
 
                 }
@@ -78,7 +80,14 @@ namespace MOBY_API_Core6.Controllers
                 {
                     ListBlog = await BlogDAO.getBlogByUserID(blogGetVM.userId.Value, pagging);
                     int totalBlog = await BlogDAO.getBlogByUserIDCount(blogGetVM.userId.Value);
-                    PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
+                    PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
+                    return Ok(result);
+                }
+                else if (blogGetVM.tittle != null)
+                {
+                    ListBlog = await BlogDAO.SearchlBlog(pagging, blogGetVM.tittle);
+                    int totalBlog = await BlogDAO.getSearchBlogCount(blogGetVM.tittle);
+                    PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
                     return Ok(result);
                 }
                 else if (blogGetVM.BlogId != null)
@@ -107,9 +116,9 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int UserID = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<BlogVM> ListBlog = await BlogDAO.getBlogBySelf(UserID, pagging);
+                List<BlogSimpleVM> ListBlog = await BlogDAO.getBlogBySelf(UserID, pagging);
                 int totalBlog = await BlogDAO.getBlogByBySelfCount(UserID);
-                PaggingReturnVM<BlogVM> result = new PaggingReturnVM<BlogVM>(ListBlog, pagging, totalBlog);
+                PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
                 return Ok(result);
             }
             catch (Exception ex)

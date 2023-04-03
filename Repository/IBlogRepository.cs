@@ -5,18 +5,20 @@ namespace MOBY_API_Core6.Repository
 {
     public interface IBlogRepository
     {
-        public Task<List<BlogVM>> getAllBlog(PaggingVM pagging);
+        public Task<List<BlogSimpleVM>> getAllBlog(PaggingVM pagging);
         //public Task<List<BlogVM>> getNewBlog();
+        public Task<List<BlogSimpleVM>> SearchlBlog(PaggingVM pagging, string tittle);
+        public Task<int> getSearchBlogCount(string tittle);
         public Task<List<BlogBriefVM>> getAllUncheckBlog(PaggingVM pagging, BlogStatusVM blogStatusVM);
         public Task<int> getAllUncheckBlogcount(BlogStatusVM blogStatusVM);
         public Task<Blog?> getBlogByBlogID(int id);
         public Task<BlogVM?> getBlogVMByBlogID(int id);
         public Task<Blog?> getBlogByBlogIDAndUserId(int blogId, int userId);
         //public Task<BlogVM> getBlogVMByBlogID(int id);
-        public Task<List<BlogVM>> getBlogByBlogCateID(int blogCateID, PaggingVM pagging);
+        public Task<List<BlogSimpleVM>> getBlogByBlogCateID(int blogCateID, PaggingVM pagging);
         //public Task<List<BlogVM>> getNewBlogByBlogCateID(int blogCateID);
-        public Task<List<BlogVM>> getBlogByUserID(int userID, PaggingVM pagging);
-        public Task<List<BlogVM>> getBlogBySelf(int userID, PaggingVM pagging);
+        public Task<List<BlogSimpleVM>> getBlogByUserID(int userID, PaggingVM pagging);
+        public Task<List<BlogSimpleVM>> getBlogBySelf(int userID, PaggingVM pagging);
         public Task<bool> CreateBlog(CreateBlogVM blogvm, int UserID);
         public Task<bool> UpdateBlog(Blog blog, UpdateBlogVM UpdatedBlogvm);
         public Task<bool> ConfirmBlog(Blog blog, int decision);

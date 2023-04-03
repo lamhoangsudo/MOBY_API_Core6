@@ -8,5 +8,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public int pageNumber { get; set; }
         [DefaultValue(5)]
         public int pageSize { get; set; }
+        [DefaultValue(true)]
+        public bool orderBy { get; set; }
     }
 }
