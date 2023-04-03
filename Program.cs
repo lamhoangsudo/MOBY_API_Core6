@@ -61,7 +61,7 @@ builder.Services.AddScoped<IUserAddressRepository, UserAddressRepository>();
 
 builder.Services.AddSwaggerGen(swagger =>
 {
-    swagger.SwaggerDoc("v2", new OpenApiInfo { Title = "Moby API" });
+    swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Moby API" });
     swagger.AddSecurityDefinition("Bearer",
         new OpenApiSecurityScheme
         {
