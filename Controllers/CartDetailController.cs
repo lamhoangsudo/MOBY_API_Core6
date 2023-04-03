@@ -151,6 +151,10 @@ namespace MOBY_API_Core6.Controllers
 
             try
             {
+                if (listCartDetailID.listCartDetailID == null || listCartDetailID.listCartDetailID.Count == 0)
+                {
+                    return BadRequest(ReturnMessage.create("there no cart Detail to confirm"));
+                }
                 var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (await cartDetailDAO.ConfirmCartDetail(listCartDetailID, currentUid))
                 {
