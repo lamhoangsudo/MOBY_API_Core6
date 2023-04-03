@@ -65,6 +65,7 @@ namespace MOBY_API_Core6.Repository
             //Cart cart = context.Carts.Where(c => c.UserId == userID).FirstOrDefault();
             CartVM? cart = await context.Carts
                 .Where(c => c.UserId == userID)
+                .Include(c => c.User)
                 .Include(c => c.CartDetails)
                 .ThenInclude(c => c.Item)
                 .ThenInclude(i => i.User)
