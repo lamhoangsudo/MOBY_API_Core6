@@ -331,7 +331,7 @@ namespace MOBY_API_Core6.Repository
                 var checkSubCategoryExists = await _context.SubCategories
                     .Where(sc => sc.SubCategoryId == itemVM.subCategoryId)
                     .SingleOrDefaultAsync();
-                if (currentItem == null || currentItem.ItemStatus == false)
+                if (currentItem == null || currentItem.ItemStatus == null)
                 {
                     ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
                     return false;

@@ -353,7 +353,7 @@ namespace Item.Controllers
         {
             try
             {
-                ListVM? listVM = await _itemRepository.GetItemDynamicFilters(dynamicFilterVM);
+                ListVM<BriefItem>? listVM = await _itemRepository.GetItemDynamicFilters(dynamicFilterVM);
                 if (listVM == null)
                 {
                     return BadRequest(ItemRepository.ErrorMessage);

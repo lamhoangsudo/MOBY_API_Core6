@@ -662,11 +662,25 @@ namespace MOBY_API_Core6.Models
 
                 entity.ToView("ViewReport");
 
+                entity.Property(e => e.BlogId).HasColumnName("BlogID");
+
+                entity.Property(e => e.CommentId).HasColumnName("CommentID");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.ReplyId).HasColumnName("ReplyID");
+
                 entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
 
                 entity.Property(e => e.ReportDateCreate)
                     .HasColumnType("smalldatetime")
                     .HasColumnName("Report_Date_Create");
+
+                entity.Property(e => e.ReportDateResolve)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Resolve");
 
                 entity.Property(e => e.ReportId).HasColumnName("ReportID");
 

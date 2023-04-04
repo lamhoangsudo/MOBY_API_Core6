@@ -9,7 +9,7 @@
         public double? ItemSalePrice { get; set; }
         public int ItemShareAmount { get; set; }
         public string Image { get; set; } = null!;
-        public bool ItemStatus { get; set; }
+        public bool? ItemStatus { get; set; }
         public SubCategoryBriefVM? SubCategoryBriefVM { get; set; }
         public ItemOwnerVM? ItemOwnerVM { get; set; }
 

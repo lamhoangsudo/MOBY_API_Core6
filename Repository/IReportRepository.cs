@@ -27,8 +27,6 @@ namespace MOBY_API_Core6.Repository
 
         Task<List<ViewReport>?> GetAllReportByStatus(int status, int pageNumber, int pageSize);
 
-        Task<List<ViewReport>?> GetAllReportByUserAndStatus(int status, int userid, int pageNumber, int pageSize);
-
-        Task<List<ViewReport>?> GetAllReportByUser(int userid, int pageNumber, int pageSize);
+        Task<List<ViewReport>?> GetReports(DynamicFilterReportVM dynamicFilterReportVM);
     }
 }

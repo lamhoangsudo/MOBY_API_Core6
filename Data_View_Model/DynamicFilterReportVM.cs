@@ -9,6 +9,8 @@ namespace MOBY_API_Core6.Data_View_Model
         public int pageNumber { get; set; }
         [Required]
         public int pageSize { get; set; }
+        [DefaultValue(null)]
+        public int? userID { get; set; }
         [DefaultValue(false)]
         public bool isItem { get; set; }
         [DefaultValue(null)]
@@ -45,5 +47,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime? minDateResolve { get; set; }
         [DefaultValue(null)]
         public DateTime? maxDateResolve { get; set; }
+        [DefaultValue(true)]
+        public bool AscendingOrDescending { get; set; }
     }
 }

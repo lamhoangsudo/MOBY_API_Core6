@@ -30,7 +30,7 @@ namespace MOBY_API_Core6.Models
         public string ItemShippingAddress { get; set; } = null!;
         public DateTime ItemDateCreated { get; set; }
         public DateTime? ItemDateUpdate { get; set; }
-        public bool ItemStatus { get; set; }
+        public bool? ItemStatus { get; set; }
         public bool Share { get; set; }
         public string Image { get; set; } = null!;
 

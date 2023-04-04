@@ -85,7 +85,7 @@ namespace MOBY_API_Core6.Repository
             }
             foreach (RequestDetail rd in requestDetails)
             {
-                if (!currentItem.ItemStatus || currentItem.ItemShareAmount == 0 || rd.Quantity > currentItem.ItemShareAmount)
+                if (currentItem.ItemStatus == false || currentItem.ItemShareAmount == 0 || rd.Quantity > currentItem.ItemShareAmount)
                 {
                     rd.Status = 2;
                 }

@@ -22,5 +22,12 @@ namespace MOBY_API_Core6.Models
         public string UserNameItem { get; set; } = null!;
         public int UserIdorder { get; set; }
         public string UserNameOrder { get; set; } = null!;
+        public int Expr1 { get; set; }
+        public int? ItemId { get; set; }
+        public int? OrderId { get; set; }
+        public int? CommentId { get; set; }
+        public int? ReplyId { get; set; }
+        public int? BlogId { get; set; }
+        public DateTime? ReportDateResolve { get; set; }
     }
 }

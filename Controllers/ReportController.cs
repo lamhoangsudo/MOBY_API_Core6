@@ -148,42 +148,12 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpGet("GetAllReport")]
-        public async Task<IActionResult> GetAllReport(int pageNumber, int pageSize)
+        [HttpPost("GetAllReport")]
+        public async Task<IActionResult> GetReport([FromBody] DynamicFilterReportVM dynamicFilterReportVM)
         {
             try
             {
-                List<ViewReport>? reports = await _reportRepository.GetAllReport(pageNumber, pageSize);
-                if (reports != null)
-                {
-                    if (reports.Count != 0)
-                    {
-                        return Ok(reports);
-                    }
-                    else
-                    {
-                        return NotFound(ReturnMessage.create("không có report nào"));
-                    }
-                }
-                else
-                {
-#pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(ReportRepository.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
-
-        [HttpGet("GetReport/Status")]
-        public async Task<IActionResult> GetAllReportByStatus(int status, int pageNumber, int pageSize)
-        {
-            try
-            {
-                List<ViewReport>? reports = await _reportRepository.GetAllReportByStatus(status, pageNumber, pageSize);
+                List<ViewReport>? reports = await _reportRepository.GetReports(dynamicFilterReportVM);
                 if (reports != null)
                 {
                     if (reports.Count != 0)
@@ -209,45 +179,14 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [Authorize]
-        [HttpGet("GetAllReportByUser")]
-        public async Task<IActionResult> GetAllReportByUser(int pageNumber, int pageSize)
+        [HttpPost("GetAllReportByUser")]
+        public async Task<IActionResult> GetAllReportByUser([FromBody] DynamicFilterReportVM dynamicFilterReportVM)
         {
             try
             {
                 int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<ViewReport>? reports = await _reportRepository.GetAllReportByUser(userID, pageNumber, pageSize);
-                if (reports != null)
-                {
-                    if (reports.Count != 0)
-                    {
-                        return Ok(reports);
-                    }
-                    else
-                    {
-                        return NotFound(ReturnMessage.create("không có report nào"));
-                    }
-                }
-                else
-                {
-#pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(ReportRepository.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-        }
-
-        [Authorize]
-        [HttpGet("GetAllReportByUserAndStatus")]
-        public async Task<IActionResult> GetAllReportByUserAndStatus(int status, int pageNumber, int pageSize)
-        {
-            try
-            {
-                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<ViewReport>? reports = await _reportRepository.GetAllReportByUserAndStatus(status, userID, pageNumber, pageSize);
+                dynamicFilterReportVM.userID = userID;
+                List<ViewReport>? reports = await _reportRepository.GetReports(dynamicFilterReportVM);
                 if (reports != null)
                 {
                     if (reports.Count != 0)
