@@ -12,15 +12,15 @@ namespace MOBY_API_Core6.Models
         public int ReportStatus { get; set; }
         public int UserId { get; set; }
         public string UserName { get; set; } = null!;
-        public int Expr3 { get; set; }
-        public string Expr4 { get; set; } = null!;
-        public int Expr5 { get; set; }
-        public string Expr6 { get; set; } = null!;
-        public int Expr7 { get; set; }
-        public string Expr8 { get; set; } = null!;
-        public int Expr9 { get; set; }
-        public string Expr10 { get; set; } = null!;
-        public int Expr1 { get; set; }
-        public string Expr2 { get; set; } = null!;
+        public int UserIdcomments { get; set; }
+        public string UserNameComments { get; set; } = null!;
+        public int UserIdblogs { get; set; }
+        public string UserNameBlogs { get; set; } = null!;
+        public int UserIdreplies { get; set; }
+        public string UserNameReplies { get; set; } = null!;
+        public int UserIditem { get; set; }
+        public string UserNameItem { get; set; } = null!;
+        public int UserIdorder { get; set; }
+        public string UserNameOrder { get; set; } = null!;
     }
 }

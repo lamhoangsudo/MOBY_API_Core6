@@ -56,6 +56,7 @@ namespace MOBY_API_Core6.Repository
             newCmt.BlogId = cmt.BlogId;
             newCmt.UserId = userId;
             newCmt.CommentContent = cmt.CommentContent;
+            newCmt.Status = true;
             newCmt.DateCreate = DateTime.Now;
 
             await context.AddAsync(newCmt);

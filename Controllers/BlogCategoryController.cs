@@ -26,7 +26,7 @@ namespace MOBY_API_Core6.Controllers
 
             try
             {
-                List<BlogCategoryVM> BlogCateList = await BlogCateDAO.GetAllBlogCategory();
+                List<BlogCategoryOnlyVM> BlogCateList = await BlogCateDAO.GetAllBlogCategory();
                 return Ok(BlogCateList);
             }
             catch (Exception ex)
@@ -64,6 +64,28 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
                     return BadRequest(ReturnMessage.create("this name already existed"));
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPatch]
+        [Route("api/blogcategory")]
+        public async Task<IActionResult> UpdateBlogCategory([FromBody] UpdateBlogCategoryVM updateBlogCategoryVM)
+        {
+            try
+            {
+                if (await BlogCateDAO.UpdateBlogCategory(updateBlogCategoryVM))
+                {
+                    return Ok(ReturnMessage.create("success"));
+                }
+                else
+                {
+                    return BadRequest(ReturnMessage.create("blog category not found"));
 
                 }
             }

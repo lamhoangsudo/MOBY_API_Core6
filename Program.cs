@@ -12,16 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy",
-        builder => builder.WithOrigins("http://localhost:3001")
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials());
-}
-);
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -95,8 +85,6 @@ builder.Services.AddSwaggerGen(swagger =>
 var app = builder.Build();
 
 app.UseAuthentication();
-
-app.UseCors("CorsPolicy");
 
 app.UseRouting();
 

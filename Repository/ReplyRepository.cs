@@ -18,6 +18,7 @@ namespace MOBY_API_Core6.Repository
             newRep.CommentId = rep.CommentId;
             newRep.UserId = userId;
             newRep.ReplyContent = rep.ReplyContent;
+            newRep.Status = true;
             newRep.DateCreate = DateTime.Now;
 
             await context.AddAsync(newRep);

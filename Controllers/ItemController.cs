@@ -349,7 +349,7 @@ namespace Item.Controllers
         }
 
         [HttpPost("GetItemDynamicFilters")]
-        public async Task<IActionResult> GetItemDynamicFilters([FromBody] DynamicFilterVM dynamicFilterVM)
+        public async Task<IActionResult> GetItemDynamicFilters([FromBody] DynamicFilterItemVM dynamicFilterVM)
         {
             try
             {

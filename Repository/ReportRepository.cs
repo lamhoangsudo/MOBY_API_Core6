@@ -259,20 +259,20 @@ namespace MOBY_API_Core6.Repository
                     {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                         UserAccount userAccount = await query
-                            .Join(_context.Items, ua => ua.UserId, 
-                            it => it.UserId, 
+                            .Join(_context.Items, ua => ua.UserId,
+                            it => it.UserId,
                             (ua, it) => new { ua, it })
-                            .Join(_context.OrderDetails, 
-                            uait => uait.it.ItemId, 
-                            ord => ord.ItemId, 
+                            .Join(_context.OrderDetails,
+                            uait => uait.it.ItemId,
+                            ord => ord.ItemId,
                             (uait, ord) => new { uait, ord })
-                            .Join(_context.Orders, 
-                            uaitord => uaitord.ord.OrderId, 
-                            or => or.OrderId, 
+                            .Join(_context.Orders,
+                            uaitord => uaitord.ord.OrderId,
+                            or => or.OrderId,
                             (uaitord, or) => new { uaitord, or })
-                            .Where(uaitordor => uaitordor.or.OrderId == report.OrderId 
-                            && uaitordor.or.Status != 0 
-                            && uaitordor.uaitord.uait.ua.UserStatus == true 
+                            .Where(uaitordor => uaitordor.or.OrderId == report.OrderId
+                            && uaitordor.or.Status != 0
+                            && uaitordor.uaitord.uait.ua.UserStatus == true
                             && uaitordor.uaitord.uait.ua.Reputation != 0)
                             .Select(uaitordor => uaitordor.uaitord.uait.ua)
                             .FirstOrDefaultAsync();
@@ -286,7 +286,7 @@ namespace MOBY_API_Core6.Repository
                             }
                         }
                         Order? order = await _context.Orders.Where(or => or.OrderId == report.OrderId).FirstOrDefaultAsync();
-                        if (order != null && order.Status != 0)
+                        if (order != null && order.Status != 3)
                         {
                             order.Status = 3;
                         }
@@ -300,8 +300,8 @@ namespace MOBY_API_Core6.Repository
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                         UserAccount userAccount = await query
                             .Join(_context.Blogs, ua => ua.UserId, bg => bg.UserId, (ua, bg) => new { ua, bg })
-                            .Where(uabg => uabg.bg.BlogId == report.BlogId 
-                            && uabg.ua.UserStatus == true 
+                            .Where(uabg => uabg.bg.BlogId == report.BlogId
+                            && uabg.ua.UserStatus == true
                             && uabg.ua.Reputation != 0)
                             .Select(uabg => uabg.ua)
                             .FirstOrDefaultAsync();
@@ -315,9 +315,9 @@ namespace MOBY_API_Core6.Repository
                             }
                         }
                         Blog? blog = await _context.Blogs.Where(bg => bg.BlogId == report.BlogId).FirstOrDefaultAsync();
-                        if (blog != null && blog.BlogStatus == 0)
+                        if (blog != null && blog.BlogStatus != 2)
                         {
-                            blog.BlogStatus = 0;
+                            blog.BlogStatus = 2;
                         }
                         else
                         {
@@ -328,12 +328,12 @@ namespace MOBY_API_Core6.Repository
                     {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                         UserAccount userAccount = await query
-                            .Join(_context.Comments, 
-                            ua => ua.UserId, 
-                            cm => cm.UserId, 
+                            .Join(_context.Comments,
+                            ua => ua.UserId,
+                            cm => cm.UserId,
                             (ua, cm) => new { ua, cm })
-                            .Where(uacm => uacm.cm.CommentId == report.CommentId 
-                            && uacm.ua.UserStatus == true 
+                            .Where(uacm => uacm.cm.CommentId == report.CommentId
+                            && uacm.ua.UserStatus == true
                             && uacm.ua.Reputation != 0)
                             .Select(uacm => uacm.ua)
                             .FirstOrDefaultAsync();
@@ -346,17 +346,26 @@ namespace MOBY_API_Core6.Repository
                                 userAccount.Reputation = 0;
                             }
                         }
+                        Comment? comment = await _context.Comments.Where(cm => cm.CommentId == report.CommentId).FirstOrDefaultAsync();
+                        if (comment != null && comment.Status == true)
+                        {
+                            comment.Status = false;
+                        }
+                        else
+                        {
+                            ErrorMessage = "bình luận này đã bị xóa";
+                        }
                     }
                     else if (report.ReplyId != null)
                     {
 #pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
                         UserAccount userAccount = await query
-                            .Join(_context.Replies, 
-                            ua => ua.UserId, 
-                            rp => rp.UserId, 
+                            .Join(_context.Replies,
+                            ua => ua.UserId,
+                            rp => rp.UserId,
                             (ua, rp) => new { ua, rp })
-                            .Where(uarp => uarp.rp.ReplyId == report.ReportId 
-                            && uarp.ua.UserStatus == true 
+                            .Where(uarp => uarp.rp.ReplyId == report.ReportId
+                            && uarp.ua.UserStatus == true
                             && uarp.ua.Reputation != 0)
                             .Select(uarp => uarp.ua)
                             .FirstOrDefaultAsync();
@@ -368,6 +377,15 @@ namespace MOBY_API_Core6.Repository
                             {
                                 userAccount.Reputation = 0;
                             }
+                        }
+                        Reply? reply = await _context.Replies.Where(rp => rp.ReplyId == report.ReportId).FirstOrDefaultAsync();
+                        if (reply != null && reply.Status == true)
+                        {
+                            reply.Status = false;
+                        }
+                        else
+                        {
+                            ErrorMessage = "bình luận này đã bị xóa";
                         }
                     }
                     await _context.SaveChangesAsync();
@@ -466,6 +484,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
+        //admin
         public async Task<List<ViewReport>?> GetAllReport(int pageNumber, int pageSize)
         {
             try
@@ -518,6 +537,114 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
+        public async Task<List<ViewReport>?> GetReportsAdmin(DynamicFilterReportVM dynamicFilterReportVM)
+        {
+            try
+            {
+                int itemsToSkip = (dynamicFilterReportVM.pageNumber - 1) * dynamicFilterReportVM.pageSize;
+                List<ViewReport> reports = new();
+                var query = _context.ViewReports;
+                if (dynamicFilterReportVM.isItem == true)
+                {
+                    query = query;
+                    if (dynamicFilterReportVM.itemID != null)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+                if (dynamicFilterReportVM.isOrder == true)
+                {
+                    if (dynamicFilterReportVM.orderID != null)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+                if (dynamicFilterReportVM.isComment == true)
+                {
+                    if (dynamicFilterReportVM.commentId != null)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+                if (dynamicFilterReportVM.isReply == true)
+                {
+                    if (dynamicFilterReportVM.replyId != null)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+                if (dynamicFilterReportVM.isBlog == true)
+                {
+                    if (dynamicFilterReportVM.blogId != null)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+                if (dynamicFilterReportVM.status != null)
+                {
+
+                }
+                if (dynamicFilterReportVM.title != null)
+                {
+
+                }
+                if (dynamicFilterReportVM.orderByDateCreate == true && dynamicFilterReportVM.orderByDateResolve == false)
+                {
+
+                }
+                if (dynamicFilterReportVM.orderByDateCreate == false && dynamicFilterReportVM.orderByDateResolve == false)
+                {
+
+                }
+                if (dynamicFilterReportVM.minDateCreate <= dynamicFilterReportVM.maxDateCreate)
+                {
+
+                }
+                else if (dynamicFilterReportVM.minDateResolve <= dynamicFilterReportVM.maxDateResolve)
+                {
+
+                }
+
+                int total = query.Count();
+                int totalPage = total / dynamicFilterReportVM.pageSize;
+                if (total % dynamicFilterReportVM.pageSize != 0)
+                {
+                    ++totalPage;
+                }
+                reports = await query
+                    .Skip(itemsToSkip)
+                    .Take(dynamicFilterReportVM.pageSize)
+                    .ToListAsync();
+                return reports;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        //user
         public async Task<List<ViewReport>?> GetAllReportByUserAndStatus(int status, int userid, int pageNumber, int pageSize)
         {
             try

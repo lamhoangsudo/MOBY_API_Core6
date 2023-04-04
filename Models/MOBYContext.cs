@@ -118,6 +118,14 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemCode).HasColumnName("Item_Code");
 
+                entity.Property(e => e.ItemDateCreated)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Item_Date_Created");
+
+                entity.Property(e => e.ItemDateUpdate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Item_Date_Update");
+
                 entity.Property(e => e.ItemId).HasColumnName("ItemID");
 
                 entity.Property(e => e.ItemSalePrice).HasColumnName("Item_Sale_Price");
@@ -667,6 +675,16 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.Title).HasMaxLength(100);
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserIdblogs).HasColumnName("UserIDBlogs");
+
+                entity.Property(e => e.UserIdcomments).HasColumnName("UserIDComments");
+
+                entity.Property(e => e.UserIditem).HasColumnName("UserIDItem");
+
+                entity.Property(e => e.UserIdorder).HasColumnName("UserIDOrder");
+
+                entity.Property(e => e.UserIdreplies).HasColumnName("UserIDReplies");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
             });

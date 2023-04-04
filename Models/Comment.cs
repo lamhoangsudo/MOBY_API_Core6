@@ -18,6 +18,7 @@ namespace MOBY_API_Core6.Models
         public DateTime DateCreate { get; set; }
         public DateTime? DateUpdate { get; set; }
         public string CommentContent { get; set; } = null!;
+        public bool? Status { get; set; }
 
         public virtual Blog? Blog { get; set; }
         public virtual Item? Item { get; set; }

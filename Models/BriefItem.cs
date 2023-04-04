@@ -20,5 +20,7 @@ namespace MOBY_API_Core6.Models
         public bool ItemStatus { get; set; }
         public bool CategoryStatus { get; set; }
         public bool SubCategoryStatus { get; set; }
+        public DateTime ItemDateCreated { get; set; }
+        public DateTime? ItemDateUpdate { get; set; }
     }
 }
