@@ -29,9 +29,9 @@ namespace MOBY_API_Core6.Controllers
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (await RepDAO.CreateReply(rep, uid))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
-                return BadRequest(ReturnMessage.create("error at CreateReply"));
+                return BadRequest(ReturnMessage.Create("error at CreateReply"));
             }
             catch (Exception ex)
             {
@@ -49,9 +49,9 @@ namespace MOBY_API_Core6.Controllers
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (await RepDAO.UpdateReply(rep, uid))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
-                return BadRequest(ReturnMessage.create("error at UpdateReply"));
+                return BadRequest(ReturnMessage.Create("error at UpdateReply"));
             }
             catch (Exception ex)
             {
@@ -69,9 +69,9 @@ namespace MOBY_API_Core6.Controllers
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (await RepDAO.DeleteReply(cmtid, uid))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
-                return BadRequest(ReturnMessage.create("error at DeleteReply"));
+                return BadRequest(ReturnMessage.Create("error at DeleteReply"));
             }
             catch (Exception ex)
             {

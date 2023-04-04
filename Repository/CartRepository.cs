@@ -62,7 +62,7 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<CartVM?> GetCartVMByUid(int userID)
         {
-            //Cart cart = context.Carts.Where(c => c.UserId == userID).FirstOrDefault();
+            //Cart cart = context.Carts.Where(c => c.UserId == UserID).FirstOrDefault();
             CartVM? cart = await context.Carts
                 .Where(c => c.UserId == userID)
                 .Include(c => c.User)
@@ -79,7 +79,7 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<Cart?> GetCartByUid(int userID)
         {
-            //Cart cart = context.Carts.Where(c => c.UserId == userID).FirstOrDefault();
+            //Cart cart = context.Carts.Where(c => c.UserId == UserID).FirstOrDefault();
             Cart? cart = await context.Carts
                 .Where(c => c.UserId == userID)
                 .FirstOrDefaultAsync();

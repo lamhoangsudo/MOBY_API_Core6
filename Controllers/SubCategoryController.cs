@@ -23,7 +23,7 @@ namespace MOBY_API_Core6.Controllers
                 bool checkCreate = await _subCategoryRepository.CreateSubCategory(subCategoryVM);
                 if (checkCreate)
                 {
-                    return Ok(ReturnMessage.create("da tao thanh cong"));
+                    return Ok(ReturnMessage.Create("da tao thanh cong"));
                 }
                 else
                 {
@@ -72,7 +72,7 @@ namespace MOBY_API_Core6.Controllers
                     bool check = await _subCategoryRepository.UpdateSubCategory(subCategoryVM);
                     if (check == true)
                     {
-                        return Ok(ReturnMessage.create("da edit thanh cong"));
+                        return Ok(ReturnMessage.Create("da edit thanh cong"));
                     }
                     else
                     {

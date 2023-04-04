@@ -484,145 +484,92 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        //admin
-        public async Task<List<ViewReport>?> GetAllReport(int pageNumber, int pageSize)
+        public async Task<ListVM<ViewReport>?> GetReports(DynamicFilterReportVM dynamicFilterReportVM)
         {
             try
             {
-                int itemsToSkip = (pageNumber - 1) * pageSize;
+                int itemsToSkip = (dynamicFilterReportVM.PageNumber - 1) * dynamicFilterReportVM.PageSize;
                 List<ViewReport> reports = new();
                 var query = _context.ViewReports;
-                int total = query.Count();
-                int totalPage = total / pageSize;
-                if (total % pageSize != 0)
+                if (dynamicFilterReportVM.UserID != null)
                 {
-                    ++totalPage;
+                    query = (DbSet<ViewReport>)query.Where(rp => rp.UserId == dynamicFilterReportVM.UserID);
                 }
-                reports = await query
-                    .Skip(itemsToSkip)
-                    .Take(pageSize)
-                    .ToListAsync();
-                return reports;
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = ex.Message;
-                return null;
-            }
-        }
-
-        public async Task<List<ViewReport>?> GetAllReportByStatus(int status, int pageNumber, int pageSize)
-        {
-            try
-            {
-                int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<ViewReport> reports = new();
-                var query = _context.ViewReports.Where(rp => rp.ReportStatus == status);
-                int total = query.Count();
-                int totalPage = total / pageSize;
-                if (total % pageSize != 0)
+                if (dynamicFilterReportVM.IsItem == true)
                 {
-                    ++totalPage;
-                }
-                reports = await query
-                    .Skip(itemsToSkip)
-                    .Take(pageSize)
-                    .ToListAsync();
-                return reports;
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = ex.Message;
-                return null;
-            }
-        }
-
-        public async Task<List<ViewReport>?> GetReports(DynamicFilterReportVM dynamicFilterReportVM)
-        {
-            try
-            {
-                int itemsToSkip = (dynamicFilterReportVM.pageNumber - 1) * dynamicFilterReportVM.pageSize;
-                List<ViewReport> reports = new();
-                var query = _context.ViewReports;
-                if (dynamicFilterReportVM.userID != null)
-                {
-                    query = (DbSet<ViewReport>) query.Where(rp => rp.UserId == dynamicFilterReportVM.userID);
-                }
-                if (dynamicFilterReportVM.isItem == true)
-                {
-                    if (dynamicFilterReportVM.itemID != null)
+                    if (dynamicFilterReportVM.ItemID != null)
                     {
-                        query = (DbSet<ViewReport>) query.Where(rp => rp.ItemId == dynamicFilterReportVM.itemID);
+                        query = (DbSet<ViewReport>)query.Where(rp => rp.ItemId == dynamicFilterReportVM.ItemID);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>) query.Where(rp => rp.ItemId != null);
+                        query = (DbSet<ViewReport>)query.Where(rp => rp.ItemId != null);
                     }
                 }
-                if (dynamicFilterReportVM.isOrder == true)
+                if (dynamicFilterReportVM.IsOrder == true)
                 {
-                    if (dynamicFilterReportVM.orderID != null)
+                    if (dynamicFilterReportVM.OrderID != null)
                     {
-                        query = (DbSet<ViewReport>) query.Where(rp => rp.OrderId == dynamicFilterReportVM.orderID);
+                        query = (DbSet<ViewReport>)query.Where(rp => rp.OrderId == dynamicFilterReportVM.OrderID);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>) query.Where(rp => rp.OrderId != null);
+                        query = (DbSet<ViewReport>)query.Where(rp => rp.OrderId != null);
                     }
                 }
-                if (dynamicFilterReportVM.isComment == true)
+                if (dynamicFilterReportVM.IsComment == true)
                 {
-                    if (dynamicFilterReportVM.commentId != null)
+                    if (dynamicFilterReportVM.CommentId != null)
                     {
-                        query = (DbSet<ViewReport>) query.Where(rp => rp.CommentId == dynamicFilterReportVM.commentId);
+                        query = (DbSet<ViewReport>)query.Where(rp => rp.CommentId == dynamicFilterReportVM.CommentId);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>) query.Where(rp => rp.CommentId != null);
+                        query = (DbSet<ViewReport>)query.Where(rp => rp.CommentId != null);
                     }
                 }
-                if (dynamicFilterReportVM.isReply == true)
+                if (dynamicFilterReportVM.IsReply == true)
                 {
-                    if (dynamicFilterReportVM.replyId != null)
+                    if (dynamicFilterReportVM.ReplyId != null)
                     {
-                        query = (DbSet<ViewReport>) query.Where(rp => rp.ReplyId == dynamicFilterReportVM.replyId);
+                        query = (DbSet<ViewReport>)query.Where(rp => rp.ReplyId == dynamicFilterReportVM.ReplyId);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>) query.Where(rp => rp.ReplyId != null);
+                        query = (DbSet<ViewReport>)query.Where(rp => rp.ReplyId != null);
                     }
                 }
-                if (dynamicFilterReportVM.isBlog == true)
+                if (dynamicFilterReportVM.IsBlog == true)
                 {
-                    if (dynamicFilterReportVM.blogId != null)
+                    if (dynamicFilterReportVM.BlogId != null)
                     {
-                        query = (DbSet<ViewReport>) query.Where(rp => rp.BlogId == dynamicFilterReportVM.blogId);
+                        query = (DbSet<ViewReport>)query.Where(rp => rp.BlogId == dynamicFilterReportVM.BlogId);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>) query.Where(rp => rp.BlogId != null);
+                        query = (DbSet<ViewReport>)query.Where(rp => rp.BlogId != null);
                     }
                 }
-                if (dynamicFilterReportVM.status != null)
+                if (dynamicFilterReportVM.Status != null)
                 {
-                    query = (DbSet<ViewReport>) query.Where(rp => rp.ReportStatus == dynamicFilterReportVM.status);
+                    query = (DbSet<ViewReport>)query.Where(rp => rp.ReportStatus == dynamicFilterReportVM.Status);
                 }
-                if (dynamicFilterReportVM.title != null)
+                if (dynamicFilterReportVM.Title != null)
                 {
-                    query = (DbSet<ViewReport>) query.Where(rp => rp.Title.Equals(dynamicFilterReportVM.title));
+                    query = (DbSet<ViewReport>)query.Where(rp => rp.Title.Equals(dynamicFilterReportVM.Title));
                 }
-                if (dynamicFilterReportVM.orderByDateCreate == true && dynamicFilterReportVM.orderByDateResolve == false)
+                if (dynamicFilterReportVM.OrderByDateCreate == true && dynamicFilterReportVM.OrderByDateResolve == false)
                 {
-                    if(dynamicFilterReportVM.AscendingOrDescending == true) 
+                    if (dynamicFilterReportVM.AscendingOrDescending == true)
                     {
-                        query = (DbSet<ViewReport>) query.OrderBy(rp => rp.ReportDateCreate);
+                        query = (DbSet<ViewReport>)query.OrderBy(rp => rp.ReportDateCreate);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>) query.OrderByDescending(rp => rp.ReportDateCreate);
+                        query = (DbSet<ViewReport>)query.OrderByDescending(rp => rp.ReportDateCreate);
                     }
                 }
-                if (dynamicFilterReportVM.orderByDateCreate == false && dynamicFilterReportVM.orderByDateResolve == false)
+                if (dynamicFilterReportVM.OrderByDateCreate == false && dynamicFilterReportVM.OrderByDateResolve == false)
                 {
                     if (dynamicFilterReportVM.AscendingOrDescending == true)
                     {
@@ -633,25 +580,116 @@ namespace MOBY_API_Core6.Repository
                         query = (DbSet<ViewReport>)query.OrderByDescending(rp => rp.ReportDateResolve);
                     }
                 }
-                if (dynamicFilterReportVM.minDateCreate <= dynamicFilterReportVM.maxDateCreate)
+                if (dynamicFilterReportVM.MinDateCreate <= dynamicFilterReportVM.MaxDateCreate)
                 {
-                    query = (DbSet<ViewReport>) query.Where(rp => rp.ReportDateCreate >= dynamicFilterReportVM.minDateCreate && rp.ReportDateCreate <= dynamicFilterReportVM.maxDateCreate);
+                    query = (DbSet<ViewReport>)query.Where(rp => rp.ReportDateCreate >= dynamicFilterReportVM.MinDateCreate && rp.ReportDateCreate <= dynamicFilterReportVM.MaxDateCreate);
                 }
-                else if (dynamicFilterReportVM.minDateResolve <= dynamicFilterReportVM.maxDateResolve)
+                else if (dynamicFilterReportVM.MinDateResolve <= dynamicFilterReportVM.MaxDateResolve)
                 {
-                    query = (DbSet<ViewReport>) query.Where(rp => rp.ReportDateResolve >= dynamicFilterReportVM.minDateResolve && rp.ReportDateResolve <= dynamicFilterReportVM.maxDateResolve);
+                    query = (DbSet<ViewReport>)query.Where(rp => rp.ReportDateResolve >= dynamicFilterReportVM.MinDateResolve && rp.ReportDateResolve <= dynamicFilterReportVM.MaxDateResolve);
                 }
                 int total = query.Count();
-                int totalPage = total / dynamicFilterReportVM.pageSize;
-                if (total % dynamicFilterReportVM.pageSize != 0)
+                int totalPage = total / dynamicFilterReportVM.PageSize;
+                if (total % dynamicFilterReportVM.PageSize != 0)
                 {
                     ++totalPage;
                 }
                 reports = await query
                     .Skip(itemsToSkip)
-                    .Take(dynamicFilterReportVM.pageSize)
+                    .Take(dynamicFilterReportVM.PageSize)
                     .ToListAsync();
-                return reports;
+                ListVM<ViewReport> ViewReport = new(total, totalPage, reports);
+                return ViewReport;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<ViewReportItem?> ItemReportDetail(int reportID)
+        {
+            try
+            {
+                ViewReportItem? itemReport = await _context.ViewReportItems.Where(vri => vri.ReportId == reportID).FirstOrDefaultAsync();
+                if (itemReport == null)
+                {
+                    ErrorMessage = "report này không còn tồn tại trong dữ liệu";
+                }
+                return itemReport;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<ViewReportBlog?> BlogReportDetail(int reportID)
+        {
+            try
+            {
+                ViewReportBlog? itemReport = await _context.ViewReportBlogs.Where(vri => vri.ReportId == reportID).FirstOrDefaultAsync();
+                if (itemReport == null)
+                {
+                    ErrorMessage = "report này không còn tồn tại trong dữ liệu";
+                }
+                return itemReport;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<ViewReportComment?> CommentReportDetail(int reportID)
+        {
+            try
+            {
+                ViewReportComment? itemReport = await _context.ViewReportComments.Where(vri => vri.ReportId == reportID).FirstOrDefaultAsync();
+                if (itemReport == null)
+                {
+                    ErrorMessage = "report này không còn tồn tại trong dữ liệu";
+                }
+                return itemReport;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<ViewReportReply?> ReplyReportDetail(int reportID)
+        {
+            try
+            {
+                ViewReportReply? itemReport = await _context.ViewReportReplies.Where(vri => vri.ReportId == reportID).FirstOrDefaultAsync();
+                if (itemReport == null)
+                {
+                    ErrorMessage = "report này không còn tồn tại trong dữ liệu";
+                }
+                return itemReport;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<ViewReportOrder?> OrderReportDetail(int reportID)
+        {
+            try
+            {
+                ViewReportOrder? itemReport = await _context.ViewReportOrders.Where(vri => vri.ReportId == reportID).FirstOrDefaultAsync();
+                if (itemReport == null)
+                {
+                    ErrorMessage = "report này không còn tồn tại trong dữ liệu";
+                }
+                return itemReport;
             }
             catch (Exception ex)
             {

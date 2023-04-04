@@ -26,12 +26,12 @@ namespace MOBY_API_Core6.Controllers
                 if (await userDAO.CheckExistedUser(this.User.Claims.First(i => i.Type == "user_id").Value))
                 {
                     //user existed 
-                    return Ok(ReturnMessage.create("User existed"));
+                    return Ok(ReturnMessage.Create("User existed"));
                 }
                 else
                 {
                     //quang qua trang dien thong tin
-                    return Ok(ReturnMessage.create("new user"));
+                    return Ok(ReturnMessage.Create("new user"));
                 }
 
 

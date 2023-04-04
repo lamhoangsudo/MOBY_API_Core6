@@ -27,12 +27,12 @@ namespace Item.Controllers
                 bool checkCreate = await _itemRepository.CreateItem(itemVM);
                 if (checkCreate)
                 {
-                    return Ok(ReturnMessage.create(itemVM + " đã được thêm vào thành công."));
+                    return Ok(ReturnMessage.Create(itemVM + " đã được thêm vào thành công."));
                 }
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(ItemRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -70,7 +70,7 @@ namespace Item.Controllers
                 DetailItem? itemDetail = await _itemRepository.GetItemDetail(itemID);
                 if (itemDetail == null)
                 {
-                    return NotFound(ReturnMessage.create("sản phẩm này không tồn tại"));
+                    return NotFound(ReturnMessage.Create("sản phẩm này không tồn tại"));
                 }
                 else
                 {
@@ -91,7 +91,7 @@ namespace Item.Controllers
                 DetailItemRequest? itemRequestDetail = await _itemRepository.GetRequestDetail(itemID);
                 if (itemRequestDetail == null)
                 {
-                    return NotFound(ReturnMessage.create("yêu cầu này không tồn tại"));
+                    return NotFound(ReturnMessage.Create("yêu cầu này không tồn tại"));
                 }
                 else
                 {
@@ -196,12 +196,12 @@ namespace Item.Controllers
                 bool checkDelete = await _itemRepository.DeleteItem(itemVM);
                 if (checkDelete)
                 {
-                    return Ok(ReturnMessage.create("sản phẩm này đã xóa thành công"));
+                    return Ok(ReturnMessage.Create("sản phẩm này đã xóa thành công"));
                 }
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return NotFound(ReturnMessage.create(ItemRepository.ErrorMessage));
+                    return NotFound(ReturnMessage.Create(ItemRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -219,12 +219,12 @@ namespace Item.Controllers
                 bool checkUpdate = await _itemRepository.UpdateItem(itemVM);
                 if (checkUpdate)
                 {
-                    return Ok(ReturnMessage.create("sản phẩm này đã được cập nhập thành công"));
+                    return Ok(ReturnMessage.Create("sản phẩm này đã được cập nhập thành công"));
                 }
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(ItemRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -330,7 +330,7 @@ namespace Item.Controllers
                 UserAccount? user = await _userRepository.FindUserByUid(userID);
                 if (user == null)
                 {
-                    return BadRequest(ReturnMessage.create("tài khoảng không tồn tại"));
+                    return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
                 }
                 List<BriefItem>? listAllShareNearYou = await _itemRepository.GetAllShareNearYou(user.UserAddress, pageNumber, pageSize, userID);
                 if (listAllShareNearYou == null)
@@ -385,7 +385,7 @@ namespace Item.Controllers
                     }
                     else
                     {
-                        return NotFound(ReturnMessage.create("không có dữ liệu"));
+                        return NotFound(ReturnMessage.Create("không có dữ liệu"));
                     }
                 }
                 else
@@ -415,7 +415,7 @@ namespace Item.Controllers
                     }
                     else
                     {
-                        return NotFound(ReturnMessage.create("không có dữ liệu"));
+                        return NotFound(ReturnMessage.Create("không có dữ liệu"));
                     }
                 }
                 else

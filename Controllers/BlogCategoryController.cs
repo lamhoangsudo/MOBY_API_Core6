@@ -59,11 +59,11 @@ namespace MOBY_API_Core6.Controllers
             {
                 if (await BlogCateDAO.createBlogCategory(blogCateName.BlogCategoryName))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create("this name already existed"));
+                    return BadRequest(ReturnMessage.Create("this name already existed"));
 
                 }
             }
@@ -81,11 +81,11 @@ namespace MOBY_API_Core6.Controllers
             {
                 if (await BlogCateDAO.UpdateBlogCategory(updateBlogCategoryVM))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create("blog category not found"));
+                    return BadRequest(ReturnMessage.Create("blog category not found"));
 
                 }
             }

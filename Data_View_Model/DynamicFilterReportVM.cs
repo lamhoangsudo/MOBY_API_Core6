@@ -6,47 +6,48 @@ namespace MOBY_API_Core6.Data_View_Model
     public class DynamicFilterReportVM
     {
         [Required]
-        public int pageNumber { get; set; }
+        public int PageNumber { get; set; }
         [Required]
-        public int pageSize { get; set; }
+        public int PageSize { get; set; }
         [DefaultValue(null)]
-        public int? userID { get; set; }
+        [ReadOnly(true)]
+        public int? UserID { get; set; }
         [DefaultValue(false)]
-        public bool isItem { get; set; }
+        public bool IsItem { get; set; }
         [DefaultValue(null)]
-        public int? itemID { get; set; }
+        public int? ItemID { get; set; }
         [DefaultValue(false)]
-        public bool isOrder { get; set; }
+        public bool IsOrder { get; set; }
         [DefaultValue(null)]
-        public int? orderID { get; set; }
+        public int? OrderID { get; set; }
         [DefaultValue(false)]
-        public bool isComment { get; set; }
+        public bool IsComment { get; set; }
         [DefaultValue(null)]
-        public int? commentId { get; set; }
+        public int? CommentId { get; set; }
         [DefaultValue(false)]
-        public bool isReply { get; set; }
+        public bool IsReply { get; set; }
         [DefaultValue(null)]
-        public int? replyId { get; set; }
+        public int? ReplyId { get; set; }
         [DefaultValue(false)]
-        public bool isBlog { get; set; }
+        public bool IsBlog { get; set; }
         [DefaultValue(null)]
-        public int? blogId { get; set; }
+        public int? BlogId { get; set; }
         [DefaultValue(null)]
-        public int? status { get; set;}
+        public int? Status { get; set;}
         [DefaultValue(null)]
-        public string? title { get; set; }
+        public string? Title { get; set; }
         [DefaultValue(true)]
-        public bool? orderByDateCreate { get; set; }
+        public bool? OrderByDateCreate { get; set; }
         [DefaultValue(false)]
-        public bool? orderByDateResolve { get; set; }
+        public bool? OrderByDateResolve { get; set; }
         [DefaultValue(null)]
-        public DateTime? minDateCreate { get; set; }
+        public DateTime? MinDateCreate { get; set; }
         [DefaultValue(null)]
-        public DateTime? maxDateCreate { get; set; }
+        public DateTime? MaxDateCreate { get; set; }
         [DefaultValue(null)]
-        public DateTime? minDateResolve { get; set; }
+        public DateTime? MinDateResolve { get; set; }
         [DefaultValue(null)]
-        public DateTime? maxDateResolve { get; set; }
+        public DateTime? MaxDateResolve { get; set; }
         [DefaultValue(true)]
         public bool AscendingOrDescending { get; set; }
     }

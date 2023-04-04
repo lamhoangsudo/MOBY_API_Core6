@@ -23,7 +23,7 @@ namespace MOBY_API_Core6.Controllers
                 bool checkCreate = await _categoryRepository.CreateCategory(categoryVM);
                 if (checkCreate)
                 {
-                    return Ok(ReturnMessage.create("da tao thanh cong"));
+                    return Ok(ReturnMessage.Create("da tao thanh cong"));
                 }
                 else
                 {
@@ -44,14 +44,14 @@ namespace MOBY_API_Core6.Controllers
                 var category = await _categoryRepository.GetCategoryByID(categoryVM.categoryID);
                 if (category == null || category.CategoryStatus == false)
                 {
-                    return NotFound(ReturnMessage.create("khong tim thay"));
+                    return NotFound(ReturnMessage.Create("khong tim thay"));
                 }
                 else
                 {
                     bool check = await _categoryRepository.UpdateCategory(categoryVM);
                     if (check == true)
                     {
-                        return Ok(ReturnMessage.create("da edit thanh cong"));
+                        return Ok(ReturnMessage.Create("da edit thanh cong"));
                     }
                     else
                     {
@@ -73,14 +73,14 @@ namespace MOBY_API_Core6.Controllers
                 var category = await _categoryRepository.GetCategoryByID(categoryVM.categoryID);
                 if (category == null || category.CategoryStatus == false)
                 {
-                    return NotFound(ReturnMessage.create("khong tim thay"));
+                    return NotFound(ReturnMessage.Create("khong tim thay"));
                 }
                 else
                 {
                     bool check = await _categoryRepository.DeleteCategory(categoryVM);
                     if (check == true)
                     {
-                        return Ok(ReturnMessage.create("da update thanh cong"));
+                        return Ok(ReturnMessage.Create("da update thanh cong"));
                     }
                     else
                     {
@@ -104,13 +104,13 @@ namespace MOBY_API_Core6.Controllers
                 if (listCategory == null)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.create(CategoryRepository.errorMessage));
+                    return BadRequest(ReturnMessage.Create(CategoryRepository.errorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
                 if (listCategory.Count == 0)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return NotFound(ReturnMessage.create(CategoryRepository.errorMessage));
+                    return NotFound(ReturnMessage.Create(CategoryRepository.errorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else

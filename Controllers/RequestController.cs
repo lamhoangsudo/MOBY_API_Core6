@@ -110,7 +110,7 @@ namespace MOBY_API_Core6.Controllers
                 Request? foundRequest = await requestRepository.getRequestByRequestID(requestConfirmVM.RequestID);
                 if (foundRequest == null)
                 {
-                    return BadRequest(ReturnMessage.create("error at request not found"));
+                    return BadRequest(ReturnMessage.Create("error at request not found"));
                 }
 
                 List<RequestDetail> requestDetailList = foundRequest.RequestDetails.ToList();
@@ -121,9 +121,16 @@ namespace MOBY_API_Core6.Controllers
                     if (requestConfirmVM.ListRequestDetailID.Contains(requestDetail.RequestDetailId))
                     {
                         //accept requestDetail + autoCheckDeny
-                        requestDetailRepository.AcceptRequestDetail(requestDetail);
-                        await requestDetailRepository.DenyOtherRequestWhichPassItemQuantity(requestDetail);
-                        acceptedRequestDetail.Add(requestDetail);
+                        if (requestDetailRepository.AcceptRequestDetail(requestDetail))
+                        {
+                            await requestDetailRepository.DenyOtherRequestWhichPassItemQuantity(requestDetail);
+                            acceptedRequestDetail.Add(requestDetail);
+                        }
+                        else
+                        {
+                            return BadRequest(ReturnMessage.Create("Item not enought for request Detail"));
+                        }
+
                     }
                     else
                     {
@@ -136,9 +143,9 @@ namespace MOBY_API_Core6.Controllers
                 await requestRepository.SaveRequest();
                 if (await orderRepository.CreateOrder(foundRequest.UserId, foundRequest.Address, foundRequest.Note, acceptedRequestDetail))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
-                return BadRequest(ReturnMessage.create("error at ConfirmRequest"));
+                return BadRequest(ReturnMessage.Create("error at ConfirmRequest"));
 
             }
             catch (Exception ex)
@@ -159,13 +166,13 @@ namespace MOBY_API_Core6.Controllers
                 Request? foundRequest = await requestRepository.getRequestByRequestID(requestIDVM.RequestId);
                 if (foundRequest == null)
                 {
-                    return BadRequest(ReturnMessage.create("error at request not found"));
+                    return BadRequest(ReturnMessage.Create("error at request not found"));
                 }
                 if (await requestRepository.DenyRequest(foundRequest))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
-                return BadRequest(ReturnMessage.create("error at DenyRequest"));
+                return BadRequest(ReturnMessage.Create("error at DenyRequest"));
 
 
             }

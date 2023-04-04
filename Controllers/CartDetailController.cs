@@ -30,7 +30,7 @@ namespace MOBY_API_Core6.Controllers
 
             if (listOfIds == null)
             {
-                return BadRequest(ReturnMessage.create("there no CartDetailid"));
+                return BadRequest(ReturnMessage.Create("there no CartDetailid"));
             }
             try
             {
@@ -40,7 +40,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return Ok(result);
                 }
-                return BadRequest(ReturnMessage.create("error at GetListCartDetailByListCartDetailid"));
+                return BadRequest(ReturnMessage.Create("error at GetListCartDetailByListCartDetailid"));
             }
             catch (Exception ex)
             {
@@ -59,15 +59,15 @@ namespace MOBY_API_Core6.Controllers
 
                 if (await cartDetailDAO.CheclExistCartDetail(createdRequestDetail))
                 {
-                    return Ok(ReturnMessage.create("Success"));
+                    return Ok(ReturnMessage.Create("Success"));
                 }
                 var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 String result = await cartDetailDAO.CreateCartDetail(createdRequestDetail, currentUid);
                 if (result.Equals("success"))
                 {
-                    return Ok(ReturnMessage.create(result));
+                    return Ok(ReturnMessage.Create(result));
                 }
-                return BadRequest(ReturnMessage.create(result));
+                return BadRequest(ReturnMessage.Create(result));
             }
             catch (Exception ex)
             {
@@ -91,25 +91,25 @@ namespace MOBY_API_Core6.Controllers
                     {
                         if (await cartDetailDAO.DeleteCartDetail(currentCartDetail))
                         {
-                            return Ok(ReturnMessage.create("Success"));
+                            return Ok(ReturnMessage.Create("Success"));
                         }
                     }
                     String result = await cartDetailDAO.UpdateCartDetail(currentCartDetail, updatedCartDetail);
                     if (result.Equals("success"))
                     {
-                        return Ok(ReturnMessage.create("Success"));
+                        return Ok(ReturnMessage.Create("Success"));
                     }
                     else if (result.Contains("item available ammout"))
                     {
-                        return Ok(ReturnMessage.create(result));
+                        return Ok(ReturnMessage.Create(result));
                     }
                     else
                     {
-                        return BadRequest(ReturnMessage.create("error at UpdateRequestDetail"));
+                        return BadRequest(ReturnMessage.Create("error at UpdateRequestDetail"));
                     }
 
                 }
-                return BadRequest(ReturnMessage.create("error at UpdateRequestDetail"));
+                return BadRequest(ReturnMessage.Create("error at UpdateRequestDetail"));
             }
             catch (Exception ex)
             {
@@ -129,10 +129,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (await cartDetailDAO.DeleteCartDetail(requestDetail))
                     {
-                        return Ok(ReturnMessage.create("Success"));
+                        return Ok(ReturnMessage.Create("Success"));
                     }
                 }
-                return BadRequest(ReturnMessage.create("error at DeleteRequestDetail"));
+                return BadRequest(ReturnMessage.Create("error at DeleteRequestDetail"));
             }
             catch (Exception ex)
             {
@@ -153,14 +153,14 @@ namespace MOBY_API_Core6.Controllers
             {
                 if (listCartDetailID.listCartDetailID == null || listCartDetailID.listCartDetailID.Count == 0)
                 {
-                    return BadRequest(ReturnMessage.create("there no cart Detail to confirm"));
+                    return BadRequest(ReturnMessage.Create("there no cart Detail to confirm"));
                 }
                 var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (await cartDetailDAO.ConfirmCartDetail(listCartDetailID, currentUid))
                 {
-                    return Ok(ReturnMessage.create("Success"));
+                    return Ok(ReturnMessage.Create("Success"));
                 }
-                return BadRequest(ReturnMessage.create("error at ConfirmRequestDetail"));
+                return BadRequest(ReturnMessage.Create("error at ConfirmRequestDetail"));
             }
             catch (Exception ex)
             {

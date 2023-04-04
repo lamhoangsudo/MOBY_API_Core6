@@ -23,10 +23,16 @@ namespace MOBY_API_Core6.Repository
 
         Task<bool> DeleteReport(DeleteReportVM reportVM);
 
-        Task<List<ViewReport>?> GetAllReport(int pageNumber, int pageSize);
+        Task<ListVM<ViewReport>?> GetReports(DynamicFilterReportVM dynamicFilterReportVM);
 
-        Task<List<ViewReport>?> GetAllReportByStatus(int status, int pageNumber, int pageSize);
+        Task<ViewReportItem?> ItemReportDetail(int reportID);
 
-        Task<List<ViewReport>?> GetReports(DynamicFilterReportVM dynamicFilterReportVM);
+        Task<ViewReportBlog?> BlogReportDetail(int reportID);
+
+        Task<ViewReportComment?> CommentReportDetail(int reportID);
+
+        Task<ViewReportReply?> ReplyReportDetail(int reportID);
+
+        Task<ViewReportOrder?> OrderReportDetail(int reportID);
     }
 }

@@ -28,7 +28,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (await userDAO.CreateUser(this.User.Claims, createUserVM))
                     {
-                        return Ok(ReturnMessage.create("success"));
+                        return Ok(ReturnMessage.Create("success"));
                         //int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                         /*if (await cartDAO.CreateCart(uid))
                         {
@@ -39,7 +39,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create("this user already exist"));
+                    return BadRequest(ReturnMessage.Create("this user already exist"));
                 }
             }
             catch (Exception ex)
@@ -47,7 +47,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
-            return BadRequest(ReturnMessage.create("error at CreateAccount"));
+            return BadRequest(ReturnMessage.Create("error at CreateAccount"));
         }
 
         [Authorize]
@@ -64,12 +64,12 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (await userDAO.EditUser(currentUser, accountVM))
                     {
-                        return Ok(ReturnMessage.create("success"));
+                        return Ok(ReturnMessage.Create("success"));
                     }
-                    return BadRequest(ReturnMessage.create("error at updateUserAccount"));
+                    return BadRequest(ReturnMessage.Create("error at updateUserAccount"));
                 }
 
-                return BadRequest(ReturnMessage.create("No User Found"));
+                return BadRequest(ReturnMessage.Create("No User Found"));
 
 
             }
@@ -91,9 +91,9 @@ namespace MOBY_API_Core6.Controllers
             {
                 if (await userDAO.BanUser(uid))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
-                return BadRequest(ReturnMessage.create("error at BanUser"));
+                return BadRequest(ReturnMessage.Create("error at BanUser"));
 
             }
             catch (Exception ex)
@@ -113,9 +113,9 @@ namespace MOBY_API_Core6.Controllers
             {
                 if (await userDAO.UnbanUser(uid))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
-                return BadRequest(ReturnMessage.create("error at UnbanUser"));
+                return BadRequest(ReturnMessage.Create("error at UnbanUser"));
 
             }
             catch (Exception ex)
@@ -155,12 +155,12 @@ namespace MOBY_API_Core6.Controllers
                 UserAccount? currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (currentUser == null)
                 {
-                    return NotFound(ReturnMessage.create("account not found"));
+                    return NotFound(ReturnMessage.Create("account not found"));
                 }
                 Cart? currentcart = currentUser.Carts.FirstOrDefault();
                 if (currentcart == null)
                 {
-                    return NotFound(ReturnMessage.create("account not found cart"));
+                    return NotFound(ReturnMessage.Create("account not found cart"));
                 }
                 var userAccountVM = UserAccountVM.UserAccountToVewModel(currentUser, currentcart.CartId);
 
@@ -184,12 +184,12 @@ namespace MOBY_API_Core6.Controllers
                 UserAccount? currentUser = await userDAO.FindUserByUid(uid.UserId);
                 if (currentUser == null)
                 {
-                    return BadRequest(ReturnMessage.create("account not found"));
+                    return BadRequest(ReturnMessage.Create("account not found"));
                 }
                 Cart? currentcart = currentUser.Carts.FirstOrDefault();
                 if (currentcart == null)
                 {
-                    return NotFound(ReturnMessage.create("account not found cart"));
+                    return NotFound(ReturnMessage.Create("account not found cart"));
                 }
                 var userAccountVM = UserAccountVM.UserAccountToVewModel(currentUser, currentcart.CartId);
 

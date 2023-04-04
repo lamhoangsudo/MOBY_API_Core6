@@ -99,7 +99,7 @@ namespace MOBY_API_Core6.Controllers
                     }
                     return Ok(foundBlog);
                 }
-                return Ok(ReturnMessage.create("there no field so no blog"));
+                return Ok(ReturnMessage.Create("there no field so no blog"));
             }
             catch (Exception ex)
             {
@@ -139,11 +139,11 @@ namespace MOBY_API_Core6.Controllers
 
                 if (await BlogDAO.CreateBlog(createdBlog, UserID))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create("error at CreateBlog"));
+                    return BadRequest(ReturnMessage.Create("error at CreateBlog"));
                 }
             }
             catch (Exception ex)
@@ -167,10 +167,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (await BlogDAO.UpdateBlog(foundblog, UpdatedBlog))
                     {
-                        return Ok(ReturnMessage.create("success"));
+                        return Ok(ReturnMessage.Create("success"));
                     }
                 }
-                return BadRequest(ReturnMessage.create("error at UpdateBlog"));
+                return BadRequest(ReturnMessage.Create("error at UpdateBlog"));
             }
             catch (Exception ex)
             {
@@ -192,14 +192,14 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (await BlogDAO.ConfirmBlog(foundblog, 1))
                     {
-                        return Ok(ReturnMessage.create("success"));
+                        return Ok(ReturnMessage.Create("success"));
                     }
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create("found no blog"));
+                    return BadRequest(ReturnMessage.Create("found no blog"));
                 }
-                return BadRequest(ReturnMessage.create("error at AcceptBlog"));
+                return BadRequest(ReturnMessage.Create("error at AcceptBlog"));
             }
             catch (Exception ex)
             {
@@ -223,19 +223,19 @@ namespace MOBY_API_Core6.Controllers
                     {
                         if (await BlogDAO.DenyBlog(foundblog, 2, blogId.reason))
                         {
-                            return Ok(ReturnMessage.create("success"));
+                            return Ok(ReturnMessage.Create("success"));
                         }
                     }
                     else
                     {
-                        return BadRequest(ReturnMessage.create("must have reason deny"));
+                        return BadRequest(ReturnMessage.Create("must have reason deny"));
                     }
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create("found no blog"));
+                    return BadRequest(ReturnMessage.Create("found no blog"));
                 }
-                return BadRequest(ReturnMessage.create("error at DenyBlog"));
+                return BadRequest(ReturnMessage.Create("error at DenyBlog"));
             }
             catch (Exception ex)
             {
@@ -258,14 +258,14 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (await BlogDAO.ConfirmBlog(foundblog, 3))
                     {
-                        return Ok(ReturnMessage.create("success"));
+                        return Ok(ReturnMessage.Create("success"));
                     }
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create("found no blog"));
+                    return BadRequest(ReturnMessage.Create("found no blog"));
                 }
-                return BadRequest(ReturnMessage.create("error at DeleteBlog"));
+                return BadRequest(ReturnMessage.Create("error at DeleteBlog"));
             }
             catch (Exception ex)
             {

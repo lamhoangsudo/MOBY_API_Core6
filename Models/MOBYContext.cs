@@ -709,15 +709,53 @@ namespace MOBY_API_Core6.Models
 
                 entity.ToView("ViewReportBlog");
 
+                entity.Property(e => e.BlogDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Blog_Date_Create");
+
+                entity.Property(e => e.BlogDateUpdate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Blog_Date_Update");
+
                 entity.Property(e => e.BlogId).HasColumnName("BlogID");
+
+                entity.Property(e => e.BlogStatus).HasColumnName("Blog_Status");
 
                 entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
 
+                entity.Property(e => e.Expr7).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
+
+                entity.Property(e => e.ReportDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Create");
+
+                entity.Property(e => e.ReportDateResolve)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Resolve");
+
                 entity.Property(e => e.ReportId).HasColumnName("ReportID");
+
+                entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
+
+                entity.Property(e => e.Title).HasMaxLength(100);
+
+                entity.Property(e => e.UserCode).HasColumnName("User_Code");
+
+                entity.Property(e => e.UserDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("User_Date_Create");
+
+                entity.Property(e => e.UserGmail).HasColumnName("User_Gmail");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
+                entity.Property(e => e.UserImage).HasColumnName("User_Image");
+
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
+
+                entity.Property(e => e.UserStatus).HasColumnName("User_Status");
             });
 
             modelBuilder.Entity<ViewReportComment>(entity =>
@@ -726,13 +764,53 @@ namespace MOBY_API_Core6.Models
 
                 entity.ToView("ViewReportComment");
 
+                entity.Property(e => e.BlogId).HasColumnName("BlogID");
+
+                entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
+
                 entity.Property(e => e.CommentId).HasColumnName("CommentID");
+
+                entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.DateUpdate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.Expr7).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
+
+                entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
+
+                entity.Property(e => e.ReportDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Create");
+
+                entity.Property(e => e.ReportDateResolve)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Resolve");
 
                 entity.Property(e => e.ReportId).HasColumnName("ReportID");
 
+                entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
+
+                entity.Property(e => e.Title).HasMaxLength(100);
+
+                entity.Property(e => e.UserCode).HasColumnName("User_Code");
+
+                entity.Property(e => e.UserDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("User_Date_Create");
+
+                entity.Property(e => e.UserGmail).HasColumnName("User_Gmail");
+
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
+                entity.Property(e => e.UserImage).HasColumnName("User_Image");
+
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
+
+                entity.Property(e => e.UserStatus).HasColumnName("User_Status");
             });
 
             modelBuilder.Entity<ViewReportItem>(entity =>
@@ -741,13 +819,69 @@ namespace MOBY_API_Core6.Models
 
                 entity.ToView("ViewReportItem");
 
+                entity.Property(e => e.ItemCode).HasColumnName("Item_Code");
+
+                entity.Property(e => e.ItemDateCreated)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Item_Date_Created");
+
+                entity.Property(e => e.ItemDateUpdate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Item_Date_Update");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.ItemStatus).HasColumnName("Item_Status");
+
                 entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
+
+                entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
+
+                entity.Property(e => e.ReportDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Create");
+
+                entity.Property(e => e.ReportDateResolve)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Resolve");
 
                 entity.Property(e => e.ReportId).HasColumnName("ReportID");
 
+                entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
+
+                entity.Property(e => e.Title).HasMaxLength(100);
+
+                entity.Property(e => e.UserCode).HasColumnName("User_Code");
+
+                entity.Property(e => e.UserCodeReport).HasColumnName("User_CodeReport");
+
+                entity.Property(e => e.UserDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("User_Date_Create");
+
+                entity.Property(e => e.UserDateCreateReport)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("User_DateCreateReport");
+
+                entity.Property(e => e.UserGmail).HasColumnName("User_Gmail");
+
+                entity.Property(e => e.UserGmailReport).HasColumnName("User_GmailReport");
+
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
+                entity.Property(e => e.UserIdreport).HasColumnName("UserIDReport");
+
+                entity.Property(e => e.UserImage).HasColumnName("User_Image");
+
+                entity.Property(e => e.UserImageReport).HasColumnName("User_ImageReport");
+
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
+
+                entity.Property(e => e.UserNameReport).HasColumnName("User_NameReport");
+
+                entity.Property(e => e.UserStatus).HasColumnName("User_Status");
+
+                entity.Property(e => e.UserStausReport).HasColumnName("User_StausReport");
             });
 
             modelBuilder.Entity<ViewReportOrder>(entity =>
@@ -756,13 +890,67 @@ namespace MOBY_API_Core6.Models
 
                 entity.ToView("ViewReportOrder");
 
+                entity.Property(e => e.CodeUreport).HasColumnName("CodeUReport");
+
+                entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.DateCreateUreport)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("DateCreateUReport");
+
+                entity.Property(e => e.DatePackage).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.DateReceived).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.GmailUreport).HasColumnName("GmailUReport");
+
+                entity.Property(e => e.Idureport).HasColumnName("IDUReport");
+
+                entity.Property(e => e.ImageUreport).HasColumnName("ImageUReport");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
+
+                entity.Property(e => e.NameUreport).HasColumnName("NameUReport");
+
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
+
+                entity.Property(e => e.ReportDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Create");
+
+                entity.Property(e => e.ReportDateResolve)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Resolve");
 
                 entity.Property(e => e.ReportId).HasColumnName("ReportID");
 
+                entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
+
+                entity.Property(e => e.ReputationUreport).HasColumnName("ReputationUReport");
+
+                entity.Property(e => e.StatusUreport).HasColumnName("StatusUReport");
+
+                entity.Property(e => e.Title).HasMaxLength(100);
+
+                entity.Property(e => e.UserCode).HasColumnName("User_Code");
+
+                entity.Property(e => e.UserDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("User_Date_Create");
+
+                entity.Property(e => e.UserGmail).HasColumnName("User_Gmail");
+
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
+                entity.Property(e => e.UserImage).HasColumnName("User_Image");
+
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
+
+                entity.Property(e => e.UserStatus).HasColumnName("User_Status");
             });
 
             modelBuilder.Entity<ViewReportReply>(entity =>
@@ -771,13 +959,67 @@ namespace MOBY_API_Core6.Models
 
                 entity.ToView("ViewReportReply");
 
+                entity.Property(e => e.BlogId).HasColumnName("BlogID");
+
+                entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
+
+                entity.Property(e => e.CodeUreport).HasColumnName("CodeUReport");
+
+                entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.DateCreateUreport)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("DateCreateUReport");
+
+                entity.Property(e => e.GmailUreport).HasColumnName("GmailUReport");
+
+                entity.Property(e => e.Idureport).HasColumnName("IDUReport");
+
+                entity.Property(e => e.ImageUreport).HasColumnName("ImageUReport");
+
+                entity.Property(e => e.ItemId).HasColumnName("ItemID");
+
+                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
+
+                entity.Property(e => e.NameUreport).HasColumnName("NameUReport");
+
                 entity.Property(e => e.ReplyId).HasColumnName("ReplyID");
+
+                entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
+
+                entity.Property(e => e.ReportDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Create");
+
+                entity.Property(e => e.ReportDateResolve)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("Report_Date_Resolve");
 
                 entity.Property(e => e.ReportId).HasColumnName("ReportID");
 
+                entity.Property(e => e.ReportStatus).HasColumnName("Report_Status");
+
+                entity.Property(e => e.ReputationUreport).HasColumnName("ReputationUReport");
+
+                entity.Property(e => e.StatusUreport).HasColumnName("StatusUReport");
+
+                entity.Property(e => e.Title).HasMaxLength(100);
+
+                entity.Property(e => e.UserCode).HasColumnName("User_Code");
+
+                entity.Property(e => e.UserDateCreate)
+                    .HasColumnType("smalldatetime")
+                    .HasColumnName("User_Date_Create");
+
+                entity.Property(e => e.UserGmail).HasColumnName("User_Gmail");
+
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
+                entity.Property(e => e.UserImage).HasColumnName("User_Image");
+
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
+
+                entity.Property(e => e.UserStatus).HasColumnName("User_Status");
             });
 
             OnModelCreatingPartial(modelBuilder);

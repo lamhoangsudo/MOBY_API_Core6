@@ -49,7 +49,7 @@ namespace MOBY_API_Core6.Controllers
                     List<CommentVM> listAllComment = await CmtDAO.GetCommentByItemID(id.ItemId.Value);
                     return Ok(listAllComment);
                 }
-                return BadRequest(ReturnMessage.create("no BlogID either ItemID"));
+                return BadRequest(ReturnMessage.Create("no BlogID either ItemID"));
             }
             catch (Exception ex)
             {
@@ -68,10 +68,10 @@ namespace MOBY_API_Core6.Controllers
 
                 if (await CmtDAO.CreateComment(cmt, uid))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
 
-                return BadRequest(ReturnMessage.create("error at CreateComment"));
+                return BadRequest(ReturnMessage.Create("error at CreateComment"));
             }
             catch (Exception ex)
             {
@@ -89,9 +89,9 @@ namespace MOBY_API_Core6.Controllers
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (await CmtDAO.UpdateComment(cmt, uid))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
-                return BadRequest(ReturnMessage.create("error at UpdateComment"));
+                return BadRequest(ReturnMessage.Create("error at UpdateComment"));
             }
             catch (Exception ex)
             {
@@ -109,9 +109,9 @@ namespace MOBY_API_Core6.Controllers
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (await CmtDAO.DeleteComment(cmtid, uid))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
-                return BadRequest(ReturnMessage.create("error at DeleteComment"));
+                return BadRequest(ReturnMessage.Create("error at DeleteComment"));
             }
             catch (Exception ex)
             {

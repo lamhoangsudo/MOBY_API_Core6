@@ -70,11 +70,11 @@ namespace MOBY_API_Core6.Controllers
 
                 if (checking)
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create("there no record change"));
+                    return BadRequest(ReturnMessage.Create("there no record change"));
                 }
             }
             catch (Exception ex)
@@ -95,11 +95,11 @@ namespace MOBY_API_Core6.Controllers
 
                 if (checking)
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.create("there no record change"));
+                    return BadRequest(ReturnMessage.Create("there no record change"));
                 }
             }
             catch (Exception ex)
@@ -120,7 +120,7 @@ namespace MOBY_API_Core6.Controllers
 
                 if (Order == null)
                 {
-                    return BadRequest(ReturnMessage.create("order not found"));
+                    return BadRequest(ReturnMessage.Create("order not found"));
                 }
                 return Ok(Order);
 
@@ -143,28 +143,28 @@ namespace MOBY_API_Core6.Controllers
                 Order? currentOrder = await orderDAO.GetOrderByOrderID(updateOrderVM.OrderId);
                 if (currentOrder == null)
                 {
-                    return BadRequest(ReturnMessage.create("order not found"));
+                    return BadRequest(ReturnMessage.Create("order not found"));
                 }
 
 
                 if (currentOrder.UserId == uid && updateOrderVM.Status == 1)
                 {
-                    return BadRequest(ReturnMessage.create("Package status must be from Sharer"));
+                    return BadRequest(ReturnMessage.Create("Package status must be from Sharer"));
                 }
 
                 if (currentOrder.OrderDetails.First().Item.UserId == uid && currentOrder.Status == 2)
                 {
-                    return BadRequest(ReturnMessage.create("Recieve status must be from Reciever"));
+                    return BadRequest(ReturnMessage.Create("Recieve status must be from Reciever"));
                 }
 
 
 
                 if (await orderDAO.UpdateStatusOrder(currentOrder, updateOrderVM.Status))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
 
-                return BadRequest(ReturnMessage.create("error at UpdateOrder"));
+                return BadRequest(ReturnMessage.Create("error at UpdateOrder"));
 
 
             }

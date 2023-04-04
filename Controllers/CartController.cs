@@ -25,13 +25,13 @@ namespace MOBY_API_Core6.Controllers
             var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             if (await cartDAO.CheackExistedCartByUid(currentUid))
             {
-                return Ok(ReturnMessage.create("this user already has a cart"));
+                return Ok(ReturnMessage.Create("this user already has a cart"));
             }
             if (await cartDAO.CreateCart(currentUid))
             {
-                return Ok(ReturnMessage.create("success"));
+                return Ok(ReturnMessage.Create("success"));
             }
-            return Ok(ReturnMessage.create("error at CreateCart"));
+            return Ok(ReturnMessage.Create("error at CreateCart"));
         }
 
         [Authorize]
@@ -43,13 +43,13 @@ namespace MOBY_API_Core6.Controllers
             var currenCart = await cartDAO.GetCartByUid(currentUid);
             if (currenCart == null)
             {
-                return Ok(ReturnMessage.create("Cart Not Found"));
+                return Ok(ReturnMessage.Create("Cart Not Found"));
             }
             if (await cartDAO.UpdateCart(currenCart, updatedCart))
             {
-                return Ok(ReturnMessage.create("success"));
+                return Ok(ReturnMessage.Create("success"));
             }
-            return Ok(ReturnMessage.create("error at UpdateCart"));
+            return Ok(ReturnMessage.Create("error at UpdateCart"));
         }
 
         [Authorize]

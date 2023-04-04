@@ -1,20 +1,23 @@
 ﻿
 
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
 
 namespace MOBY_API_Core6.Data_View_Model
 {
     public class ListVM<T>
     {
-        public int total { get; set; }
-        public int totalPage { get; set; }
-        public List<T>? list { get; set; }
+        [DefaultValue(0)]
+        public int Total { get; set; }
+        [DefaultValue(0)]
+        public int TotalPage { get; set; }
+        public List<T>? List { get; set; }
 
         public ListVM(int total, int totalPage, IEnumerable<T> list)
         {
-            this.total = total;
-            this.totalPage = totalPage;
-            this.list = new List<T>(list);
+            this.Total = total;
+            this.TotalPage = totalPage;
+            this.List = new List<T>(list);
         }
     }
 }

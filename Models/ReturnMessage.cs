@@ -2,11 +2,11 @@
 {
     public class ReturnMessage
     {
-        public string? message { get; set; }
+        public string? Message { get; set; }
 
-        public static ReturnMessage create(string message)
+        public static ReturnMessage Create(string message)
         {
-            return new ReturnMessage { message = message };
+            return new ReturnMessage { Message = message };
         }
     }
 }

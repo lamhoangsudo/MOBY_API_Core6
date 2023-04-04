@@ -28,17 +28,17 @@ namespace MOBY_API_Core6.Controllers
 
                 if (await userAddressDAO.CheckExitedAddress(createMyAddressVM, uid))
                 {
-                    return BadRequest(ReturnMessage.create("this address already existed"));
+                    return BadRequest(ReturnMessage.Create("this address already existed"));
                 }
 
                 if (await userAddressDAO.createNewAddress(createMyAddressVM, uid))
                 {
-                    return Ok(ReturnMessage.create("success"));
+                    return Ok(ReturnMessage.Create("success"));
                 }
                 else
                 {
 
-                    return BadRequest(ReturnMessage.create("error at createNewAddress"));
+                    return BadRequest(ReturnMessage.Create("error at createNewAddress"));
 
                 }
             }
@@ -79,11 +79,11 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (await userAddressDAO.UpdateUserAddress(updateMyAddressVM, currentUserAddress))
                     {
-                        return Ok(ReturnMessage.create("success"));
+                        return Ok(ReturnMessage.Create("success"));
                     }
-                    return BadRequest(ReturnMessage.create("error at UpdateAddress"));
+                    return BadRequest(ReturnMessage.Create("error at UpdateAddress"));
                 }
-                return BadRequest(ReturnMessage.create("UserAddress not found"));
+                return BadRequest(ReturnMessage.Create("UserAddress not found"));
             }
             catch (Exception ex)
             {
@@ -103,11 +103,11 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (await userAddressDAO.deleteMyAddress(currentUserAddress))
                     {
-                        return Ok(ReturnMessage.create("success"));
+                        return Ok(ReturnMessage.Create("success"));
                     }
-                    return BadRequest(ReturnMessage.create("error at deleteNewAddress"));
+                    return BadRequest(ReturnMessage.Create("error at deleteNewAddress"));
                 }
-                return BadRequest(ReturnMessage.create("UserAddress not found"));
+                return BadRequest(ReturnMessage.Create("UserAddress not found"));
             }
             catch (Exception ex)
             {
