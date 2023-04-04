@@ -51,10 +51,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     return false;
                 }
-                if (item.ItemShareAmount - requestDetail.Quantity == 0)
-                {
-                    item.ItemStatus = false;
-                }
+
 
                 item.ItemShareAmount -= requestDetail.Quantity;
                 requestDetail.Status = 1;
