@@ -249,7 +249,7 @@ namespace MOBY_API_Core6.Repository
             if (pagging.orderBy)
             {
                 blogList = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus != 3)
-                .Include(b => b.BlogCategory)
+                .Include(b => b.User)
                 .Include(b => b.BlogCategory)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
@@ -260,7 +260,7 @@ namespace MOBY_API_Core6.Repository
             else
             {
                 blogList = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus != 3)
-                .Include(b => b.BlogCategory)
+                .Include(b => b.User)
                 .Include(b => b.BlogCategory)
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
