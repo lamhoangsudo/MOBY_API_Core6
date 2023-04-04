@@ -121,9 +121,16 @@ namespace MOBY_API_Core6.Controllers
                     if (requestConfirmVM.ListRequestDetailID.Contains(requestDetail.RequestDetailId))
                     {
                         //accept requestDetail + autoCheckDeny
-                        requestDetailRepository.AcceptRequestDetail(requestDetail);
-                        await requestDetailRepository.DenyOtherRequestWhichPassItemQuantity(requestDetail);
-                        acceptedRequestDetail.Add(requestDetail);
+                        if (requestDetailRepository.AcceptRequestDetail(requestDetail))
+                        {
+                            await requestDetailRepository.DenyOtherRequestWhichPassItemQuantity(requestDetail);
+                            acceptedRequestDetail.Add(requestDetail);
+                        }
+                        else
+                        {
+                            return BadRequest(ReturnMessage.create("Item not enought for request Detail"));
+                        }
+
                     }
                     else
                     {
