@@ -44,29 +44,61 @@ namespace MOBY_API_Core6.Repository
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
             List<OrderBriefVM> listOrder = new List<OrderBriefVM>();
-            if (orderStatusVM.OrderStatus == null)
+            if (pagging.orderBy)
             {
-                listOrder = await context.Orders.Where(o => o.UserId == uid)
-                .Include(o => o.User)
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Item)
-                .ThenInclude(i => i.User)
-                .Skip(itemsToSkip)
-                .Take(pagging.pageSize)
-                .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
-                .ToListAsync();
+                if (orderStatusVM.OrderStatus == null)
+                {
+                    listOrder = await context.Orders.Where(o => o.UserId == uid)
+                    .Include(o => o.User)
+                    .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Item)
+                    .ThenInclude(i => i.User)
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .OrderByDescending(o => o.OrderId)
+                    .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
+                    .ToListAsync();
+                }
+                else
+                {
+                    listOrder = await context.Orders.Where(o => o.UserId == uid && o.Status == orderStatusVM.OrderStatus)
+                    .Include(o => o.User)
+                    .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Item)
+                    .ThenInclude(i => i.User)
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .OrderByDescending(o => o.OrderId)
+                    .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
+                    .ToListAsync();
+                }
             }
             else
             {
-                listOrder = await context.Orders.Where(o => o.UserId == uid && o.Status == orderStatusVM.OrderStatus)
-                .Include(o => o.User)
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Item)
-                .ThenInclude(i => i.User)
-                .Skip(itemsToSkip)
-                .Take(pagging.pageSize)
-                .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
-                .ToListAsync();
+                if (orderStatusVM.OrderStatus == null)
+                {
+                    listOrder = await context.Orders.Where(o => o.UserId == uid)
+                    .Include(o => o.User)
+                    .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Item)
+                    .ThenInclude(i => i.User)
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
+                    .ToListAsync();
+                }
+                else
+                {
+                    listOrder = await context.Orders.Where(o => o.UserId == uid && o.Status == orderStatusVM.OrderStatus)
+                    .Include(o => o.User)
+                    .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Item)
+                    .ThenInclude(i => i.User)
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
+                    .ToListAsync();
+                }
             }
             return listOrder;
         }
@@ -90,31 +122,65 @@ namespace MOBY_API_Core6.Repository
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
             List<OrderBriefVM> listOrder = new List<OrderBriefVM>();
-            if (orderStatusVM.OrderStatus == null)
+            if (pagging.orderBy)
             {
-                listOrder = await context.Orders
-                .Include(o => o.User)
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Item)
-                .ThenInclude(i => i.User)
-                .Where(r => r.OrderDetails.Any(od => od.Item.UserId == uid))
-                .Skip(itemsToSkip)
-                .Take(pagging.pageSize)
-                .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
-                .ToListAsync();
+                if (orderStatusVM.OrderStatus == null)
+                {
+                    listOrder = await context.Orders
+                    .Include(o => o.User)
+                    .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Item)
+                    .ThenInclude(i => i.User)
+                    .Where(r => r.OrderDetails.Any(od => od.Item.UserId == uid))
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .OrderByDescending(o => o.OrderId)
+                    .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
+                    .ToListAsync();
+                }
+                else
+                {
+                    listOrder = await context.Orders
+                    .Include(o => o.User)
+                    .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Item)
+                    .ThenInclude(i => i.User)
+                    .Where(o => o.OrderDetails.Any(od => od.Item.UserId == uid) && o.Status == orderStatusVM.OrderStatus)
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .OrderByDescending(o => o.OrderId)
+                    .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
+                    .ToListAsync();
+                }
             }
             else
             {
-                listOrder = await context.Orders
-                .Include(o => o.User)
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Item)
-                .ThenInclude(i => i.User)
-                .Where(o => o.OrderDetails.Any(od => od.Item.UserId == uid) && o.Status == orderStatusVM.OrderStatus)
-                .Skip(itemsToSkip)
-                .Take(pagging.pageSize)
-                .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
-                .ToListAsync();
+                if (orderStatusVM.OrderStatus == null)
+                {
+                    listOrder = await context.Orders
+                    .Include(o => o.User)
+                    .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Item)
+                    .ThenInclude(i => i.User)
+                    .Where(r => r.OrderDetails.Any(od => od.Item.UserId == uid))
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
+                    .ToListAsync();
+                }
+                else
+                {
+                    listOrder = await context.Orders
+                    .Include(o => o.User)
+                    .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Item)
+                    .ThenInclude(i => i.User)
+                    .Where(o => o.OrderDetails.Any(od => od.Item.UserId == uid) && o.Status == orderStatusVM.OrderStatus)
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
+                    .ToListAsync();
+                }
             }
             return listOrder;
         }

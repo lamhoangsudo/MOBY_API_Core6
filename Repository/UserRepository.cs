@@ -133,11 +133,26 @@ namespace MOBY_API_Core6.Repository
         public async Task<List<UserVM>> GetAllUser(PaggingVM pagging)
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
-            List<UserVM> accountListVM = await context.UserAccounts
+            List<UserVM> accountListVM = new List<UserVM>();
+            if (pagging.orderBy)
+            {
+                accountListVM = await context.UserAccounts
+                .Skip(itemsToSkip)
+                .Take(pagging.pageSize)
+                .OrderByDescending(x => x.UserId)
+                .Select(u => UserVM.UserAccountToVewModel(u))
+                .ToListAsync();
+
+            }
+            else
+            {
+                accountListVM = await context.UserAccounts
                 .Skip(itemsToSkip)
                 .Take(pagging.pageSize)
                 .Select(u => UserVM.UserAccountToVewModel(u))
                 .ToListAsync();
+
+            }
 
             return accountListVM;
         }
