@@ -140,7 +140,7 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> DeleteReport([FromBody] DeleteReportVM reportVM)
         {
             try
-            { 
+            {
                 bool checkDelete = await _reportRepository.DeleteReport(reportVM);
                 if (checkDelete)
                 {
@@ -167,16 +167,7 @@ namespace MOBY_API_Core6.Controllers
                 ListVM<ViewReport>? reports = await _reportRepository.GetReports(dynamicFilterReportVM);
                 if (reports != null)
                 {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    if (reports.List.Count == 0 || reports.List == null)
-                    {
-                        return NotFound(ReturnMessage.Create("không có report nào"));
-                    }
-                    else
-                    {
-                        return Ok(reports);
-                    }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    return Ok(reports);
                 }
                 else
                 {
@@ -236,7 +227,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                if(item)
+                if (item)
                 {
                     ViewReportItem? viewReportItem = await _reportRepository.ItemReportDetail(report);
                     if (viewReportItem != null)
@@ -300,7 +291,7 @@ namespace MOBY_API_Core6.Controllers
                 return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
