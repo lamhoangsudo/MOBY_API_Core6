@@ -11,10 +11,12 @@ namespace MOBY_API_Core6.Controllers
     public class ReportController : ControllerBase
     {
         public readonly IReportRepository _reportRepository;
+        public readonly IUserRepository _userRepository;
 
-        public ReportController(IReportRepository reportRepository)
+        public ReportController(IReportRepository reportRepository, IUserRepository userRepository)
         {
             _reportRepository = reportRepository;
+            _userRepository = userRepository;
         }
 
         [Authorize]
@@ -53,7 +55,9 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.ErrorMessage);
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -75,7 +79,9 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.ErrorMessage);
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -96,7 +102,9 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.ErrorMessage);
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -117,7 +125,9 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.ErrorMessage);
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -138,7 +148,9 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, ReportRepository.ErrorMessage);
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -185,7 +197,12 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                UserAccount? user = await _userRepository.FindUserByUid(userID);
+                if (user == null)
+                {
+                    return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
+                }
                 dynamicFilterReportVM.UserID = userID;
                 ListVM<ViewReport>? reports = await _reportRepository.GetReports(dynamicFilterReportVM);
                 if (reports != null)

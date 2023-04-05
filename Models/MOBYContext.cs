@@ -45,7 +45,14 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<ViewReportOrder> ViewReportOrders { get; set; } = null!;
         public virtual DbSet<ViewReportReply> ViewReportReplies { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=tcp:mobys.database.windows.net,1433;Initial Catalog=MOBY;Persist Security Info=False;User ID=lamhoang;Password=Hlam@qaz890;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,6 +63,10 @@ namespace MOBY_API_Core6.Models
                     .HasColumnName("BannerID");
 
                 entity.Property(e => e.BannerLink).HasColumnName("Banner_Link");
+
+                entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
+
+                entity.Property(e => e.DateUpdate).HasColumnType("smalldatetime");
             });
 
             modelBuilder.Entity<Blog>(entity =>

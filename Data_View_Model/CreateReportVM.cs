@@ -21,6 +21,7 @@ namespace MOBY_API_Core6.Data_View_Model
         [Required]
         public string? title { get; set; }
         [DefaultValue(0)]
+        [ReadOnly(true)]
         public int status { get; set; }
         [Required]
         public string? content { get; set; }

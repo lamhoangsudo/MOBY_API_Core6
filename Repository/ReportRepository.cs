@@ -218,7 +218,13 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.ReportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
+                Report? report = await _context.Reports
+                    .Join(_context.UserAccounts, rp => rp.UserId, us => us.UserId, (rp, us) => new { rp , us })
+                    .Where(rpus => rpus.rp.ReportId == reportVM.ReportID 
+                    && rpus.rp.ReportStatus == 0
+                    && rpus.us.UserStatus == true)
+                    .Select(rpus => rpus.rp)
+                    .FirstOrDefaultAsync();
                 if (report != null)
                 {
                     report.ReportDateResolve = DateTime.Now;
@@ -243,6 +249,7 @@ namespace MOBY_API_Core6.Repository
                             if (userAccount.Reputation < 0)
                             {
                                 userAccount.Reputation = 0;
+                                AutoDeleteAllBanUser();
                             }
                         }
                         Models.Item? item = await _context.Items.Where(it => it.ItemId == report.ItemId).FirstOrDefaultAsync();
@@ -283,6 +290,7 @@ namespace MOBY_API_Core6.Repository
                             if (userAccount.Reputation < 0)
                             {
                                 userAccount.Reputation = 0;
+                                AutoDeleteAllBanUser();
                             }
                         }
                         Order? order = await _context.Orders.Where(or => or.OrderId == report.OrderId).FirstOrDefaultAsync();
@@ -312,6 +320,7 @@ namespace MOBY_API_Core6.Repository
                             if (userAccount.Reputation < 0)
                             {
                                 userAccount.Reputation = 0;
+                                AutoDeleteAllBanUser();
                             }
                         }
                         Blog? blog = await _context.Blogs.Where(bg => bg.BlogId == report.BlogId).FirstOrDefaultAsync();
@@ -344,6 +353,7 @@ namespace MOBY_API_Core6.Repository
                             if (userAccount.Reputation < 0)
                             {
                                 userAccount.Reputation = 0;
+                                AutoDeleteAllBanUser();
                             }
                         }
                         Comment? comment = await _context.Comments.Where(cm => cm.CommentId == report.CommentId).FirstOrDefaultAsync();
@@ -376,6 +386,7 @@ namespace MOBY_API_Core6.Repository
                             if (userAccount.Reputation < 0)
                             {
                                 userAccount.Reputation = 0;
+                                AutoDeleteAllBanUser();
                             }
                         }
                         Reply? reply = await _context.Replies.Where(rp => rp.ReplyId == report.ReportId).FirstOrDefaultAsync();
@@ -408,7 +419,13 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
+                Report? report = await _context.Reports
+                    .Join(_context.UserAccounts, rp => rp.UserId, us => us.UserId, (rp, us) => new { rp, us })
+                    .Where(rpus => rpus.rp.ReportId == reportVM.reportID 
+                    && rpus.rp.ReportStatus == 0
+                    && rpus.us.UserStatus == true)
+                    .Select(rpus => rpus.rp)
+                    .FirstOrDefaultAsync();
                 if (report != null)
                 {
                     report.ReportDateResolve = DateTime.Now;
@@ -488,105 +505,107 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
+                AutoDeleteAllBanUser();
                 int itemsToSkip = (dynamicFilterReportVM.PageNumber - 1) * dynamicFilterReportVM.PageSize;
                 List<ViewReport> reports = new();
-                var query = _context.ViewReports;
+                var query = _context.ViewReports
+                    .Join(_context.UserAccounts, vr => vr.UserId, us => us.UserId, (vr, us) => new { vr, us });
                 if (dynamicFilterReportVM.UserID != null)
                 {
-                    query = (DbSet<ViewReport>)query.Where(rp => rp.UserId == dynamicFilterReportVM.UserID);
+                    query = query.Where(vrus => vrus.vr.UserId == dynamicFilterReportVM.UserID && vrus.us.UserStatus == true);
                 }
                 if (dynamicFilterReportVM.IsItem == true)
                 {
                     if (dynamicFilterReportVM.ItemID != null)
                     {
-                        query = (DbSet<ViewReport>)query.Where(rp => rp.ItemId == dynamicFilterReportVM.ItemID);
+                        query = query.Where(vrus => vrus.vr.ItemId == dynamicFilterReportVM.ItemID);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>)query.Where(rp => rp.ItemId != null);
+                        query = query.Where(vrus => vrus.vr.ItemId != null);
                     }
                 }
                 if (dynamicFilterReportVM.IsOrder == true)
                 {
                     if (dynamicFilterReportVM.OrderID != null)
                     {
-                        query = (DbSet<ViewReport>)query.Where(rp => rp.OrderId == dynamicFilterReportVM.OrderID);
+                        query = query.Where(vrus => vrus.vr.OrderId == dynamicFilterReportVM.OrderID);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>)query.Where(rp => rp.OrderId != null);
+                        query = query.Where(vrus => vrus.vr.OrderId != null);
                     }
                 }
                 if (dynamicFilterReportVM.IsComment == true)
                 {
                     if (dynamicFilterReportVM.CommentId != null)
                     {
-                        query = (DbSet<ViewReport>)query.Where(rp => rp.CommentId == dynamicFilterReportVM.CommentId);
+                        query = query.Where(vrus => vrus.vr.CommentId == dynamicFilterReportVM.CommentId);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>)query.Where(rp => rp.CommentId != null);
+                        query = query.Where(vrus => vrus.vr.CommentId != null);
                     }
                 }
                 if (dynamicFilterReportVM.IsReply == true)
                 {
                     if (dynamicFilterReportVM.ReplyId != null)
                     {
-                        query = (DbSet<ViewReport>)query.Where(rp => rp.ReplyId == dynamicFilterReportVM.ReplyId);
+                        query = query.Where(vrus => vrus.vr.ReplyId == dynamicFilterReportVM.ReplyId);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>)query.Where(rp => rp.ReplyId != null);
+                        query = query.Where(vrus => vrus.vr.ReplyId != null);
                     }
                 }
                 if (dynamicFilterReportVM.IsBlog == true)
                 {
                     if (dynamicFilterReportVM.BlogId != null)
                     {
-                        query = (DbSet<ViewReport>)query.Where(rp => rp.BlogId == dynamicFilterReportVM.BlogId);
+                        query = query.Where(vrus => vrus.vr.BlogId == dynamicFilterReportVM.BlogId);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>)query.Where(rp => rp.BlogId != null);
+                        query = query.Where(vrus => vrus.vr.BlogId != null);
                     }
                 }
                 if (dynamicFilterReportVM.Status != null)
                 {
-                    query = (DbSet<ViewReport>)query.Where(rp => rp.ReportStatus == dynamicFilterReportVM.Status);
+                    query = query.Where(vrus => vrus.vr.ReportStatus == dynamicFilterReportVM.Status);
                 }
                 if (dynamicFilterReportVM.Title != null)
                 {
-                    query = (DbSet<ViewReport>)query.Where(rp => rp.Title.Equals(dynamicFilterReportVM.Title));
+                    query = query.Where(vrus => vrus.vr.Title.Equals(dynamicFilterReportVM.Title));
                 }
                 if (dynamicFilterReportVM.OrderByDateCreate == true && dynamicFilterReportVM.OrderByDateResolve == false)
                 {
                     if (dynamicFilterReportVM.AscendingOrDescending == true)
                     {
-                        query = (DbSet<ViewReport>)query.OrderBy(rp => rp.ReportDateCreate);
+                        query = query.OrderBy(vrus => vrus.vr.ReportDateCreate);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>)query.OrderByDescending(rp => rp.ReportDateCreate);
+                        query = query.OrderByDescending(vrus => vrus.vr.ReportDateCreate);
                     }
                 }
                 if (dynamicFilterReportVM.OrderByDateCreate == false && dynamicFilterReportVM.OrderByDateResolve == false)
                 {
                     if (dynamicFilterReportVM.AscendingOrDescending == true)
                     {
-                        query = (DbSet<ViewReport>)query.OrderBy(rp => rp.ReportDateResolve);
+                        query = query.OrderBy(vrus => vrus.vr.ReportDateResolve);
                     }
                     else
                     {
-                        query = (DbSet<ViewReport>)query.OrderByDescending(rp => rp.ReportDateResolve);
+                        query = query.OrderByDescending(vrus => vrus.vr.ReportDateResolve);
                     }
                 }
                 if (dynamicFilterReportVM.MinDateCreate <= dynamicFilterReportVM.MaxDateCreate)
                 {
-                    query = (DbSet<ViewReport>)query.Where(rp => rp.ReportDateCreate >= dynamicFilterReportVM.MinDateCreate && rp.ReportDateCreate <= dynamicFilterReportVM.MaxDateCreate);
+                    query = query.Where(vrus => vrus.vr.ReportDateCreate >= dynamicFilterReportVM.MinDateCreate && vrus.vr.ReportDateCreate <= dynamicFilterReportVM.MaxDateCreate);
                 }
                 else if (dynamicFilterReportVM.MinDateResolve <= dynamicFilterReportVM.MaxDateResolve)
                 {
-                    query = (DbSet<ViewReport>)query.Where(rp => rp.ReportDateResolve >= dynamicFilterReportVM.MinDateResolve && rp.ReportDateResolve <= dynamicFilterReportVM.MaxDateResolve);
+                    query = query.Where(vrus => vrus.vr.ReportDateResolve >= dynamicFilterReportVM.MinDateResolve && vrus.vr.ReportDateResolve <= dynamicFilterReportVM.MaxDateResolve);
                 }
                 int total = query.Count();
                 int totalPage = total / dynamicFilterReportVM.PageSize;
@@ -595,6 +614,7 @@ namespace MOBY_API_Core6.Repository
                     ++totalPage;
                 }
                 reports = await query
+                    .Select(vrus => vrus.vr)
                     .Skip(itemsToSkip)
                     .Take(dynamicFilterReportVM.PageSize)
                     .ToListAsync();
@@ -695,6 +715,34 @@ namespace MOBY_API_Core6.Repository
             {
                 ErrorMessage = ex.Message;
                 return null;
+            }
+        }
+
+        public async void AutoDeleteAllBanUser()
+        {
+            try
+            {
+                List<Report>? reports = await _context.Reports
+                    .Join(_context.UserAccounts, rp => rp.UserId, us => us.UserId, ( rp,us ) => new { rp,us })
+                    .Where(rpus => rpus.us.UserStatus == false && rpus.rp.ReportStatus == 0)
+                    .Select(rpus => rpus.rp)
+                    .ToListAsync();
+                if (reports.Any() && reports != null)
+                {
+                    foreach (Report report in reports)
+                    {
+                        report.ReportStatus = 3;
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                else 
+                {
+                    ErrorMessage = "không có dữ liệu";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
             }
         }
     }
