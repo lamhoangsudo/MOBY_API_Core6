@@ -29,9 +29,9 @@ namespace MOBY_API_Core6.Repository
 
         Task<List<BriefItem>?> GetAllMyBriefItemAndBriefRequestActiveandUnActive(int userID, bool share, bool status);
 
-        Task<List<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int? userID);
+        Task<ListVM<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int? userID);
 
-        Task<List<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize, int? userID);
+        Task<ListVM<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize, int? userID);
 
         Task<ListVM<BriefItem>?> GetAllMyShareAndRequest(int userID, bool share, bool status, int pageNumber, int pageSize);
 

@@ -262,8 +262,7 @@ namespace Item.Controllers
             {
                 int? userID = null;
                 //userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                //ListVM<BriefItem>? listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize, userID);
-                List<BriefItem>? listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize, userID);
+                ListVM<BriefItem>? listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize, userID);
                 if (listAllShareRecently == null)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
@@ -273,7 +272,7 @@ namespace Item.Controllers
                 else
                 {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    if (listAllShareRecently.Count > 0)
+                    if (listAllShareRecently.List.Count > 0)
                     {
                         return Ok(listAllShareRecently);
                     }
@@ -299,8 +298,7 @@ namespace Item.Controllers
             {
                 int? userID = null;
                 //userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                //ListVM<BriefItem>? listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize, userID);
-                List<BriefItem>? listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize, userID);
+                ListVM<BriefItem>? listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize, userID);
                 if (listAllShareFree == null)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
@@ -310,7 +308,7 @@ namespace Item.Controllers
                 else
                 {
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    if (listAllShareFree.Count > 0)
+                    if (listAllShareFree.List.Count > 0)
                     {
                         return Ok(listAllShareFree);
                     }
