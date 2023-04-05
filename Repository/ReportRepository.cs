@@ -512,100 +512,100 @@ namespace MOBY_API_Core6.Repository
                     .Join(_context.UserAccounts, vr => vr.UserId, us => us.UserId, (vr, us) => new { vr, us });
                 if (dynamicFilterReportVM.UserID != null)
                 {
-                    query = query.Where(vrus => vrus.vr.UserId == dynamicFilterReportVM.UserID && vrus.us.UserStatus == true);
+                    query = query.Where(query => query.vr.UserId == dynamicFilterReportVM.UserID && query.us.UserStatus == true);
                 }
                 if (dynamicFilterReportVM.IsItem == true)
                 {
                     if (dynamicFilterReportVM.ItemID != null)
                     {
-                        query = query.Where(vrus => vrus.vr.ItemId == dynamicFilterReportVM.ItemID);
+                        query = query.Where(query => query.vr.ItemId == dynamicFilterReportVM.ItemID);
                     }
                     else
                     {
-                        query = query.Where(vrus => vrus.vr.ItemId != null);
+                        query = query.Where(query => query.vr.ItemId != null);
                     }
                 }
                 if (dynamicFilterReportVM.IsOrder == true)
                 {
                     if (dynamicFilterReportVM.OrderID != null)
                     {
-                        query = query.Where(vrus => vrus.vr.OrderId == dynamicFilterReportVM.OrderID);
+                        query = query.Where(query => query.vr.OrderId == dynamicFilterReportVM.OrderID);
                     }
                     else
                     {
-                        query = query.Where(vrus => vrus.vr.OrderId != null);
+                        query = query.Where(query => query.vr.OrderId != null);
                     }
                 }
                 if (dynamicFilterReportVM.IsComment == true)
                 {
                     if (dynamicFilterReportVM.CommentId != null)
                     {
-                        query = query.Where(vrus => vrus.vr.CommentId == dynamicFilterReportVM.CommentId);
+                        query = query.Where(query => query.vr.CommentId == dynamicFilterReportVM.CommentId);
                     }
                     else
                     {
-                        query = query.Where(vrus => vrus.vr.CommentId != null);
+                        query = query.Where(query => query.vr.CommentId != null);
                     }
                 }
                 if (dynamicFilterReportVM.IsReply == true)
                 {
                     if (dynamicFilterReportVM.ReplyId != null)
                     {
-                        query = query.Where(vrus => vrus.vr.ReplyId == dynamicFilterReportVM.ReplyId);
+                        query = query.Where(query => query.vr.ReplyId == dynamicFilterReportVM.ReplyId);
                     }
                     else
                     {
-                        query = query.Where(vrus => vrus.vr.ReplyId != null);
+                        query = query.Where(query => query.vr.ReplyId != null);
                     }
                 }
                 if (dynamicFilterReportVM.IsBlog == true)
                 {
                     if (dynamicFilterReportVM.BlogId != null)
                     {
-                        query = query.Where(vrus => vrus.vr.BlogId == dynamicFilterReportVM.BlogId);
+                        query = query.Where(query => query.vr.BlogId == dynamicFilterReportVM.BlogId);
                     }
                     else
                     {
-                        query = query.Where(vrus => vrus.vr.BlogId != null);
+                        query = query.Where(query => query.vr.BlogId != null);
                     }
                 }
                 if (dynamicFilterReportVM.Status != null)
                 {
-                    query = query.Where(vrus => vrus.vr.ReportStatus == dynamicFilterReportVM.Status);
+                    query = query.Where(query => query.vr.ReportStatus == dynamicFilterReportVM.Status);
                 }
                 if (dynamicFilterReportVM.Title != null)
                 {
-                    query = query.Where(vrus => vrus.vr.Title.Equals(dynamicFilterReportVM.Title));
+                    query = query.Where(query => query.vr.Title.Equals(dynamicFilterReportVM.Title));
                 }
                 if (dynamicFilterReportVM.OrderByDateCreate == true && dynamicFilterReportVM.OrderByDateResolve == false)
                 {
                     if (dynamicFilterReportVM.AscendingOrDescending == true)
                     {
-                        query = query.OrderBy(vrus => vrus.vr.ReportDateCreate);
+                        query = query.OrderBy(query => query.vr.ReportDateCreate);
                     }
                     else
                     {
-                        query = query.OrderByDescending(vrus => vrus.vr.ReportDateCreate);
+                        query = query.OrderByDescending(query => query.vr.ReportDateCreate);
                     }
                 }
-                if (dynamicFilterReportVM.OrderByDateCreate == false && dynamicFilterReportVM.OrderByDateResolve == false)
+                if (dynamicFilterReportVM.OrderByDateCreate == false && dynamicFilterReportVM.OrderByDateResolve == true)
                 {
                     if (dynamicFilterReportVM.AscendingOrDescending == true)
                     {
-                        query = query.OrderBy(vrus => vrus.vr.ReportDateResolve);
+                        query = query.OrderBy(query => query.vr.ReportDateResolve);
                     }
                     else
                     {
-                        query = query.OrderByDescending(vrus => vrus.vr.ReportDateResolve);
+                        query = query.OrderByDescending(query => query.vr.ReportDateResolve);
                     }
                 }
                 if (dynamicFilterReportVM.MinDateCreate <= dynamicFilterReportVM.MaxDateCreate)
                 {
-                    query = query.Where(vrus => vrus.vr.ReportDateCreate >= dynamicFilterReportVM.MinDateCreate && vrus.vr.ReportDateCreate <= dynamicFilterReportVM.MaxDateCreate);
+                    query = query.Where(query => query.vr.ReportDateCreate >= dynamicFilterReportVM.MinDateCreate && query.vr.ReportDateCreate <= dynamicFilterReportVM.MaxDateCreate);
                 }
                 else if (dynamicFilterReportVM.MinDateResolve <= dynamicFilterReportVM.MaxDateResolve)
                 {
-                    query = query.Where(vrus => vrus.vr.ReportDateResolve >= dynamicFilterReportVM.MinDateResolve && vrus.vr.ReportDateResolve <= dynamicFilterReportVM.MaxDateResolve);
+                    query = query.Where(query => query.vr.ReportDateResolve >= dynamicFilterReportVM.MinDateResolve && query.vr.ReportDateResolve <= dynamicFilterReportVM.MaxDateResolve);
                 }
                 int total = query.Count();
                 int totalPage = total / dynamicFilterReportVM.PageSize;
@@ -718,22 +718,22 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async void AutoDeleteAllBanUser()
+        public void AutoDeleteAllBanUser()
         {
             try
             {
-                List<Report>? reports = await _context.Reports
+                List<Report>? reports = _context.Reports
                     .Join(_context.UserAccounts, rp => rp.UserId, us => us.UserId, ( rp,us ) => new { rp,us })
                     .Where(rpus => rpus.us.UserStatus == false && rpus.rp.ReportStatus == 0)
                     .Select(rpus => rpus.rp)
-                    .ToListAsync();
+                    .ToList();
                 if (reports.Any() && reports != null)
                 {
                     foreach (Report report in reports)
                     {
                         report.ReportStatus = 3;
                     }
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 else 
                 {

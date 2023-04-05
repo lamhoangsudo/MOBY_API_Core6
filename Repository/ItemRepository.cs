@@ -627,7 +627,8 @@ namespace MOBY_API_Core6.Repository
             {
                 int itemsToSkip = (dynamicFilterVM.pageNumber - 1) * dynamicFilterVM.pageSize;
                 List<BriefItem> listItemDynamicFilters = new();
-                var query = _context.BriefItems.Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
+                var query = _context.BriefItems
+                    .Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
                     .Join(_context.UserAccounts, bfit => bfit.it.UserId, us => us.UserId, (bfit, us) => new { bfit, us })
                     .Where(bfitus => bfitus.us.UserStatus == true);
                 if (dynamicFilterVM.categoryID != 0)
