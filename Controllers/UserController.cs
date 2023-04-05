@@ -174,7 +174,6 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [Authorize]
         [HttpGet]
         [Route("api/useraccount")]
         public async Task<IActionResult> GetUserInfoByQuery([FromQuery] UserUidVM uid)

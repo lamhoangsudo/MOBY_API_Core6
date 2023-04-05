@@ -625,43 +625,50 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                int itemsToSkip = (dynamicFilterVM.pageNumber - 1) * dynamicFilterVM.pageSize;
+                int itemsToSkip = (dynamicFilterVM.PageNumber - 1) * dynamicFilterVM.PageSize;
                 List<BriefItem> listItemDynamicFilters = new();
                 var query = _context.BriefItems
                     .Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
                     .Join(_context.UserAccounts, bfit => bfit.it.UserId, us => us.UserId, (bfit, us) => new { bfit, us })
-                    .Where(bfitus => bfitus.us.UserStatus == true);
-                if (dynamicFilterVM.categoryID != 0)
+                    .Where(bfitus => bfitus.us.UserStatus == true 
+                    && bfitus.bfit.bf.CategoryStatus == true
+                    && bfitus.bfit.bf.SubCategoryStatus == true
+                    && bfitus.bfit.it.ItemStatus == true);
+                if (dynamicFilterVM.CategoryID != null)
                 {
-                    query = query.Where(query => query.bfit.bf.CategoryId == dynamicFilterVM.categoryID);
+                    query = query.Where(query => query.bfit.bf.CategoryId == dynamicFilterVM.CategoryID);
                 }
-                if (!String.IsNullOrEmpty(dynamicFilterVM.titleName) && !String.IsNullOrWhiteSpace(dynamicFilterVM.titleName))
+                if (dynamicFilterVM.SubCategoryID != null)
                 {
-                    query = query.Where(query => query.bfit.bf.ItemTitle.Contains(dynamicFilterVM.titleName));
+                    query = query.Where(query => query.bfit.bf.SubCategoryId == dynamicFilterVM.SubCategoryID);
                 }
-                if (dynamicFilterVM.location != null)
+                if (!String.IsNullOrEmpty(dynamicFilterVM.TitleName) && !String.IsNullOrWhiteSpace(dynamicFilterVM.TitleName))
                 {
-                    string locationString = String.Concat(dynamicFilterVM.location.Where(c => !Char.IsWhiteSpace(c))).Replace("}", "");
+                    query = query.Where(query => query.bfit.bf.ItemTitle.Contains(dynamicFilterVM.TitleName));
+                }
+                if (dynamicFilterVM.Location != null)
+                {
+                    string locationString = String.Concat(dynamicFilterVM.Location.Where(c => !Char.IsWhiteSpace(c))).Replace("}", "");
                     query = query.Where(query => query.bfit.it.ItemShippingAddress.StartsWith(locationString));
                 }
-                if (dynamicFilterVM.maxPrice >= dynamicFilterVM.minPrice)
+                if (dynamicFilterVM.MaxPrice >= dynamicFilterVM.MinPrice)
                 {
-                    query = query.Where(query => query.bfit.it.ItemSalePrice <= dynamicFilterVM.maxPrice && query.bfit.it.ItemSalePrice >= dynamicFilterVM.minPrice);
+                    query = query.Where(query => query.bfit.it.ItemSalePrice <= dynamicFilterVM.MaxPrice && query.bfit.it.ItemSalePrice >= dynamicFilterVM.MinPrice);
                 }
-                if (dynamicFilterVM.share != null)
+                if (dynamicFilterVM.Share != null)
                 {
-                    query = query.Where(query => query.bfit.it.Share == dynamicFilterVM.share);
+                    query = query.Where(query => query.bfit.it.Share == dynamicFilterVM.Share);
                 }
-                query = query.Where(query => query.bfit.it.ItemEstimateValue <= dynamicFilterVM.maxUsable && query.bfit.it.ItemEstimateValue >= dynamicFilterVM.minUsable);
+                query = query.Where(query => query.bfit.it.ItemEstimateValue <= dynamicFilterVM.MaxUsable && query.bfit.it.ItemEstimateValue >= dynamicFilterVM.MinUsable);
                 int total = query.Count();
-                int totalPage = total / dynamicFilterVM.pageSize;
-                if (total % dynamicFilterVM.pageSize != 0)
+                int totalPage = total / dynamicFilterVM.PageSize;
+                if (total % dynamicFilterVM.PageSize != 0)
                 {
                     ++totalPage;
                 }
                 listItemDynamicFilters = await query
                     .Skip(itemsToSkip)
-                    .Take(dynamicFilterVM.pageSize)
+                    .Take(dynamicFilterVM.PageSize)
                     .Select(bfitus => bfitus.bfit.bf)
                     .ToListAsync();
                 if (listItemDynamicFilters.Count == 0)
