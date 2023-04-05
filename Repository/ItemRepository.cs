@@ -87,13 +87,13 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<int>> getListItemIDByUserID(int userId)
+        public async Task<List<int>> GetListItemIDByUserID(int userId)
         {
             List<int> ItemIDList = await _context.Items.Where(i => i.UserId == userId).Select(i => i.ItemId).ToListAsync();
             return ItemIDList;
         }
 
-        public async Task<int> getQuantityByItemID(int itemID)
+        public async Task<int> GetQuantityByItemID(int itemID)
         {
             int itemQuantity = await _context.Items.Where(i => i.ItemId == itemID).Select(i => i.ItemShareAmount).FirstOrDefaultAsync();
             return itemQuantity;
@@ -104,7 +104,7 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<BriefItem> listBriefItem = new List<BriefItem>();
+                List<BriefItem> listBriefItem = new();
                 listBriefItem = await _context.BriefItems
                     .Where(bf => bf.Share == share && bf.ItemStatus == status)
                     .OrderByDescending(bf => bf.ItemDateCreated)
@@ -128,7 +128,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                List<BriefItem> listBriefItemByTitle = new List<BriefItem>();
+                List<BriefItem> listBriefItemByTitle = new();
                 listBriefItemByTitle = await _context.BriefItems
                     .Where(bf => bf.ItemTitle.Equals(itemTitle))
                     .ToListAsync();
@@ -150,7 +150,7 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<BriefItem> listBriefItemByUserID = new List<BriefItem>();
+                List<BriefItem> listBriefItemByUserID = new();
                 listBriefItemByUserID = await _context.BriefItems
                     .Where(bf => bf.UserId == userID && bf.ItemStatus == status && bf.Share == share)
                     .Skip(itemsToSkip)
@@ -173,7 +173,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                List<BriefItem> listBriefItemByUserID = new List<BriefItem>();
+                List<BriefItem> listBriefItemByUserID = new();
                 listBriefItemByUserID = await _context.BriefItems
                     .Where(bf => bf.Share == share && bf.ItemStatus == status)
                     .ToListAsync();
@@ -228,7 +228,7 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<BriefItem> listBriefItemBySubCategoryID = new List<BriefItem>();
+                List<BriefItem> listBriefItemBySubCategoryID = new();
                 listBriefItemBySubCategoryID = await _context.BriefItems
                     .Where(bf => bf.SubCategoryId == subCategoryID 
                     && bf.ItemStatus == status
@@ -254,7 +254,7 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<BriefItem> listBriefItemByCategoryID = new List<BriefItem>();
+                List<BriefItem> listBriefItemByCategoryID = new();
                 listBriefItemByCategoryID = await _context.BriefItems
                     .Where(bf => bf.CategoryId == categoryID
                     && bf.ItemStatus == status
@@ -293,7 +293,7 @@ namespace MOBY_API_Core6.Repository
                         .SingleOrDefaultAsync();
                     if (item != null)
                     {
-                        item.ItemStatus = false;
+                        item.ItemStatus = null;
                         _context.SaveChanges();
                         return true;
                     }
@@ -370,6 +370,7 @@ namespace MOBY_API_Core6.Repository
                     currentItem.ItemSize = itemVM.itemSize;
 #pragma warning disable CS8601 // Possible null reference assignment.
                     currentItem.ItemQuanlity = itemVM.itemQuanlity;
+                    currentItem.ItemStatus = true;
 #pragma warning restore CS8601 // Possible null reference assignment.
                     currentItem.ItemEstimateValue = itemVM.itemEstimateValue;
                     currentItem.ItemSalePrice = itemVM.itemSalePrice;
@@ -395,7 +396,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                List<BriefItem> listBriefItemAndBriefRequestByUserID = new List<BriefItem>();
+                List<BriefItem> listBriefItemAndBriefRequestByUserID = new();
                 listBriefItemAndBriefRequestByUserID = await _context.BriefItems
                     .Where(bf => bf.Share == share
                     && bf.UserId == userID)
@@ -417,7 +418,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                List<BriefItem> listBriefItemAndBriefRequestByUserID = new List<BriefItem>();
+                List<BriefItem> listBriefItemAndBriefRequestByUserID = new();
                 listBriefItemAndBriefRequestByUserID = await _context.BriefItems
                     .Where(bf => bf.Share == share
                     && bf.UserId == userID
@@ -436,44 +437,17 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>?> GetAllMyShareAndRequest(int userID, bool share, bool status, int pageNumber, int pageSize)
+        public async Task<ListVM<BriefItem>?> GetAllMyShareAndRequest(int userID, bool share, bool status, int pageNumber, int pageSize)
         {
             try
             {
                 DateTime dateTimeNow = DateTime.Now;
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<BriefItem> listMyShareAndRequest = new List<BriefItem>();
-                listMyShareAndRequest = await _context.BriefItems
+                List<BriefItem> listMyShareAndRequest = new();
+                var query = _context.BriefItems
                     .Where(bf => bf.Share == share
                     && bf.UserId == userID
-                    && bf.ItemStatus == status)
-                    .Skip(itemsToSkip)
-                    .Take(pageSize)
-                    .ToListAsync();
-                if (listMyShareAndRequest.Count == 0)
-                {
-                    ErrorMessage = "không có dữ liệu";
-                }
-                return listMyShareAndRequest;
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = ex.Message;
-                return null;
-            }
-        }
-
-        public async Task<List<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize, int userID)
-        {
-            try
-            {
-                int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<BriefItem> listMyShareAndRequest = new List<BriefItem>();
-                var query = _context.BriefItems
-                    .Where(bf => bf.Share == true
-                    && bf.ItemStatus == true
-                    && bf.ItemSalePrice == 0
-                    && bf.UserId != userID);
+                    && bf.ItemStatus == status);
                 int total = query.Count();
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)
@@ -488,7 +462,8 @@ namespace MOBY_API_Core6.Repository
                 {
                     ErrorMessage = "không có dữ liệu";
                 }
-                return listMyShareAndRequest;
+                ListVM<BriefItem> listVM = new(total, totalPage, listMyShareAndRequest);
+                return listVM;
             }
             catch (Exception ex)
             {
@@ -497,17 +472,57 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int userID)
+        public async Task<ListVM<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize, int userID)
         {
             try
             {
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<BriefItem> listShareRecently = new List<BriefItem>();
+                List<BriefItem> listShareFree = new();
                 var query = _context.BriefItems
-                    .Where(bf => bf.Share == true
-                    && bf.ItemStatus == true
-                    && bf.UserId != userID)
-                    .OrderByDescending(bf => bf.ItemDateCreated);
+                    .Join(_context.UserAccounts, bf => bf.UserId, us => us.UserId, (bf, us) => new { bf, us })
+                    .Where(bfus => bfus.bf.Share == true
+                    && bfus.bf.ItemStatus == true
+                    && bfus.bf.ItemSalePrice == 0
+                    && bfus.bf.UserId != userID
+                    && bfus.us.UserStatus == true);
+                int total = query.Count();
+                int totalPage = total / pageSize;
+                if (total % pageSize != 0)
+                {
+                    ++totalPage;
+                }
+                listShareFree = await query
+                    .Skip(itemsToSkip)
+                    .Take(pageSize)
+                    .Select(bfus => bfus.bf)
+                    .ToListAsync();
+                if (listShareFree.Count == 0)
+                {
+                    ErrorMessage = "không có dữ liệu";
+                }
+                ListVM<BriefItem> listVM = new(total, totalPage, listShareFree);
+                return listVM;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<ListVM<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int userID)
+        {
+            try
+            {
+                int itemsToSkip = (pageNumber - 1) * pageSize;
+                List<BriefItem> listShareRecently = new();
+                var query = _context.BriefItems
+                    .Join(_context.UserAccounts, bf => bf.UserId, us => us.UserId, (bf, us) => new { bf,us })
+                    .Where(bfus => bfus.bf.Share == true
+                    && bfus.bf.ItemStatus == true
+                    && bfus.bf.UserId != userID
+                    && bfus.us.UserStatus == true)
+                    .OrderByDescending(bfus => bfus.bf.ItemDateCreated);
                 int total = query.Count();
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)
@@ -517,12 +532,14 @@ namespace MOBY_API_Core6.Repository
                 listShareRecently = await query
                     .Skip(itemsToSkip)
                     .Take(pageSize)
+                    .Select(bfus => bfus.bf)
                     .ToListAsync();
                 if (listShareRecently.Count == 0)
                 {
                     ErrorMessage = "không có dữ liệu";
                 }
-                return listShareRecently;
+                ListVM<BriefItem> listVM = new(total, totalPage, listShareRecently);
+                return listVM;
             }
             catch (Exception ex)
             {
@@ -531,21 +548,23 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>?> GetAllShareNearYou(string location, int pageNumber, int pageSize, int userID)
+        public async Task<ListVM<BriefItem>?> GetAllShareNearYou(string location, int pageNumber, int pageSize, int userID)
         {
             try
             {
                 string[] words = location.Trim().Split(",");
                 string city = String.Concat(words[0].Where(c => !Char.IsWhiteSpace(c))).Replace("}", "");
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                List<BriefItem> listShareRecently = new List<BriefItem>();
+                List<BriefItem> listShareRecently = new();
                 var query = _context.BriefItems
                     .Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
-                    .Where(bfit => bfit.it.ItemShippingAddress.StartsWith(city)
-                    && bfit.bf.Share == true
-                    && bfit.bf.ItemStatus == true
-                    && bfit.bf.UserId != userID)
-                    .OrderByDescending(bfit => bfit.bf.ItemDateCreated);
+                    .Join(_context.UserAccounts, bfit => bfit.it.UserId, us => us.UserId, (bfit, us) => new { bfit, us })
+                    .Where(bfitus => bfitus.bfit.it.ItemShippingAddress.StartsWith(city)
+                    && bfitus.bfit.bf.Share == true
+                    && bfitus.bfit.bf.ItemStatus == true
+                    && bfitus.bfit.bf.UserId != userID
+                    && bfitus.us.UserStatus == true)
+                    .OrderByDescending(bfitus => bfitus.bfit.bf.ItemDateCreated);
                 int total = query.Count();
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)
@@ -555,32 +574,16 @@ namespace MOBY_API_Core6.Repository
                 listShareRecently = await query
                     .Skip(itemsToSkip)
                     .Take(pageSize)
-                    .Select(bfit => new BriefItem
-                    {
-                        CategoryId = bfit.bf.CategoryId,
-                        CategoryName = bfit.bf.CategoryName,
-                        CategoryStatus = bfit.bf.CategoryStatus,
-                        SubCategoryId = bfit.bf.SubCategoryId,
-                        ItemId = bfit.bf.ItemId,
-                        Image = bfit.bf.Image,
-                        ItemCode = bfit.bf.ItemCode,
-                        ItemSalePrice = bfit.bf.ItemSalePrice,
-                        ItemStatus = bfit.bf.ItemStatus,
-                        ItemTitle = bfit.bf.ItemTitle,
-                        Share = true,
-                        SubCategoryName = bfit.bf.SubCategoryName,
-                        SubCategoryStatus = bfit.bf.SubCategoryStatus,
-                        UserId = bfit.bf.UserId,
-                        UserName = bfit.bf.UserName
-                    }).ToListAsync();
+                    .Select(bfitus => bfitus.bfit.bf)
+                    .ToListAsync();
                 if (listShareRecently.Count == 0)
                 {
                     total = 0;
                     totalPage = 0;
                     ErrorMessage = "không có dữ liệu";
                 }
-                ListVM<BriefItem> listVM = new ListVM<BriefItem> (total, totalPage, listShareRecently);
-                return listShareRecently;
+                ListVM<BriefItem> listVM = new(total, totalPage, listShareRecently);
+                return listVM;
             }
             catch (Exception ex)
             {
@@ -623,30 +626,32 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 int itemsToSkip = (dynamicFilterVM.pageNumber - 1) * dynamicFilterVM.pageSize;
-                List<BriefItem> listItemDynamicFilters = new List<BriefItem>();
-                var query = _context.BriefItems.Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it });
+                List<BriefItem> listItemDynamicFilters = new();
+                var query = _context.BriefItems.Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
+                    .Join(_context.UserAccounts, bfit => bfit.it.UserId, us => us.UserId, (bfit, us) => new { bfit, us })
+                    .Where(bfitus => bfitus.us.UserStatus == true);
                 if (dynamicFilterVM.categoryID != 0)
                 {
-                    query = query.Where(query => query.bf.CategoryId == dynamicFilterVM.categoryID);
+                    query = query.Where(query => query.bfit.bf.CategoryId == dynamicFilterVM.categoryID);
                 }
                 if (!String.IsNullOrEmpty(dynamicFilterVM.titleName) && !String.IsNullOrWhiteSpace(dynamicFilterVM.titleName))
                 {
-                    query = query.Where(query => query.bf.ItemTitle.Contains(dynamicFilterVM.titleName));
+                    query = query.Where(query => query.bfit.bf.ItemTitle.Contains(dynamicFilterVM.titleName));
                 }
                 if (dynamicFilterVM.location != null)
                 {
                     string locationString = String.Concat(dynamicFilterVM.location.Where(c => !Char.IsWhiteSpace(c))).Replace("}", "");
-                    query = query.Where(query => query.it.ItemShippingAddress.StartsWith(locationString));
+                    query = query.Where(query => query.bfit.it.ItemShippingAddress.StartsWith(locationString));
                 }
                 if (dynamicFilterVM.maxPrice >= dynamicFilterVM.minPrice)
                 {
-                    query = query.Where(query => query.it.ItemSalePrice <= dynamicFilterVM.maxPrice && query.it.ItemSalePrice >= dynamicFilterVM.minPrice);
+                    query = query.Where(query => query.bfit.it.ItemSalePrice <= dynamicFilterVM.maxPrice && query.bfit.it.ItemSalePrice >= dynamicFilterVM.minPrice);
                 }
                 if (dynamicFilterVM.share != null)
                 {
-                    query = query.Where(query => query.it.Share == dynamicFilterVM.share);
+                    query = query.Where(query => query.bfit.it.Share == dynamicFilterVM.share);
                 }
-                query = query.Where(query => query.it.ItemEstimateValue <= dynamicFilterVM.maxUsable && query.it.ItemEstimateValue >= dynamicFilterVM.minUsable);
+                query = query.Where(query => query.bfit.it.ItemEstimateValue <= dynamicFilterVM.maxUsable && query.bfit.it.ItemEstimateValue >= dynamicFilterVM.minUsable);
                 int total = query.Count();
                 int totalPage = total / dynamicFilterVM.pageSize;
                 if (total % dynamicFilterVM.pageSize != 0)
@@ -656,31 +661,13 @@ namespace MOBY_API_Core6.Repository
                 listItemDynamicFilters = await query
                     .Skip(itemsToSkip)
                     .Take(dynamicFilterVM.pageSize)
-                    .Select(bfit => new BriefItem
-                    {
-                        CategoryId = bfit.bf.CategoryId,
-                        CategoryName = bfit.bf.CategoryName,
-                        CategoryStatus = bfit.bf.CategoryStatus,
-                        SubCategoryId = bfit.bf.SubCategoryId,
-                        ItemId = bfit.bf.ItemId,
-                        Image = bfit.bf.Image,
-                        ItemCode = bfit.bf.ItemCode,
-                        ItemSalePrice = bfit.bf.ItemSalePrice,
-                        ItemStatus = bfit.bf.ItemStatus,
-                        ItemTitle = bfit.bf.ItemTitle,
-                        Share = bfit.bf.Share,
-                        SubCategoryName = bfit.bf.SubCategoryName,
-                        SubCategoryStatus = bfit.bf.SubCategoryStatus,
-                        UserId = bfit.bf.UserId,
-                        UserName = bfit.bf.UserName
-                    }).ToListAsync();
+                    .Select(bfitus => bfitus.bfit.bf)
+                    .ToListAsync();
                 if (listItemDynamicFilters.Count == 0)
                 {
-                    total = 0;
-                    totalPage = 0;
                     ErrorMessage = "không có dữ liệu";
                 }
-                ListVM<BriefItem> listVM = new ListVM<BriefItem>(total, totalPage, listItemDynamicFilters);
+                ListVM<BriefItem> listVM = new(total, totalPage, listItemDynamicFilters);
                 return listVM;
             }
             catch (Exception ex)
@@ -690,15 +677,24 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>?> GetListAllOtherPersonRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize)
+        public async Task<ListVM<BriefItem>?> GetListAllOtherPersonRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize)
         {
             try
             {
-                List<BriefItem> listBriefItemByUserID = new List<BriefItem>();
+                List<BriefItem> listBriefItemByUserID = new();
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                listBriefItemByUserID = await _context.BriefItems
-                    .Where(bf => bf.Share == share && bf.ItemStatus == status && bf.UserId != userID)
-                    .OrderByDescending(bf => bf.ItemDateCreated)
+                var query = _context.BriefItems
+                    .Join(_context.UserAccounts, bf => bf.UserId, us => us.UserId, (bf, us) => new { bf, us })
+                    .Where(bfus => bfus.bf.Share == share && bfus.bf.ItemStatus == status && bfus.bf.UserId != userID)
+                    .OrderByDescending(bfus => bfus.bf.ItemDateCreated);
+                int total = query.Count();
+                int totalPage = total / pageSize;
+                if (total % pageSize != 0)
+                {
+                    ++totalPage;
+                }
+                listBriefItemByUserID = await query
+                    .Select(bfus => bfus.bf)
                     .Skip(itemsToSkip)
                     .Take(pageSize)
                     .ToListAsync();
@@ -706,7 +702,8 @@ namespace MOBY_API_Core6.Repository
                 {
                     ErrorMessage = "không có dữ liệu";
                 }
-                return listBriefItemByUserID;
+                ListVM<BriefItem> listVM = new(total, totalPage, listBriefItemByUserID);
+                return listVM;
             }
             catch (Exception ex)
             {
@@ -715,15 +712,22 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<List<BriefItem>?> GetListAllMyRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize)
+        public async Task<ListVM<BriefItem>?> GetListAllMyRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize)
         {
             try
             {
-                List<BriefItem> listBriefItemByUserID = new List<BriefItem>();
+                List<BriefItem> listBriefItemByUserID = new();
                 int itemsToSkip = (pageNumber - 1) * pageSize;
-                listBriefItemByUserID = await _context.BriefItems
+                var query = _context.BriefItems
                     .Where(bf => bf.Share == share && bf.ItemStatus == status && bf.UserId == userID)
-                    .OrderByDescending(bf => bf.ItemDateCreated)
+                    .OrderByDescending(bf => bf.ItemDateCreated);
+                int total = query.Count();
+                int totalPage = total / pageSize;
+                if (total % pageSize != 0)
+                {
+                    ++totalPage;
+                }
+                listBriefItemByUserID = await query
                     .Skip(itemsToSkip)
                     .Take(pageSize)
                     .ToListAsync();
@@ -731,7 +735,8 @@ namespace MOBY_API_Core6.Repository
                 {
                     ErrorMessage = "không có dữ liệu";
                 }
-                return listBriefItemByUserID;
+                ListVM<BriefItem> listVM = new(total, totalPage, listBriefItemByUserID);
+                return listVM;
             }
             catch (Exception ex)
             {

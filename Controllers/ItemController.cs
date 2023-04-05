@@ -255,19 +255,39 @@ namespace Item.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("GetAllShareRecently")]
-        public async Task<IActionResult> GetAllShareRecently(int pageNumber, int pageSize, int userID)
+        public async Task<IActionResult> GetAllShareRecently(int pageNumber, int pageSize)
         {
             try
             {
-                List<BriefItem>? listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize, userID);
+                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                UserAccount? user = await _userRepository.FindUserByUid(userID);
+                if (user == null)
+                {
+                    return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
+                }
+                ListVM<BriefItem>? listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize, userID);
                 if (listAllShareRecently == null)
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else
                 {
-                    return Ok(listAllShareRecently);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    if (listAllShareRecently.List.Count > 0)
+                    {
+                        return Ok(listAllShareRecently);
+                    }
+                    else 
+                    {
+#pragma warning disable CS8604 // Possible null reference argument.
+                        return NotFound(ReturnMessage.Create(ItemRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                    }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
             }
             catch (Exception ex)
@@ -276,19 +296,39 @@ namespace Item.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("GetAllShareFree")]
-        public async Task<IActionResult> GetAllShareFree(int pageNumber, int pageSize, int userID)
+        public async Task<IActionResult> GetAllShareFree(int pageNumber, int pageSize)
         {
             try
             {
-                List<BriefItem>? listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize, userID);
+                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                UserAccount? user = await _userRepository.FindUserByUid(userID);
+                if (user == null)
+                {
+                    return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
+                }
+                ListVM<BriefItem>? listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize, userID);
                 if (listAllShareFree == null)
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else
                 {
-                    return Ok(listAllShareFree);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    if (listAllShareFree.List.Count > 0)
+                    {
+                        return Ok(listAllShareFree);
+                    }
+                    else
+                    {
+#pragma warning disable CS8604 // Possible null reference argument.
+                        return NotFound(ReturnMessage.Create(ItemRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                    }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
             }
             catch (Exception ex)
@@ -303,15 +343,33 @@ namespace Item.Controllers
         {
             try
             {
-                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
-                List<BriefItem>? listAllMyShareAndRequest = await _itemRepository.GetAllMyShareAndRequest(userID, share, status, pageNumber, pageSize);
+                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                UserAccount? user = await _userRepository.FindUserByUid(userID);
+                if (user == null)
+                {
+                    return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
+                }
+                ListVM<BriefItem>? listAllMyShareAndRequest = await _itemRepository.GetAllMyShareAndRequest(userID, share, status, pageNumber, pageSize);
                 if (listAllMyShareAndRequest == null)
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else
                 {
-                    return Ok(listAllMyShareAndRequest);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    if (listAllMyShareAndRequest.List.Count > 0)
+                    {
+                        return Ok(listAllMyShareAndRequest);
+                    }
+                    else
+                    {
+#pragma warning disable CS8604 // Possible null reference argument.
+                        return NotFound(ReturnMessage.Create(ItemRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                    }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
             }
             catch (Exception ex)
@@ -332,14 +390,27 @@ namespace Item.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
                 }
-                List<BriefItem>? listAllShareNearYou = await _itemRepository.GetAllShareNearYou(user.UserAddress, pageNumber, pageSize, userID);
+                ListVM<BriefItem>? listAllShareNearYou = await _itemRepository.GetAllShareNearYou(user.UserAddress, pageNumber, pageSize, userID);
                 if (listAllShareNearYou == null)
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else
                 {
-                    return Ok(listAllShareNearYou);
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    if (listAllShareNearYou.List.Count > 0)
+                    {
+                        return Ok(listAllShareNearYou);
+                    }
+                    else
+                    {
+#pragma warning disable CS8604 // Possible null reference argument.
+                        return NotFound(ReturnMessage.Create(ItemRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                    }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
             }
             catch (Exception ex)
@@ -373,13 +444,19 @@ namespace Item.Controllers
         [HttpGet("GetListAllOtherPersonRequestItem")]
         public async Task<IActionResult> GetListAllOtherPersonRequestItem(bool share, bool status, int pageNumber, int pageSize)
         {
-            int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
+            int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            UserAccount? user = await _userRepository.FindUserByUid(userID);
+            if (user == null)
+            {
+                return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
+            }
             try
             {
-                List<BriefItem>? listAllOtherPersonRequestItem = await _itemRepository.GetListAllOtherPersonRequestItem(share, status, userID, pageNumber, pageSize);
+                ListVM<BriefItem>? listAllOtherPersonRequestItem = await _itemRepository.GetListAllOtherPersonRequestItem(share, status, userID, pageNumber, pageSize);
                 if (listAllOtherPersonRequestItem != null)
                 {
-                    if (listAllOtherPersonRequestItem.Count > 0)
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    if (listAllOtherPersonRequestItem.List.Count > 0 && listAllOtherPersonRequestItem.List != null)
                     {
                         return Ok(listAllOtherPersonRequestItem);
                     }
@@ -387,6 +464,7 @@ namespace Item.Controllers
                     {
                         return NotFound(ReturnMessage.Create("không có dữ liệu"));
                     }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
                 else
                 {
@@ -403,13 +481,19 @@ namespace Item.Controllers
         [HttpGet("GetListAllMyRequestItem")]
         public async Task<IActionResult> GetListAllMyRequestItem(bool share, bool status, int pageNumber, int pageSize)
         {
-            int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
+            int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            UserAccount? user = await _userRepository.FindUserByUid(userID);
+            if (user == null)
+            {
+                return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
+            }
             try
             {
-                List<BriefItem>? listAllMyRequestItem = await _itemRepository.GetListAllMyRequestItem(share, status, userID, pageNumber, pageSize);
+                ListVM<BriefItem>? listAllMyRequestItem = await _itemRepository.GetListAllMyRequestItem(share, status, userID, pageNumber, pageSize);
                 if (listAllMyRequestItem != null)
                 {
-                    if (listAllMyRequestItem.Count > 0)
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                    if (listAllMyRequestItem.List.Count > 0 && listAllMyRequestItem.List != null)
                     {
                         return Ok(listAllMyRequestItem);
                     }
@@ -417,6 +501,7 @@ namespace Item.Controllers
                     {
                         return NotFound(ReturnMessage.Create("không có dữ liệu"));
                     }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
                 else
                 {
