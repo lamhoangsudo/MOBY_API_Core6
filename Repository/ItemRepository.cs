@@ -472,7 +472,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<ListVM<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize, int? userID)
+        public async Task<List<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize, int? userID)
         {
             try
             {
@@ -505,7 +505,7 @@ namespace MOBY_API_Core6.Repository
                     ErrorMessage = "không có dữ liệu";
                 }
                 ListVM<BriefItem> listVM = new(total, totalPage, listShareFree);
-                return listVM;
+                return listShareFree;
             }
             catch (Exception ex)
             {
@@ -514,7 +514,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<ListVM<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int? userID)
+        public async Task<List<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int? userID)
         {
             try
             {
@@ -545,8 +545,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     ErrorMessage = "không có dữ liệu";
                 }
-                ListVM<BriefItem> listVM = new(total, totalPage, listShareRecently);
-                return listVM;
+                return listShareRecently;
             }
             catch (Exception ex)
             {
