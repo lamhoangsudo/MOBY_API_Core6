@@ -472,7 +472,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<ListVM<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize, int userID)
+        public async Task<ListVM<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize, int? userID)
         {
             try
             {
@@ -483,8 +483,12 @@ namespace MOBY_API_Core6.Repository
                     .Where(bfus => bfus.bf.Share == true
                     && bfus.bf.ItemStatus == true
                     && bfus.bf.ItemSalePrice == 0
-                    && bfus.bf.UserId != userID
                     && bfus.us.UserStatus == true);
+                if (userID != null)
+                {
+                    query = query.Where(bfus => bfus.bf.UserId != userID);
+                }
+                query = query.OrderByDescending(bfus => bfus.bf.ItemDateCreated);
                 int total = query.Count();
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)
@@ -510,7 +514,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<ListVM<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int userID)
+        public async Task<ListVM<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int? userID)
         {
             try
             {
@@ -520,9 +524,12 @@ namespace MOBY_API_Core6.Repository
                     .Join(_context.UserAccounts, bf => bf.UserId, us => us.UserId, (bf, us) => new { bf,us })
                     .Where(bfus => bfus.bf.Share == true
                     && bfus.bf.ItemStatus == true
-                    && bfus.bf.UserId != userID
-                    && bfus.us.UserStatus == true)
-                    .OrderByDescending(bfus => bfus.bf.ItemDateCreated);
+                    && bfus.us.UserStatus == true);
+                if (userID != null)
+                {
+                    query = query.Where(bfus => bfus.bf.UserId != userID);
+                }
+                query = query.OrderByDescending(bfus => bfus.bf.ItemDateCreated);
                 int total = query.Count();
                 int totalPage = total / pageSize;
                 if (total % pageSize != 0)

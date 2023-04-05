@@ -255,18 +255,13 @@ namespace Item.Controllers
             }
         }
 
-        [Authorize]
         [HttpGet("GetAllShareRecently")]
         public async Task<IActionResult> GetAllShareRecently(int pageNumber, int pageSize)
         {
             try
             {
-                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                UserAccount? user = await _userRepository.FindUserByUid(userID);
-                if (user == null)
-                {
-                    return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
-                }
+                int? userID = null;
+                userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 ListVM<BriefItem>? listAllShareRecently = await _itemRepository.GetAllShareRecently(pageNumber, pageSize, userID);
                 if (listAllShareRecently == null)
                 {
@@ -296,18 +291,13 @@ namespace Item.Controllers
             }
         }
 
-        [Authorize]
         [HttpGet("GetAllShareFree")]
         public async Task<IActionResult> GetAllShareFree(int pageNumber, int pageSize)
         {
             try
             {
-                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                UserAccount? user = await _userRepository.FindUserByUid(userID);
-                if (user == null)
-                {
-                    return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
-                }
+                int? userID = null;
+                userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 ListVM<BriefItem>? listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize, userID);
                 if (listAllShareFree == null)
                 {
