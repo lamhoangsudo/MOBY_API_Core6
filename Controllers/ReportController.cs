@@ -25,7 +25,12 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int userID = int.Parse(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                UserAccount? user = await _userRepository.FindUserByUid(userID);
+                if (user == null)
+                {
+                    return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
+                }
                 reportVM.userID = userID;
                 bool checkCreate = false;
                 if (reportVM.itemID != null)
