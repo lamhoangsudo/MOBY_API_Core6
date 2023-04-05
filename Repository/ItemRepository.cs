@@ -639,8 +639,7 @@ namespace MOBY_API_Core6.Repository
                     .Join(_context.UserAccounts, bfit => bfit.it.UserId, us => us.UserId, (bfit, us) => new { bfit, us })
                     .Where(bfitus => bfitus.us.UserStatus == true 
                     && bfitus.bfit.bf.CategoryStatus == true
-                    && bfitus.bfit.bf.SubCategoryStatus == true
-                    && bfitus.bfit.it.ItemStatus == true);
+                    && bfitus.bfit.bf.SubCategoryStatus == true);
                 if (dynamicFilterVM.CategoryID != null)
                 {
                     query = query.Where(query => query.bfit.bf.CategoryId == dynamicFilterVM.CategoryID);
@@ -665,6 +664,62 @@ namespace MOBY_API_Core6.Repository
                 if (dynamicFilterVM.Share != null)
                 {
                     query = query.Where(query => query.bfit.it.Share == dynamicFilterVM.Share);
+                }
+                if (dynamicFilterVM.Status != null)
+                {
+                    query = query.Where(query => query.bfit.bf.ItemStatus == dynamicFilterVM.Status);
+                }
+                if (dynamicFilterVM.MinDateCreate <= dynamicFilterVM.MaxDateCreate)
+                {
+                    query = query.Where(query => query.bfit.bf.ItemDateCreated >= dynamicFilterVM.MinDateCreate && query.bfit.bf.ItemDateCreated <= dynamicFilterVM.MaxDateCreate);
+                }
+                if (dynamicFilterVM.MinDateUpdate <= dynamicFilterVM.MaxDateUpdate)
+                {
+                    query = query.Where(query => query.bfit.it.ItemDateUpdate >= dynamicFilterVM.MinDateUpdate && query.bfit.it.ItemDateUpdate <= dynamicFilterVM.MaxDateUpdate);
+                }
+                if (dynamicFilterVM.OrderByDateCreate == true && dynamicFilterVM.OrderByDateUpdate == false && dynamicFilterVM.OrderByEstimateValue == false && dynamicFilterVM.OrderByPrice == true)
+                {
+                    if (dynamicFilterVM.AscendingOrDescending == true)
+                    {
+                        query = query.OrderBy(query => query.bfit.bf.ItemDateCreated);
+                    }
+                    else
+                    {
+                        query = query.OrderByDescending(query => query.bfit.bf.ItemDateCreated);
+                    }
+                } 
+                else if (dynamicFilterVM.OrderByDateCreate == false && dynamicFilterVM.OrderByDateUpdate == true && dynamicFilterVM.OrderByEstimateValue == false && dynamicFilterVM.OrderByPrice == true)
+                {
+                    if (dynamicFilterVM.AscendingOrDescending == true)
+                    {
+                        query = query.OrderBy(query => query.bfit.it.ItemDateUpdate);
+                    }
+                    else
+                    {
+                        query = query.OrderByDescending(query => query.bfit.it.ItemDateUpdate);
+                    }
+                }
+                else if (dynamicFilterVM.OrderByDateCreate == false && dynamicFilterVM.OrderByDateUpdate == false && dynamicFilterVM.OrderByEstimateValue == true && dynamicFilterVM.OrderByPrice == true)
+                {
+                    if (dynamicFilterVM.AscendingOrDescending == true)
+                    {
+                        query = query.OrderBy(query => query.bfit.it.ItemEstimateValue);
+                    }
+                    else
+                    {
+                        query = query.OrderByDescending(query => query.bfit.it.ItemEstimateValue);
+                    }
+                }
+                else if (dynamicFilterVM.OrderByDateCreate == false && dynamicFilterVM.OrderByDateUpdate == false && dynamicFilterVM.OrderByEstimateValue == true && dynamicFilterVM.OrderByPrice == true)
+                {
+                    if (dynamicFilterVM.AscendingOrDescending == true)
+                    {
+                        query = query.OrderBy(query => query.bfit.bf.ItemSalePrice);
+                    }
+                    else
+                    {
+                        query = query.OrderByDescending(query => query.bfit.bf.ItemSalePrice);
+                    }
                 }
                 query = query.Where(query => query.bfit.it.ItemEstimateValue <= dynamicFilterVM.MaxUsable && query.bfit.it.ItemEstimateValue >= dynamicFilterVM.MinUsable);
                 int total = query.Count();

@@ -49,6 +49,7 @@ namespace MOBY_API_Core6.Repository
                 category.CategoryName = categoryVM.categoryName;
 #pragma warning restore CS8601 // Possible null reference assignment.
                 category.CategoryImage = categoryVM.categoryImage;
+                category.CategoryStatus = true;
                 await _context.Categories.AddAsync(category);
                 await _context.SaveChangesAsync();
                 return true;
@@ -70,6 +71,7 @@ namespace MOBY_API_Core6.Repository
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                 updateCategory.CategoryImage = categoryVM.categoryImage;
+                updateCategory.CategoryStatus = true;   
                 await _context.SaveChangesAsync();
                 return true;
             }

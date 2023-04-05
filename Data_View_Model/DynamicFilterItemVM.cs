@@ -24,10 +24,29 @@ namespace MOBY_API_Core6.Data_View_Model
         [DefaultValue(null)]
         public bool? Share { get; set; }
         [DefaultValue(true)]
-        public bool Status { get; set;}
+        public bool? Status { get; set;}
         [Required]
         public int PageNumber { get; set; }
         [Required]
         public int PageSize { get; set; }
+        [DefaultValue(true)]
+        public bool OrderByDateCreate { get; set; }
+        [DefaultValue(false)]
+        public bool OrderByDateUpdate { get; set; }
+        [DefaultValue(false)]
+        public bool? OrderByEstimateValue { get; set; }
+        [DefaultValue(false)]
+        public bool? OrderByPrice { get; set; }
+        [DefaultValue(null)]
+        public DateTime? MinDateCreate { get; set; }
+        [DefaultValue(null)]
+        public DateTime? MaxDateCreate { get; set; }
+        [DefaultValue(null)]
+        public DateTime? MinDateUpdate { get; set; }
+        [DefaultValue(null)]
+        public DateTime? MaxDateUpdate { get; set; }
+        [DefaultValue(true)]
+        public bool AscendingOrDescending { get; set; }
+
     }
 }

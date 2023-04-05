@@ -745,5 +745,18 @@ namespace MOBY_API_Core6.Repository
                 ErrorMessage = ex.Message;
             }
         }
+
+        public async Task<bool> HideOject(int id, int tyle)
+        {
+            try
+            {
+                return false;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return false;
+            }
+        }
     }
 }

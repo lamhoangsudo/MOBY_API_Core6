@@ -183,6 +183,7 @@ namespace MOBY_API_Core6.Repository
                     }
                     subCategoryUpdate.SubCategoryName = subCategoryVM.subCategoryName;
                     subCategoryUpdate.CategoryId = subCategoryVM.categoryID;
+                    subCategoryUpdate.SubCategoryStatus = true;
                     await _context.SaveChangesAsync();
                     return true;
                 }

@@ -333,6 +333,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<bool> ConfirmBlog(Blog blog, int decision)
         {
             blog.BlogStatus = decision;
+            blog.ReasonDeny = null;
             if (await context.SaveChangesAsync() != 0)
             {
                 return true;
