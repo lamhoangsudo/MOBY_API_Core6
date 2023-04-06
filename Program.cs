@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Models;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
 using System.Text.Json.Serialization;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -48,6 +47,7 @@ builder.Services.AddScoped<IReplyRepository, ReplyRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IUserAddressRepository, UserAddressRepository>();
 builder.Services.AddScoped<IBannerRepository, BannerRepository>();
+builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 
 
 builder.Services.AddSwaggerGen(swagger =>
