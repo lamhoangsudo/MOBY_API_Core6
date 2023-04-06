@@ -56,10 +56,14 @@ namespace MOBY_API_Core6.Controllers
 
             try
             {
-
-                if (await cartDetailDAO.CheclExistCartDetail(createdRequestDetail))
+                String check = await cartDetailDAO.CheclExistCartDetail(createdRequestDetail);
+                if (check.Equals("succes"))
                 {
                     return Ok(ReturnMessage.Create("Success"));
+                }
+                else if (check.Equals("cant not add more than share ammout"))
+                {
+                    return BadRequest(ReturnMessage.Create("cant not add more than share ammout"));
                 }
                 var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 String result = await cartDetailDAO.CreateCartDetail(createdRequestDetail, currentUid);
