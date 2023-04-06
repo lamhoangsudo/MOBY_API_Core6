@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
+using System;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -228,73 +229,112 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpGet("GetDetailReport")]
-        public async Task<IActionResult> DetaiGetDetailReport(int report, bool item, bool blog, bool comment, bool reply, bool order)
+        public async Task<IActionResult> GetDetailReport(int report, int tyle)
         {
             try
             {
-                if (item)
+                switch (tyle)
                 {
-                    ViewReportItem? viewReportItem = await _reportRepository.ItemReportDetail(report);
-                    if (viewReportItem != null)
-                    {
-                        return Ok(viewReportItem);
-                    }
-                    else
-                    {
-                        return NotFound(ReturnMessage.Create("report không tồn tại"));
-                    }
-                }
-                else if (blog)
-                {
-                    ViewReportBlog? viewReportBlog = await _reportRepository.BlogReportDetail(report);
-                    if (viewReportBlog != null)
-                    {
-                        return Ok(viewReportBlog);
-                    }
-                    else
-                    {
-                        return NotFound(ReturnMessage.Create("report không tồn tại"));
-                    }
-                }
-                else if (comment)
-                {
-                    ViewReportComment? viewReportCommnent = await _reportRepository.CommentReportDetail(report);
-                    if (viewReportCommnent != null)
-                    {
-                        return Ok(viewReportCommnent);
-                    }
-                    else
-                    {
-                        return NotFound(ReturnMessage.Create("report không tồn tại"));
-                    }
-                }
-                else if (reply)
-                {
-                    ViewReportReply? viewReportReply = await _reportRepository.ReplyReportDetail(report);
-                    if (viewReportReply != null)
-                    {
-                        return Ok(viewReportReply);
-                    }
-                    else
-                    {
-                        return NotFound(ReturnMessage.Create("report không tồn tại"));
-                    }
-                }
-                else if (order)
-                {
-                    ViewReportOrder? viewReportOrder = await _reportRepository.OrderReportDetail(report);
-                    if (viewReportOrder != null)
-                    {
-                        return Ok(viewReportOrder);
-                    }
-                    else
-                    {
-                        return NotFound(ReturnMessage.Create("report không tồn tại"));
-                    }
+                    case 0:
+                        ViewReportItem? viewReportItem = await _reportRepository.ItemReportDetail(report);
+                        if (viewReportItem != null)
+                        {
+                            return Ok(viewReportItem);
+                        }
+                        else
+                        {
+                            return NotFound(ReturnMessage.Create("report không tồn tại"));
+                        }
+                    case 1:
+                        ViewReportBlog? viewReportBlog = await _reportRepository.BlogReportDetail(report);
+                        if (viewReportBlog != null)
+                        {
+                            return Ok(viewReportBlog);
+                        }
+                        else
+                        {
+                            return NotFound(ReturnMessage.Create("report không tồn tại"));
+                        }
+                    case 2:
+                        ViewReportComment? viewReportCommnent = await _reportRepository.CommentReportDetail(report);
+                        if (viewReportCommnent != null)
+                        {
+                            return Ok(viewReportCommnent);
+                        }
+                        else
+                        {
+                            return NotFound(ReturnMessage.Create("report không tồn tại"));
+                        }
+                    case 3:
+                        ViewReportReply? viewReportReply = await _reportRepository.ReplyReportDetail(report);
+                        if (viewReportReply != null)
+                        {
+                            return Ok(viewReportReply);
+                        }
+                        else
+                        {
+                            return NotFound(ReturnMessage.Create("report không tồn tại"));
+                        }
+                    case 4:
+                        ViewReportOrder? viewReportOrder = await _reportRepository.OrderReportDetail(report);
+                        if (viewReportOrder != null)
+                        {
+                            return Ok(viewReportOrder);
+                        }
+                        else
+                        {
+                            return NotFound(ReturnMessage.Create("report không tồn tại"));
+                        }
                 }
 #pragma warning disable CS8604 // Possible null reference argument.
                 return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPatch("HideOject")]
+        public async Task<IActionResult> HideOject([FromQuery] HideAndPunish hideAndPunish)
+        {
+            try
+            {
+                bool checkHide = await _reportRepository.HideOject(hideAndPunish);
+                if (checkHide)
+                {
+                    return Ok(ReturnMessage.Create("đã ẩn đối tượng thành công"));
+                }
+                else
+                {
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPut("PunishViolators")]
+        public async Task<IActionResult> PunishViolators([FromQuery] HideAndPunish hideAndPunish)
+        {
+            try
+            {
+                bool checkHide = await _reportRepository.PunishViolators(hideAndPunish);
+                if (checkHide)
+                {
+                    return Ok(ReturnMessage.Create("đã trừ điểm user thành công"));
+                }
+                else
+                {
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                }
             }
             catch (Exception ex)
             {

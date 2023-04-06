@@ -34,5 +34,9 @@ namespace MOBY_API_Core6.Repository
         Task<ViewReportReply?> ReplyReportDetail(int reportID);
 
         Task<ViewReportOrder?> OrderReportDetail(int reportID);
+
+        Task<bool> HideOject(HideAndPunish hideAndPunish);
+
+        Task<bool> PunishViolators(HideAndPunish hideAndPunish);
     }
 }
