@@ -297,7 +297,7 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPatch("HideOject")]
-        public async Task<IActionResult> HideOject([FromQuery] HideAndPunish hideAndPunish)
+        public async Task<IActionResult> HideOject([FromBody] HideAndPunish hideAndPunish)
         {
             try
             {
@@ -320,7 +320,7 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPut("PunishViolators")]
-        public async Task<IActionResult> PunishViolators([FromQuery] HideAndPunish hideAndPunish)
+        public async Task<IActionResult> PunishViolators([FromBody] HideAndPunish hideAndPunish)
         {
             try
             {
