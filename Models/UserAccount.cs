@@ -33,6 +33,7 @@ namespace MOBY_API_Core6.Models
         public DateTime UserDateCreate { get; set; }
         public DateTime? UserDateUpdate { get; set; }
         public int Reputation { get; set; }
+        public string? ReasonDeductionOfPoints { get; set; }
 
         public virtual Role Role { get; set; } = null!;
         public virtual ICollection<Blog> Blogs { get; set; }

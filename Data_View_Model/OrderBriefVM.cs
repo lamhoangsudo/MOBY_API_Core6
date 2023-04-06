@@ -25,7 +25,7 @@ namespace MOBY_API_Core6.Data_View_Model
             var orderDetails = order.OrderDetails.Select(od => OrderDetailBriefVM.OrderDetailBriefToViewModel(od)).ToList();
             orderBriefVM.OrderDetails = orderDetails;
 
-            var userOwner = order.OrderDetails.First().Item.User;
+            var userOwner = (order.OrderDetails.First()).Item.User;
             orderBriefVM.UserSharerVM = UserVM.UserAccountToVewModel(userOwner);
 
             var user = order.User;

@@ -22,7 +22,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost("CreateBanner")]
-        public async Task<IActionResult> CreateBanner(string link) 
+        public async Task<IActionResult> CreateBanner(string link, string image) 
         {
             try
             {

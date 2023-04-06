@@ -74,7 +74,10 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
             List<RequestDetail> requestDetails = await context.RequestDetails
-                .Where(rd => rd.ItemId == currentItem.ItemId && rd.Status == 0).ToListAsync();
+                .Where(rd => rd.ItemId == currentItem.ItemId && rd.Status == 0 && rd.RequestDetailId != RequestDetail.RequestDetailId)
+                .Include(rd => rd.Request)
+                .ThenInclude(r => r.RequestDetails)
+                .ToListAsync();
 
             if (requestDetails == null || requestDetails.Count == 0)
             {
@@ -85,6 +88,10 @@ namespace MOBY_API_Core6.Repository
                 if (currentItem.ItemStatus == false || currentItem.ItemShareAmount == 0 || rd.Quantity > currentItem.ItemShareAmount)
                 {
                     rd.Status = 2;
+                    if (rd.Request.RequestDetails.Count == 1)
+                    {
+                        rd.Request.Status = 1;
+                    }
                 }
 
             }

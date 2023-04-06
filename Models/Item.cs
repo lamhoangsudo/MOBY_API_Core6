@@ -33,6 +33,7 @@ namespace MOBY_API_Core6.Models
         public bool? ItemStatus { get; set; }
         public bool Share { get; set; }
         public string Image { get; set; } = null!;
+        public string? ReasonHiden { get; set; }
 
         public virtual SubCategory SubCategory { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;

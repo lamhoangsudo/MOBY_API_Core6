@@ -17,7 +17,7 @@ namespace MOBY_API_Core6.Models
         public string UserName { get; set; } = null!;
         public bool Share { get; set; }
         public string Image { get; set; } = null!;
-        public bool ItemStatus { get; set; }
+        public bool? ItemStatus { get; set; }
         public bool CategoryStatus { get; set; }
         public bool SubCategoryStatus { get; set; }
         public DateTime ItemDateCreated { get; set; }

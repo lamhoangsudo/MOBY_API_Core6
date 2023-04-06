@@ -26,19 +26,24 @@ namespace MOBY_API_Core6.Repository
 
             return foundCartDetail;
         }
-        public async Task<bool> CheclExistCartDetail(CreateCartDetailVM createdcartDetail)
+        public async Task<String> CheclExistCartDetail(CreateCartDetailVM createdcartDetail)
         {
 
             CartDetail? foundCartDetail = await context.CartDetails
                 .Where(cd => cd.CartId == createdcartDetail.CartId && cd.ItemId == createdcartDetail.ItemId)
+                .Include(cd => cd.Item)
                 .FirstOrDefaultAsync();
             if (foundCartDetail != null)
             {
+                if (foundCartDetail.ItemQuantity >= foundCartDetail.Item.ItemShareAmount)
+                {
+                    return "cant not add more than share ammout";
+                }
                 foundCartDetail.ItemQuantity += 1;
                 await context.SaveChangesAsync();
-                return true;
+                return "succes";
             }
-            return false;
+            return "";
         }
         /*public List<CartDetailVM> GetCartDetailByItemID(int itemID)
         {
