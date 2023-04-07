@@ -51,9 +51,7 @@ namespace MOBY_API_Core6.Models
         {
             modelBuilder.Entity<Banner>(entity =>
             {
-                entity.Property(e => e.BannerId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("BannerID");
+                entity.Property(e => e.BannerId).HasColumnName("BannerID");
 
                 entity.Property(e => e.BannerLink).HasColumnName("Banner_Link");
 

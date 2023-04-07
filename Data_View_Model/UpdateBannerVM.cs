@@ -1,14 +1,16 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MOBY_API_Core6.Data_View_Model
 {
-    public class BannerVM
+    public class UpdateBannerVM
     {
+        [Required]
         public int Id { get; set; }
+        [Required]
         public string? Link { get; set; }
-        public string? Image { get; set; }
-        public DateTime? DateCreate { get; set; }
-        public DateTime? DateUpdate { get; set; }
+        [Required]
+        public string? Imange { get; set; }
     }
 }

@@ -20,9 +20,9 @@ namespace MOBY_API_Core6.Controllers
             _userRepository = userRepository;
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("CreateBanner")]
-        public async Task<IActionResult> CreateBanner([FromBody] BannerVM bannerVM) 
+        public async Task<IActionResult> CreateBanner([FromBody] CreateBannerVM bannerVM) 
         {
             try
             {
@@ -44,9 +44,9 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPut("UpdateBanner")]
-        public async Task<IActionResult> UpdateBanner([FromBody] BannerVM bannerVM)
+        public async Task<IActionResult> UpdateBanner([FromBody] UpdateBannerVM bannerVM)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpDelete("DeleteBanner")]
         public async Task<IActionResult> DeleteBanner([FromBody] int id)
         {
@@ -105,7 +105,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return NotFound(ReturnMessage.Create(BannerRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(BannerRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }

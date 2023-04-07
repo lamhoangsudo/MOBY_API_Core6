@@ -14,7 +14,7 @@ namespace MOBY_API_Core6.Repository
 
         public static string? ErrorMessage { get; set; }
 
-        public async Task<bool> CreateBanner(BannerVM bannerVM)
+        public async Task<bool> CreateBanner(CreateBannerVM bannerVM)
         {
             try
             {
@@ -23,7 +23,7 @@ namespace MOBY_API_Core6.Repository
                     BannerLink = bannerVM.Link,
                     DateCreate = DateTime.Now,
                     DateUpdate = DateTime.Now,
-                    Image = bannerVM.Imange
+                    Image = bannerVM.Image,
                 };
                 await _context.Banners.AddAsync(banner);
                 await _context.SaveChangesAsync();
@@ -36,7 +36,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<bool> UpdateBanner(BannerVM updateBanner)
+        public async Task<bool> UpdateBanner(UpdateBannerVM updateBanner)
         {
             try
             {
@@ -98,6 +98,7 @@ namespace MOBY_API_Core6.Repository
                     {
                         Id = bn.BannerId,
                         Link = bn.BannerLink,
+                        Image = bn.Image,
                         DateCreate = bn.DateCreate,
                         DateUpdate = bn.DateUpdate
                     }
