@@ -4,7 +4,7 @@ namespace MOBY_API_Core6.Repository
 {
     public interface IBannerRepository
     {
-        Task<bool> CreateBanner(string link);
+        Task<bool> CreateBanner(BannerVM createBanner);
         Task<bool> UpdateBanner(BannerVM updateBanner);
         Task<bool> DeleteBanner(int id);
         Task<List<BannerVM>?> GetAllBanner();

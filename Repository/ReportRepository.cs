@@ -576,12 +576,12 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<bool> HideOject(HideAndPunish hideAndPunish)
+        public async Task<bool> HiddenOject(HiddenAndPunish hideAndPunish)
         {
             try
             {
                 int id = hideAndPunish.Id;
-                int tyle = hideAndPunish.Tyle;
+                int tyle = hideAndPunish.Type;
                 switch (tyle)
                 {
                     case 0:
@@ -666,12 +666,12 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<bool> PunishViolators(HideAndPunish hideAndPunish)
+        public async Task<bool> PunishViolators(HiddenAndPunish hideAndPunish)
         {
             try
             {
                 int id = hideAndPunish.Id;
-                int tyle = hideAndPunish.Tyle;
+                int tyle = hideAndPunish.Type;
                 switch (tyle)
                 {
                     case 0:

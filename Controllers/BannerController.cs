@@ -22,11 +22,11 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpPost("CreateBanner")]
-        public async Task<IActionResult> CreateBanner(string link, string image) 
+        public async Task<IActionResult> CreateBanner([FromBody] BannerVM bannerVM) 
         {
             try
             {
-                bool checkCreate = await _bannerRepository.CreateBanner(link);
+                bool checkCreate = await _bannerRepository.CreateBanner(bannerVM);
                 if (checkCreate)
                 {
                     return Ok(ReturnMessage.Create("đã tạo thành công"));

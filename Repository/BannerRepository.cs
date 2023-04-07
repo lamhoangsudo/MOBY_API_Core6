@@ -14,12 +14,17 @@ namespace MOBY_API_Core6.Repository
 
         public static string? ErrorMessage { get; set; }
 
-        public async Task<bool> CreateBanner(string link)
+        public async Task<bool> CreateBanner(BannerVM bannerVM)
         {
             try
             {
-                Banner banner = new Banner();
-                banner.BannerLink = link;
+                Banner banner = new()
+                {
+                    BannerLink = bannerVM.Link,
+                    DateCreate = DateTime.Now,
+                    DateUpdate = DateTime.Now,
+                    Image = bannerVM.Imange
+                };
                 await _context.Banners.AddAsync(banner);
                 await _context.SaveChangesAsync();
                 return true;
@@ -45,6 +50,8 @@ namespace MOBY_API_Core6.Repository
                 {
 #pragma warning disable CS8601 // Possible null reference assignment.
                     banner.BannerLink = updateBanner.Link;
+                    banner.DateUpdate = DateTime.Now;
+                    banner.Image = updateBanner.Imange;
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.SaveChangesAsync();
                     return true;
@@ -85,11 +92,14 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                List<BannerVM> bannerVMs = await _context.Banners.Select(
+                List<BannerVM> bannerVMs = await _context.Banners
+                    .Select(
                     bn => new BannerVM
                     {
                         Id = bn.BannerId,
-                        Link = bn.BannerLink
+                        Link = bn.BannerLink,
+                        DateCreate = bn.DateCreate,
+                        DateUpdate = bn.DateUpdate
                     }
                     ).ToListAsync();
                 return bannerVMs;

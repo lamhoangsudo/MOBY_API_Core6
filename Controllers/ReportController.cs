@@ -296,12 +296,12 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpPatch("HideOject")]
-        public async Task<IActionResult> HideOject([FromBody] HideAndPunish hideAndPunish)
+        [HttpPatch("HiddenOject")]
+        public async Task<IActionResult> HideOject([FromBody] HiddenAndPunish hideAndPunish)
         {
             try
             {
-                bool checkHide = await _reportRepository.HideOject(hideAndPunish);
+                bool checkHide = await _reportRepository.HiddenOject(hideAndPunish);
                 if (checkHide)
                 {
                     return Ok(ReturnMessage.Create("đã ẩn đối tượng thành công"));
@@ -320,7 +320,7 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpPut("PunishViolators")]
-        public async Task<IActionResult> PunishViolators([FromBody] HideAndPunish hideAndPunish)
+        public async Task<IActionResult> PunishViolators([FromBody] HiddenAndPunish hideAndPunish)
         {
             try
             {
