@@ -7,10 +7,11 @@ namespace MOBY_API_Core6.Repository
     public class OrderRepository : IOrderRepository
     {
         private readonly MOBYContext context;
-
-        public OrderRepository(MOBYContext context)
+        private readonly IEmailRepository emailDAO;
+        public OrderRepository(MOBYContext context, IEmailRepository emailDAO)
         {
             this.context = context;
+            this.emailDAO = emailDAO;
         }
 
         public async Task<bool> CreateOrder(int uid, String Address, String? note, List<RequestDetail> accteptedRequestDetail)
@@ -32,8 +33,17 @@ namespace MOBY_API_Core6.Repository
             newOrder.OrderDetails = ListOrderDetail;
 
             context.Orders.Add(newOrder);
+            String? recieverGmail = await context.UserAccounts.Where(U => U.UserId == uid).Select(u => u.UserGmail).FirstOrDefaultAsync();
             if (await context.SaveChangesAsync() != 0)
             {
+                if (recieverGmail != null)
+                {
+                    Email newEmail = new Email();
+                    newEmail.To = recieverGmail;
+                    newEmail.Subject = "your order has been created";
+                    newEmail.Body = "your order has been created";
+                    emailDAO.SendEmai(newEmail);
+                }
                 return true;
             }
 
