@@ -41,7 +41,7 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<UserAccount?> FindUserByUid(int uid)
         {
-            UserAccount? foundAccount = await context.UserAccounts.Where(u => u.UserId == uid)
+            UserAccount? foundAccount = await context.UserAccounts.Where(u => u.UserId == uid&&u.UserStatus==true)
                 .Include(u => u.Carts)
                 .FirstOrDefaultAsync();
             return foundAccount;
