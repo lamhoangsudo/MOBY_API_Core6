@@ -10,11 +10,11 @@ namespace MOBY_API_Core6.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository userDAO;
-        private readonly ICartRepository cartDAO;
-        public UserController(IUserRepository userDao, ICartRepository cartDAO)
+        private readonly IEmailRepository emailDAO;
+        public UserController(IUserRepository userDao, IEmailRepository emailDAO)
         {
             this.userDAO = userDao;
-            this.cartDAO = cartDAO;
+            this.emailDAO = emailDAO;
         }
         [Authorize]
         [HttpPost]
@@ -126,11 +126,19 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpGet]
         [Route("api/useraccount/all")]
-        public async Task<IActionResult> GetAllUser([FromQuery] PaggingVM pagging)
+        public async Task<IActionResult> GetAllUser([FromQuery] PaggingVM pagging, [FromQuery] UserAccountFilterVM userAccountFilterVM)
         {
             try
             {
-                List<UserVM> listUser = await userDAO.GetAllUser(pagging);
+                if (userAccountFilterVM.UserName == null)
+                {
+                    userAccountFilterVM.UserName = "";
+                }
+                if (userAccountFilterVM.UserGmail == null)
+                {
+                    userAccountFilterVM.UserGmail = "";
+                }
+                List<UserVM> listUser = await userDAO.GetAllUser(pagging, userAccountFilterVM);
                 int totalUser = await userDAO.GetAllUserCount();
                 PaggingReturnVM<UserVM> result = new PaggingReturnVM<UserVM>(listUser, pagging, totalUser);
                 //UserAccounts currentUser = new UserAccounts();

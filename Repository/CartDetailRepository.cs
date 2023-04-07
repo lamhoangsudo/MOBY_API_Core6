@@ -7,12 +7,12 @@ namespace MOBY_API_Core6.Repository
     public class CartDetailRepository : ICartDetailRepository
     {
         private readonly MOBYContext context;
-        private readonly IOrderRepository orderDAO;
 
-        public CartDetailRepository(MOBYContext context, IOrderRepository orderDAO)
+
+        public CartDetailRepository(MOBYContext context)
         {
             this.context = context;
-            this.orderDAO = orderDAO;
+
         }
 
 
