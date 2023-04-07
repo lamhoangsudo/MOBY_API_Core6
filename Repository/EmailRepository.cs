@@ -20,7 +20,7 @@ namespace MOBY_API_Core6.Repository
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_configuration.GetSection("EmailHost").Value));
             email.To.Add(MailboxAddress.Parse(emailTo.To));
-            email.Subject = email.Subject;
+            email.Subject = emailTo.Subject;
             email.Body = new TextPart(TextFormat.Html) { Text = emailTo.Body };
             var smtp = new SmtpClient();
             smtp.Connect(_configuration.GetSection("EmailHost").Value, int.Parse(_configuration.GetSection("EmailPort").Value), SecureSocketOptions.StartTls);
