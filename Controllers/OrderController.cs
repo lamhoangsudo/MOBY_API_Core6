@@ -25,6 +25,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 List<OrderBriefVM> listOrder = await orderDAO.GetOrderByRecieverID(uid, pagging, orderStatusVM);
                 int total = await orderDAO.GetOrderByRecieverIDCount(uid, orderStatusVM);
                 PaggingReturnVM<OrderBriefVM> result = new PaggingReturnVM<OrderBriefVM>(listOrder, pagging, total);
@@ -46,6 +50,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 List<OrderBriefVM> listOrder = await orderDAO.GetOrderBySharerID(uid, pagging, orderStatusVM);
                 int total = await orderDAO.GetOrderBySharerIDCount(uid, orderStatusVM);
                 PaggingReturnVM<OrderBriefVM> result = new PaggingReturnVM<OrderBriefVM>(listOrder, pagging, total);
@@ -66,6 +74,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 bool checking = await orderDAO.checkOrderSharer(uid);
 
                 if (checking)
@@ -91,6 +103,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 bool checking = await orderDAO.checkOrderReciever(uid);
 
                 if (checking)
@@ -140,6 +156,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 Order? currentOrder = await orderDAO.GetOrderByOrderID(updateOrderVM.OrderId);
                 if (currentOrder == null)
                 {

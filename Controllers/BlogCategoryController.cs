@@ -27,7 +27,23 @@ namespace MOBY_API_Core6.Controllers
 
             try
             {
-                List<BlogCategoryOnlyVM> BlogCateList = await BlogCateDAO.GetAllBlogCategory();
+                List<BlogCategoryOnlyVM> BlogCateList = await BlogCateDAO.GetAllBlogCategory(0);
+                return Ok(BlogCateList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("api/admin/blogcategory/all")]
+        public async Task<IActionResult> GetALlBlogCategoryForAdmin()
+        {
+
+            try
+            {
+                List<BlogCategoryOnlyVM> BlogCateList = await BlogCateDAO.GetAllBlogCategory(1);
                 return Ok(BlogCateList);
             }
             catch (Exception ex)

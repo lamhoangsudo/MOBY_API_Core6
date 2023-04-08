@@ -27,6 +27,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 if (await RepDAO.CreateReply(rep, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
@@ -47,6 +51,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 if (await RepDAO.UpdateReply(rep, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
@@ -67,6 +75,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 if (await RepDAO.DeleteReply(cmtid, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));

@@ -12,13 +12,24 @@ namespace MOBY_API_Core6.Repository
         {
             this.context = context;
         }
-        public async Task<List<BlogCategoryOnlyVM>> GetAllBlogCategory()
+        public async Task<List<BlogCategoryOnlyVM>> GetAllBlogCategory(int status)
         {
-            List<BlogCategoryOnlyVM> blogCategories = await context.BlogCategories
+            List<BlogCategoryOnlyVM> blogCategories = new List<BlogCategoryOnlyVM>();
+            if (status == 0)
+            {
+                blogCategories = await context.BlogCategories
                 .Where(bc => bc.Status == null || bc.Status == "ennable")
                 .Select(bc => BlogCategoryOnlyVM.BlogCategoryToVewModel(bc))
                 .ToListAsync();
 
+            }
+            else
+            {
+                blogCategories = await context.BlogCategories
+                .Select(bc => BlogCategoryOnlyVM.BlogCategoryToVewModel(bc))
+                .ToListAsync();
+
+            }
             return blogCategories;
         }
 

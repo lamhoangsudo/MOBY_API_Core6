@@ -64,14 +64,14 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Models.Category? updateCategory = await _context.Categories.Where(ct => ct.CategoryId == categoryVM.categoryID).SingleOrDefaultAsync();
+                Models.Category? updateCategory = await _context.Categories.Where(ct => ct.CategoryId == categoryVM.categoryID).FirstOrDefaultAsync();
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8601 // Possible null reference assignment.
                 updateCategory.CategoryName = categoryVM.categoryName;
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
                 updateCategory.CategoryImage = categoryVM.categoryImage;
-                updateCategory.CategoryStatus = true;   
+                updateCategory.CategoryStatus = true;
                 await _context.SaveChangesAsync();
                 return true;
             }
