@@ -203,6 +203,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (await BlogDAO.ConfirmBlog(foundblog, 1))
                     {
+
                         return Ok(ReturnMessage.Create("success"));
                     }
                 }

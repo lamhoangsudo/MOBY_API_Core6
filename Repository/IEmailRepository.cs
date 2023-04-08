@@ -4,6 +4,6 @@ namespace MOBY_API_Core6.Repository
 {
     public interface IEmailRepository
     {
-        void SendEmai(Email emailTo);
+        Task SendEmai(Email emailTo);
     }
 }
