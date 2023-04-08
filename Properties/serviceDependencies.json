@@ -14,7 +14,8 @@
       "connectionId": "ConnectionStrings:MobyDBLocallam"
     },
     "secrets1": {
-      "type": "secrets"
+      "type": "secrets",
+      "connectionId": "VaultUriSignalR"
     },
     "signalr1": {
       "type": "signalr",

@@ -42,7 +42,7 @@ namespace MOBY_API_Core6.Repository
                     newEmail.To = recieverGmail;
                     newEmail.Subject = "your order has been created";
                     newEmail.Body = "your order has been created";
-                    emailDAO.SendEmai(newEmail);
+                    await emailDAO.SendEmai(newEmail);
                 }
                 return true;
             }

@@ -5,16 +5,19 @@
       "type": "apis"
     },
     "secrets1": {
-      "type": "secrets.user"
+      "secretStore": null,
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/MOBYAPICore6vault",
+      "type": "secrets.keyVault",
+      "connectionId": "VaultUriSignalR"
     },
     "signalr1": {
-      "secretStore": "LocalSecretsFile",
+      "secretStore": "AzureKeyVault",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.SignalRService/SignalR/SignalRMoby",
       "type": "signalr.azure",
       "connectionId": "Azure:SignalR:ConnectionString"
     },
     "mssql2": {
-      "secretStore": "LocalSecretsFile",
+      "secretStore": "AzureKeyVault",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/mobys/databases/MOBY",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:MobyDBAzure"

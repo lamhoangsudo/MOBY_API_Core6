@@ -220,7 +220,7 @@ namespace MOBY_API_Core6.Repository
                 newEmail.To = foundAccount.UserGmail;
                 newEmail.Subject = "your has been ban";
                 newEmail.Body = foundAccount.UserGmail + " has been banned by admintrator at " + DateTime.Now.ToString();
-                emailDAO.SendEmai(newEmail);
+                await emailDAO.SendEmai(newEmail);
                 return true;
             }
 
@@ -241,7 +241,7 @@ namespace MOBY_API_Core6.Repository
                 newEmail.To = foundAccount.UserGmail;
                 newEmail.Subject = "your has been unbanned";
                 newEmail.Body = foundAccount.UserGmail + " has been unbanned by admintrator at " + DateTime.Now.ToString();
-                emailDAO.SendEmai(newEmail);
+                await emailDAO.SendEmai(newEmail);
                 return true;
 
             }

@@ -9,8 +9,6 @@ using MOBY_API_Core6.Repository;
 using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -36,7 +34,7 @@ if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != null)
 }
 else
 {
-    connectionString = builder.Configuration.GetConnectionString("SQLAZURECONNSTR_MobyDB");
+    connectionString = builder.Configuration.GetConnectionString("MobyDBAzure");
 }
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -60,7 +58,7 @@ builder.Services.AddScoped<IUserAddressRepository, UserAddressRepository>();
 builder.Services.AddScoped<IBannerRepository, BannerRepository>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<IImageVerifyRepository, ImageVerifyRepository>();
-
+builder.Configuration.AddUserSecrets<Program>(true);
 builder.Services.AddSwaggerGen(swagger =>
 {
     swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Moby API" });
