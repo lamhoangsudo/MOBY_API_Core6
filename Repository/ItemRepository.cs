@@ -290,7 +290,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     var item = await _context.Items.Where(it => it.ItemId == itemVM.itemID
                     && it.UserId == itemVM.userID)
-                        .SingleOrDefaultAsync();
+                        .FirstOrDefaultAsync();
                     if (item != null)
                     {
                         item.ItemStatus = null;
@@ -327,10 +327,10 @@ namespace MOBY_API_Core6.Repository
                 {*/
                 Models.Item? currentItem = await _context.Items
                     .Where(it => it.ItemId == itemVM.itemID && it.UserId == itemVM.userId)
-                    .SingleOrDefaultAsync();
+                    .FirstOrDefaultAsync();
                 var checkSubCategoryExists = await _context.SubCategories
                     .Where(sc => sc.SubCategoryId == itemVM.subCategoryId)
-                    .SingleOrDefaultAsync();
+                    .FirstOrDefaultAsync();
                 if (currentItem == null || currentItem.ItemStatus == null)
                 {
                     ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
@@ -657,7 +657,7 @@ namespace MOBY_API_Core6.Repository
                     string locationString = String.Concat(dynamicFilterVM.Location.Where(c => !Char.IsWhiteSpace(c))).Replace("}", "");
                     query = query.Where(query => query.bfit.it.ItemShippingAddress.StartsWith(locationString));
                 }
-                if (dynamicFilterVM.MaxPrice >= dynamicFilterVM.MinPrice)
+                if (dynamicFilterVM.MaxPrice >= dynamicFilterVM.MinPrice && dynamicFilterVM.MaxPrice != 0)
                 {
                     query = query.Where(query => query.bfit.it.ItemSalePrice <= dynamicFilterVM.MaxPrice && query.bfit.it.ItemSalePrice >= dynamicFilterVM.MinPrice);
                 }
@@ -669,11 +669,11 @@ namespace MOBY_API_Core6.Repository
                 {
                     query = query.Where(query => query.bfit.bf.ItemStatus == dynamicFilterVM.Status);
                 }
-                if (dynamicFilterVM.MinDateCreate <= dynamicFilterVM.MaxDateCreate)
+                if (dynamicFilterVM.MinDateCreate <= dynamicFilterVM.MaxDateCreate && dynamicFilterVM.MinDateCreate != null && dynamicFilterVM.MaxDateCreate != null)
                 {
                     query = query.Where(query => query.bfit.bf.ItemDateCreated >= dynamicFilterVM.MinDateCreate && query.bfit.bf.ItemDateCreated <= dynamicFilterVM.MaxDateCreate);
                 }
-                if (dynamicFilterVM.MinDateUpdate <= dynamicFilterVM.MaxDateUpdate)
+                if (dynamicFilterVM.MinDateUpdate <= dynamicFilterVM.MaxDateUpdate && dynamicFilterVM.MinDateUpdate != null && dynamicFilterVM.MaxDateUpdate != null)
                 {
                     query = query.Where(query => query.bfit.it.ItemDateUpdate >= dynamicFilterVM.MinDateUpdate && query.bfit.it.ItemDateUpdate <= dynamicFilterVM.MaxDateUpdate);
                 }
@@ -721,7 +721,10 @@ namespace MOBY_API_Core6.Repository
                         query = query.OrderByDescending(query => query.bfit.bf.ItemSalePrice);
                     }
                 }
-                query = query.Where(query => query.bfit.it.ItemEstimateValue <= dynamicFilterVM.MaxUsable && query.bfit.it.ItemEstimateValue >= dynamicFilterVM.MinUsable);
+                if (dynamicFilterVM.MinUsable <= dynamicFilterVM.MaxUsable && dynamicFilterVM.MinUsable != null && dynamicFilterVM.MaxUsable != null)
+                {
+                    query = query.Where(query => query.bfit.it.ItemEstimateValue <= dynamicFilterVM.MaxUsable && query.bfit.it.ItemEstimateValue >= dynamicFilterVM.MinUsable);
+                }
                 int total = query.Count();
                 int totalPage = total / dynamicFilterVM.PageSize;
                 if (total % dynamicFilterVM.PageSize != 0)

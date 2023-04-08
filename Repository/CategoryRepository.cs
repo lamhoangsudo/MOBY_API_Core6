@@ -28,7 +28,7 @@ namespace MOBY_API_Core6.Repository
                         ct.CategoryImage,
                         ct.CategoryStatus
                         ))
-                    .SingleOrDefaultAsync();
+                    .FirstOrDefaultAsync();
 #pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 return checkCategory;
             }
@@ -41,7 +41,7 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<bool> CreateCategory(CreateCategoryVM categoryVM)
         {
-            var checkCategory = await _context.Categories.Where(ct => ct.CategoryName.Equals(categoryVM.categoryName)).SingleOrDefaultAsync();
+            var checkCategory = await _context.Categories.Where(ct => ct.CategoryName.Equals(categoryVM.categoryName)).FirstOrDefaultAsync();
             if (checkCategory == null)
             {
                 Models.Category category = new Models.Category();
@@ -86,7 +86,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Models.Category? deleteCategory = await _context.Categories.Where(ct => ct.CategoryId == categoryVM.categoryID).SingleOrDefaultAsync();
+                Models.Category? deleteCategory = await _context.Categories.Where(ct => ct.CategoryId == categoryVM.categoryID).FirstOrDefaultAsync();
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 deleteCategory.CategoryStatus = false;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.

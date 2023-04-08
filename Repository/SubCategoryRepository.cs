@@ -20,7 +20,7 @@ namespace MOBY_API_Core6.Repository
             {
                 var checkCategory = await _context.Categories
                                 .Where(ct => ct.CategoryId == subCategoryVM.categoryID)
-                                .SingleOrDefaultAsync();
+                                .FirstOrDefaultAsync();
                 if (checkCategory == null || subCategoryVM.subCategoryName == null || subCategoryVM.subCategoryName.Equals(""))
                 {
                     errorMessage = "Category không tồn tại";
@@ -30,7 +30,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     var checkSubCategory = await _context.SubCategories
                         .Where(sc => sc.SubCategoryName.Equals(subCategoryVM.subCategoryName))
-                        .SingleOrDefaultAsync();
+                        .FirstOrDefaultAsync();
                     if (checkSubCategory == null)
                     {
                         SubCategory subCategory = new SubCategory();
@@ -59,7 +59,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                SubCategory? subCategoryDelete = await _context.SubCategories.Where(sc => sc.SubCategoryId == subCategoryVM.subCategoryID).SingleOrDefaultAsync();
+                SubCategory? subCategoryDelete = await _context.SubCategories.Where(sc => sc.SubCategoryId == subCategoryVM.subCategoryID).FirstOrDefaultAsync();
                 if (subCategoryDelete == null)
                 {
                     errorMessage = "không tìm thấy";
@@ -105,7 +105,7 @@ namespace MOBY_API_Core6.Repository
             {
                 var checkCategory = await _context.Categories
                                 .Where(ct => ct.CategoryId == categoryID)
-                                .SingleOrDefaultAsync();
+                                .FirstOrDefaultAsync();
                 if (checkCategory == null)
                 {
                     errorMessage = "Category không tồn tại";
@@ -114,7 +114,7 @@ namespace MOBY_API_Core6.Repository
                 else
                 {
                     var listSubCategory = await _context.SubCategories
-                        .FromSqlInterpolated($"EXEC get_All_SubCategory {categoryID}")
+                        .Where(sc => sc.CategoryId == categoryID)
                         .Select(subCategory => new SubCategoryVM
                         (
                              subCategory.SubCategoryId,
@@ -137,7 +137,7 @@ namespace MOBY_API_Core6.Repository
             {
                 var checkSubCategory = await _context.SubCategories
                                 .Where(sc => sc.SubCategoryId == subCategoryID)
-                                .SingleOrDefaultAsync();
+                                .FirstOrDefaultAsync();
                 if (checkSubCategory != null)
                 {
                     return new SubCategoryVM
@@ -167,7 +167,7 @@ namespace MOBY_API_Core6.Repository
             {
                 var checkCategory = await _context.Categories
                                 .Where(ct => ct.CategoryId == subCategoryVM.categoryID)
-                                .SingleOrDefaultAsync();
+                                .FirstOrDefaultAsync();
                 if (checkCategory == null || subCategoryVM.subCategoryName == null || subCategoryVM.subCategoryName.Equals(""))
                 {
                     return false;
@@ -176,7 +176,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     SubCategory? subCategoryUpdate = await _context.SubCategories
                         .Where(sc => sc.SubCategoryId == subCategoryVM.subCategoryID)
-                        .SingleOrDefaultAsync();
+                        .FirstOrDefaultAsync();
                     if (subCategoryUpdate == null)
                     {
                         return false;
