@@ -6,6 +6,7 @@ namespace MOBY_API_Core6.Data_View_Model
     {
         public int BlogId { get; set; }
         public string BlogTitle { get; set; } = null!;
+        public int BlogCategoryId { get; set; }
         public string? Image { get; set; }
         public string? BlogDescription { get; set; }
         public string? ReasonDeny { get; set; }
@@ -22,9 +23,10 @@ namespace MOBY_API_Core6.Data_View_Model
                 BlogId = blog.BlogId,
 
                 BlogTitle = blog.BlogTitle,
+                BlogCategoryId = blog.BlogCategoryId,
                 Image = blog.Image,
                 BlogDescription = blog.BlogDescription,
-                ReasonDeny=blog.ReasonDeny,
+                ReasonDeny = blog.ReasonDeny,
                 BlogDateCreate = blog.BlogDateCreate,
                 BlogDateUpdate = blog.BlogDateUpdate,
                 BlogStatus = blog.BlogStatus

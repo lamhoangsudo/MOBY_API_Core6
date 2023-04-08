@@ -79,7 +79,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPatch]
         [Route("api/useraccount/ban")]
         public async Task<IActionResult> BanUser([FromBody] UserUidVM uid)
@@ -102,7 +102,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPatch]
         [Route("api/useraccount/unban")]
         public async Task<IActionResult> UnBanUser([FromBody] UserUidVM uid)

@@ -26,7 +26,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-var connectionString = builder.Configuration.GetConnectionString("MobyDB");
+
+
+string connectionString = "";
+
+if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != null)
+{
+    connectionString = Environment.GetEnvironmentVariable("MobyDB")!;
+}
+else
+{
+    connectionString = builder.Configuration.GetConnectionString("SQLAZURECONNSTR_MobyDB");
+}
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -48,7 +59,7 @@ builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IUserAddressRepository, UserAddressRepository>();
 builder.Services.AddScoped<IBannerRepository, BannerRepository>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
-
+builder.Services.AddScoped<IImageVerifyRepository, ImageVerifyRepository>();
 
 builder.Services.AddSwaggerGen(swagger =>
 {
@@ -103,7 +114,7 @@ FirebaseApp.Create(new AppOptions()
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    
+
 }
 app.UseSwagger();
 

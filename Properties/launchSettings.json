@@ -1,4 +1,30 @@
-﻿{
+{
+  "profiles": {
+    "MOBY_API_Core6": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "EmailPassword": "lewfuvkkahszhmia",
+        "EmailUserName": "hlam5370@gmail.com",
+        "MobyDB": "Server=mobys.database.windows.net,1433;Initial Catalog=MOBY;Persist Security Info=False;User ID=lamhoang;Password=Hlam@qaz890;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;",
+        "MobyDBLocalbao": "Server=DESKTOP-PBF0GCO\\MSSQLSERVER01;Database=MOBY;Trusted_Connection=True;Integrated Security=true;Trust Server Certificate=true",
+        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.Azure.SignalR"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7217;http://localhost:5209"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.Azure.SignalR"
+      }
+    }
+  },
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -6,26 +32,6 @@
     "iisExpress": {
       "applicationUrl": "http://localhost:30384",
       "sslPort": 44316
-    }
-  },
-  "profiles": {
-    "MOBY_API_Core6": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7217;http://localhost:5209",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
     }
   }
 }
