@@ -11,8 +11,8 @@ namespace MOBY_API_Core6.Models
             StreamReader streamReader = System.IO.File.OpenText("EmailFormat\\index.html");
             bodyBuilder.HtmlBody = streamReader.ReadToEnd();
             bodyBuilder.HtmlBody = bodyBuilder.HtmlBody.Replace("[asacsac]", "a");
-            Email email = new("","","");
-            email.Body = bodyBuilder.HtmlBody;
+            //Email email = new("","","");
+            //email.Body = bodyBuilder.HtmlBody;
         }
     }
 }
