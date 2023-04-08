@@ -290,7 +290,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     var item = await _context.Items.Where(it => it.ItemId == itemVM.itemID
                     && it.UserId == itemVM.userID)
-                        .SingleOrDefaultAsync();
+                        .FirstOrDefaultAsync();
                     if (item != null)
                     {
                         item.ItemStatus = null;
@@ -327,10 +327,10 @@ namespace MOBY_API_Core6.Repository
                 {*/
                 Models.Item? currentItem = await _context.Items
                     .Where(it => it.ItemId == itemVM.itemID && it.UserId == itemVM.userId)
-                    .SingleOrDefaultAsync();
+                    .FirstOrDefaultAsync();
                 var checkSubCategoryExists = await _context.SubCategories
                     .Where(sc => sc.SubCategoryId == itemVM.subCategoryId)
-                    .SingleOrDefaultAsync();
+                    .FirstOrDefaultAsync();
                 if (currentItem == null || currentItem.ItemStatus == null)
                 {
                     ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";

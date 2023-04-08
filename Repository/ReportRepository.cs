@@ -234,7 +234,7 @@ namespace MOBY_API_Core6.Repository
                     string? gmail = await query
                     .Select(rpus => rpus.us.UserGmail)
                     .FirstOrDefaultAsync();
-                    //Email email = new(gmail, "a", "a");
+                    //Email email = new(gmail, "", "a");
                     report.ReportDateResolve = DateTime.Now;
                     report.ReportStatus = reportVM.IsApproved;
                     //_emailRepository.SendEmai(email);
@@ -258,18 +258,24 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report? report = await _context.Reports
+                var query = _context.Reports
                     .Join(_context.UserAccounts, rp => rp.UserId, us => us.UserId, (rp, us) => new { rp, us })
                     .Where(rpus => rpus.rp.ReportId == reportVM.reportID
                     && rpus.rp.ReportStatus == 0
-                    && rpus.us.UserStatus == true)
+                    && rpus.us.UserStatus == true);
+                Report? report = await query
                     .Select(rpus => rpus.rp)
                     .FirstOrDefaultAsync();
                 if (report != null)
                 {
+                    string? email = await query
+                        .Select(rpus => rpus.us.UserGmail)
+                        .FirstOrDefaultAsync();
+                    //Email email = new(gmail, "", "a");
                     report.ReportDateResolve = DateTime.Now;
                     report.ReportStatus = reportVM.isDeny;
                     report.ReasonDeny = reportVM.reason;
+                    //_emailRepository.SendEmai(email);
                     await _context.SaveChangesAsync();
                     return true;
                 }
