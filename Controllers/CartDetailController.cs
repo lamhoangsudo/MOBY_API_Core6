@@ -56,6 +56,11 @@ namespace MOBY_API_Core6.Controllers
 
             try
             {
+                var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (currentUid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 String check = await cartDetailDAO.CheclExistCartDetail(createdRequestDetail);
                 if (check.Equals("succes"))
                 {
@@ -65,7 +70,8 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("cant not add more than share ammout"));
                 }
-                var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+
+
                 String result = await cartDetailDAO.CreateCartDetail(createdRequestDetail, currentUid);
                 if (result.Equals("success"))
                 {
@@ -155,11 +161,16 @@ namespace MOBY_API_Core6.Controllers
 
             try
             {
+                var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (currentUid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 if (listCartDetailID.listCartDetailID == null || listCartDetailID.listCartDetailID.Count == 0)
                 {
                     return BadRequest(ReturnMessage.Create("there no cart Detail to confirm"));
                 }
-                var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+
                 if (await cartDetailDAO.ConfirmCartDetail(listCartDetailID, currentUid))
                 {
                     return Ok(ReturnMessage.Create("Success"));

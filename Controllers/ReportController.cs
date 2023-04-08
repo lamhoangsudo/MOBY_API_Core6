@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
-using System;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -27,6 +26,14 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (userID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (userID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 UserAccount? user = await _userRepository.FindUserByUid(userID);
                 if (user == null)
                 {
@@ -195,7 +202,11 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                UserAccount? user = await _userRepository.FindUserByUid(userID);
+                if (userID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                UserAccount? user = await _userRepository.FindUserByUidWithoutStatus(userID);
                 if (user == null)
                 {
                     return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
@@ -229,11 +240,11 @@ namespace MOBY_API_Core6.Controllers
         }
 
         [HttpGet("GetDetailReport")]
-        public async Task<IActionResult> GetDetailReport(int report, int tyle)
+        public async Task<IActionResult> GetDetailReport(int report, int type)
         {
             try
             {
-                switch (tyle)
+                switch (type)
                 {
                     case 0:
                         ViewReportItem? viewReportItem = await _reportRepository.ItemReportDetail(report);
@@ -296,13 +307,13 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [HttpPatch("HiddenOject")]
-        public async Task<IActionResult> HideOject([FromBody] HiddenAndPunish hideAndPunish)
+        [HttpPatch("HiddenObject")]
+        public async Task<IActionResult> HideObject([FromBody] HiddenAndPunish hiddenAndPunish)
         {
             try
             {
-                bool checkHide = await _reportRepository.HiddenOject(hideAndPunish);
-                if (checkHide)
+                bool checkHidden = await _reportRepository.HiddenOject(hiddenAndPunish);
+                if (checkHidden)
                 {
                     return Ok(ReturnMessage.Create("đã ẩn đối tượng thành công"));
                 }

@@ -23,6 +23,10 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> CreateCart()
         {
             var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            if (currentUid == 0)
+            {
+                return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
             if (await cartDAO.CheackExistedCartByUid(currentUid))
             {
                 return Ok(ReturnMessage.Create("this user already has a cart"));
@@ -40,6 +44,10 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> UpdateCart([FromBody] UpdateCartVM updatedCart)
         {
             var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            if (currentUid == 0)
+            {
+                return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
             var currenCart = await cartDAO.GetCartByUid(currentUid);
             if (currenCart == null)
             {
@@ -55,9 +63,13 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpGet]
         [Route("api/useraccount/cart")]
-        public async Task<IActionResult> GetRequestByUid()
+        public async Task<IActionResult> GetCartByUid()
         {
             int currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            if (currentUid == 0)
+            {
+                return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
             Data_View_Model.CartVM? currentCart = await cartDAO.GetCartVMByUid(currentUid);
             return Ok(currentCart);
         }

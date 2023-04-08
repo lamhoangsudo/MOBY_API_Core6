@@ -32,6 +32,10 @@ namespace MOBY_API_Core6.Controllers
             {
 
                 int uid = await userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 List<RequestVM> requestDetailOf1ItemList = await requestRepository.getRequestBySharerID(uid, requestStatus.requestStatus);
                 /*List<int> itemIDList = await itemDAO.getListItemIDByUserID(uid);
                 List<RequestVM> result = new List<RequestVM>();
@@ -60,7 +64,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int uid = await userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
 
                 List<RequestVM> ListRequest = await requestRepository.getRequestByRecieverID(uid, requestStatus.requestStatus);
 

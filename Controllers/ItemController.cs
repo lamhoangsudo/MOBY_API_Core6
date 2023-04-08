@@ -276,7 +276,7 @@ namespace Item.Controllers
                     {
                         return Ok(listAllShareRecently);
                     }
-                    else 
+                    else
                     {
 #pragma warning disable CS8604 // Possible null reference argument.
                         return NotFound(ReturnMessage.Create(ItemRepository.ErrorMessage));
@@ -334,6 +334,10 @@ namespace Item.Controllers
             try
             {
                 int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (userID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 UserAccount? user = await _userRepository.FindUserByUid(userID);
                 if (user == null)
                 {
@@ -375,6 +379,10 @@ namespace Item.Controllers
             try
             {
                 int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (userID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 UserAccount? user = await _userRepository.FindUserByUid(userID);
                 if (user == null)
                 {
@@ -435,6 +443,14 @@ namespace Item.Controllers
         public async Task<IActionResult> GetListAllOtherPersonRequestItem(bool share, bool status, int pageNumber, int pageSize)
         {
             int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            if (userID == 0)
+            {
+                return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
+            if (userID == 0)
+            {
+                return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
             UserAccount? user = await _userRepository.FindUserByUid(userID);
             if (user == null)
             {
@@ -472,6 +488,10 @@ namespace Item.Controllers
         public async Task<IActionResult> GetListAllMyRequestItem(bool share, bool status, int pageNumber, int pageSize)
         {
             int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            if (userID == 0)
+            {
+                return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
             UserAccount? user = await _userRepository.FindUserByUid(userID);
             if (user == null)
             {

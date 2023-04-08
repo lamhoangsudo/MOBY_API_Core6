@@ -188,7 +188,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                UserAccount? currentUser = await userDAO.FindUserByUid(uid.UserId);
+                UserAccount? currentUser = await userDAO.FindUserByUidWithoutStatus(uid.UserId);
                 if (currentUser == null)
                 {
                     return BadRequest(ReturnMessage.Create("account not found"));
