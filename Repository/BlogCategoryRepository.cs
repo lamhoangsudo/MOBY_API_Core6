@@ -15,6 +15,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<List<BlogCategoryOnlyVM>> GetAllBlogCategory()
         {
             List<BlogCategoryOnlyVM> blogCategories = await context.BlogCategories
+                .Where(bc => bc.Status == null || bc.Status == "ennable")
                 .Select(bc => BlogCategoryOnlyVM.BlogCategoryToVewModel(bc))
                 .ToListAsync();
 
@@ -31,6 +32,7 @@ namespace MOBY_API_Core6.Repository
             }
             BlogCategory newBlogCategory = new BlogCategory();
             newBlogCategory.BlogCategoryName = name;
+            newBlogCategory.Status = "ennable";
             await context.BlogCategories.AddAsync(newBlogCategory);
             context.SaveChanges();
             return true;
@@ -46,6 +48,22 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
             existBlogCate.BlogCategoryName = updateBlogCategoryVM.BlogCategoryName;
+            existBlogCate.Status = "ennable";
+            await context.SaveChangesAsync();
+            return true;
+
+        }
+
+        public async Task<bool> DeleteBlogCategory(BlogCateGetVM blogCateGetVM)
+        {
+            BlogCategory? existBlogCate = await context.BlogCategories
+                .Where(bc => bc.BlogCategoryId == blogCateGetVM.BlogCategoryId).FirstOrDefaultAsync();
+            if (existBlogCate == null)
+            {
+                return false;
+            }
+
+            existBlogCate.Status = "disable";
             await context.SaveChangesAsync();
             return true;
 
@@ -55,7 +73,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<BlogCategoryVM?> GetBlogCateByID(int blogCateId)
         {
             BlogCategoryVM? foundBlogCate = await context.BlogCategories
-                .Where(bc => bc.BlogCategoryId == blogCateId)
+                .Where(bc => bc.BlogCategoryId == blogCateId && (bc.Status == null || bc.Status == "ennable"))
                 .Include(bc => bc.Blogs.Where(b => b.BlogStatus == 1))
                 .ThenInclude(b => b.User)
                 .Select(bc => BlogCategoryVM.BlogCategoryVMToVewModel(bc))

@@ -8,10 +8,11 @@ namespace MOBY_API_Core6.Repository
     public class UserRepository : IUserRepository
     {
         private readonly MOBYContext context;
-
-        public UserRepository(MOBYContext context)
+        private readonly IEmailRepository emailDAO;
+        public UserRepository(MOBYContext context, IEmailRepository emailDAO)
         {
             this.context = context;
+            this.emailDAO = emailDAO;
         }
 
         public async Task<bool> CheckExistedUser(String userCode)
@@ -130,28 +131,61 @@ namespace MOBY_API_Core6.Repository
         }
 
 
-        public async Task<List<UserVM>> GetAllUser(PaggingVM pagging)
+        public async Task<List<UserVM>> GetAllUser(PaggingVM pagging, UserAccountFilterVM userAccountFilterVM)
         {
             int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
             List<UserVM> accountListVM = new List<UserVM>();
-            if (pagging.orderBy)
+            if (userAccountFilterVM.UserName == null || userAccountFilterVM.UserGmail == null)
             {
-                accountListVM = await context.UserAccounts
-                .Skip(itemsToSkip)
-                .Take(pagging.pageSize)
-                .OrderByDescending(x => x.UserId)
-                .Select(u => UserVM.UserAccountToVewModel(u))
-                .ToListAsync();
+                return accountListVM;
+            }
+            if (userAccountFilterVM.UserStatus != null)
+            {
+                if (pagging.orderBy)
+                {
+                    accountListVM = await context.UserAccounts
+                    .Where(uc => uc.UserStatus == userAccountFilterVM.UserStatus && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .OrderByDescending(x => x.UserId)
+                    .Select(u => UserVM.UserAccountToVewModel(u))
+                    .ToListAsync();
 
+                }
+                else
+                {
+                    accountListVM = await context.UserAccounts
+                    .Where(uc => uc.UserStatus == userAccountFilterVM.UserStatus && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .Select(u => UserVM.UserAccountToVewModel(u))
+                    .ToListAsync();
+
+                }
             }
             else
             {
-                accountListVM = await context.UserAccounts
-                .Skip(itemsToSkip)
-                .Take(pagging.pageSize)
-                .Select(u => UserVM.UserAccountToVewModel(u))
-                .ToListAsync();
+                if (pagging.orderBy)
+                {
+                    accountListVM = await context.UserAccounts
+                    .Where(uc => uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .OrderByDescending(x => x.UserId)
+                    .Select(u => UserVM.UserAccountToVewModel(u))
+                    .ToListAsync();
 
+                }
+                else
+                {
+                    accountListVM = await context.UserAccounts
+                    .Where(uc => uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
+                    .Skip(itemsToSkip)
+                    .Take(pagging.pageSize)
+                    .Select(u => UserVM.UserAccountToVewModel(u))
+                    .ToListAsync();
+
+                }
             }
 
             return accountListVM;
@@ -174,6 +208,11 @@ namespace MOBY_API_Core6.Repository
             {
                 foundAccount.UserStatus = false;
                 await context.SaveChangesAsync();
+                Email newEmail = new Email();
+                newEmail.To = foundAccount.UserGmail;
+                newEmail.Subject = "your has been ban";
+                newEmail.Body = foundAccount.UserGmail + " has been banned by admintrator at " + DateTime.Now.ToString();
+                emailDAO.SendEmai(newEmail);
                 return true;
             }
 
@@ -190,6 +229,11 @@ namespace MOBY_API_Core6.Repository
             {
                 foundAccount.UserStatus = true;
                 await context.SaveChangesAsync();
+                Email newEmail = new Email();
+                newEmail.To = foundAccount.UserGmail;
+                newEmail.Subject = "your has been unbanned";
+                newEmail.Body = foundAccount.UserGmail + " has been unbanned by admintrator at " + DateTime.Now.ToString();
+                emailDAO.SendEmai(newEmail);
                 return true;
 
             }

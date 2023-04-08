@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
@@ -51,6 +52,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpPost]
         [Route("api/blogcategory/create")]
         public async Task<IActionResult> CreateBlogCategory([FromBody] CreateBlogCategoryName blogCateName)
@@ -72,14 +74,36 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
-        [HttpPatch]
+        [Authorize]
+        [HttpPut]
         [Route("api/blogcategory")]
         public async Task<IActionResult> UpdateBlogCategory([FromBody] UpdateBlogCategoryVM updateBlogCategoryVM)
         {
             try
             {
                 if (await BlogCateDAO.UpdateBlogCategory(updateBlogCategoryVM))
+                {
+                    return Ok(ReturnMessage.Create("success"));
+                }
+                else
+                {
+                    return BadRequest(ReturnMessage.Create("blog category not found"));
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize]
+        [HttpPatch]
+        [Route("api/blogcategory")]
+        public async Task<IActionResult> DeleteBlogCategory([FromBody] BlogCateGetVM blogCateGetVM)
+        {
+            try
+            {
+                if (await BlogCateDAO.DeleteBlogCategory(blogCateGetVM))
                 {
                     return Ok(ReturnMessage.Create("success"));
                 }

@@ -6,6 +6,7 @@ namespace MOBY_API_Core6.Data_View_Model
     {
         public int BlogCategoryId { get; set; }
         public string BlogCategoryName { get; set; } = null!;
+        public string? Status { get; set; }
 
         public static BlogCategoryOnlyVM BlogCategoryToVewModel(BlogCategory blogcate)
         {
@@ -13,6 +14,7 @@ namespace MOBY_API_Core6.Data_View_Model
             {
                 BlogCategoryId = blogcate.BlogCategoryId,
                 BlogCategoryName = blogcate.BlogCategoryName,
+                Status = blogcate.Status,
             };
 
             return blogcateView;
