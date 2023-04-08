@@ -339,7 +339,7 @@ namespace MOBY_API_Core6.Repository
             blog.ReasonDeny = null;
             if (await context.SaveChangesAsync() != 0)
             {
-                //Email newEmail = new Email();
+                Email newEmail = new Email();
                 newEmail.To = blog.User.UserGmail;
                 newEmail.Subject = "your blog has been accepted";
                 newEmail.Body = "https://moby-customer.vercel.app/blog/" + blog.BlogId + " has been accepted by admintrator";
