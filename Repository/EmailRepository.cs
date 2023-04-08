@@ -1,8 +1,8 @@
-﻿using MailKit.Security;
-using MimeKit.Text;
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
 using MimeKit;
+using MimeKit.Text;
 using MOBY_API_Core6.Models;
-using MailKit.Net.Smtp;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -15,7 +15,7 @@ namespace MOBY_API_Core6.Repository
             _configuration = configuration;
         }
 
-        public void SendEmai(Email emailTo)
+        public async Task SendEmai(Email emailTo)
         {
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_configuration.GetSection("EmailHost").Value));
@@ -23,10 +23,14 @@ namespace MOBY_API_Core6.Repository
             email.Subject = emailTo.Subject;
             email.Body = new TextPart(TextFormat.Html) { Text = emailTo.Body };
             var smtp = new SmtpClient();
-            smtp.Connect(_configuration.GetSection("EmailHost").Value, int.Parse(_configuration.GetSection("EmailPort").Value), SecureSocketOptions.StartTls);
-            smtp.Authenticate(_configuration.GetSection("EmailUserName").Value, _configuration.GetSection("EmailPassword").Value);
-            smtp.Send(email);
-            smtp.Disconnect(true);
+
+            string emailUsername = _configuration.GetSection("EmailUserName").Value;
+            string emailPassword = _configuration.GetSection("EmailPassword").Value;
+
+            await smtp.ConnectAsync(_configuration.GetSection("EmailHost").Value, int.Parse(_configuration.GetSection("EmailPort").Value), SecureSocketOptions.StartTls);
+            await smtp.AuthenticateAsync(emailUsername, emailPassword);
+            await smtp.SendAsync(email);
+            await smtp.DisconnectAsync(true);
         }
     }
 }
