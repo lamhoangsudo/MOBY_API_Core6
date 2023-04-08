@@ -7,13 +7,16 @@ namespace MOBY_API_Core6.Repository
     public class ReportRepository : IReportRepository
     {
         private readonly MOBYContext _context;
+        private readonly IEmailRepository _emailRepository;
 
         public static string? ErrorMessage { get; set; }
 
-        public ReportRepository(MOBYContext context)
+        public ReportRepository(MOBYContext context, IEmailRepository emailRepository)
         {
             _context = context;
+            _emailRepository = emailRepository;
         }
+
         public async Task<bool> CreateItemReport(CreateReportVM reportVM)
         {
             try
@@ -218,17 +221,23 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Report? report = await _context.Reports
+                var query = _context.Reports
                     .Join(_context.UserAccounts, rp => rp.UserId, us => us.UserId, (rp, us) => new { rp, us })
                     .Where(rpus => rpus.rp.ReportId == reportVM.ReportID
                     && rpus.rp.ReportStatus == 0
-                    && rpus.us.UserStatus == true)
+                    && rpus.us.UserStatus == true);
+                Report? report = await query
                     .Select(rpus => rpus.rp)
                     .FirstOrDefaultAsync();
                 if (report != null)
                 {
+                    string? gmail = await query
+                    .Select(rpus => rpus.us.UserGmail)
+                    .FirstOrDefaultAsync();
+                    //Email email = new(gmail, "a", "a");
                     report.ReportDateResolve = DateTime.Now;
                     report.ReportStatus = reportVM.IsApproved;
+                    //_emailRepository.SendEmai(email);
                     await _context.SaveChangesAsync();
                     return true;
                 }
@@ -581,8 +590,8 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 int id = hideAndPunish.Id;
-                int tyle = hideAndPunish.Type;
-                switch (tyle)
+                int type = hideAndPunish.Type;
+                switch (type)
                 {
                     case 0:
                         //item
@@ -590,6 +599,7 @@ namespace MOBY_API_Core6.Repository
                         if (item != null)
                         {
                             item.ItemStatus = false;
+                            item.ReasonHiden = hideAndPunish.Reason;
                             await _context.SaveChangesAsync();
                             return true;
                         }
@@ -604,6 +614,7 @@ namespace MOBY_API_Core6.Repository
                         if (order != null)
                         {
                             order.Status = 3;
+                            order.ReasonCancel = hideAndPunish.Reason;
                             await _context.SaveChangesAsync();
                             return true;
                         }
@@ -618,6 +629,7 @@ namespace MOBY_API_Core6.Repository
                         if (comment != null)
                         {
                             comment.Status = false;
+                            comment.ReasonHiden = hideAndPunish.Reason;
                             await _context.SaveChangesAsync();
                             return true;
 
@@ -633,6 +645,7 @@ namespace MOBY_API_Core6.Repository
                         if (reply != null)
                         {
                             reply.Status = false;
+                            reply.ReasonHiden = hideAndPunish.Reason;
                             await _context.SaveChangesAsync();
                             return true;
                         }
@@ -647,6 +660,7 @@ namespace MOBY_API_Core6.Repository
                         if (blog != null)
                         {
                             blog.BlogStatus = 2;
+                            blog.ReasonDeny = hideAndPunish.Reason;
                             await _context.SaveChangesAsync();
                             return true;
                         }
@@ -691,6 +705,7 @@ namespace MOBY_API_Core6.Repository
                                 userAccountItem.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
+                            userAccountItem.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Models.Item? item = await queryItem
                                 .Where(query => query.it.ItemStatus == true)
                                 .Select(query => query.it)
@@ -726,6 +741,7 @@ namespace MOBY_API_Core6.Repository
                                 userAccountOrder.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
+                            userAccountOrder.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Order? order = await queryOrder
                                 .Where(queryOrder => queryOrder.orordit.orord.or.Status != 3)
                                 .Select(queryOrder => queryOrder.orordit.orord.or)
@@ -759,6 +775,7 @@ namespace MOBY_API_Core6.Repository
                                 userAccountComment.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
+                            userAccountComment.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Comment? comment = await queryComment
                                 .Where(queryComment => queryComment.cm.Status == true)
                                 .Select(queryComment => queryComment.cm)
@@ -792,6 +809,7 @@ namespace MOBY_API_Core6.Repository
                                 userAccountReply.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
+                            userAccountReply.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Reply? reply = await queryReply
                                 .Where(queryReply => queryReply.rp.Status == true)
                                 .Select(queryReply => queryReply.rp)
@@ -825,6 +843,7 @@ namespace MOBY_API_Core6.Repository
                                 userAccountBlog.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
+                            userAccountBlog.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Blog? blog = await queryBlog
                                 .Where(queryBlog => queryBlog.blg.BlogStatus != 2)
                                 .Select(queryBlog => queryBlog.blg)

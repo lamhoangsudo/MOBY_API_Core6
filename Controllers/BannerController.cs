@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
@@ -22,7 +20,7 @@ namespace MOBY_API_Core6.Controllers
 
         //[Authorize]
         [HttpPost("CreateBanner")]
-        public async Task<IActionResult> CreateBanner([FromBody] CreateBannerVM bannerVM) 
+        public async Task<IActionResult> CreateBanner([FromBody] CreateBannerVM bannerVM)
         {
             try
             {
@@ -70,7 +68,7 @@ namespace MOBY_API_Core6.Controllers
 
         //[Authorize]
         [HttpDelete("DeleteBanner")]
-        public async Task<IActionResult> DeleteBanner([FromBody] int id)
+        public async Task<IActionResult> DeleteBanner([FromQuery] int id)
         {
             try
             {

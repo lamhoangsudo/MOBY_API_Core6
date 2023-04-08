@@ -42,7 +42,7 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 var category = await _categoryRepository.GetCategoryByID(categoryVM.categoryID);
-                if (category == null || category.CategoryStatus == false)
+                if (category == null)
                 {
                     return NotFound(ReturnMessage.Create("khong tim thay"));
                 }

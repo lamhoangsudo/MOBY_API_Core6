@@ -10,7 +10,9 @@ namespace MOBY_API_Core6.Data_View_Model
 
         [Required]
         [DefaultValue(0)]
-        [Range(0,4)]
+        [Range(0, 4)]
         public int Type { get; set; }
+        [DefaultValue(null)]
+        public string? Reason { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace MOBY_API_Core6.Repository
         public Task<bool> CheckExistedUser(String userCode);
         public Task<UserAccount?> FindUserByCode(String userCode);
         public Task<UserAccount?> FindUserByUid(int uid);
+        public Task<UserAccount?> FindUserByUidWithoutStatus(int uid);
         public Task<int> getUserIDByUserCode(String userCode);
         //public Task<int?> GetRoleByToken(IEnumerable<Claim> claims);
         public Task<bool> CreateUser(IEnumerable<Claim> claims, CreateAccountVM createUserVm);

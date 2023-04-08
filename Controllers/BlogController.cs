@@ -23,7 +23,7 @@ namespace MOBY_API_Core6.Controllers
 
         [HttpGet]
         [Route("api/blog/all")]
-        public async Task<IActionResult> getAllBlog([FromQuery] PaggingVM pagging)
+        public async Task<IActionResult> GetAllBlog([FromQuery] PaggingVM pagging)
         {
             try
             {
@@ -116,6 +116,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int UserID = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (UserID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 List<BlogSimpleVM> ListBlog = await BlogDAO.getBlogBySelf(UserID, pagging);
                 int totalBlog = await BlogDAO.getBlogByBySelfCount(UserID);
                 PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
@@ -136,7 +140,10 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 int UserID = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-
+                if (UserID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 if (await BlogDAO.CreateBlog(createdBlog, UserID))
                 {
                     return Ok(ReturnMessage.Create("success"));
@@ -162,6 +169,10 @@ namespace MOBY_API_Core6.Controllers
             {
 
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 Blog? foundblog = await BlogDAO.getBlogByBlogIDAndUserId(UpdatedBlog.BlogId, uid);
                 if (foundblog != null)
                 {
@@ -253,6 +264,10 @@ namespace MOBY_API_Core6.Controllers
             {
 
                 int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
                 Blog? foundblog = await BlogDAO.getBlogByBlogIDAndUserId(blogId.BlogId, uid);
                 if (foundblog != null)
                 {

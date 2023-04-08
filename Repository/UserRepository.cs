@@ -42,7 +42,15 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<UserAccount?> FindUserByUid(int uid)
         {
-            UserAccount? foundAccount = await context.UserAccounts.Where(u => u.UserId == uid&&u.UserStatus==true)
+            UserAccount? foundAccount = await context.UserAccounts.Where(u => u.UserId == uid && u.UserStatus == true)
+                .Include(u => u.Carts)
+                .FirstOrDefaultAsync();
+            return foundAccount;
+        }
+
+        public async Task<UserAccount?> FindUserByUidWithoutStatus(int uid)
+        {
+            UserAccount? foundAccount = await context.UserAccounts.Where(u => u.UserId == uid)
                 .Include(u => u.Carts)
                 .FirstOrDefaultAsync();
             return foundAccount;
@@ -59,14 +67,14 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<int> getUserIDByUserCode(String userCode)// nay laf tren token
         {
-            UserAccount? Userfound = await context.UserAccounts.Where(u => u.UserCode == userCode).FirstOrDefaultAsync();
+            UserAccount? Userfound = await context.UserAccounts.Where(u => u.UserCode == userCode && u.UserStatus == true).FirstOrDefaultAsync();
             if (Userfound != null)
             {
                 return Userfound.UserId;
             }
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            return Userfound.UserId;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+            return 0;
+
         }
 
 
