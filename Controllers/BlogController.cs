@@ -231,7 +231,7 @@ namespace MOBY_API_Core6.Controllers
                 Blog? foundblog = await BlogDAO.getBlogByBlogID(blogId.BlogId);
                 if (foundblog != null)
                 {
-                    if (blogId.reason != null && blogId.reason.Equals(""))
+                    if (blogId.reason != null && !blogId.reason.Equals(""))
                     {
                         if (await BlogDAO.DenyBlog(foundblog, 2, blogId.reason))
                         {
