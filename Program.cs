@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
 using System.Text.Json.Serialization;
+using Azure.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -35,7 +36,9 @@ if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != null)
 else
 {
     connectionString = builder.Configuration.GetConnectionString("MobyDBAzure");
+    //azureSignalR = builder.Configuration.GetConnectionString("");
 }
+//builder.Services.AddSignalR().AddAzureSignalR(connectionString);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

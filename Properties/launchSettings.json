@@ -13,7 +13,8 @@
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.Azure.SignalR",
         "VaultUriAzure": "https://mobyapicore6vault.vault.azure.net/",
         "AZURE_USERNAME": "hlam5370@gmail.com",
-        "VaultUriSignalR": "https://mobyapicore6vault.vault.azure.net/"
+        "VaultUriSignalR": "https://mobyapicore6vault.vault.azure.net/",
+        "VaultUri": "https://mobyapicore6vault.vault.azure.net/"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7217;http://localhost:5209"
@@ -27,7 +28,8 @@
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.Azure.SignalR",
         "VaultUriAzure": "https://mobyapicore6vault.vault.azure.net/",
         "AZURE_USERNAME": "hlam5370@gmail.com",
-        "VaultUriSignalR": "https://mobyapicore6vault.vault.azure.net/"
+        "VaultUriSignalR": "https://mobyapicore6vault.vault.azure.net/",
+        "VaultUri": "https://mobyapicore6vault.vault.azure.net/"
       }
     }
   },
