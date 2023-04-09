@@ -33,9 +33,5 @@ namespace MOBY_API_Core6.Models
         public bool Expr6 { get; set; }
         public DateTime Expr7 { get; set; }
         public int Expr8 { get; set; }
-        public int BlogId { get; set; }
-        public string BlogTitle { get; set; } = null!;
-        public int ItemId { get; set; }
-        public string ItemTitle { get; set; } = null!;
     }
 }

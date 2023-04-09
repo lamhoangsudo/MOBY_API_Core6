@@ -33,9 +33,5 @@ namespace MOBY_API_Core6.Models
         public bool StatusUreport { get; set; }
         public DateTime DateCreateUreport { get; set; }
         public int ReputationUreport { get; set; }
-        public int BlogId { get; set; }
-        public string BlogTitle { get; set; } = null!;
-        public int ItemId { get; set; }
-        public string ItemTitle { get; set; } = null!;
     }
 }

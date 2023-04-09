@@ -27,13 +27,13 @@ namespace MOBY_API_Core6.Models
         public bool UserStatus { get; set; }
         public DateTime UserDateCreate { get; set; }
         public int Reputation { get; set; }
-        public int Expr1 { get; set; }
-        public string Expr2 { get; set; } = null!;
-        public string Expr3 { get; set; } = null!;
-        public string Expr4 { get; set; } = null!;
-        public string Expr5 { get; set; } = null!;
-        public bool Expr6 { get; set; }
-        public DateTime Expr7 { get; set; }
-        public int Expr8 { get; set; }
+        public int UserIdreport { get; set; }
+        public string UserCodeReport { get; set; } = null!;
+        public string UserNameReport { get; set; } = null!;
+        public string UserGmailReport { get; set; } = null!;
+        public string UserImageReport { get; set; } = null!;
+        public bool UserStatusReport { get; set; }
+        public DateTime UserDateCreateReport { get; set; }
+        public int ReputationReport { get; set; }
     }
 }

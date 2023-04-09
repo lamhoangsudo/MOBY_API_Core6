@@ -715,8 +715,6 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
 
-                entity.Property(e => e.Expr7).HasColumnType("smalldatetime");
-
                 entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
 
                 entity.Property(e => e.ReportDateCreate)
@@ -739,9 +737,13 @@ namespace MOBY_API_Core6.Models
                     .HasColumnType("smalldatetime")
                     .HasColumnName("User_Date_Create");
 
+                entity.Property(e => e.UserDateCreateReport).HasColumnType("smalldatetime");
+
                 entity.Property(e => e.UserGmail).HasColumnName("User_Gmail");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.UserIdreport).HasColumnName("UserIDReport");
 
                 entity.Property(e => e.UserImage).HasColumnName("User_Image");
 
@@ -756,10 +758,6 @@ namespace MOBY_API_Core6.Models
 
                 entity.ToView("ViewReportComment");
 
-                entity.Property(e => e.BlogId).HasColumnName("BlogID");
-
-                entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
-
                 entity.Property(e => e.CommentId).HasColumnName("CommentID");
 
                 entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
@@ -767,10 +765,6 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.DateUpdate).HasColumnType("smalldatetime");
 
                 entity.Property(e => e.Expr7).HasColumnType("smalldatetime");
-
-                entity.Property(e => e.ItemId).HasColumnName("ItemID");
-
-                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
 
                 entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
 
@@ -951,10 +945,6 @@ namespace MOBY_API_Core6.Models
 
                 entity.ToView("ViewReportReply");
 
-                entity.Property(e => e.BlogId).HasColumnName("BlogID");
-
-                entity.Property(e => e.BlogTitle).HasColumnName("Blog_Title");
-
                 entity.Property(e => e.CodeUreport).HasColumnName("CodeUReport");
 
                 entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
@@ -968,10 +958,6 @@ namespace MOBY_API_Core6.Models
                 entity.Property(e => e.Idureport).HasColumnName("IDUReport");
 
                 entity.Property(e => e.ImageUreport).HasColumnName("ImageUReport");
-
-                entity.Property(e => e.ItemId).HasColumnName("ItemID");
-
-                entity.Property(e => e.ItemTitle).HasColumnName("Item_Title");
 
                 entity.Property(e => e.NameUreport).HasColumnName("NameUReport");
 

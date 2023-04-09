@@ -256,7 +256,7 @@ namespace MOBY_API_Core6.Controllers
                         {
                             return NotFound(ReturnMessage.Create("report không tồn tại"));
                         }
-                    case 1:
+                    case 4:
                         ViewReportBlog? viewReportBlog = await _reportRepository.BlogReportDetail(report);
                         if (viewReportBlog != null)
                         {
@@ -286,7 +286,7 @@ namespace MOBY_API_Core6.Controllers
                         {
                             return NotFound(ReturnMessage.Create("report không tồn tại"));
                         }
-                    case 4:
+                    case 1:
                         ViewReportOrder? viewReportOrder = await _reportRepository.OrderReportDetail(report);
                         if (viewReportOrder != null)
                         {
