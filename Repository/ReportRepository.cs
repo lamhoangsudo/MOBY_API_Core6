@@ -235,7 +235,7 @@ namespace MOBY_API_Core6.Repository
                 if (report != null)
                 {
                     int? type = null;
-                    if (report.Item != null)
+                    if (report.ItemId != null)
                     {
                         type = 0;
                     }
