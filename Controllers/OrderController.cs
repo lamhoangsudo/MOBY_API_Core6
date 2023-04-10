@@ -12,10 +12,12 @@ namespace MOBY_API_Core6.Controllers
     {
         private readonly IOrderRepository orderDAO;
         private readonly IUserRepository userDAO;
-        public OrderController(IOrderRepository orderDAO, IUserRepository userDAO)
+        private readonly IEmailRepository emailDAO;
+        public OrderController(IOrderRepository orderDAO, IUserRepository userDAO, IEmailRepository emailDAO)
         {
             this.orderDAO = orderDAO;
             this.userDAO = userDAO;
+            this.emailDAO = emailDAO;
         }
         [Authorize]
         [HttpGet]
@@ -155,6 +157,10 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
+                if (updateOrderVM.Status < 1 && updateOrderVM.Status > 2)
+                {
+                    return BadRequest(ReturnMessage.Create("unknown function"));
+                }
                 int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
@@ -181,6 +187,23 @@ namespace MOBY_API_Core6.Controllers
 
                 if (await orderDAO.UpdateStatusOrder(currentOrder, updateOrderVM.Status))
                 {
+                    if (updateOrderVM.Status == 1)
+                    {
+                        Email newEmail = new Email();
+                        newEmail.To = currentOrder.User.UserGmail;
+                        newEmail.Subject = "your order has been shipping";
+                        newEmail.Body = "your order has been shipping";
+                        await emailDAO.SendEmai(newEmail);
+                    }
+                    else
+                    if (updateOrderVM.Status == 2)
+                    {
+                        Email newEmail = new Email();
+                        newEmail.To = currentOrder.OrderDetails.First().Item.User.UserGmail;
+                        newEmail.Subject = "your order has been recievied";
+                        newEmail.Body = "your order has been recievied";
+                        await emailDAO.SendEmai(newEmail);
+                    }
                     return Ok(ReturnMessage.Create("success"));
                 }
 

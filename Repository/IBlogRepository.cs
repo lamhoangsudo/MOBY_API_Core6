@@ -22,7 +22,7 @@ namespace MOBY_API_Core6.Repository
         public Task<bool> CreateBlog(CreateBlogVM blogvm, int UserID);
         public Task<bool> UpdateBlog(Blog blog, UpdateBlogVM UpdatedBlogvm);
         public Task<bool> ConfirmBlog(Blog blog, int decision);
-        public Task<bool> DenyBlog(Blog blog, int decision, String reason);
+        public Task<bool> DenyBlog(Blog blog, String reason);
         public Task<int> getAllBlogCount();
         public Task<int> getBlogByCateCount(int blogCateID);
         public Task<int> getBlogByUserIDCount(int userID);
