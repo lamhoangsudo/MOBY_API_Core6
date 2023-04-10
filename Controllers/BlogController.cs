@@ -233,7 +233,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (blogId.reason != null && !blogId.reason.Equals(""))
                     {
-                        if (await BlogDAO.DenyBlog(foundblog, 2, blogId.reason))
+                        if (await BlogDAO.DenyBlog(foundblog, blogId.reason))
                         {
                             return Ok(ReturnMessage.Create("success"));
                         }

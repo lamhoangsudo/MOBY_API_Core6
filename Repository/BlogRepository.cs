@@ -320,11 +320,10 @@ namespace MOBY_API_Core6.Repository
                     blog.BlogStatus = 0;
                     blog.ReasonDeny = null;
                 }
-                if (await context.SaveChangesAsync() != 0)
-                {
-                    return true;
-                }
-                return false;
+                await context.SaveChangesAsync();
+                return true;
+
+
             }
             else
             {
@@ -337,36 +336,36 @@ namespace MOBY_API_Core6.Repository
         {
             blog.BlogStatus = decision;
             blog.ReasonDeny = null;
-            if (await context.SaveChangesAsync() != 0)
+            await context.SaveChangesAsync();
+            if (decision == 1)
             {
                 Email newEmail = new Email();
                 newEmail.To = blog.User.UserGmail;
                 newEmail.Subject = "your blog has been accepted";
                 newEmail.Body = "https://moby-customer.vercel.app/blog/" + blog.BlogId + " has been accepted by admintrator";
-
                 await emailDAO.SendEmai(newEmail);
 
-                return true;
             }
+            return true;
 
-            return false;
+
+
         }
 
-        public async Task<bool> DenyBlog(Blog blog, int decision, String reason)
+        public async Task<bool> DenyBlog(Blog blog, String reason)
         {
-            blog.BlogStatus = decision;
+            blog.BlogStatus = 2;
             blog.ReasonDeny = reason;
-            if (await context.SaveChangesAsync() != 0)
-            {
-                Email newEmail = new Email();
-                newEmail.To = blog.User.UserGmail;
-                newEmail.Subject = "your blog has been accepted";
-                newEmail.Body = "https://moby-customer.vercel.app/blog/" + blog.BlogId + " has been denied by admintrator /n reason: " + reason;
-                await emailDAO.SendEmai(newEmail);
-                return true;
-            }
+            await context.SaveChangesAsync();
+            Email newEmail = new Email();
+            newEmail.To = blog.User.UserGmail;
+            newEmail.Subject = "your blog has been denied";
+            newEmail.Body = "https://moby-customer.vercel.app/blog/" + blog.BlogId + " has been denied by admintrator /n reason: " + reason;
+            await emailDAO.SendEmai(newEmail);
+            return true;
 
-            return false;
+
+
         }
 
     }
