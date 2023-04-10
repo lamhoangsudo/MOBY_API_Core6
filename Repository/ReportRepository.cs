@@ -272,7 +272,7 @@ namespace MOBY_API_Core6.Repository
                         await _emailRepository.SendEmai(email);
                     }
                     report.ReportDateResolve = DateTime.Now;
-                    report.ReportStatus = reportVM.IsApproved;
+                    report.ReportStatus = 1;
                     await _context.SaveChangesAsync();
                     return true;
                 }
@@ -341,7 +341,7 @@ namespace MOBY_API_Core6.Repository
                         await _emailRepository.SendEmai(email);
                     }
                     report.ReportDateResolve = DateTime.Now;
-                    report.ReportStatus = reportVM.isDeny;
+                    report.ReportStatus = 2;
                     report.ReasonDeny = reportVM.reason;
                     await _context.SaveChangesAsync();
                     return true;

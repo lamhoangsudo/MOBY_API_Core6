@@ -304,6 +304,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<Order?> GetOrderByOrderID(int orderID)
         {
             Order? order = await context.Orders.Where(o => o.OrderId == orderID)
+                .Include(o => o.User)
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Item)
                 .ThenInclude(i => i.User)
