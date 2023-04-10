@@ -178,7 +178,7 @@ namespace MOBY_API_Core6.Controllers
                     return BadRequest(ReturnMessage.Create("Package status must be from Sharer"));
                 }
 
-                if (currentOrder.OrderDetails.First().Item.UserId == uid && currentOrder.Status == 2)
+                if (currentOrder.OrderDetails.First().Item.UserId == uid && updateOrderVM.Status == 2)
                 {
                     return BadRequest(ReturnMessage.Create("Recieve status must be from Reciever"));
                 }
