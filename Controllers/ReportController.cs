@@ -13,11 +13,13 @@ namespace MOBY_API_Core6.Controllers
     {
         public readonly IReportRepository _reportRepository;
         public readonly IUserRepository _userRepository;
+        public readonly IRecordPenaltyRepository _recordPenaltyRepository;
 
-        public ReportController(IReportRepository reportRepository, IUserRepository userRepository)
+        public ReportController(IReportRepository reportRepository, IUserRepository userRepository, IRecordPenaltyRepository recordPenaltyRepository)
         {
             _reportRepository = reportRepository;
             _userRepository = userRepository;
+            _recordPenaltyRepository = recordPenaltyRepository;
         }
 
         [Authorize]
@@ -345,6 +347,51 @@ namespace MOBY_API_Core6.Controllers
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [HttpGet("GetStatusAndReasonHiden")]
+        public async Task<IActionResult> GetStatusAndReasonHiden([FromQuery] int id, [FromQuery] int type)
+        {
+            try
+            {
+                StatusAndReasonHidenViewModel? statusAndReasonHidenViewModel = await _reportRepository.GetStatusAndReasonHiden(id, type);
+                if(statusAndReasonHidenViewModel != null)
+                {
+                    return Ok(statusAndReasonHidenViewModel);
+                }
+                else
+                {
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+#pragma warning restore CS8604 // Possible null reference argument.
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpGet("GetRecordPenaltyPointsByUser")]
+        public async Task<IActionResult> GetRecordPenaltyPointsByUser([FromQuery] int userID)
+        {
+            try
+            {
+                List<RecordPenaltyPoint>? recordPenaltyPoints = await _recordPenaltyRepository.GetRecordPenaltyPointsByUserID(userID);
+                if (recordPenaltyPoints != null)
+                {
+                    return Ok(recordPenaltyPoints);
+                }
+                else
+                {
+#pragma warning disable CS8604 // Possible null reference argument.
+                    return BadRequest(ReturnMessage.Create(RecordPenaltyRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }

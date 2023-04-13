@@ -38,5 +38,7 @@ namespace MOBY_API_Core6.Repository.IRepository
         Task<bool> HiddenOject(HiddenAndPunish hideAndPunish);
 
         Task<bool> PunishViolators(HiddenAndPunish hideAndPunish);
+
+        Task<StatusAndReasonHidenViewModel?> GetStatusAndReasonHiden(int id, int type);
     }
 }

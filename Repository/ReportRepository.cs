@@ -10,13 +10,15 @@ namespace MOBY_API_Core6.Repository
     {
         private readonly MOBYContext _context;
         private readonly IEmailRepository _emailRepository;
+        private readonly IRecordPenaltyRepository _recordPenaltyRepository;
 
         public static string? ErrorMessage { get; set; }
 
-        public ReportRepository(MOBYContext context, IEmailRepository emailRepository)
+        public ReportRepository(MOBYContext context, IEmailRepository emailRepository, IRecordPenaltyRepository recordPenaltyRepository)
         {
             _context = context;
             _emailRepository = emailRepository;
+            _recordPenaltyRepository = recordPenaltyRepository;
         }
 
         public async Task<bool> CreateItemReport(CreateReportVM reportVM)
@@ -668,7 +670,7 @@ namespace MOBY_API_Core6.Repository
                 switch (type)
                 {
                     case 0:
-                        //item
+                        //order
                         var queryItem = _context.Items
                             .Where(it => it.ItemId == id && it.ItemStatus == true)
                             .Join(_context.UserAccounts, it => it.UserId, us => us.UserId, (it, us) => new { it, us });
@@ -686,11 +688,11 @@ namespace MOBY_API_Core6.Repository
                             Email email = new()
                             {
                                 To = userAccount.UserGmail,
-                                Subject = "your item has been hidden",
+                                Subject = "your order has been hidden",
                                 Body = "Dear "
                                 + userAccount.UserName
                                 + "/n"
-                                + "your item: https://moby-customer.vercel.app/product/"
+                                + "your order: https://moby-customer.vercel.app/product/"
                                 + item.ItemId
                                 + "has been hidden by admintrator. \n"
                                 + "Reason: "
@@ -868,11 +870,12 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 int id = hideAndPunish.Id;
-                int tyle = hideAndPunish.Type;
-                switch (tyle)
+                int type = hideAndPunish.Type;
+                RecordPenaltyPoint? recordPenaltyPoint = null;
+                switch (type)
                 {
                     case 0:
-                        //item
+                        //order
                         var queryItem = _context.Items
                             .Join(_context.UserAccounts, it => it.UserId, us => us.UserId, (it, us) => new { it, us })
                             .Where(itus => itus.it.ItemId == id);
@@ -896,20 +899,29 @@ namespace MOBY_API_Core6.Repository
                             if (item != null)
                             {
                                 item.ItemStatus = false;
-                                Email email = new()
+                                recordPenaltyPoint = new()
                                 {
-                                    To = userAccountItem.UserGmail,
-                                    Subject = "your blog has been hidden",
-                                    Body = "Dear "
-                                + userAccountItem.UserName
-                                + "/n"
-                                + "your item: https://moby-customer.vercel.app/order/"
-                                + item.ItemId
-                                + " has seriously violated our policy \n"
-                                + "Reason: "
-                                + hideAndPunish.Reason
+                                    UserId = userAccountItem.UserId,
+                                    ObjReport = item.ItemId,
+                                    Type = type,
+                                    PenaltyPoint = 10,
+                                    ReasonDeductionOfPoints = hideAndPunish.Reason
                                 };
-                                await _emailRepository.SendEmai(email);
+                                if (await _recordPenaltyRepository.CreateRecord(recordPenaltyPoint) == true)
+                                {
+                                    Email email = new()
+                                    {
+                                        To = userAccountItem.UserGmail,
+                                        Subject = "your blog has been hidden",
+                                        Body = "Dear " + userAccountItem.UserName + "/n" + "your order: https://moby-customer.vercel.app/order/" + item.ItemId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                    };
+                                    await _emailRepository.SendEmai(email);
+                                }
+                                else
+                                {
+                                    ErrorMessage = RecordPenaltyRepository.ErrorMessage;
+                                }
+
                             }
                             await _context.SaveChangesAsync();
                             return true;
@@ -946,20 +958,24 @@ namespace MOBY_API_Core6.Repository
                             if (order != null)
                             {
                                 order.Status = 3;
-                                Email email = new()
+                                recordPenaltyPoint = new()
                                 {
-                                    To = userAccountOrder.UserGmail,
-                                    Subject = "your blog has been hidden",
-                                    Body = "Dear "
-                                + userAccountOrder.UserName
-                                + "/n"
-                                + "your order: https://moby-customer.vercel.app/order/"
-                                + order.OrderId
-                                + " has seriously violated our policy \n"
-                                + "Reason: "
-                                + hideAndPunish.Reason
+                                    UserId = userAccountOrder.UserId,
+                                    ObjReport = order.OrderId,
+                                    Type = type,
+                                    PenaltyPoint = 10,
+                                    ReasonDeductionOfPoints = hideAndPunish.Reason
                                 };
-                                await _emailRepository.SendEmai(email);
+                                if (await _recordPenaltyRepository.CreateRecord(recordPenaltyPoint) == true)
+                                {
+                                    Email email = new()
+                                    {
+                                        To = userAccountOrder.UserGmail,
+                                        Subject = "your blog has been hidden",
+                                        Body = "Dear " + userAccountOrder.UserName + "/n" + "your order: https://moby-customer.vercel.app/order/" + order.OrderId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                    };
+                                    await _emailRepository.SendEmai(email);
+                                }
                             }
                             await _context.SaveChangesAsync();
                             return true;
@@ -994,20 +1010,24 @@ namespace MOBY_API_Core6.Repository
                             if (comment != null)
                             {
                                 comment.Status = false;
-                                Email email = new()
+                                recordPenaltyPoint = new()
                                 {
-                                    To = userAccountComment.UserGmail,
-                                    Subject = "your blog has been hidden",
-                                    Body = "Dear "
-                                + userAccountComment.UserName
-                                + "/n"
-                                + "your commnet: https://moby-customer.vercel.app/order/"
-                                + comment.CommentId
-                                + " has seriously violated our policy \n"
-                                + "Reason: "
-                                + hideAndPunish.Reason
+                                    UserId = userAccountComment.UserId,
+                                    ObjReport = comment.CommentId,
+                                    Type = type,
+                                    PenaltyPoint = 10,
+                                    ReasonDeductionOfPoints = hideAndPunish.Reason
                                 };
-                                await _emailRepository.SendEmai(email);
+                                if (await _recordPenaltyRepository.CreateRecord(recordPenaltyPoint) == true)
+                                {
+                                    Email email = new()
+                                    {
+                                        To = userAccountComment.UserGmail,
+                                        Subject = "your blog has been hidden",
+                                        Body = "Dear " + userAccountComment.UserName + "/n" + "your commnet: https://moby-customer.vercel.app/order/" + comment.CommentId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                    };
+                                    await _emailRepository.SendEmai(email);
+                                }
                             }
                             await _context.SaveChangesAsync();
 
@@ -1043,20 +1063,25 @@ namespace MOBY_API_Core6.Repository
                             if (reply != null)
                             {
                                 reply.Status = false;
-                                Email email = new()
+                                recordPenaltyPoint = new()
                                 {
-                                    To = userAccountReply.UserGmail,
-                                    Subject = "your blog has been hidden",
-                                    Body = "Dear "
-                                + userAccountReply.UserName
-                                + "/n"
-                                + "your comment: https://moby-customer.vercel.app/order/"
-                                + reply.ReplyId
-                                + " has seriously violated our policy \n"
-                                + "Reason: "
-                                + hideAndPunish.Reason
+                                    UserId = userAccountReply.UserId,
+                                    ObjReport = reply.ReplyId,
+                                    Type = type,
+                                    PenaltyPoint = 10,
+                                    ReasonDeductionOfPoints = hideAndPunish.Reason
                                 };
-                                await _emailRepository.SendEmai(email);
+                                if (await _recordPenaltyRepository.CreateRecord(recordPenaltyPoint) == true)
+                                {
+                                    Email email = new()
+                                    {
+                                        To = userAccountReply.UserGmail,
+                                        Subject = "your blog has been hidden",
+                                        Body = "Dear " + userAccountReply.UserName + "/n" + "your comment: https://moby-customer.vercel.app/order/" + reply.ReplyId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                    };
+
+                                    await _emailRepository.SendEmai(email);
+                                }
                             }
                             await _context.SaveChangesAsync();
 
@@ -1092,20 +1117,25 @@ namespace MOBY_API_Core6.Repository
                             if (blog != null)
                             {
                                 blog.BlogStatus = 2;
-                                Email email = new()
+                                recordPenaltyPoint = new()
                                 {
-                                    To = userAccountBlog.UserGmail,
-                                    Subject = "your blog has been hidden",
-                                    Body = "Dear "
-                                + userAccountBlog.UserName
-                                + "/n"
-                                + "your blog: https://moby-customer.vercel.app/order/"
-                                + blog.BlogId
-                                + " has seriously violated our policy \n"
-                                + "Reason: "
-                                + hideAndPunish.Reason
+                                    UserId = userAccountBlog.UserId,
+                                    ObjReport = blog.BlogId,
+                                    Type = type,
+                                    PenaltyPoint = 10,
+                                    ReasonDeductionOfPoints = hideAndPunish.Reason
                                 };
-                                await _emailRepository.SendEmai(email);
+                                if (await _recordPenaltyRepository.CreateRecord(recordPenaltyPoint) == true)
+                                {
+                                    Email email = new()
+                                    {
+                                        To = userAccountBlog.UserGmail,
+                                        Subject = "your blog has been hidden",
+                                        Body = "Dear " + userAccountBlog.UserName + "/n" + "your blog: https://moby-customer.vercel.app/order/" + blog.BlogId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                    };
+
+                                    await _emailRepository.SendEmai(email);
+                                }
                             }
                             await _context.SaveChangesAsync();
 
@@ -1125,6 +1155,92 @@ namespace MOBY_API_Core6.Repository
                 ErrorMessage = ex.Message;
                 return false;
             }
+        }
+
+        public async Task<StatusAndReasonHidenViewModel?> GetStatusAndReasonHiden(int id, int type)
+        {
+            StatusAndReasonHidenViewModel? statusAndReasonHidenViewModel = null;
+            try
+            {
+                switch (type)
+                {
+                    case 0:
+                        //order
+                        Models.Item? item = await _context.Items.Where(it => it.ItemId == id).FirstOrDefaultAsync();
+                        if (item != null)
+                        {
+                            statusAndReasonHidenViewModel = new()
+                            {
+                                Id = id,
+                                StatusBit = item.ItemStatus,
+                                ReasonHiden = item.ReasonHiden
+                            };
+                        }
+                        break;
+                    case 1:
+                        //order
+                        Order? order = await _context.Orders.Where(or => or.OrderId == id).FirstOrDefaultAsync();
+                        if (order != null)
+                        {
+                            statusAndReasonHidenViewModel = new()
+                            {
+                                Id = id,
+                                StatusInt = order.Status,
+                                ReasonHiden = order.ReasonCancel
+                            };
+                        }
+                        break;
+
+                    case 2:
+                        //comment
+                        Comment? comment = await _context.Comments.Where(cm => cm.CommentId == id).FirstOrDefaultAsync();
+                        if (comment != null)
+                        {
+                            statusAndReasonHidenViewModel = new()
+                            {
+                                Id = id,
+                                StatusBit = comment.Status,
+                                ReasonHiden = comment.ReasonHiden
+                            };
+                        }
+                        break;
+
+                    case 3:
+                        //reply
+                        Reply? reply = await _context.Replies.Where(rpl => rpl.ReplyId == id).FirstOrDefaultAsync();
+                        if (reply != null)
+                        {
+                            statusAndReasonHidenViewModel = new()
+                            {
+                                Id = id,
+                                StatusBit = reply.Status,
+                                ReasonHiden = reply.ReasonHiden
+                            };
+                        }
+                        break;
+
+                    case 4:
+                        //blog
+                        Blog? blog = await _context.Blogs.Where(blg => blg.BlogId == id).FirstOrDefaultAsync();
+                        if (blog != null)
+                        {
+                            statusAndReasonHidenViewModel = new()
+                            {
+                                Id = id,
+                                StatusInt = blog.BlogStatus,
+                                ReasonHiden = blog.ReasonDeny
+                            };
+                        }
+                        break;
+
+                }
+                ErrorMessage = "định dạng không tồn tại";
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+            }
+            return statusAndReasonHidenViewModel;
         }
     }
 }
