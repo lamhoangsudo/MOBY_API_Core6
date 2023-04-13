@@ -5,6 +5,7 @@ namespace MOBY_API_Core6.Repository
     public interface ICommentRepository
     {
         public Task<List<CommentVM>> GetAllComment();
+        public Task<CommentVM?> GetCommentByCommentID(int id);
         public Task<List<CommentVM>> GetCommentByBlogID(int id);
         public Task<List<CommentVM>> GetCommentByItemID(int id);
         public Task<bool> CreateComment(CreateCommentVM cmt, int userId);
