@@ -29,6 +29,7 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<Item> Items { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
+        public virtual DbSet<RecordPenaltyPoint> RecordPenaltyPoints { get; set; } = null!;
         public virtual DbSet<Reply> Replies { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
         public virtual DbSet<Request> Requests { get; set; } = null!;
@@ -410,6 +411,21 @@ namespace MOBY_API_Core6.Models
                     .HasConstraintName("FK_OrderDetails_Orders");
             });
 
+            modelBuilder.Entity<RecordPenaltyPoint>(entity =>
+            {
+                entity.ToTable("RecordPenaltyPoint");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.RecordPenaltyPoints)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RecordPenaltyPoint_UserAccounts");
+            });
+
             modelBuilder.Entity<Reply>(entity =>
             {
                 entity.Property(e => e.ReplyId).HasColumnName("ReplyID");
@@ -764,8 +780,6 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.DateUpdate).HasColumnType("smalldatetime");
 
-                entity.Property(e => e.Expr7).HasColumnType("smalldatetime");
-
                 entity.Property(e => e.ReportContent).HasColumnName("Report_Content");
 
                 entity.Property(e => e.ReportDateCreate)
@@ -784,6 +798,8 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.UserCode).HasColumnName("User_Code");
 
+                entity.Property(e => e.UserDateCreatReport).HasColumnType("smalldatetime");
+
                 entity.Property(e => e.UserDateCreate)
                     .HasColumnType("smalldatetime")
                     .HasColumnName("User_Date_Create");
@@ -792,11 +808,15 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
+                entity.Property(e => e.UserIdreport).HasColumnName("UserIDReport");
+
                 entity.Property(e => e.UserImage).HasColumnName("User_Image");
 
                 entity.Property(e => e.UserName).HasColumnName("User_Name");
 
                 entity.Property(e => e.UserStatus).HasColumnName("User_Status");
+
+                entity.Property(e => e.UserStatus1).HasColumnName("UserStatus");
             });
 
             modelBuilder.Entity<ViewReportItem>(entity =>

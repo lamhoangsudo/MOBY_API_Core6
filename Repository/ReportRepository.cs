@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository.IRepository;
 using System.Reflection.Metadata;
 
 namespace MOBY_API_Core6.Repository
@@ -887,7 +888,7 @@ namespace MOBY_API_Core6.Repository
                                 userAccountItem.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
-                            userAccountItem.ReasonDeductionOfPoints = hideAndPunish.Reason;
+                            //userAccountItem.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Models.Item? item = await queryItem
                                 .Where(query => query.it.ItemStatus == true)
                                 .Select(query => query.it)
@@ -937,7 +938,7 @@ namespace MOBY_API_Core6.Repository
                                 userAccountOrder.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
-                            userAccountOrder.ReasonDeductionOfPoints = hideAndPunish.Reason;
+                            //userAccountOrder.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Order? order = await queryOrder
                                 .Where(queryOrder => queryOrder.orordit.orord.or.Status != 3)
                                 .Select(queryOrder => queryOrder.orordit.orord.or)
@@ -985,7 +986,7 @@ namespace MOBY_API_Core6.Repository
                                 userAccountComment.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
-                            userAccountComment.ReasonDeductionOfPoints = hideAndPunish.Reason;
+                            //userAccountComment.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Comment? comment = await queryComment
                                 .Where(queryComment => queryComment.cm.Status == true)
                                 .Select(queryComment => queryComment.cm)
@@ -1034,7 +1035,7 @@ namespace MOBY_API_Core6.Repository
                                 userAccountReply.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
-                            userAccountReply.ReasonDeductionOfPoints = hideAndPunish.Reason;
+                            //userAccountReply.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Reply? reply = await queryReply
                                 .Where(queryReply => queryReply.rp.Status == true)
                                 .Select(queryReply => queryReply.rp)
@@ -1083,7 +1084,7 @@ namespace MOBY_API_Core6.Repository
                                 userAccountBlog.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
-                            userAccountBlog.ReasonDeductionOfPoints = hideAndPunish.Reason;
+                            //userAccountBlog.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Blog? blog = await queryBlog
                                 .Where(queryBlog => queryBlog.blg.BlogStatus != 2)
                                 .Select(queryBlog => queryBlog.blg)

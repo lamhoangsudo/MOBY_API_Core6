@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository.IRepository;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -12,6 +13,16 @@ namespace MOBY_API_Core6.Repository
         {
             this.context = context;
         }
+
+        public async Task<ReplyVM?> GetReplyByReplyID(int id)
+        {
+            ReplyVM? foundRewply = await context.Replies.Where(r => r.ReplyId == id)
+                .Include(r => r.User)
+                .Select(r => ReplyVM.ReplyToVewModel(r))
+                .FirstOrDefaultAsync();
+            return foundRewply;
+        }
+
         public async Task<bool> CreateReply(CreateReplyVM rep, int userId)
         {
             Reply newRep = new Reply();

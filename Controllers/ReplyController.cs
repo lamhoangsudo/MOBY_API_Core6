@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository;
+using MOBY_API_Core6.Repository.IRepository;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -10,13 +10,28 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class ReplyController : ControllerBase
     {
-        private readonly IUserRepository UserDAO;
-        private readonly IReplyRepository RepDAO;
+        private readonly IUserRepository UserRepository;
+        private readonly IReplyRepository ReplyRepository;
 
-        public ReplyController(IUserRepository userRepository, IReplyRepository RepDAO)
+        public ReplyController(IUserRepository userRepository, IReplyRepository ReplyRepository)
         {
-            this.UserDAO = userRepository;
-            this.RepDAO = RepDAO;
+            this.UserRepository = userRepository;
+            this.ReplyRepository = ReplyRepository;
+        }
+
+        [HttpGet]
+        [Route("api/reply")]
+        public async Task<IActionResult> GetReplyByID([FromQuery] ReplyIDVM replyIDVM)
+        {
+            try
+            {
+                ReplyVM? replyFound = await ReplyRepository.GetReplyByReplyID(replyIDVM.ReplyId);
+                return Ok(replyFound);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [Authorize]
@@ -26,12 +41,12 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await UserRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
-                if (await RepDAO.CreateReply(rep, uid))
+                if (await ReplyRepository.CreateReply(rep, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
                 }
@@ -50,12 +65,12 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await UserRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
-                if (await RepDAO.UpdateReply(rep, uid))
+                if (await ReplyRepository.UpdateReply(rep, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
                 }
@@ -74,12 +89,12 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await UserRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
-                if (await RepDAO.DeleteReply(cmtid, uid))
+                if (await ReplyRepository.DeleteReply(cmtid, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
                 }

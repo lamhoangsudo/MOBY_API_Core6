@@ -1,7 +1,7 @@
 ﻿using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
-namespace MOBY_API_Core6.Repository
+namespace MOBY_API_Core6.Repository.IRepository
 {
     public interface IOrderRepository
     {
@@ -11,7 +11,7 @@ namespace MOBY_API_Core6.Repository
         public Task<int> GetOrderBySharerIDCount(int uid, OrderStatusVM orderStatusVM);
         public Task<bool> checkOrderSharer(int uid);
         public Task<bool> checkOrderReciever(int uid);
-        public Task<bool> CreateOrder(int uid, String Address, String? note, List<RequestDetail> accteptedRequestDetail);
+        public Task<bool> CreateOrder(int uid, string Address, string? note, List<RequestDetail> accteptedRequestDetail);
         public Task<Order?> GetOrderByOrderID(int orderID);
         public Task<OrderVM?> GetOrderVMByOrderID(int orderID);
         public Task<bool> UpdateStatusOrder(Order order, int status);

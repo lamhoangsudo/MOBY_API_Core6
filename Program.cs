@@ -8,6 +8,8 @@ using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
 using System.Text.Json.Serialization;
 using Azure.Identity;
+using MOBY_API_Core6.Repository.IRepository;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

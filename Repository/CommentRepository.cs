@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository.IRepository;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -23,6 +24,16 @@ namespace MOBY_API_Core6.Repository
                 .ToListAsync();
 
             return ListComment;
+        }
+        public async Task<CommentVM?> GetCommentByCommentID(int id)
+        {
+            CommentVM? Comment = await context.Comments.Where(cmt => cmt.CommentId == id)
+                .Include(c => c.User)
+                .Select(c => CommentVM.CommentOnlyToVewModel(c))
+                .FirstOrDefaultAsync();
+
+
+            return Comment;
         }
 
         public async Task<List<CommentVM>> GetCommentByBlogID(int id)
