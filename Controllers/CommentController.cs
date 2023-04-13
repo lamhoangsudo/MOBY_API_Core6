@@ -10,12 +10,12 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly IUserRepository UserDAO;
-        private readonly ICommentRepository CmtDAO;
-        public CommentController(IUserRepository userRepository, ICommentRepository CmtDAO)
+        private readonly IUserRepository UserRepository;
+        private readonly ICommentRepository CommentRepository;
+        public CommentController(IUserRepository userRepository, ICommentRepository CommentRepository)
         {
-            this.UserDAO = userRepository;
-            this.CmtDAO = CmtDAO;
+            this.UserRepository = userRepository;
+            this.CommentRepository = CommentRepository;
         }
 
         [HttpGet]
@@ -24,7 +24,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                List<CommentVM> listAllComment = await CmtDAO.GetAllComment();
+                List<CommentVM> listAllComment = await CommentRepository.GetAllComment();
                 return Ok(listAllComment);
             }
             catch (Exception ex)
@@ -41,15 +41,20 @@ namespace MOBY_API_Core6.Controllers
             {
                 if (id.BlogId != null)
                 {
-                    List<CommentVM> listAllComment = await CmtDAO.GetCommentByBlogID(id.BlogId.Value);
+                    List<CommentVM> listAllComment = await CommentRepository.GetCommentByBlogID(id.BlogId.Value);
                     return Ok(listAllComment);
                 }
                 else if (id.ItemId != null)
                 {
-                    List<CommentVM> listAllComment = await CmtDAO.GetCommentByItemID(id.ItemId.Value);
+                    List<CommentVM> listAllComment = await CommentRepository.GetCommentByItemID(id.ItemId.Value);
                     return Ok(listAllComment);
                 }
-                return BadRequest(ReturnMessage.Create("no BlogID either ItemID"));
+                else if (id.CommentId != null)
+                {
+                    CommentVM? commentFound = await CommentRepository.GetCommentByCommentID(id.CommentId.Value);
+                    return Ok(commentFound);
+                }
+                return BadRequest(ReturnMessage.Create("no BlogID either ItemID or CommentID"));
             }
             catch (Exception ex)
             {
@@ -64,12 +69,12 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await UserRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
-                if (await CmtDAO.CreateComment(cmt, uid))
+                if (await CommentRepository.CreateComment(cmt, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
                 }
@@ -89,12 +94,12 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await UserRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
-                if (await CmtDAO.UpdateComment(cmt, uid))
+                if (await CommentRepository.UpdateComment(cmt, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
                 }
@@ -113,12 +118,12 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await UserRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
-                if (await CmtDAO.DeleteComment(cmtid, uid))
+                if (await CommentRepository.DeleteComment(cmtid, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
                 }

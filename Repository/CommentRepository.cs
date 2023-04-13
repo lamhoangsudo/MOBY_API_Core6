@@ -24,6 +24,16 @@ namespace MOBY_API_Core6.Repository
 
             return ListComment;
         }
+        public async Task<CommentVM?> GetCommentByCommentID(int id)
+        {
+            CommentVM? Comment = await context.Comments.Where(cmt => cmt.CommentId == id)
+                .Include(c => c.User)
+                .Select(c => CommentVM.CommentOnlyToVewModel(c))
+                .FirstOrDefaultAsync();
+
+
+            return Comment;
+        }
 
         public async Task<List<CommentVM>> GetCommentByBlogID(int id)
         {

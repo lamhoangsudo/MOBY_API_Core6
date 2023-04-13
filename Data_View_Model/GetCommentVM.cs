@@ -4,5 +4,6 @@
     {
         public int? ItemId { get; set; }
         public int? BlogId { get; set; }
+        public int? CommentId { get; set; }
     }
 }

@@ -36,5 +36,24 @@ namespace MOBY_API_Core6.Data_View_Model
 
             return commendVM;
         }
+
+        public static CommentVM CommentOnlyToVewModel(Comment cmt)
+        {
+            var commendVM = new CommentVM
+            {
+                CommentId = cmt.CommentId,
+                ItemId = cmt.ItemId,
+                BlogId = cmt.BlogId,
+                UserId = cmt.UserId,
+                CommentContent = cmt.CommentContent,
+                DateCreate = cmt.DateCreate,
+                DateUpdate = cmt.DateUpdate,
+            };
+            var user = cmt.User;
+            commendVM.UserVM = UserVM.UserAccountToVewModel(user);
+
+
+            return commendVM;
+        }
     }
 }
