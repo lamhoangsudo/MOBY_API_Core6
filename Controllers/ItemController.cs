@@ -398,18 +398,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    if (listAllShareNearYou.List.Count > 0)
-                    {
-                        return Ok(listAllShareNearYou);
-                    }
-                    else
-                    {
-#pragma warning disable CS8604 // Possible null reference argument.
-                        return NotFound(ReturnMessage.Create(ItemRepository.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
-                    }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    return Ok(listAllShareNearYou);
                 }
             }
             catch (Exception ex)

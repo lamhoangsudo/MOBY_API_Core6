@@ -2,17 +2,20 @@
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
+using Newtonsoft.Json;
 
 namespace MOBY_API_Core6.Repository
 {
     public class ItemRepository : IItemRepository
     {
         private readonly MOBYContext _context;
+        private readonly JsonToObj _JsonToObj;
 
         public static string? ErrorMessage { get; set; }
 
-        public ItemRepository(MOBYContext context)
+        public ItemRepository(MOBYContext context, JsonToObj jsonToObj)
         {
+            _JsonToObj = jsonToObj;
             _context = context;
         }
         public async Task<bool> CreateItem(CreateItemVM itemVM)
@@ -51,7 +54,10 @@ namespace MOBY_API_Core6.Repository
                             ErrorMessage = "bạn đã nhập sai format ngày, fotmat của chúng tôi là yyyy/mm/dd";
                             return false;
                         }
-
+                    }
+                    if(_JsonToObj.TransformLocation(itemVM.itemShippingAddress) != null)
+                    {
+                        return false;
                     }
                     string itemCode = Guid.NewGuid().ToString();
                     Models.Item item = new()
@@ -63,13 +69,12 @@ namespace MOBY_API_Core6.Repository
                         ItemDetailedDescription = itemVM.itemDetailedDescription,
                         ItemMass = itemVM.itemMass,
                         ItemSize = itemVM.itemSize,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         ItemQuanlity = itemVM.itemQuanlity,
                         ItemEstimateValue = itemVM.itemEstimateValue,
                         ItemSalePrice = itemVM.itemSalePrice,
                         ItemShareAmount = itemVM.itemShareAmount,
                         ItemExpiredTime = dateTimeExpired,
-                        ItemShippingAddress = itemVM.itemShippingAddress,
+                        ItemShippingAddress = _JsonToObj.TransformLocation(itemVM.itemShippingAddress),
                         ItemDateCreated = dateTimeCreate,
                         ItemStatus = true,
                         Share = itemVM.share,
@@ -561,14 +566,14 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                string[] words = location.Trim().Split(",");
-                string city = String.Concat(words[0].Where(c => !Char.IsWhiteSpace(c))).Replace("}", "");
+                Location locationObject = JsonConvert.DeserializeObject<Location>(location);
+                string city = "addressProvince:" + locationObject.AddressProvince;
                 int itemsToSkip = (pageNumber - 1) * pageSize;
                 List<BriefItem> listShareRecently = new();
                 var query = _context.BriefItems
                     .Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
                     .Join(_context.UserAccounts, bfit => bfit.it.UserId, us => us.UserId, (bfit, us) => new { bfit, us })
-                    .Where(bfitus => bfitus.bfit.it.ItemShippingAddress.StartsWith(city)
+                    .Where(bfitus => bfitus.bfit.it.ItemShippingAddress.Trim().Contains(city)
                     && bfitus.bfit.bf.Share == true
                     && bfitus.bfit.bf.ItemStatus == true
                     && bfitus.bfit.bf.UserId != userID
@@ -656,7 +661,7 @@ namespace MOBY_API_Core6.Repository
                 }
                 if (dynamicFilterVM.Location != null)
                 {
-                    string locationString = String.Concat(dynamicFilterVM.Location.Where(c => !Char.IsWhiteSpace(c))).Replace("}", "");
+                    string? locationString = _JsonToObj.TransformLocation(dynamicFilterVM.Location);
                     query = query.Where(query => query.bfit.it.ItemShippingAddress.StartsWith(locationString));
                 }
                 if (dynamicFilterVM.MaxPrice >= dynamicFilterVM.MinPrice && dynamicFilterVM.MaxPrice != 0)
