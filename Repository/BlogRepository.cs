@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-
+using MOBY_API_Core6.Repository.IRepository;
 
 namespace MOBY_API_Core6.Repository
 {

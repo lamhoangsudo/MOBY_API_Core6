@@ -1,6 +1,6 @@
 ﻿using MOBY_API_Core6.Data_View_Model;
 
-namespace MOBY_API_Core6.Repository
+namespace MOBY_API_Core6.Repository.IRepository
 {
     public interface IReplyRepository
     {

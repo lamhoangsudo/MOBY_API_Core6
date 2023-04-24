@@ -1,7 +1,7 @@
 ﻿using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
-namespace MOBY_API_Core6.Repository
+namespace MOBY_API_Core6.Repository.IRepository
 {
     public interface IReportRepository
     {
@@ -38,5 +38,7 @@ namespace MOBY_API_Core6.Repository
         Task<bool> HiddenOject(HiddenAndPunish hideAndPunish);
 
         Task<bool> PunishViolators(HiddenAndPunish hideAndPunish);
+
+        Task<StatusAndReasonHidenViewModel?> GetStatusAndReasonHiden(int id, int type);
     }
 }

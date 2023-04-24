@@ -25,6 +25,10 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<DetailItemRequest> DetailItemRequests { get; set; } = null!;
         public virtual DbSet<Item> Items { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
+<<<<<<< HEAD
+=======
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
+>>>>>>> master
         public virtual DbSet<RecordPenaltyPoint> RecordPenaltyPoints { get; set; } = null!;
         public virtual DbSet<Reply> Replies { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
@@ -404,6 +408,21 @@ namespace MOBY_API_Core6.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Orders_UserAccounts1");
+            });
+
+            modelBuilder.Entity<RecordPenaltyPoint>(entity =>
+            {
+                entity.ToTable("RecordPenaltyPoint");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.RecordPenaltyPoints)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RecordPenaltyPoint_UserAccounts");
             });
 
             modelBuilder.Entity<RecordPenaltyPoint>(entity =>

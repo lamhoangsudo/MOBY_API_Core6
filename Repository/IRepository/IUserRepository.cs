@@ -2,15 +2,15 @@
 using MOBY_API_Core6.Models;
 using System.Security.Claims;
 
-namespace MOBY_API_Core6.Repository
+namespace MOBY_API_Core6.Repository.IRepository
 {
     public interface IUserRepository
     {
-        public Task<bool> CheckExistedUser(String userCode);
-        public Task<UserAccount?> FindUserByCode(String userCode);
+        public Task<bool> CheckExistedUser(string userCode);
+        public Task<UserAccount?> FindUserByCode(string userCode);
         public Task<UserAccount?> FindUserByUid(int uid);
         public Task<UserAccount?> FindUserByUidWithoutStatus(int uid);
-        public Task<int> getUserIDByUserCode(String userCode);
+        public Task<int> getUserIDByUserCode(string userCode);
         //public Task<int?> GetRoleByToken(IEnumerable<Claim> claims);
         public Task<bool> CreateUser(IEnumerable<Claim> claims, CreateAccountVM createUserVm);
         public Task<bool> EditUser(UserAccount currentUser, UpdateAccountVM accountVM);
