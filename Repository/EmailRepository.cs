@@ -3,6 +3,7 @@ using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository.IRepository;
 
 namespace MOBY_API_Core6.Repository
 {

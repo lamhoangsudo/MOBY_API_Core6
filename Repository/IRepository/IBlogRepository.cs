@@ -1,7 +1,7 @@
 ﻿using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 
-namespace MOBY_API_Core6.Repository
+namespace MOBY_API_Core6.Repository.IRepository
 {
     public interface IBlogRepository
     {
@@ -22,7 +22,7 @@ namespace MOBY_API_Core6.Repository
         public Task<bool> CreateBlog(CreateBlogVM blogvm, int UserID);
         public Task<bool> UpdateBlog(Blog blog, UpdateBlogVM UpdatedBlogvm);
         public Task<bool> ConfirmBlog(Blog blog, int decision);
-        public Task<bool> DenyBlog(Blog blog, String reason);
+        public Task<bool> DenyBlog(Blog blog, string reason);
         public Task<int> getAllBlogCount();
         public Task<int> getBlogByCateCount(int blogCateID);
         public Task<int> getBlogByUserIDCount(int userID);
