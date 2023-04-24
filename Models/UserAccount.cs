@@ -12,9 +12,10 @@ namespace MOBY_API_Core6.Models
             Comments = new HashSet<Comment>();
             Items = new HashSet<Item>();
             Orders = new HashSet<Order>();
+            RecordPenaltyPoints = new HashSet<RecordPenaltyPoint>();
             Replies = new HashSet<Reply>();
             Reports = new HashSet<Report>();
-            Requests = new HashSet<Request>();
+            TransationLogs = new HashSet<TransationLog>();
             UserAddresses = new HashSet<UserAddress>();
         }
 
@@ -33,7 +34,9 @@ namespace MOBY_API_Core6.Models
         public DateTime UserDateCreate { get; set; }
         public DateTime? UserDateUpdate { get; set; }
         public int Reputation { get; set; }
-        public string? ReasonDeductionOfPoints { get; set; }
+        public string? CardNumber { get; set; }
+        public string? BankName { get; set; }
+        public double? Balance { get; set; }
 
         public virtual Role Role { get; set; } = null!;
         public virtual ICollection<Blog> Blogs { get; set; }
@@ -41,9 +44,10 @@ namespace MOBY_API_Core6.Models
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Item> Items { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<RecordPenaltyPoint> RecordPenaltyPoints { get; set; }
         public virtual ICollection<Reply> Replies { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
-        public virtual ICollection<Request> Requests { get; set; }
+        public virtual ICollection<TransationLog> TransationLogs { get; set; }
         public virtual ICollection<UserAddress> UserAddresses { get; set; }
     }
 }

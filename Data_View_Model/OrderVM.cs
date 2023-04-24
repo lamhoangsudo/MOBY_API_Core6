@@ -16,10 +16,14 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime DateCreate { get; set; }
         public DateTime? DatePackage { get; set; }
         public DateTime? DateReceived { get; set; }
+        public string? TransactionNo { get; set; }
+        public string? CardType { get; set; }
+        public string? BankCode { get; set; }
 
         public UserVM? UserSharerVM { get; set; }
         public UserVM? UserRecieverVM { get; set; }
-        public List<OrderDetailVM>? OrderDetails { get; set; }
+        public ItemVM? itemVM { get; set; }
+
 
         public static OrderVM OrderToViewModel(Order order)
         {
@@ -34,6 +38,9 @@ namespace MOBY_API_Core6.Data_View_Model
                 DateCreate = order.DateCreate,
                 DatePackage = order.DatePackage,
                 DateReceived = order.DateReceived,
+                TransactionNo = order.TransactionNo,
+                CardType = order.CardType,
+                BankCode = order.BankCode,
             };
             if (order.Status == 1 && order.DatePackage != null)
             {
@@ -54,13 +61,13 @@ namespace MOBY_API_Core6.Data_View_Model
                 int totalDaysint = Convert.ToInt32(totalDays.TotalDays);
                 orderVM.daysLeftForCancel = 7 - totalDaysint;
             }
-            var orderDetailVM = order.OrderDetails.Select(od => OrderDetailVM.OrderDetailToViewModel(od)).ToList();
-            orderVM.OrderDetails = orderDetailVM;
-            var userSharer = order.OrderDetails.First().Item.User;
+
+            var userSharer = order.Item.User;
             orderVM.UserSharerVM = UserVM.UserAccountToVewModel(userSharer);
             var userReciever = order.User;
             orderVM.UserRecieverVM = UserVM.UserAccountToVewModel(userReciever);
-
+            var item = order.Item;
+            orderVM.itemVM = ItemVM.ItemForOrderToViewModel(item);
 
             return orderVM;
         }

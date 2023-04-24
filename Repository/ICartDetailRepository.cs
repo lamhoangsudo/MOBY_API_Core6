@@ -12,6 +12,7 @@ namespace MOBY_API_Core6.Repository
         public Task<CartDetail?> GetCartDetailByCartDetailID(int cartDetailID);
         public Task<bool> DeleteCartDetail(CartDetail cartDetail);
         public Task<List<CartDetailVM>> GetListCartDetailByListID(int[] listOfIds);
+        public Task<String> CheckCartDetail(int[] listCartDetailID, int uid);
         public Task<bool> ConfirmCartDetail(ListCartDetailidToConfirm requestDetailIDList, int uid);
         //public Task<List<CartDetailVM>> GetCartDetailByItemID(int itemID);
 

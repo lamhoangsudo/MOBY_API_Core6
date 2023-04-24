@@ -7,12 +7,12 @@ namespace MOBY_API_Core6.Repository
     public class CartDetailRepository : ICartDetailRepository
     {
         private readonly MOBYContext context;
+        private readonly IEmailRepository emailDAO;
 
-
-        public CartDetailRepository(MOBYContext context)
+        public CartDetailRepository(MOBYContext context, IEmailRepository emailDAO)
         {
             this.context = context;
-
+            this.emailDAO = emailDAO;
         }
 
 
@@ -151,12 +151,48 @@ namespace MOBY_API_Core6.Repository
         }
 
 
+        public async Task<String> CheckCartDetail(int[] listCartDetailID, int uid)
+        {
+
+            //int cartid = await context.Carts.Where(c => c.UserId == uid).Select(c=> c.CartId).FirstOrDefaultAsync();
+
+            int countLeft = 7;
+            List<Order> listOrder = await context.Orders.Where(o => o.Price == 0 && o.UserId == uid)
+                .OrderByDescending(o => o.OrderId).Take(7).ToListAsync();
+            foreach (Order order in listOrder)
+            {
+                TimeSpan date = DateTime.Now - order.DateCreate;
+                if (date.TotalDays <= 7)
+                {
+                    countLeft--;
+                }
+            }
+            if (countLeft <= 0)
+            {
+                return "đã vượt quá giới hạn lượt nhận trong tuần";
+            }
+            if (countLeft == 7)
+            {
+                return "success";
+            }
+            int cartDetailFree = await context.CartDetails
+                .Include(cd => cd.Item)
+                .ThenInclude(i => i.User)
+                .Where(cd => listCartDetailID.Contains(cd.CartDetailId) && cd.Item.ItemSalePrice == 0)
+                .CountAsync();
+            if (cartDetailFree > countLeft)
+            {
+                return "bạn đã nhận " + countLeft + "/7 sản phẩm trong tuần, bạn không thể nhận thêm " + cartDetailFree + " sản phẩm";
+            }
+
+
+            return "success";
+        }
+
+
         public async Task<bool> ConfirmCartDetail(ListCartDetailidToConfirm cartDetailIDList, int uid)
         {
-            if (cartDetailIDList.listCartDetailID == null || cartDetailIDList.listCartDetailID.Count == 0)
-            {
-                return false;
-            }
+
             String? address;
             String? note = cartDetailIDList.note;
             if (cartDetailIDList.address == null || cartDetailIDList.address == "")
@@ -173,56 +209,46 @@ namespace MOBY_API_Core6.Repository
             {
                 return false;
             }
-
+            List<UserAccount> itemOwner = new List<UserAccount>();
+            IDictionary<int, String> itemOwnerDic = new Dictionary<int, String>();
             List<CartDetail> currentCartDetails = await context.CartDetails.Where(cd => cartDetailIDList.listCartDetailID!.Contains(cd.CartDetailId))
                 .Include(cd => cd.Item)
+                .ThenInclude(i => i.User)
                 .ToListAsync();
-
-            Dictionary<int, List<CartDetail>> cartDetailsByReciverId = new Dictionary<int, List<CartDetail>>();
-
-            foreach (var cartDetail in currentCartDetails)
+            foreach (CartDetail cartDetail in currentCartDetails)
             {
-                var recieverId = cartDetail.Item.UserId;
-
-
-                if (cartDetailsByReciverId.ContainsKey(recieverId))
+                if (cartDetail.Item.ItemShareAmount < cartDetail.ItemQuantity)
                 {
-                    cartDetailsByReciverId[recieverId].Add(cartDetail);
+                    return false;
                 }
-                else
+                Order newOrder = new Order();
+                newOrder.UserId = uid;
+                newOrder.ItemId = cartDetail.ItemId;
+                newOrder.Address = address;
+                newOrder.Note = note;
+                newOrder.Status = 0;
+                newOrder.DateCreate = DateTime.Now;
+                newOrder.Quantity = cartDetail.ItemQuantity;
+                newOrder.Price = cartDetail.Item.ItemSalePrice!.Value;
+                newOrder.TransactionNo = cartDetailIDList.vnp_TransactionNo;
+                newOrder.CardType = cartDetailIDList.vnp_CardType;
+                newOrder.BankCode = cartDetailIDList.vnp_BankCode;
+                context.Orders.Add(newOrder);
+                cartDetail.Item.ItemShareAmount -= cartDetail.ItemQuantity;
+
+                if (!(itemOwnerDic.Keys.Contains(cartDetail.Item.UserId)))
                 {
-                    var newList = new List<CartDetail>() { cartDetail };
-                    cartDetailsByReciverId.Add(recieverId, newList);
+                    itemOwnerDic.Add(cartDetail.Item.UserId, cartDetail.Item.User.UserGmail);
                 }
+                context.CartDetails.Remove(cartDetail);
             }
-
-
-            foreach (var key in cartDetailsByReciverId.Keys)
+            foreach (var owner in itemOwnerDic)
             {
-                Request newRequest = new Request();
-                newRequest.UserId = uid;
-                newRequest.Address = address;
-                newRequest.Note = note;
-                newRequest.Note = cartDetailIDList.note;
-                newRequest.DateCreate = DateTime.Now;
-                newRequest.Status = 0;
-
-                List<RequestDetail> listRequestDetail = cartDetailsByReciverId[key].Select(cd => new RequestDetail
-                {
-                    ItemId = cd.ItemId,
-
-                    Price = (cd.Item.ItemSalePrice == null) ? 0 : cd.Item.ItemSalePrice.Value,
-                    Quantity = cd.ItemQuantity,
-                    Status = 0
-                }).ToList();
-                newRequest.RequestDetails = listRequestDetail;
-
-
-                context.Requests.Add(newRequest);
-                foreach (CartDetail cartDetail in cartDetailsByReciverId[key])
-                {
-                    context.CartDetails.Remove(cartDetail);
-                }
+                Email newEmail = new Email();
+                newEmail.To = owner.Value;
+                newEmail.Subject = "you have an order";
+                newEmail.Body = "you have an order";
+                await emailDAO.SendEmai(newEmail);
             }
 
             if (await context.SaveChangesAsync() != 0)

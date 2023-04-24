@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -230,7 +229,7 @@ namespace MOBY_API_Core6.Repository
                 int itemsToSkip = (pageNumber - 1) * pageSize;
                 List<BriefItem> listBriefItemBySubCategoryID = new();
                 listBriefItemBySubCategoryID = await _context.BriefItems
-                    .Where(bf => bf.SubCategoryId == subCategoryID 
+                    .Where(bf => bf.SubCategoryId == subCategoryID
                     && bf.ItemStatus == status
                     && bf.Share == share)
                     .Skip(itemsToSkip)
@@ -279,7 +278,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                bool check = await _context.RequestDetails.Where(cd => cd.ItemId == itemVM.itemID && cd.Status == 0)
+                /*bool check = await _context.RequestDetails.Where(cd => cd.ItemId == itemVM.itemID && cd.Status == 0)
                     .AnyAsync();
                 if (check)
                 {
@@ -287,22 +286,22 @@ namespace MOBY_API_Core6.Repository
                     return false;
                 }
                 else
+                {*/
+                var item = await _context.Items.Where(it => it.ItemId == itemVM.itemID
+                && it.UserId == itemVM.userID)
+                    .FirstOrDefaultAsync();
+                if (item != null)
                 {
-                    var item = await _context.Items.Where(it => it.ItemId == itemVM.itemID
-                    && it.UserId == itemVM.userID)
-                        .FirstOrDefaultAsync();
-                    if (item != null)
-                    {
-                        item.ItemStatus = null;
-                        _context.SaveChanges();
-                        return true;
-                    }
-                    else
-                    {
-                        ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
-                        return false;
-                    }
+                    item.ItemStatus = null;
+                    _context.SaveChanges();
+                    return true;
                 }
+                else
+                {
+                    ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
+                    return false;
+                }
+                //}
             }
             catch
             {
@@ -521,7 +520,7 @@ namespace MOBY_API_Core6.Repository
                 int itemsToSkip = (pageNumber - 1) * pageSize;
                 List<BriefItem> listShareRecently = new();
                 var query = _context.BriefItems
-                    .Join(_context.UserAccounts, bf => bf.UserId, us => us.UserId, (bf, us) => new { bf,us })
+                    .Join(_context.UserAccounts, bf => bf.UserId, us => us.UserId, (bf, us) => new { bf, us })
                     .Where(bfus => bfus.bf.Share == true
                     && bfus.bf.ItemStatus == true
                     && bfus.us.UserStatus == true);
@@ -637,7 +636,7 @@ namespace MOBY_API_Core6.Repository
                 var query = _context.BriefItems
                     .Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
                     .Join(_context.UserAccounts, bfit => bfit.it.UserId, us => us.UserId, (bfit, us) => new { bfit, us })
-                    .Where(bfitus => bfitus.us.UserStatus == true 
+                    .Where(bfitus => bfitus.us.UserStatus == true
                     && bfitus.bfit.bf.CategoryStatus == true
                     && bfitus.bfit.bf.SubCategoryStatus == true);
                 if (dynamicFilterVM.CategoryID != null)
@@ -687,7 +686,7 @@ namespace MOBY_API_Core6.Repository
                     {
                         query = query.OrderByDescending(query => query.bfit.bf.ItemDateCreated);
                     }
-                } 
+                }
                 else if (dynamicFilterVM.OrderByDateCreate == false && dynamicFilterVM.OrderByDateUpdate == true && dynamicFilterVM.OrderByEstimateValue == false && dynamicFilterVM.OrderByPrice == true)
                 {
                     if (dynamicFilterVM.AscendingOrDescending == true)

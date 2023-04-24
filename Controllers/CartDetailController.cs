@@ -11,15 +11,17 @@ namespace MOBY_API_Core6.Controllers
     public class CartDetailController : ControllerBase
     {
         private readonly IUserRepository userDAO;
-        private readonly ICartRepository cartDAO;
+
         private readonly ICartDetailRepository cartDetailDAO;
-        private readonly IItemRepository itemDAO;
-        public CartDetailController(ICartDetailRepository cartDetailDAO, ICartRepository cartDAO, IUserRepository userDAO, IItemRepository itemDAO)
+
+        private readonly IEmailRepository emailDAO;
+        public CartDetailController(ICartDetailRepository cartDetailDAO, IUserRepository userDAO, IEmailRepository emailDAO)
         {
             this.userDAO = userDAO;
             this.cartDetailDAO = cartDetailDAO;
-            this.cartDAO = cartDAO;
-            this.itemDAO = itemDAO;
+
+
+            this.emailDAO = emailDAO;
         }
 
         [Authorize]
@@ -151,7 +153,35 @@ namespace MOBY_API_Core6.Controllers
         }
 
 
+        [Authorize]
+        [HttpGet]
+        [Route("api/cartdetail/checking")]
+        public async Task<IActionResult> CheckingCartDetail([FromQuery] int[] listCartDetailID)
+        {
 
+            try
+            {
+                var uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (listCartDetailID == null || listCartDetailID.Length == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("there no cart Detail to confirm"));
+                }
+                String result = await cartDetailDAO.CheckCartDetail(listCartDetailID, uid);
+
+
+                return Ok(result);
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
 
         [Authorize]
         [HttpPost]
@@ -161,8 +191,8 @@ namespace MOBY_API_Core6.Controllers
 
             try
             {
-                var currentUid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                if (currentUid == 0)
+                var user = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (user == null)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
@@ -171,17 +201,23 @@ namespace MOBY_API_Core6.Controllers
                     return BadRequest(ReturnMessage.Create("there no cart Detail to confirm"));
                 }
 
-                if (await cartDetailDAO.ConfirmCartDetail(listCartDetailID, currentUid))
+                if (await cartDetailDAO.ConfirmCartDetail(listCartDetailID, user.UserId))
                 {
+                    Email newEmail = new Email();
+                    newEmail.To = user.UserGmail;
+                    newEmail.Subject = "your order has been shipping";
+                    newEmail.Body = "your order has been shipping";
+                    await emailDAO.SendEmai(newEmail);
                     return Ok(ReturnMessage.Create("Success"));
                 }
-                return BadRequest(ReturnMessage.Create("error at ConfirmRequestDetail"));
+                return BadRequest(ReturnMessage.Create("error at ConfirmCartDetail"));
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
 
     }
 }

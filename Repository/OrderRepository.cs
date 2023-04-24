@@ -14,41 +14,7 @@ namespace MOBY_API_Core6.Repository
             this.emailDAO = emailDAO;
         }
 
-        public async Task<bool> CreateOrder(int uid, String Address, String? note, List<RequestDetail> accteptedRequestDetail)
-        {
 
-            Order newOrder = new Order();
-            newOrder.UserId = uid;
-            newOrder.Address = Address;
-            newOrder.Note = note;
-            newOrder.DateCreate = DateTime.Now;
-
-            List<OrderDetail> ListOrderDetail = accteptedRequestDetail.Select(rd => new OrderDetail
-            {
-                ItemId = rd.ItemId,
-                Quantity = rd.Quantity,
-                Price = rd.Price,
-
-            }).ToList();
-            newOrder.OrderDetails = ListOrderDetail;
-
-            context.Orders.Add(newOrder);
-            String? recieverGmail = await context.UserAccounts.Where(U => U.UserId == uid).Select(u => u.UserGmail).FirstOrDefaultAsync();
-            if (await context.SaveChangesAsync() != 0)
-            {
-                if (recieverGmail != null)
-                {
-                    Email newEmail = new Email();
-                    newEmail.To = recieverGmail;
-                    newEmail.Subject = "your order has been created";
-                    newEmail.Body = "your order has been created";
-                    await emailDAO.SendEmai(newEmail);
-                }
-                return true;
-            }
-
-            return false;
-        }
 
         public async Task<List<OrderBriefVM>> GetOrderByRecieverID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM)
         {
@@ -60,8 +26,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     listOrder = await context.Orders.Where(o => o.UserId == uid)
                     .Include(o => o.User)
-                    .Include(o => o.OrderDetails)
-                    .ThenInclude(od => od.Item)
+                    .Include(o => o.Item)
                     .ThenInclude(i => i.User)
                     .Skip(itemsToSkip)
                     .Take(pagging.pageSize)
@@ -73,8 +38,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     listOrder = await context.Orders.Where(o => o.UserId == uid && o.Status == orderStatusVM.OrderStatus)
                     .Include(o => o.User)
-                    .Include(o => o.OrderDetails)
-                    .ThenInclude(od => od.Item)
+                    .Include(o => o.Item)
                     .ThenInclude(i => i.User)
                     .Skip(itemsToSkip)
                     .Take(pagging.pageSize)
@@ -89,8 +53,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     listOrder = await context.Orders.Where(o => o.UserId == uid)
                     .Include(o => o.User)
-                    .Include(o => o.OrderDetails)
-                    .ThenInclude(od => od.Item)
+                    .Include(o => o.Item)
                     .ThenInclude(i => i.User)
                     .Skip(itemsToSkip)
                     .Take(pagging.pageSize)
@@ -101,8 +64,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     listOrder = await context.Orders.Where(o => o.UserId == uid && o.Status == orderStatusVM.OrderStatus)
                     .Include(o => o.User)
-                    .Include(o => o.OrderDetails)
-                    .ThenInclude(od => od.Item)
+                    .Include(o => o.Item)
                     .ThenInclude(i => i.User)
                     .Skip(itemsToSkip)
                     .Take(pagging.pageSize)
@@ -138,10 +100,9 @@ namespace MOBY_API_Core6.Repository
                 {
                     listOrder = await context.Orders
                     .Include(o => o.User)
-                    .Include(o => o.OrderDetails)
-                    .ThenInclude(od => od.Item)
+                    .Include(o => o.Item)
                     .ThenInclude(i => i.User)
-                    .Where(r => r.OrderDetails.Any(od => od.Item.UserId == uid))
+                    .Where(r => r.Item.UserId == uid)
                     .Skip(itemsToSkip)
                     .Take(pagging.pageSize)
                     .OrderByDescending(o => o.OrderId)
@@ -152,10 +113,9 @@ namespace MOBY_API_Core6.Repository
                 {
                     listOrder = await context.Orders
                     .Include(o => o.User)
-                    .Include(o => o.OrderDetails)
-                    .ThenInclude(od => od.Item)
+                    .Include(o => o.Item)
                     .ThenInclude(i => i.User)
-                    .Where(o => o.OrderDetails.Any(od => od.Item.UserId == uid) && o.Status == orderStatusVM.OrderStatus)
+                    .Where(o => o.Item.UserId == uid && o.Status == orderStatusVM.OrderStatus)
                     .Skip(itemsToSkip)
                     .Take(pagging.pageSize)
                     .OrderByDescending(o => o.OrderId)
@@ -169,10 +129,9 @@ namespace MOBY_API_Core6.Repository
                 {
                     listOrder = await context.Orders
                     .Include(o => o.User)
-                    .Include(o => o.OrderDetails)
-                    .ThenInclude(od => od.Item)
+                    .Include(o => o.Item)
                     .ThenInclude(i => i.User)
-                    .Where(r => r.OrderDetails.Any(od => od.Item.UserId == uid))
+                    .Where(r => r.Item.UserId == uid)
                     .Skip(itemsToSkip)
                     .Take(pagging.pageSize)
                     .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
@@ -182,10 +141,9 @@ namespace MOBY_API_Core6.Repository
                 {
                     listOrder = await context.Orders
                     .Include(o => o.User)
-                    .Include(o => o.OrderDetails)
-                    .ThenInclude(od => od.Item)
+                    .Include(o => o.Item)
                     .ThenInclude(i => i.User)
-                    .Where(o => o.OrderDetails.Any(od => od.Item.UserId == uid) && o.Status == orderStatusVM.OrderStatus)
+                    .Where(o => o.Item.UserId == uid && o.Status == orderStatusVM.OrderStatus)
                     .Skip(itemsToSkip)
                     .Take(pagging.pageSize)
                     .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
@@ -202,26 +160,25 @@ namespace MOBY_API_Core6.Repository
             if (orderStatusVM.OrderStatus == null || orderStatusVM.OrderStatus.Equals(""))
             {
                 listOrderCount = await context.Orders
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Item)
+                .Include(o => o.Item)
                 .ThenInclude(i => i.User)
-                .Where(o => o.OrderDetails.Any(od => od.Item.UserId == uid))
+                .Where(o => o.Item.UserId == uid)
                 .CountAsync();
             }
             else
             {
                 listOrderCount = await context.Orders
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Item)
+                .Include(o => o.Item)
+
                 .ThenInclude(i => i.User)
-                .Where(o => o.OrderDetails.Any(od => od.Item.UserId == uid) && o.Status == orderStatusVM.OrderStatus)
+                .Where(o => o.Item.UserId == uid && o.Status == orderStatusVM.OrderStatus)
                 .CountAsync();
             }
             return listOrderCount;
         }
 
 
-        public async Task<bool> checkOrderSharer(int uid)
+        /*public async Task<bool> checkOrderSharer(int uid)
         {
             List<Order> listOrder = await context.Orders
                 .Include(o => o.OrderDetails)
@@ -265,9 +222,9 @@ namespace MOBY_API_Core6.Repository
             }
 
             return false;
-        }
+        }*/
 
-        public async Task<bool> checkOrderReciever(int uid)
+        /*public async Task<bool> checkOrderReciever(int uid)
         {
             List<Order> listOrder = await context.Orders
                 .Include(o => o.User)
@@ -297,7 +254,7 @@ namespace MOBY_API_Core6.Repository
             }
 
             return false;
-        }
+        }*/
 
 
 
@@ -305,8 +262,7 @@ namespace MOBY_API_Core6.Repository
         {
             Order? order = await context.Orders.Where(o => o.OrderId == orderID)
                 .Include(o => o.User)
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Item)
+                .Include(od => od.Item)
                 .ThenInclude(i => i.User)
                 .FirstOrDefaultAsync();
 
@@ -317,8 +273,7 @@ namespace MOBY_API_Core6.Repository
         {
             OrderVM? order = await context.Orders.Where(o => o.OrderId == orderID)
                 .Include(o => o.User)
-                .Include(o => o.OrderDetails)
-                .ThenInclude(od => od.Item)
+                .Include(o => o.Item)
                 .ThenInclude(i => i.User)
                 .Select(o => OrderVM.OrderToViewModel(o))
                 .FirstOrDefaultAsync();
@@ -337,6 +292,14 @@ namespace MOBY_API_Core6.Repository
             {
                 order.Status = status;
                 order.DateReceived = DateTime.Now;
+                if (order.Item.User.Balance == null)
+                {
+                    order.Item.User.Balance = order.Quantity * order.Price;
+                }
+                else
+                {
+                    order.Item.User.Balance += order.Quantity * order.Price;
+                }
             }
 
             if (await context.SaveChangesAsync() != 0)

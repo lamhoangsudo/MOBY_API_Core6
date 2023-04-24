@@ -10,11 +10,13 @@ namespace MOBY_API_Core6.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserRepository userDAO;
-        private readonly IEmailRepository emailDAO;
-        public UserController(IUserRepository userDao, IEmailRepository emailDAO)
+
+        private readonly ITransationRepository transationRepository;
+        public UserController(IUserRepository userDao, ITransationRepository transationRepository)
         {
             this.userDAO = userDao;
-            this.emailDAO = emailDAO;
+
+            this.transationRepository = transationRepository;
         }
         [Authorize]
         [HttpPost]
@@ -29,12 +31,6 @@ namespace MOBY_API_Core6.Controllers
                     if (await userDAO.CreateUser(this.User.Claims, createUserVM))
                     {
                         return Ok(ReturnMessage.Create("success"));
-                        //int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                        /*if (await cartDAO.CreateCart(uid))
-                        {
-                            
-                        }*/
-
                     }
                 }
                 else
@@ -67,6 +63,69 @@ namespace MOBY_API_Core6.Controllers
                         return Ok(ReturnMessage.Create("success"));
                     }
                     return BadRequest(ReturnMessage.Create("error at updateUserAccount"));
+                }
+
+                return BadRequest(ReturnMessage.Create("No User Found"));
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut]
+        [Route("api/useraccount/bank")]
+        public async Task<IActionResult> UpdateUserBanking([FromBody] UpdateBankAccount bankVM)
+        {
+            try
+            {
+                //UserAccounts currentUser = new UserAccounts();
+                UserAccount? currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+
+                if (currentUser != null)
+                {
+                    if (await userDAO.EditBankAccount(currentUser, bankVM))
+                    {
+                        return Ok(ReturnMessage.Create("success"));
+                    }
+                    return BadRequest(ReturnMessage.Create("error at update banking"));
+                }
+
+                return BadRequest(ReturnMessage.Create("No User Found"));
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("api/useraccount/balance")]
+        public async Task<IActionResult> Withdraw([FromBody] WithdrawVM bankVM)
+        {
+            try
+            {
+                if (bankVM.Balance < 20000)
+                {
+                    return BadRequest(ReturnMessage.Create("khoản rút tối thiểu là 20.000vnd"));
+                }
+                //UserAccounts currentUser = new UserAccounts();
+                UserAccount? currentUser = await userDAO.FindUserByCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+
+                if (currentUser != null)
+                {
+
+                    if (await transationRepository.CreateTransationLog(currentUser, bankVM.Balance))
+                    {
+                        return Ok(ReturnMessage.Create("success"));
+                    }
+                    return BadRequest(ReturnMessage.Create("error at update banking"));
                 }
 
                 return BadRequest(ReturnMessage.Create("No User Found"));
@@ -170,7 +229,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return NotFound(ReturnMessage.Create("account not found cart"));
                 }
-                var userAccountVM = UserAccountVM.UserAccountToVewModel(currentUser, currentcart.CartId);
+                var userAccountVM = UserAccountSelfVM.UserAccountToVewModel(currentUser, currentcart.CartId);
 
 
                 //return Ok(UserAccountVM.UserAccountToVewModel(currentUser, cart.CartId));

@@ -11,7 +11,7 @@ namespace MOBY_API_Core6.Data_View_Model
 
         public UserVM? UserRecieverVM { get; set; }
         public UserVM? UserSharerVM { get; set; }
-        public List<OrderDetailBriefVM>? OrderDetails { get; set; }
+        public ItemVM? itemVM { get; set; }
 
         public static OrderBriefVM OrderToBriefVewModel(Order order)
         {
@@ -22,16 +22,16 @@ namespace MOBY_API_Core6.Data_View_Model
 
                 Status = order.Status,
             };
-            var orderDetails = order.OrderDetails.Select(od => OrderDetailBriefVM.OrderDetailBriefToViewModel(od)).ToList();
-            orderBriefVM.OrderDetails = orderDetails;
 
-            var userOwner = (order.OrderDetails.First()).Item.User;
+
+            var userOwner = order.Item.User;
             orderBriefVM.UserSharerVM = UserVM.UserAccountToVewModel(userOwner);
 
             var user = order.User;
             orderBriefVM.UserRecieverVM = UserVM.UserAccountToVewModel(user);
 
-
+            var item = order.Item;
+            orderBriefVM.itemVM = ItemVM.ItemForOrderToViewModel(item);
             return orderBriefVM;
         }
     }
