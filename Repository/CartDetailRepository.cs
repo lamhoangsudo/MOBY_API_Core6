@@ -236,7 +236,7 @@ namespace MOBY_API_Core6.Repository
                 context.Orders.Add(newOrder);
                 cartDetail.Item.ItemShareAmount -= cartDetail.ItemQuantity;
 
-                if (!(itemOwnerDic.Keys.Contains(cartDetail.Item.UserId)))
+                if (!(itemOwnerDic.ContainsKey(cartDetail.Item.UserId)))
                 {
                     itemOwnerDic.Add(cartDetail.Item.UserId, cartDetail.Item.User.UserGmail);
                 }
