@@ -25,10 +25,6 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<DetailItemRequest> DetailItemRequests { get; set; } = null!;
         public virtual DbSet<Item> Items { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
-<<<<<<< HEAD
-=======
-        public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
->>>>>>> master
         public virtual DbSet<RecordPenaltyPoint> RecordPenaltyPoints { get; set; } = null!;
         public virtual DbSet<Reply> Replies { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
