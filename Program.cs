@@ -60,6 +60,7 @@ builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<IImageVerifyRepository, ImageVerifyRepository>();
 builder.Services.AddScoped<ITransationRepository, TransationRepository>();
 builder.Services.AddScoped<IRecordPenaltyRepository, RecordPenaltyRepository>();
+builder.Services.AddScoped<JsonToObj>();
 
 builder.Configuration.AddUserSecrets<Program>(true);
 builder.Services.AddSwaggerGen(swagger =>
