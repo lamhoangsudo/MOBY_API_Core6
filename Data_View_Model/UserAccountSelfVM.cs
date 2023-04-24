@@ -2,7 +2,7 @@
 
 namespace MOBY_API_Core6.Data_View_Model
 {
-    public class UserAccountVM
+    public class UserAccountSelfVM
     {
         public int UserId { get; set; }
         public string UserCode { get; set; } = null!;
@@ -18,11 +18,14 @@ namespace MOBY_API_Core6.Data_View_Model
         public bool UserStatus { get; set; }
         public DateTime UserDateCreate { get; set; }
         public DateTime? UserDateUpdate { get; set; }
+        public string? CardNumber { get; set; }
+        public string? BankName { get; set; }
+        public double? Balance { get; set; }
         public int CartID { get; set; }
 
-        public static UserAccountVM UserAccountToVewModel(UserAccount user, int cartid)
+        public static UserAccountSelfVM UserAccountToVewModel(UserAccount user, int cartid)
         {
-            return new UserAccountVM
+            return new UserAccountSelfVM
             {
                 UserId = user.UserId,
                 UserCode = user.UserCode,
@@ -38,10 +41,11 @@ namespace MOBY_API_Core6.Data_View_Model
                 UserStatus = user.UserStatus,
                 UserDateCreate = user.UserDateCreate,
                 UserDateUpdate = user.UserDateUpdate,
+                CardNumber = user.CardNumber,
+                BankName = user.BankName,
+                Balance = user.Balance,
                 CartID = cartid,
             };
         }
-
-
     }
 }

@@ -42,7 +42,7 @@
             return ItemVM;
         }
 
-        public static ItemVM ItemForRequestOrderToViewModel(Models.Item item)
+        public static ItemVM ItemForOrderToViewModel(Models.Item item)
         {
 
             var ItemVM = new ItemVM()
@@ -50,9 +50,7 @@
                 ItemId = item.ItemId,
                 UserId = item.UserId,
                 ItemTitle = item.ItemTitle,
-                ItemShareAmount = item.ItemShareAmount,
                 Image = item.Image,
-                ItemStatus = item.ItemStatus,
             };
 
 

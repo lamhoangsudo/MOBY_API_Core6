@@ -20,8 +20,6 @@ namespace MOBY_API_Core6.Models
         public DateTime? DatePackage { get; set; }
         public DateTime? DateReceived { get; set; }
         public string Address { get; set; } = null!;
-        public int ItemId { get; set; }
-        public string ItemTitle { get; set; } = null!;
         public int UserId { get; set; }
         public string UserCode { get; set; } = null!;
         public string UserName { get; set; } = null!;
@@ -38,5 +36,9 @@ namespace MOBY_API_Core6.Models
         public bool StatusUreport { get; set; }
         public DateTime DateCreateUreport { get; set; }
         public int ReputationUreport { get; set; }
+        public int ItemId { get; set; }
+        public string ItemTitle { get; set; } = null!;
+        public int Quantity { get; set; }
+        public string? Note { get; set; }
     }
 }

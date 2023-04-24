@@ -9,9 +9,15 @@ namespace MOBY_API_Core6.Repository.IRepository
         public Task<int> GetOrderByRecieverIDCount(int uid, OrderStatusVM orderStatusVM);
         public Task<List<OrderBriefVM>> GetOrderBySharerID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM);
         public Task<int> GetOrderBySharerIDCount(int uid, OrderStatusVM orderStatusVM);
+<<<<<<< HEAD:Repository/IOrderRepository.cs
+        //public Task<bool> checkOrderSharer(int uid);
+        //public Task<bool> checkOrderReciever(int uid);
+
+=======
         public Task<bool> checkOrderSharer(int uid);
         public Task<bool> checkOrderReciever(int uid);
         public Task<bool> CreateOrder(int uid, string Address, string? note, List<RequestDetail> accteptedRequestDetail);
+>>>>>>> master:Repository/IRepository/IOrderRepository.cs
         public Task<Order?> GetOrderByOrderID(int orderID);
         public Task<OrderVM?> GetOrderVMByOrderID(int orderID);
         public Task<bool> UpdateStatusOrder(Order order, int status);

@@ -2,6 +2,8 @@
 
 namespace MOBY_API_Core6.Data_View_Model
 {
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+
     public class UpdateAccountVM
     {
         [DefaultValue("String UserName")]
@@ -18,16 +20,5 @@ namespace MOBY_API_Core6.Data_View_Model
         public string UserDateOfBirth { get; set; }
         [DefaultValue("String UserMoreInformation")]
         public string? UserMoreInformation { get; set; }
-
-        public UpdateAccountVM(string userName, string userImage, string userAddress, string userPhone, bool userSex, string userDateOfBirth, string? userMoreInformation)
-        {
-            UserName = userName;
-            UserImage = userImage;
-            UserAddress = userAddress;
-            UserPhone = userPhone;
-            UserSex = userSex;
-            UserDateOfBirth = userDateOfBirth;
-            UserMoreInformation = userMoreInformation;
-        }
     }
 }

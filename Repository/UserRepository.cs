@@ -35,7 +35,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<UserAccount?> FindUserByCode(String userCode)
         {
             UserAccount? foundAccount = await context.UserAccounts
-                .Where(u => u.UserCode == userCode)
+                .Where(u => u.UserCode == userCode && u.UserStatus == true)
                 .Include(u => u.Carts)
                 .FirstOrDefaultAsync();
             return foundAccount;
@@ -88,6 +88,7 @@ namespace MOBY_API_Core6.Repository
             newUser.UserCode = claims.First(i => i.Type == "user_id").Value;
             newUser.RoleId = 1;
             newUser.Reputation = 80;
+            newUser.Balance = 0;
             newUser.UserName = claims.First(i => i.Type.Contains("identity/claims/name")).Value;
             newUser.UserGmail = claims.First(i => i.Type.Contains("emailaddress")).Value;
             newUser.UserAddress = createUserVM.UserAddress;
@@ -139,6 +140,20 @@ namespace MOBY_API_Core6.Repository
 
         }
 
+        public async Task<bool> EditBankAccount(UserAccount currentUser, UpdateBankAccount accountVM)
+        {
+
+
+            currentUser.CardNumber = accountVM.CardNumber;
+            currentUser.BankName = accountVM.BankName;
+
+            if (await context.SaveChangesAsync() != 0)
+            {
+                return true;
+            }
+            return false;
+
+        }
 
         public async Task<List<UserVM>> GetAllUser(PaggingVM pagging, UserAccountFilterVM userAccountFilterVM)
         {

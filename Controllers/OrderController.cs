@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using MOBY_API_Core6.Data_View_Model;
-using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository.IRepository;
-
-namespace MOBY_API_Core6.Controllers
+﻿namespace MOBY_API_Core6.Controllers
 {
 
     [ApiController]
@@ -68,7 +62,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
 
-        [Authorize]
+        /*[Authorize]
         [HttpGet]
         [Route("api/useraccount/order/sharer/check")]
         public async Task<IActionResult> ChecktOrderBySharerID()
@@ -124,7 +118,7 @@ namespace MOBY_API_Core6.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
-        }
+        }*/
 
         [Authorize]
         [HttpGet]
@@ -178,7 +172,8 @@ namespace MOBY_API_Core6.Controllers
                     return BadRequest(ReturnMessage.Create("Package status must be from Sharer"));
                 }
 
-                if (currentOrder.OrderDetails.First().Item.UserId == uid && updateOrderVM.Status == 2)
+                if (currentOrder.Item.UserId == uid && currentOrder.Status == 2)
+
                 {
                     return BadRequest(ReturnMessage.Create("Recieve status must be from Reciever"));
                 }
@@ -199,7 +194,7 @@ namespace MOBY_API_Core6.Controllers
                     if (updateOrderVM.Status == 2)
                     {
                         Email newEmail = new Email();
-                        newEmail.To = currentOrder.OrderDetails.First().Item.User.UserGmail;
+                        newEmail.To = currentOrder.Item.User.UserGmail;
                         newEmail.Subject = "your order has been recievied";
                         newEmail.Body = "your order has been recievied";
                         await emailDAO.SendEmai(newEmail);
