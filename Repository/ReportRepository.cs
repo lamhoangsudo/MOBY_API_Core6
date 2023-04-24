@@ -2,7 +2,6 @@
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
-using System.Reflection.Metadata;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -932,59 +931,59 @@ namespace MOBY_API_Core6.Repository
                             return false;
                         }
                     case 1:
-                        //order
-                        var queryOrder = _context.Orders
-                            .Join(_context.OrderDetails, or => or.OrderId, ord => ord.OrderId, (or, ord) => new { or, ord })
-                            .Join(_context.Items, orord => orord.ord.ItemId, it => it.ItemId, (orord, it) => new { orord, it })
-                            .Join(_context.UserAccounts, orordit => orordit.it.UserId, us => us.UserId, (orordit, us) => new { orordit, us })
-                            .Where(ororditus => ororditus.orordit.orord.or.OrderId == id);
-                        UserAccount? userAccountOrder = await queryOrder
-                            .Where(queryOrder => queryOrder.us.UserStatus == true)
-                            .Select(queryOrder => queryOrder.us)
+                    //order
+                    /*var queryOrder = _context.Orders
+                        .Join(_context.OrderDetails, or => or.OrderId, ord => ord.OrderId, (or, ord) => new { or, ord })
+                        .Join(_context.Items, orord => orord.ord.ItemId, it => it.ItemId, (orord, it) => new { orord, it })
+                        .Join(_context.UserAccounts, orordit => orordit.it.UserId, us => us.UserId, (orordit, us) => new { orordit, us })
+                        .Where(ororditus => ororditus.orordit.orord.or.OrderId == id);
+                    UserAccount? userAccountOrder = await queryOrder
+                        .Where(queryOrder => queryOrder.us.UserStatus == true)
+                        .Select(queryOrder => queryOrder.us)
+                        .FirstOrDefaultAsync();
+                    if (userAccountOrder != null)
+                    {
+                        userAccountOrder.Reputation -= 10;
+                        if (userAccountOrder.Reputation < 0)
+                        {
+                            userAccountOrder.Reputation = 0;
+                            AutoDeleteAllBanUser();
+                        }
+                        //userAccountOrder.ReasonDeductionOfPoints = hideAndPunish.Reason;
+                        Order? order = await queryOrder
+                            .Where(queryOrder => queryOrder.orordit.orord.or.Status != 3)
+                            .Select(queryOrder => queryOrder.orordit.orord.or)
                             .FirstOrDefaultAsync();
-                        if (userAccountOrder != null)
+                        if (order != null)
                         {
-                            userAccountOrder.Reputation -= 10;
-                            if (userAccountOrder.Reputation < 0)
+                            order.Status = 3;
+                            recordPenaltyPoint = new()
                             {
-                                userAccountOrder.Reputation = 0;
-                                AutoDeleteAllBanUser();
-                            }
-                            //userAccountOrder.ReasonDeductionOfPoints = hideAndPunish.Reason;
-                            Order? order = await queryOrder
-                                .Where(queryOrder => queryOrder.orordit.orord.or.Status != 3)
-                                .Select(queryOrder => queryOrder.orordit.orord.or)
-                                .FirstOrDefaultAsync();
-                            if (order != null)
+                                UserId = userAccountOrder.UserId,
+                                ObjReport = order.OrderId,
+                                Type = type,
+                                PenaltyPoint = 10,
+                                ReasonDeductionOfPoints = hideAndPunish.Reason
+                            };
+                            if (await _recordPenaltyRepository.CreateRecord(recordPenaltyPoint) == true)
                             {
-                                order.Status = 3;
-                                recordPenaltyPoint = new()
+                                Email email = new()
                                 {
-                                    UserId = userAccountOrder.UserId,
-                                    ObjReport = order.OrderId,
-                                    Type = type,
-                                    PenaltyPoint = 10,
-                                    ReasonDeductionOfPoints = hideAndPunish.Reason
+                                    To = userAccountOrder.UserGmail,
+                                    Subject = "your blog has been hidden",
+                                    Body = "Dear " + userAccountOrder.UserName + "/n" + "your order: https://moby-customer.vercel.app/order/" + order.OrderId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
                                 };
-                                if (await _recordPenaltyRepository.CreateRecord(recordPenaltyPoint) == true)
-                                {
-                                    Email email = new()
-                                    {
-                                        To = userAccountOrder.UserGmail,
-                                        Subject = "your blog has been hidden",
-                                        Body = "Dear " + userAccountOrder.UserName + "/n" + "your order: https://moby-customer.vercel.app/order/" + order.OrderId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
-                                    };
-                                    await _emailRepository.SendEmai(email);
-                                }
+                                await _emailRepository.SendEmai(email);
                             }
-                            await _context.SaveChangesAsync();
-                            return true;
                         }
-                        else
-                        {
-                            ErrorMessage = "Đơn hàng này đã bị hủy";
-                            return false;
-                        }
+                        await _context.SaveChangesAsync();
+                        return true;
+                    }
+                    else
+                    {
+                        ErrorMessage = "Đơn hàng này đã bị hủy";
+                        return false;
+                    }*/
                     case 2:
                         //comment
                         var queryComment = _context.Comments

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MOBY_API_Core6.Models
+﻿namespace MOBY_API_Core6.Models
 {
     public partial class UserAccount
     {
@@ -34,12 +31,9 @@ namespace MOBY_API_Core6.Models
         public DateTime UserDateCreate { get; set; }
         public DateTime? UserDateUpdate { get; set; }
         public int Reputation { get; set; }
-<<<<<<< HEAD
         public string? CardNumber { get; set; }
         public string? BankName { get; set; }
         public double? Balance { get; set; }
-=======
->>>>>>> master
 
         public virtual Role Role { get; set; } = null!;
         public virtual ICollection<Blog> Blogs { get; set; }
