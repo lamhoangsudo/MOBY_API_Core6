@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MOBY_API_Core6.Models
 {
@@ -41,15 +44,10 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<ViewReportOrder> ViewReportOrders { get; set; } = null!;
         public virtual DbSet<ViewReportReply> ViewReportReplies { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
-
             modelBuilder.Entity<Banner>(entity =>
             {
                 entity.Property(e => e.BannerId).HasColumnName("BannerID");
@@ -404,21 +402,6 @@ namespace MOBY_API_Core6.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Orders_UserAccounts1");
-            });
-
-            modelBuilder.Entity<RecordPenaltyPoint>(entity =>
-            {
-                entity.ToTable("RecordPenaltyPoint");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.RecordPenaltyPoints)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_RecordPenaltyPoint_UserAccounts");
             });
 
             modelBuilder.Entity<RecordPenaltyPoint>(entity =>

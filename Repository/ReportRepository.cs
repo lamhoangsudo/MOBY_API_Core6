@@ -890,7 +890,6 @@ namespace MOBY_API_Core6.Repository
                                 userAccountItem.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
-                            //userAccountItem.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Models.Item? item = await queryItem
                                 .Where(query => query.it.ItemStatus == true)
                                 .Select(query => query.it)
@@ -932,11 +931,10 @@ namespace MOBY_API_Core6.Repository
                         }
                     case 1:
                     //order
-                    /*var queryOrder = _context.Orders
-                        .Join(_context.OrderDetails, or => or.OrderId, ord => ord.OrderId, (or, ord) => new { or, ord })
-                        .Join(_context.Items, orord => orord.ord.ItemId, it => it.ItemId, (orord, it) => new { orord, it })
-                        .Join(_context.UserAccounts, orordit => orordit.it.UserId, us => us.UserId, (orordit, us) => new { orordit, us })
-                        .Where(ororditus => ororditus.orordit.orord.or.OrderId == id);
+                    var queryOrder = _context.Orders
+                        .Join(_context.Items, or => or.ItemId, it => it.ItemId, (or, it) => new { or, it })
+                        .Join(_context.UserAccounts, orit => orit.it.UserId, us => us.UserId, (orit, us) => new { orit, us })
+                        .Where(oritus => oritus.orit.or.OrderId == id);
                     UserAccount? userAccountOrder = await queryOrder
                         .Where(queryOrder => queryOrder.us.UserStatus == true)
                         .Select(queryOrder => queryOrder.us)
@@ -949,10 +947,9 @@ namespace MOBY_API_Core6.Repository
                             userAccountOrder.Reputation = 0;
                             AutoDeleteAllBanUser();
                         }
-                        //userAccountOrder.ReasonDeductionOfPoints = hideAndPunish.Reason;
                         Order? order = await queryOrder
-                            .Where(queryOrder => queryOrder.orordit.orord.or.Status != 3)
-                            .Select(queryOrder => queryOrder.orordit.orord.or)
+                            .Where(queryOrder => queryOrder.orit.or.Status != 3)
+                            .Select(queryOrder => queryOrder.orit.or)
                             .FirstOrDefaultAsync();
                         if (order != null)
                         {
@@ -983,7 +980,7 @@ namespace MOBY_API_Core6.Repository
                     {
                         ErrorMessage = "Đơn hàng này đã bị hủy";
                         return false;
-                    }*/
+                    }
                     case 2:
                         //comment
                         var queryComment = _context.Comments
@@ -1001,7 +998,6 @@ namespace MOBY_API_Core6.Repository
                                 userAccountComment.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
-                            //userAccountComment.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Comment? comment = await queryComment
                                 .Where(queryComment => queryComment.cm.Status == true)
                                 .Select(queryComment => queryComment.cm)
@@ -1054,7 +1050,6 @@ namespace MOBY_API_Core6.Repository
                                 userAccountReply.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
-                            //userAccountReply.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Reply? reply = await queryReply
                                 .Where(queryReply => queryReply.rp.Status == true)
                                 .Select(queryReply => queryReply.rp)
@@ -1108,7 +1103,6 @@ namespace MOBY_API_Core6.Repository
                                 userAccountBlog.Reputation = 0;
                                 AutoDeleteAllBanUser();
                             }
-                            //userAccountBlog.ReasonDeductionOfPoints = hideAndPunish.Reason;
                             Blog? blog = await queryBlog
                                 .Where(queryBlog => queryBlog.blg.BlogStatus != 2)
                                 .Select(queryBlog => queryBlog.blg)

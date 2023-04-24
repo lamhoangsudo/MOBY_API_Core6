@@ -279,7 +279,9 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                /*bool check = await _context.RequestDetails.Where(cd => cd.ItemId == itemVM.itemID && cd.Status == 0)
+                bool check = await _context
+                    .Orders
+                    .Where(or => or.ItemId == itemVM.itemID && or.Status == 0)
                     .AnyAsync();
                 if (check)
                 {
@@ -287,22 +289,22 @@ namespace MOBY_API_Core6.Repository
                     return false;
                 }
                 else
-                {*/
-                var item = await _context.Items.Where(it => it.ItemId == itemVM.itemID
-                && it.UserId == itemVM.userID)
-                    .FirstOrDefaultAsync();
-                if (item != null)
                 {
-                    item.ItemStatus = null;
-                    _context.SaveChanges();
-                    return true;
+                    var item = await _context.Items.Where(it => it.ItemId == itemVM.itemID
+                    && it.UserId == itemVM.userID)
+                        .FirstOrDefaultAsync();
+                    if (item != null)
+                    {
+                        item.ItemStatus = null;
+                        _context.SaveChanges();
+                        return true;
+                    }
+                    else
+                    {
+                        ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
+                        return false;
+                    }
                 }
-                else
-                {
-                    ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
-                    return false;
-                }
-                //}
             }
             catch
             {
@@ -315,75 +317,75 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                /*bool checkCurrentItem = await _context.Requests
-                    .Where(cd => cd.ItemId == itemVM.itemID && cd.Status == 0)
+                bool checkCurrentItem = await _context.Orders
+                    .Where(or => or.ItemId == itemVM.itemID && or.Status == 0)
                     .AnyAsync();
                 if (checkCurrentItem)
                 {
-                    errorMessage = "sản phẩm của bạn đang có người muốn nhận nên bạn không thể cập nhật sản phẩm này";
-                    return false;
-                }
-                else
-                {*/
-                Models.Item? currentItem = await _context.Items
-                    .Where(it => it.ItemId == itemVM.itemID && it.UserId == itemVM.userId)
-                    .FirstOrDefaultAsync();
-                var checkSubCategoryExists = await _context.SubCategories
-                    .Where(sc => sc.SubCategoryId == itemVM.subCategoryId)
-                    .FirstOrDefaultAsync();
-                if (currentItem == null || currentItem.ItemStatus == null)
-                {
-                    ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
-                    return false;
-                }
-                if (checkSubCategoryExists == null)
-                {
-                    ErrorMessage = "danh mục bạn chọn không còn tồn tại trong dữ liệu, mong bạn chọn danh mục khác";
+                    ErrorMessage = "sản phẩm của bạn đang có người muốn nhận nên bạn không thể cập nhật sản phẩm này";
                     return false;
                 }
                 else
                 {
-                    DateTime dateTimeUpdate = DateTime.Now;
-                    DateTime? dateTimeExpired = null;
-                    try
+                    Models.Item? currentItem = await _context.Items
+                        .Where(it => it.ItemId == itemVM.itemID && it.UserId == itemVM.userId)
+                        .FirstOrDefaultAsync();
+                    var checkSubCategoryExists = await _context.SubCategories
+                        .Where(sc => sc.SubCategoryId == itemVM.subCategoryId)
+                        .FirstOrDefaultAsync();
+                    if (currentItem == null || currentItem.ItemStatus == null)
                     {
-                        if (!string.IsNullOrEmpty(itemVM.stringDateTimeExpired) && !string.IsNullOrWhiteSpace(itemVM.stringDateTimeExpired) && itemVM.share == false)
-                        {
-                            dateTimeExpired = DateTime.Parse(itemVM.stringDateTimeExpired);
-                            bool checkDate = dateTimeExpired > dateTimeUpdate;
-                            if (checkDate == false)
-                            {
-                                ErrorMessage = "bạn đã nhập ngày hết hạn sau ngày cập nhật";
-                                return false;
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        ErrorMessage = "bạn đã nhập sai format ngày, fotmat của chúng tôi là yyyy/mm/dd";
+                        ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
                         return false;
                     }
-                    currentItem.SubCategoryId = itemVM.subCategoryId;
-                    currentItem.ItemTitle = itemVM.itemTitle;
-                    currentItem.ItemDetailedDescription = itemVM.itemDetailedDescription;
-                    currentItem.ItemMass = itemVM.itemMass;
-                    currentItem.ItemSize = itemVM.itemSize;
+                    if (checkSubCategoryExists == null)
+                    {
+                        ErrorMessage = "danh mục bạn chọn không còn tồn tại trong dữ liệu, mong bạn chọn danh mục khác";
+                        return false;
+                    }
+                    else
+                    {
+                        DateTime dateTimeUpdate = DateTime.Now;
+                        DateTime? dateTimeExpired = null;
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(itemVM.stringDateTimeExpired) && !string.IsNullOrWhiteSpace(itemVM.stringDateTimeExpired) && itemVM.share == false)
+                            {
+                                dateTimeExpired = DateTime.Parse(itemVM.stringDateTimeExpired);
+                                bool checkDate = dateTimeExpired > dateTimeUpdate;
+                                if (checkDate == false)
+                                {
+                                    ErrorMessage = "bạn đã nhập ngày hết hạn sau ngày cập nhật";
+                                    return false;
+                                }
+                            }
+                        }
+                        catch
+                        {
+                            ErrorMessage = "bạn đã nhập sai format ngày, fotmat của chúng tôi là yyyy/mm/dd";
+                            return false;
+                        }
+                        currentItem.SubCategoryId = itemVM.subCategoryId;
+                        currentItem.ItemTitle = itemVM.itemTitle;
+                        currentItem.ItemDetailedDescription = itemVM.itemDetailedDescription;
+                        currentItem.ItemMass = itemVM.itemMass;
+                        currentItem.ItemSize = itemVM.itemSize;
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    currentItem.ItemQuanlity = itemVM.itemQuanlity;
-                    currentItem.ItemStatus = true;
+                        currentItem.ItemQuanlity = itemVM.itemQuanlity;
+                        currentItem.ItemStatus = true;
 #pragma warning restore CS8601 // Possible null reference assignment.
-                    currentItem.ItemEstimateValue = itemVM.itemEstimateValue;
-                    currentItem.ItemSalePrice = itemVM.itemSalePrice;
-                    currentItem.ItemShareAmount = itemVM.itemShareAmount;
-                    currentItem.ItemShippingAddress = itemVM.itemShippingAddress;
-                    currentItem.Image = itemVM.image;
-                    currentItem.ItemExpiredTime = dateTimeExpired;
-                    currentItem.ItemDateUpdate = dateTimeUpdate;
-                    currentItem.Share = itemVM.share;
-                    await _context.SaveChangesAsync();
-                    return true;
+                        currentItem.ItemEstimateValue = itemVM.itemEstimateValue;
+                        currentItem.ItemSalePrice = itemVM.itemSalePrice;
+                        currentItem.ItemShareAmount = itemVM.itemShareAmount;
+                        currentItem.ItemShippingAddress = itemVM.itemShippingAddress;
+                        currentItem.Image = itemVM.image;
+                        currentItem.ItemExpiredTime = dateTimeExpired;
+                        currentItem.ItemDateUpdate = dateTimeUpdate;
+                        currentItem.Share = itemVM.share;
+                        await _context.SaveChangesAsync();
+                        return true;
+                    }
                 }
-                //}
             }
             catch (Exception ex)
             {

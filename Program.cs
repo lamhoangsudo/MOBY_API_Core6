@@ -37,9 +37,7 @@ if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != null)
 else
 {
     connectionString = builder.Configuration.GetConnectionString("MobyDBAzure");
-    //azureSignalR = builder.Configuration.GetConnectionString("");
 }
-//builder.Services.AddSignalR().AddAzureSignalR(connectionString);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -61,7 +59,6 @@ builder.Services.AddScoped<IBannerRepository, BannerRepository>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<IImageVerifyRepository, ImageVerifyRepository>();
 builder.Services.AddScoped<ITransationRepository, TransationRepository>();
-
 builder.Services.AddScoped<IRecordPenaltyRepository, RecordPenaltyRepository>();
 
 builder.Configuration.AddUserSecrets<Program>(true);
