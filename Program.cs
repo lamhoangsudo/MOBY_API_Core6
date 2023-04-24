@@ -6,13 +6,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository;
-using System.Text.Json.Serialization;
-<<<<<<< HEAD
-=======
-using Azure.Identity;
 using MOBY_API_Core6.Repository.IRepository;
+using System.Text.Json.Serialization;
 
->>>>>>> master
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -64,13 +60,10 @@ builder.Services.AddScoped<IUserAddressRepository, UserAddressRepository>();
 builder.Services.AddScoped<IBannerRepository, BannerRepository>();
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 builder.Services.AddScoped<IImageVerifyRepository, ImageVerifyRepository>();
-<<<<<<< HEAD
 builder.Services.AddScoped<ITransationRepository, TransationRepository>();
-=======
+
 builder.Services.AddScoped<IRecordPenaltyRepository, RecordPenaltyRepository>();
 
-
->>>>>>> master
 builder.Configuration.AddUserSecrets<Program>(true);
 builder.Services.AddSwaggerGen(swagger =>
 {
