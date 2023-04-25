@@ -22,5 +22,11 @@ namespace MOBY_API_Core6.Models
         public string CategoryName { get; set; } = null!;
         public int SubCategoryId { get; set; }
         public string SubCategoryName { get; set; } = null!;
+        public double? MaxAge { get; set; }
+        public double? MinAge { get; set; }
+        public double? MaxWeight { get; set; }
+        public double? MinWeight { get; set; }
+        public double? MaxHeight { get; set; }
+        public double? MinHeight { get; set; }
     }
 }

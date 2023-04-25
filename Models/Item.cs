@@ -21,7 +21,6 @@ namespace MOBY_API_Core6.Models
         public string ItemDetailedDescription { get; set; } = null!;
         public double ItemMass { get; set; }
         public bool ItemSize { get; set; }
-        public string ItemQuanlity { get; set; } = null!;
         public double? ItemEstimateValue { get; set; }
         public double? ItemSalePrice { get; set; }
         public int ItemShareAmount { get; set; }
@@ -33,6 +32,12 @@ namespace MOBY_API_Core6.Models
         public bool Share { get; set; }
         public string Image { get; set; } = null!;
         public string? ReasonHiden { get; set; }
+        public double? MaxAge { get; set; }
+        public double? MinAge { get; set; }
+        public double? MaxWeight { get; set; }
+        public double? MinWeight { get; set; }
+        public double? MaxHeight { get; set; }
+        public double? MinHeight { get; set; }
 
         public virtual SubCategory SubCategory { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;

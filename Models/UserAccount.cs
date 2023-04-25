@@ -7,12 +7,14 @@ namespace MOBY_API_Core6.Models
     {
         public UserAccount()
         {
+            Babies = new HashSet<Baby>();
             Blogs = new HashSet<Blog>();
             Carts = new HashSet<Cart>();
             Comments = new HashSet<Comment>();
             Items = new HashSet<Item>();
             Orders = new HashSet<Order>();
             RecordPenaltyPoints = new HashSet<RecordPenaltyPoint>();
+            RecordSearches = new HashSet<RecordSearch>();
             Replies = new HashSet<Reply>();
             Reports = new HashSet<Report>();
             TransationLogs = new HashSet<TransationLog>();
@@ -39,12 +41,14 @@ namespace MOBY_API_Core6.Models
         public double? Balance { get; set; }
 
         public virtual Role Role { get; set; } = null!;
+        public virtual ICollection<Baby> Babies { get; set; }
         public virtual ICollection<Blog> Blogs { get; set; }
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Item> Items { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<RecordPenaltyPoint> RecordPenaltyPoints { get; set; }
+        public virtual ICollection<RecordSearch> RecordSearches { get; set; }
         public virtual ICollection<Reply> Replies { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
         public virtual ICollection<TransationLog> TransationLogs { get; set; }

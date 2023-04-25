@@ -16,6 +16,7 @@ namespace MOBY_API_Core6.Models
         {
         }
 
+        public virtual DbSet<Baby> Babies { get; set; } = null!;
         public virtual DbSet<Banner> Banners { get; set; } = null!;
         public virtual DbSet<Blog> Blogs { get; set; } = null!;
         public virtual DbSet<BlogCategory> BlogCategories { get; set; } = null!;
@@ -29,6 +30,7 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<Item> Items { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<RecordPenaltyPoint> RecordPenaltyPoints { get; set; } = null!;
+        public virtual DbSet<RecordSearch> RecordSearches { get; set; } = null!;
         public virtual DbSet<Reply> Replies { get; set; } = null!;
         public virtual DbSet<Report> Reports { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
@@ -48,6 +50,24 @@ namespace MOBY_API_Core6.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Baby>(entity =>
+            {
+                entity.HasKey(e => e.Idbaby)
+                    .HasName("PK_Baby");
+
+                entity.Property(e => e.Idbaby).HasColumnName("IDBaby");
+
+                entity.Property(e => e.DateOfBirth).HasColumnType("date");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Babies)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Baby_UserAccounts");
+            });
+
             modelBuilder.Entity<Banner>(entity =>
             {
                 entity.Property(e => e.BannerId).HasColumnName("BannerID");
@@ -250,8 +270,6 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemMass).HasColumnName("Item_Mass");
 
-                entity.Property(e => e.ItemQuanlity).HasColumnName("Item_Quanlity");
-
                 entity.Property(e => e.ItemSalePrice).HasColumnName("Item_Sale_Price");
 
                 entity.Property(e => e.ItemShareAmount).HasColumnName("Item_Share_Amount");
@@ -338,8 +356,6 @@ namespace MOBY_API_Core6.Models
 
                 entity.Property(e => e.ItemMass).HasColumnName("Item_Mass");
 
-                entity.Property(e => e.ItemQuanlity).HasColumnName("Item_Quanlity");
-
                 entity.Property(e => e.ItemSalePrice).HasColumnName("Item_Sale_Price");
 
                 entity.Property(e => e.ItemShareAmount).HasColumnName("Item_Share_Amount");
@@ -417,6 +433,25 @@ namespace MOBY_API_Core6.Models
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RecordPenaltyPoint_UserAccounts");
+            });
+
+            modelBuilder.Entity<RecordSearch>(entity =>
+            {
+                entity.ToTable("RecordSearch");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
+
+                entity.Property(e => e.SubCategoryId).HasColumnName("Sub_CategoryID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.RecordSearches)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RecordSearch_UserAccounts");
             });
 
             modelBuilder.Entity<Reply>(entity =>
