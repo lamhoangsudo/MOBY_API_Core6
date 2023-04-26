@@ -297,9 +297,7 @@ namespace Item.Controllers
         {
             try
             {
-                int? userID = null;
-                //userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
-                ListVM<BriefItem>? listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize, userID);
+                ListVM<BriefItem>? listAllShareFree = await _itemRepository.GetAllShareFree(pageNumber, pageSize);
                 if (listAllShareFree == null)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
@@ -308,18 +306,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    if (listAllShareFree.List.Count > 0)
-                    {
-                        return Ok(listAllShareFree);
-                    }
-                    else
-                    {
-#pragma warning disable CS8604 // Possible null reference argument.
-                        return NotFound(ReturnMessage.Create(ItemRepository.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
-                    }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    return Ok(listAllShareFree);
                 }
             }
             catch (Exception ex)
@@ -339,11 +326,6 @@ namespace Item.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
-                UserAccount? user = await _userRepository.FindUserByUid(userID);
-                if (user == null)
-                {
-                    return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
-                }
                 ListVM<BriefItem>? listAllMyShareAndRequest = await _itemRepository.GetAllMyShareAndRequest(userID, share, status, pageNumber, pageSize);
                 if (listAllMyShareAndRequest == null)
                 {
@@ -353,18 +335,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    if (listAllMyShareAndRequest.List.Count > 0)
-                    {
-                        return Ok(listAllMyShareAndRequest);
-                    }
-                    else
-                    {
-#pragma warning disable CS8604 // Possible null reference argument.
-                        return NotFound(ReturnMessage.Create(ItemRepository.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
-                    }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    return Ok(listAllMyShareAndRequest);
                 }
             }
             catch (Exception ex)
@@ -437,30 +408,13 @@ namespace Item.Controllers
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
             }
-            if (userID == 0)
-            {
-                return BadRequest(ReturnMessage.Create("Account has been suspended"));
-            }
-            UserAccount? user = await _userRepository.FindUserByUid(userID);
-            if (user == null)
-            {
-                return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
-            }
             try
             {
                 ListVM<BriefItem>? listAllOtherPersonRequestItem = await _itemRepository.GetListAllOtherPersonRequestItem(share, status, userID, pageNumber, pageSize);
                 if (listAllOtherPersonRequestItem != null)
                 {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    if (listAllOtherPersonRequestItem.List.Count > 0 && listAllOtherPersonRequestItem.List != null)
-                    {
-                        return Ok(listAllOtherPersonRequestItem);
-                    }
-                    else
-                    {
-                        return NotFound(ReturnMessage.Create("không có dữ liệu"));
-                    }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+
+                    return Ok(listAllOtherPersonRequestItem);
                 }
                 else
                 {
@@ -482,26 +436,67 @@ namespace Item.Controllers
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
             }
-            UserAccount? user = await _userRepository.FindUserByUid(userID);
-            if (user == null)
-            {
-                return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
-            }
             try
             {
                 ListVM<BriefItem>? listAllMyRequestItem = await _itemRepository.GetListAllMyRequestItem(share, status, userID, pageNumber, pageSize);
                 if (listAllMyRequestItem != null)
                 {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    if (listAllMyRequestItem.List.Count > 0 && listAllMyRequestItem.List != null)
-                    {
-                        return Ok(listAllMyRequestItem);
-                    }
-                    else
-                    {
-                        return NotFound(ReturnMessage.Create("không có dữ liệu"));
-                    }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                    return Ok(listAllMyRequestItem);
+                }
+                else
+                {
+                    return BadRequest(ItemRepository.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("CreateRecordUserSearch")]
+        public async Task<IActionResult> CreateRecordUserSearch(RecordSearchVM recordSearchVM)
+        {
+            int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            if (userID == 0)
+            {
+                return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
+            try
+            {
+                recordSearchVM.UserId = userID;
+                bool createRecordUserSearch = await _itemRepository.RecordUserSearch(recordSearchVM);
+                if (createRecordUserSearch)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(ItemRepository.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("GetListRecommend")]
+        public async Task<IActionResult> GetListRecommend(int pageNumber, int pageSize)
+        {
+            int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            if (userID == 0)
+            {
+                return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
+            try
+            {
+                ListVM<BriefItem>? listRecommendItem = await _itemRepository.GetListRecommend(userID, pageNumber, pageSize);
+                if (listRecommendItem != null)
+                {
+                    return Ok(listRecommendItem);
                 }
                 else
                 {

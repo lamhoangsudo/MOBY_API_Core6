@@ -69,7 +69,6 @@ namespace MOBY_API_Core6.Repository
                         ItemDetailedDescription = itemVM.itemDetailedDescription,
                         ItemMass = itemVM.itemMass,
                         ItemSize = itemVM.itemSize,
-                        ItemQuanlity = itemVM.itemQuanlity,
                         ItemEstimateValue = itemVM.itemEstimateValue,
                         ItemSalePrice = itemVM.itemSalePrice,
                         ItemShareAmount = itemVM.itemShareAmount,
@@ -375,8 +374,6 @@ namespace MOBY_API_Core6.Repository
                         currentItem.ItemDetailedDescription = itemVM.itemDetailedDescription;
                         currentItem.ItemMass = itemVM.itemMass;
                         currentItem.ItemSize = itemVM.itemSize;
-#pragma warning disable CS8601 // Possible null reference assignment.
-                        currentItem.ItemQuanlity = itemVM.itemQuanlity;
                         currentItem.ItemStatus = true;
 #pragma warning restore CS8601 // Possible null reference assignment.
                         currentItem.ItemEstimateValue = itemVM.itemEstimateValue;
@@ -479,7 +476,7 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<ListVM<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize, int? userID)
+        public async Task<ListVM<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize)
         {
             try
             {
@@ -491,10 +488,6 @@ namespace MOBY_API_Core6.Repository
                     && bfus.bf.ItemStatus == true
                     && bfus.bf.ItemSalePrice == 0
                     && bfus.us.UserStatus == true);
-                if (userID != null)
-                {
-                    query = query.Where(bfus => bfus.bf.UserId != userID);
-                }
                 query = query.OrderByDescending(bfus => bfus.bf.ItemDateCreated);
                 int total = query.Count();
                 int totalPage = total / pageSize;
@@ -816,6 +809,94 @@ namespace MOBY_API_Core6.Repository
                     ErrorMessage = "không có dữ liệu";
                 }
                 ListVM<BriefItem> listVM = new(total, totalPage, listBriefItemByUserID);
+                return listVM;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<bool> RecordUserSearch(RecordSearchVM recordSearchVM)
+        {
+            try
+            {
+                if (!(recordSearchVM.CategoryId == null && recordSearchVM.SubCategoryId == null && String.IsNullOrEmpty(recordSearchVM.TitleName.Trim())))
+                {
+                    RecordSearch? recordSearch = null;
+                    recordSearch = await _context.RecordSearches.Where(rs => rs.UserId == recordSearchVM.UserId && rs.CategoryId == recordSearchVM.CategoryId && rs.SubCategoryId == recordSearchVM.SubCategoryId && rs.TitleName == recordSearchVM.TitleName.Trim()).FirstOrDefaultAsync();
+                    if (recordSearch != null)
+                    {
+                        recordSearch.Count++;
+                    }
+                    else
+                    {
+                        recordSearch = new()
+                        {
+                            UserId = recordSearchVM.UserId,
+                            CategoryId = recordSearchVM.CategoryId,
+                            SubCategoryId = recordSearchVM.SubCategoryId,
+                            TitleName = recordSearchVM.TitleName.Trim()
+                        };
+                        await _context.AddAsync(recordSearch);
+                    }
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return false;
+            }
+        }
+
+        public async Task<ListVM<BriefItem>?> GetListRecommend(int userID, int pageNumber, int pageSize)
+        {
+            try
+            {
+                ListVM<BriefItem>? listVM = null;
+                RecordSearch? recordSearch = await _context.RecordSearches.Where(rs => rs.UserId == userID).OrderByDescending(rs => rs.Count).FirstOrDefaultAsync();
+                if (recordSearch != null)
+                {
+                    List<BriefItem> listListRecommend = new();
+                    int itemsToSkip = (pageNumber - 1) * pageSize;
+                    var query = _context.BriefItems
+                    .Where(bf => bf.Share == true && bf.ItemStatus == true && bf.UserId != userID);
+                    if (recordSearch.CategoryId != null)
+                    {
+                        query = query.Where(bf => bf.CategoryId == recordSearch.CategoryId);
+                        if (recordSearch.SubCategoryId != null)
+                        {
+                            query = query.Where(bf => bf.SubCategoryId == recordSearch.SubCategoryId);
+                        }
+                    }
+                    if (recordSearch.TitleName != null)
+                    {
+                        query = query.Where(bf => bf.ItemTitle.Contains(recordSearch.TitleName.Trim()));
+                    }
+                    int total = query.Count();
+                    int totalPage = total / pageSize;
+                    if (total % pageSize != 0)
+                    {
+                        ++totalPage;
+                    }
+                    listListRecommend = await query
+                        .OrderByDescending(bf => bf.ItemDateCreated)
+                        .Skip(itemsToSkip)
+                        .Take(pageSize)
+                        .ToListAsync();
+                    if (listListRecommend.Count == 0)
+                    {
+                        ErrorMessage = "không có dữ liệu";
+                    }
+                    listVM = new(total, totalPage, listListRecommend);
+                }
                 return listVM;
             }
             catch (Exception ex)

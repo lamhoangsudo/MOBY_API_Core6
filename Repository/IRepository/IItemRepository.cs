@@ -31,7 +31,7 @@ namespace MOBY_API_Core6.Repository.IRepository
 
         Task<ListVM<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int? userID);
 
-        Task<ListVM<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize, int? userID);
+        Task<ListVM<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize);
 
         Task<ListVM<BriefItem>?> GetAllMyShareAndRequest(int userID, bool share, bool status, int pageNumber, int pageSize);
 
@@ -43,8 +43,12 @@ namespace MOBY_API_Core6.Repository.IRepository
 
         Task<ListVM<BriefItem>?> GetListAllMyRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize);
 
-        public Task<List<int>> GetListItemIDByUserID(int userId);
+        Task<List<int>> GetListItemIDByUserID(int userId);
 
-        public Task<int> GetQuantityByItemID(int itemID);
+        Task<int> GetQuantityByItemID(int itemID);
+
+        Task<bool> RecordUserSearch(RecordSearchVM recordSearchVM);
+
+        Task<ListVM<BriefItem>?> GetListRecommend(int userID, int pageNumber, int pageSize);
     }
 }

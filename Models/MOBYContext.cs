@@ -437,7 +437,7 @@ namespace MOBY_API_Core6.Models
 
             modelBuilder.Entity<RecordSearch>(entity =>
             {
-                entity.ToTable("RecordSearch");
+                entity.ToTable("RecordSearchVM");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
