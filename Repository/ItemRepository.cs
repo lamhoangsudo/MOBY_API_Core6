@@ -194,12 +194,15 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<DetailItem?> GetItemDetail(int itemID)
+        public async Task<DetailItemVM?> GetItemDetail(int itemID)
         {
             try
             {
-                DetailItem? itemDetail = await _context.DetailItems
+                DetailItemVM? itemDetail = await _context.DetailItems
                     .Where(di => di.ItemId == itemID)
+                    .Select(di => new DetailItemVM {
+                        ItemShippingAddress = _JsonToObj.TransformJsonLocation(di.ItemShippingAddress)
+                    })
                     .FirstOrDefaultAsync();
                 return itemDetail;
             }
@@ -210,12 +213,16 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<DetailItemRequest?> GetRequestDetail(int itemID)
+        public async Task<DetailItemRequestVM?> GetRequestDetail(int itemID)
         {
             try
             {
-                DetailItemRequest? detailItemRequest = await _context.DetailItemRequests
+                DetailItemRequestVM? detailItemRequest = await _context.DetailItemRequests
                     .Where(dir => dir.ItemId == itemID)
+                    .Select(di => new DetailItemRequestVM
+                    {
+                        ItemShippingAddress = _JsonToObj.TransformJsonLocation(di.ItemShippingAddress)
+                    })
                     .FirstOrDefaultAsync();
                 return detailItemRequest;
 
@@ -375,11 +382,10 @@ namespace MOBY_API_Core6.Repository
                         currentItem.ItemMass = itemVM.itemMass;
                         currentItem.ItemSize = itemVM.itemSize;
                         currentItem.ItemStatus = true;
-#pragma warning restore CS8601 // Possible null reference assignment.
                         currentItem.ItemEstimateValue = itemVM.itemEstimateValue;
                         currentItem.ItemSalePrice = itemVM.itemSalePrice;
                         currentItem.ItemShareAmount = itemVM.itemShareAmount;
-                        currentItem.ItemShippingAddress = itemVM.itemShippingAddress;
+                        currentItem.ItemShippingAddress = _JsonToObj.TransformLocation(itemVM.itemShippingAddress);
                         currentItem.Image = itemVM.image;
                         currentItem.ItemExpiredTime = dateTimeExpired;
                         currentItem.ItemDateUpdate = dateTimeUpdate;

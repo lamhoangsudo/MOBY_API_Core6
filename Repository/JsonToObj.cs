@@ -17,19 +17,38 @@ namespace MOBY_API_Core6.Repository
                     location = "addressProvince:" + locationObject.AddressProvince;
                     if(locationObject.AddressDistrict != null)
                     {
-                        location = location + "," + "addressDistrict:" + locationObject.AddressDistrict;
+                        location = location + ";" + "addressDistrict:" + locationObject.AddressDistrict;
                         if(locationObject.AddressWard != null)
                         {
-                            location = location + "," + "addressWard:" + locationObject.AddressWard;
+                            location = location + ";" + "addressWard:" + locationObject.AddressWard;
                             if(locationObject.AddressDetail != null)
                             {
-                                location = location + "," + "addressDetail:" + locationObject.AddressDetail;
+                                location = location + ";" + "addressDetail:" + locationObject.AddressDetail;
                             }
                         }
                     }
                 }
             }
             return location;
+        }
+
+        public string? TransformJsonLocation(string stringLocation)
+        {
+            string? stringData = stringLocation
+                .Replace("addressProvince:", "")
+                .Replace("addressDistrict:", "")
+                .Replace("addressWard:", "")
+                .Replace("addressDetail:", "");
+            string[] data = stringData.Split(";");
+            Location location = new Location
+            {
+                AddressProvince = data[0],
+                AddressDistrict = data[1],
+                AddressWard = data[2],
+                AddressDetail = data[3]
+            };
+            string jsonLocation = JsonConvert.SerializeObject(location);
+            return jsonLocation;
         }
     }
 }

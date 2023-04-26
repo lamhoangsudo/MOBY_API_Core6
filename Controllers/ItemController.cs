@@ -68,7 +68,7 @@ namespace Item.Controllers
         {
             try
             {
-                DetailItem? itemDetail = await _itemRepository.GetItemDetail(itemID);
+                DetailItemVM? itemDetail = await _itemRepository.GetItemDetail(itemID);
                 if (itemDetail == null)
                 {
                     return NotFound(ReturnMessage.Create("sản phẩm này không tồn tại"));
@@ -89,7 +89,7 @@ namespace Item.Controllers
         {
             try
             {
-                DetailItemRequest? itemRequestDetail = await _itemRepository.GetRequestDetail(itemID);
+                DetailItemRequestVM? itemRequestDetail = await _itemRepository.GetRequestDetail(itemID);
                 if (itemRequestDetail == null)
                 {
                     return NotFound(ReturnMessage.Create("yêu cầu này không tồn tại"));
