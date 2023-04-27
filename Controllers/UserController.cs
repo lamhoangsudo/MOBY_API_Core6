@@ -13,11 +13,13 @@ namespace MOBY_API_Core6.Controllers
         private readonly IUserRepository userDAO;
 
         private readonly ITransationRepository transationRepository;
-        public UserController(IUserRepository userDao, ITransationRepository transationRepository)
+
+        private readonly IBabyRepository babyRepository;
+        public UserController(IUserRepository userDao, ITransationRepository transationRepository, IBabyRepository babyRepository)
         {
             this.userDAO = userDao;
-
             this.transationRepository = transationRepository;
+            this.babyRepository = babyRepository;
         }
         [Authorize]
         [HttpPost]
@@ -262,6 +264,82 @@ namespace MOBY_API_Core6.Controllers
 
                 return Ok(userAccountVM);
 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("InputInformationBaby")]
+        public async Task<IActionResult> InputInformationBaby([FromBody] BabyVM babyVM)
+        {
+            try
+            {
+                int userID = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (userID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                bool checkInput = await babyRepository.InputInformationBaby(babyVM);
+                if (checkInput)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut("UpdateInformationBaby")]
+        public async Task<IActionResult> UpdateInformationBaby([FromBody] UpdateBabyVM babyVM)
+        {
+            try
+            {
+                bool checkInput = await babyRepository.UpdateInformationBaby(babyVM);
+                if (checkInput)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpGet("GetBabyByUserID")]
+        public async Task<IActionResult> GetBabyByUserID()
+        {
+            try
+            {
+                int userID = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (userID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                List<Baby>? babies = await babyRepository.GetBabyByUserID(userID);
+                if (babies != null)
+                {
+                    return Ok(babies);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             catch (Exception ex)
             {
