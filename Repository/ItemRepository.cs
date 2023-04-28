@@ -59,11 +59,11 @@ namespace MOBY_API_Core6.Repository
                             return false;
                         }
                     }
-                    if(_JsonToObj.TransformLocation(itemVM.itemShippingAddress) != null)
+                    if(_JsonToObj.TransformLocation(itemVM.itemShippingAddress) == null)
                     {
                         return false;
                     }
-                    if(itemVM.MaxAge < itemVM.MinAge || itemVM.MaxWeight < itemVM.MinWeight || itemVM.MaxHeight < itemVM.MinHeight || itemVM.MinWeight <= 2.9 || itemVM.MinHeight <= 50)
+                    if (itemVM.MaxAge < itemVM.MinAge || itemVM.MaxWeight < itemVM.MinWeight || itemVM.MaxHeight < itemVM.MinHeight || itemVM.MinAge < 0 || itemVM.MinWeight < 0 || itemVM.MinHeight < 0)
                     {
                         return false;
                     }
@@ -368,7 +368,7 @@ namespace MOBY_API_Core6.Repository
                         ErrorMessage = "danh mục bạn chọn không còn tồn tại trong dữ liệu, mong bạn chọn danh mục khác";
                         return false;
                     }
-                    if (itemVM.MaxAge < itemVM.MinAge || itemVM.MaxWeight < itemVM.MinWeight || itemVM.MaxHeight < itemVM.MinHeight || itemVM.MinWeight <= 2.9 || itemVM.MinHeight <= 50)
+                    if (itemVM.MaxAge < itemVM.MinAge || itemVM.MaxWeight < itemVM.MinWeight || itemVM.MaxHeight < itemVM.MinHeight || itemVM.MinAge < 0 || itemVM.MinWeight < 0 || itemVM.MinHeight < 0)
                     {
                         return false;
                     }
