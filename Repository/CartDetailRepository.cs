@@ -170,7 +170,7 @@ namespace MOBY_API_Core6.Repository
             }
             if (countLeft <= 0)
             {
-                return "đã vượt quá giới hạn lượt nhận trong tuần";
+                return "Bạn đã vượt quá giới hạn lượt nhận trong tuần, vui lòng thử lại khi khác";
             }
             if (countLeft == 7)
             {
@@ -178,12 +178,11 @@ namespace MOBY_API_Core6.Repository
             }
             int cartDetailFree = await context.CartDetails
                 .Include(cd => cd.Item)
-                .ThenInclude(i => i.User)
                 .Where(cd => listCartDetailID.Contains(cd.CartDetailId) && cd.Item.ItemSalePrice == 0)
                 .CountAsync();
             if (cartDetailFree > countLeft)
             {
-                return "bạn đã nhận " + countLeft + "/7 sản phẩm trong tuần, bạn không thể nhận thêm " + cartDetailFree + " sản phẩm";
+                return "Bạn đã nhận " + countLeft + "/7 sản phẩm trong tuần, bạn không thể nhận thêm " + cartDetailFree + " sản phẩm, vui lòng thử lại khi khác";
             }
 
 
