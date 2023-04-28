@@ -508,5 +508,32 @@ namespace Item.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpGet("GetListRecommendByBaby")]
+        public async Task<IActionResult> GetListRecommendByBaby(int babyID, int pageNumber, int pageSize, bool age, bool weight, bool height)
+        {
+            int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            if (userID == 0)
+            {
+                return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
+            try
+            {
+                ListVM<BriefItem>? listRecommendItemByBaby = await _itemRepository.GetListRecommendByBaby(babyID, userID, pageNumber, pageSize, age, weight, height);
+                if (listRecommendItemByBaby != null)
+                {
+                    return Ok(listRecommendItemByBaby);
+                }
+                else
+                {
+                    return BadRequest(ItemRepository.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }

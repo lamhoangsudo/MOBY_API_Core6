@@ -3,6 +3,9 @@ using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
 using Newtonsoft.Json;
+using NodaTime;
+using NodaTime.Extensions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -59,6 +62,10 @@ namespace MOBY_API_Core6.Repository
                     {
                         return false;
                     }
+                    if(itemVM.MaxAge < itemVM.MinAge || itemVM.MaxWeight < itemVM.MinWeight || itemVM.MaxHeight < itemVM.MinHeight || itemVM.MinWeight <= 2.9 || itemVM.MinHeight <= 50)
+                    {
+                        return false;
+                    }
                     string itemCode = Guid.NewGuid().ToString();
                     Models.Item item = new()
                     {
@@ -74,6 +81,12 @@ namespace MOBY_API_Core6.Repository
                         ItemShareAmount = itemVM.itemShareAmount,
                         ItemExpiredTime = dateTimeExpired,
                         ItemShippingAddress = _JsonToObj.TransformLocation(itemVM.itemShippingAddress),
+                        MaxAge = itemVM.MaxAge,
+                        MinAge = itemVM.MinAge,
+                        MaxHeight = itemVM.MaxHeight,
+                        MinHeight = itemVM.MinHeight,
+                        MaxWeight = itemVM.MaxWeight,
+                        MinWeight = itemVM.MinWeight,
                         ItemDateCreated = dateTimeCreate,
                         ItemStatus = true,
                         Share = itemVM.share,
@@ -386,6 +399,12 @@ namespace MOBY_API_Core6.Repository
                         currentItem.ItemSalePrice = itemVM.itemSalePrice;
                         currentItem.ItemShareAmount = itemVM.itemShareAmount;
                         currentItem.ItemShippingAddress = _JsonToObj.TransformLocation(itemVM.itemShippingAddress);
+                        currentItem.MaxAge = itemVM.MaxAge;
+                        currentItem.MinAge = itemVM.MinAge;
+                        currentItem.MaxHeight = itemVM.MaxHeight;
+                        currentItem.MinHeight = itemVM.MinHeight;
+                        currentItem.MaxWeight = itemVM.MaxWeight;
+                        currentItem.MinWeight = itemVM.MinWeight;
                         currentItem.Image = itemVM.image;
                         currentItem.ItemExpiredTime = dateTimeExpired;
                         currentItem.ItemDateUpdate = dateTimeUpdate;
@@ -894,6 +913,64 @@ namespace MOBY_API_Core6.Repository
                     }
                     listListRecommend = await query
                         .OrderByDescending(bf => bf.ItemDateCreated)
+                        .Skip(itemsToSkip)
+                        .Take(pageSize)
+                        .ToListAsync();
+                    if (listListRecommend.Count == 0)
+                    {
+                        ErrorMessage = "không có dữ liệu";
+                    }
+                    listVM = new(total, totalPage, listListRecommend);
+                }
+                return listVM;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
+        }
+
+        public async Task<ListVM<BriefItem>?> GetListRecommendByBaby(int babyID, int userID, int pageNumber, int pageSize, bool age, bool weight, bool height)
+        {
+            try
+            {
+                ListVM<BriefItem>? listVM = null;
+                Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == babyID && bb.UserId == userID).FirstOrDefaultAsync();
+                if (baby != null)
+                {
+                    List<BriefItem> listListRecommend = new();
+                    int itemsToSkip = (pageNumber - 1) * pageSize;
+                    var query = _context.BriefItems
+                    .Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new {bf, it})
+                    .Where(bfit => bfit.bf.Share == true 
+                    && bfit.bf.ItemStatus == true 
+                    && bfit.bf.UserId != userID);
+                    if(age)
+                    {
+                        LocalDateTime now = DateTime.Now.ToLocalDateTime();
+                        LocalDateTime babyBirth = baby.DateOfBirth.ToLocalDateTime();
+                        Period period = Period.Between(babyBirth, now, PeriodUnits.Months);
+                        int monthsAge = period.Months;
+                        query = query.Where(bfit => bfit.it.MaxAge >= monthsAge && bfit.it.MinAge <= monthsAge);
+                    }
+                    if (weight)
+                    {
+                        query = query.Where(bfit => bfit.it.MaxWeight >= baby.Weight && bfit.it.MinWeight <= baby.Weight);
+                    }
+                    if (height)
+                    {
+                        query = query.Where(bfit => bfit.it.MaxHeight >= baby.Height && bfit.it.MinHeight <= baby.Height);
+                    }
+                    int total = query.Count();
+                    int totalPage = total / pageSize;
+                    if (total % pageSize != 0)
+                    {
+                        ++totalPage;
+                    }
+                    listListRecommend = await query
+                        .OrderByDescending(bfit => bfit.bf.ItemDateCreated)
+                        .Select(bfit => bfit.bf)
                         .Skip(itemsToSkip)
                         .Take(pageSize)
                         .ToListAsync();

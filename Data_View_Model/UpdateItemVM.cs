@@ -35,8 +35,20 @@ namespace MOBY_API_Core6.Data_View_Model
         public string? stringDateTimeExpired { get; set; }
         [DefaultValue(true)]
         public bool share { get; set; }
+        [DefaultValue(null)]
+        public double? MaxAge { get; set; }
+        [DefaultValue(null)]
+        public double? MinAge { get; set; }
+        [DefaultValue(null)]
+        public double? MaxWeight { get; set; }
+        [DefaultValue(null)]
+        public double? MinWeight { get; set; }
+        [DefaultValue(null)]
+        public double? MaxHeight { get; set; }
+        [DefaultValue(null)]
+        public double? MinHeight { get; set; }
 
-        public UpdateItemVM(int userId, int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string? itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, string itemShippingAddress, string image, string? stringDateTimeExpired, bool share)
+        public UpdateItemVM(int userId, int itemID, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string? itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, string itemShippingAddress, string image, string? stringDateTimeExpired, bool share, double? maxAge, double? minAge, double? maxWeight, double? minWeight, double? maxHeight, double? minHeight)
         {
             this.userId = userId;
             this.itemID = itemID;
@@ -53,6 +65,12 @@ namespace MOBY_API_Core6.Data_View_Model
             this.image = image;
             this.stringDateTimeExpired = stringDateTimeExpired;
             this.share = share;
+            MaxAge = maxAge;
+            MinAge = minAge;
+            MaxWeight = maxWeight;
+            MinWeight = minWeight;
+            MaxHeight = maxHeight;
+            MinHeight = minHeight;
         }
     }
 }

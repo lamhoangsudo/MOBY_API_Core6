@@ -50,5 +50,7 @@ namespace MOBY_API_Core6.Repository.IRepository
         Task<bool> RecordUserSearch(RecordSearchVM recordSearchVM);
 
         Task<ListVM<BriefItem>?> GetListRecommend(int userID, int pageNumber, int pageSize);
+
+        Task<ListVM<BriefItem>?> GetListRecommendByBaby(int babyID, int userID, int pageNumber, int pageSize, bool age, bool weight, bool height);
     }
 }

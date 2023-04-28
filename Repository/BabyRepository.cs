@@ -2,6 +2,8 @@
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
+using NodaTime.Extensions;
+using NodaTime;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -16,6 +18,13 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
+                LocalDateTime now = DateTime.Now.ToLocalDateTime();
+                LocalDateTime babyBirth = babyVM.DateOfBirth.ToLocalDateTime();
+                Period period = Period.Between(babyBirth, now, PeriodUnits.Months);
+                int monthsAge = period.Months;
+                if (monthsAge <= 0) {
+                    return false;
+                }
                 Baby baby = new()
                 {
                     UserId = babyVM.UserId,
@@ -39,6 +48,14 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == babyVM.Idbaby).FirstOrDefaultAsync();
+                LocalDateTime now = DateTime.Now.ToLocalDateTime();
+                LocalDateTime babyBirth = babyVM.DateOfBirth.ToLocalDateTime();
+                Period period = Period.Between(babyBirth, now, PeriodUnits.Months);
+                int monthsAge = period.Months;
+                if (monthsAge <= 0)
+                {
+                    return false;
+                }
                 if (baby != null)
                 {
                     baby.Sex = babyVM.Sex;
