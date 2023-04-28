@@ -172,9 +172,11 @@ namespace MOBY_API_Core6.Controllers
                 }
                 String result = await cartDetailDAO.CheckCartDetail(listCartDetailID, uid);
 
-
-                return Ok(result);
-
+                if (result.Equals("success"))
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
 
             }
             catch (Exception ex)
