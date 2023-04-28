@@ -5,6 +5,7 @@ using MOBY_API_Core6.Repository.IRepository;
 using Newtonsoft.Json;
 using NodaTime;
 using NodaTime.Extensions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace MOBY_API_Core6.Repository
@@ -890,10 +891,12 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 ListVM<BriefItem>? listVM = null;
+                List<BriefItem> listListRecommend = new();
+                int total = 0;
+                int totalPage = 0;
                 RecordSearch? recordSearch = await _context.RecordSearches.Where(rs => rs.UserId == userID).OrderByDescending(rs => rs.Count).FirstOrDefaultAsync();
                 if (recordSearch != null)
                 {
-                    List<BriefItem> listListRecommend = new();
                     int itemsToSkip = (pageNumber - 1) * pageSize;
                     var query = _context.BriefItems
                     .Where(bf => bf.Share == true && bf.ItemStatus == true && bf.UserId != userID);
@@ -909,8 +912,8 @@ namespace MOBY_API_Core6.Repository
                     {
                         query = query.Where(bf => bf.ItemTitle.Contains(recordSearch.TitleName.Trim()));
                     }
-                    int total = query.Count();
-                    int totalPage = total / pageSize;
+                    total = query.Count();
+                    totalPage = total / pageSize;
                     if (total % pageSize != 0)
                     {
                         ++totalPage;
@@ -920,12 +923,8 @@ namespace MOBY_API_Core6.Repository
                         .Skip(itemsToSkip)
                         .Take(pageSize)
                         .ToListAsync();
-                    if (listListRecommend.Count == 0)
-                    {
-                        ErrorMessage = "không có dữ liệu";
-                    }
-                    listVM = new(total, totalPage, listListRecommend);
                 }
+                listVM = new(total, totalPage, listListRecommend);
                 return listVM;
             }
             catch (Exception ex)
