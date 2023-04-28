@@ -977,10 +977,6 @@ namespace MOBY_API_Core6.Repository
                         .Skip(itemsToSkip)
                         .Take(pageSize)
                         .ToListAsync();
-                    if (listListRecommend.Count == 0)
-                    {
-                        ErrorMessage = "không có dữ liệu";
-                    }
                     listVM = new(total, totalPage, listListRecommend);
                 }
                 return listVM;
