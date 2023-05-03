@@ -182,7 +182,7 @@ namespace MOBY_API_Core6.Repository
                 .CountAsync();
             if (cartDetailFree > countLeft)
             {
-                return "Bạn đã nhận " + countLeft + "/7 sản phẩm trong tuần, bạn không thể nhận thêm " + cartDetailFree + " sản phẩm, vui lòng thử lại khi khác";
+                return "Bạn đã nhận " + (7 - countLeft) + "/7 sản phẩm trong tuần, bạn không thể nhận thêm " + cartDetailFree + " sản phẩm, vui lòng thử lại khi khác";
             }
 
 

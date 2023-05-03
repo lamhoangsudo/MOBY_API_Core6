@@ -11,8 +11,8 @@ namespace MOBY_API_Core6.Data_View_Model
         public string CommentContent { get; set; } = null!;
         public DateTime DateCreate { get; set; }
         public DateTime? DateUpdate { get; set; }
-        public bool EditStatus { get; set; }
-        public bool CommentStatus { get; set; }
+        public bool? Status { get; set; }
+        public string? ReasonHiden { get; set; }
         public UserVM? UserVM { get; set; }
         public List<ReplyVM>? ListReply { get; set; }
 
@@ -28,6 +28,8 @@ namespace MOBY_API_Core6.Data_View_Model
                 CommentContent = cmt.CommentContent,
                 DateCreate = cmt.DateCreate,
                 DateUpdate = cmt.DateUpdate,
+                Status = cmt.Status,
+                ReasonHiden = cmt.ReasonHiden
             };
             var user = cmt.User;
             commendVM.UserVM = UserVM.UserAccountToVewModel(user);

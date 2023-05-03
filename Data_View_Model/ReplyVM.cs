@@ -10,8 +10,8 @@ namespace MOBY_API_Core6.Data_View_Model
         public string ReplyContent { get; set; } = null!;
         public DateTime DateCreate { get; set; }
         public DateTime? DateUpdate { get; set; }
-        public bool EditStatus { get; set; }
-        public bool ReplyStatus { get; set; }
+        public bool? Status { get; set; }
+        public string? ReasonHiden { get; set; }
         public UserVM? UserVM { get; set; }
 
         public static ReplyVM ReplyToVewModel(Reply rep)
@@ -24,6 +24,8 @@ namespace MOBY_API_Core6.Data_View_Model
                 ReplyContent = rep.ReplyContent,
                 DateCreate = rep.DateCreate,
                 DateUpdate = rep.DateUpdate,
+                Status = rep.Status,
+                ReasonHiden = rep.ReasonHiden,
             };
             var user = rep.User;
             replyVM.UserVM = UserVM.UserAccountToVewModel(user);
