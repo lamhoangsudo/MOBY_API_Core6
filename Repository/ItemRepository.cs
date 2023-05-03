@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Category.Data_View_Model;
+using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
@@ -215,9 +216,35 @@ namespace MOBY_API_Core6.Repository
                 DetailItemVM? itemDetail = await _context.DetailItems
                     .Where(di => di.ItemId == itemID)
                     .Select(di => new DetailItemVM {
-                        ItemShippingAddress = _JsonToObj.TransformJsonLocation(di.ItemShippingAddress)
+                         ItemId = di.ItemId,
+                         ItemCode = di.ItemCode, 
+                         ItemTitle = di.ItemTitle, 
+                         ItemDetailedDescription = di.ItemDetailedDescription, 
+                         ItemMass = di.ItemMass, 
+                         ItemSize = di.ItemSize, 
+                         ItemEstimateValue = di.ItemEstimateValue, 
+                         ItemSalePrice = di.ItemSalePrice, 
+                         ItemShareAmount = di.ItemShareAmount, 
+                         ItemExpiredTime = di.ItemExpiredTime,
+                         ItemShippingAddress = _JsonToObj.TransformJsonLocation(di.ItemShippingAddress),
+                         ItemDateCreated = di.ItemDateCreated, 
+                         ItemStatus = di.ItemStatus, 
+                         Share = di.Share, 
+                         Image = di.Image, 
+                         UserName = di.UserName, 
+                         UserId = di.UserId, 
+                         SubCategoryId = di.SubCategoryId, 
+                         SubCategoryName = di.SubCategoryName, 
+                         CategoryId = di.CategoryId, 
+                         CategoryName = di.CategoryName, 
+                         MaxAge = di.MaxAge, 
+                         MinAge = di.MinAge, 
+                         MaxWeight = di.MaxWeight, 
+                         MinWeight = di.MinWeight, 
+                         MinHeight = di.MinHeight, 
+                         MaxHeight = di.MaxHeight,
                     })
-                    .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync();
                 return itemDetail;
             }
             catch (Exception ex)
@@ -235,7 +262,29 @@ namespace MOBY_API_Core6.Repository
                     .Where(dir => dir.ItemId == itemID)
                     .Select(di => new DetailItemRequestVM
                     {
-                        ItemShippingAddress = _JsonToObj.TransformJsonLocation(di.ItemShippingAddress)
+                        ItemId = di.ItemId,
+                        ItemCode = di.ItemCode,
+                        ItemTitle = di.ItemTitle,
+                        ItemDetailedDescription = di.ItemDetailedDescription,
+                        ItemShareAmount = di.ItemShareAmount,
+                        ItemExpiredTime = di.ItemExpiredTime,
+                        ItemShippingAddress = _JsonToObj.TransformJsonLocation(di.ItemShippingAddress),
+                        ItemDateCreated = di.ItemDateCreated,
+                        ItemStatus = di.ItemStatus,
+                        Share = di.Share,
+                        Image = di.Image,
+                        UserName = di.UserName,
+                        UserId = di.UserId,
+                        SubCategoryId = di.SubCategoryId,
+                        SubCategoryName = di.SubCategoryName,
+                        CategoryId = di.CategoryId,
+                        CategoryName = di.CategoryName,
+                        MaxAge = di.MaxAge,
+                        MinAge = di.MinAge,
+                        MaxWeight = di.MaxWeight,
+                        MinWeight = di.MinWeight,
+                        MinHeight = di.MinHeight,
+                        MaxHeight = di.MaxHeight,
                     })
                     .FirstOrDefaultAsync();
                 return detailItemRequest;
