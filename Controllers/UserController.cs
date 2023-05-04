@@ -281,6 +281,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
                 bool checkInput = await babyRepository.InputInformationBaby(babyVM);
                 if (checkInput)
                 {

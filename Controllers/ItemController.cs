@@ -326,6 +326,10 @@ namespace Item.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
+                if (userID == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
                 ListVM<BriefItem>? listAllMyShareAndRequest = await _itemRepository.GetAllMyShareAndRequest(userID, share, status, pageNumber, pageSize);
                 if (listAllMyShareAndRequest == null)
                 {
@@ -354,6 +358,10 @@ namespace Item.Controllers
                 if (userID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (userID == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
                 }
                 UserAccount? user = await _userRepository.FindUserByUid(userID);
                 if (user == null)
@@ -408,6 +416,10 @@ namespace Item.Controllers
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
             }
+            if (userID == -1)
+            {
+                return BadRequest(ReturnMessage.Create("Account not found"));
+            }
             try
             {
                 ListVM<BriefItem>? listAllOtherPersonRequestItem = await _itemRepository.GetListAllOtherPersonRequestItem(share, status, userID, pageNumber, pageSize);
@@ -436,6 +448,10 @@ namespace Item.Controllers
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
             }
+            if (userID == -1)
+            {
+                return BadRequest(ReturnMessage.Create("Account not found"));
+            }
             try
             {
                 ListVM<BriefItem>? listAllMyRequestItem = await _itemRepository.GetListAllMyRequestItem(share, status, userID, pageNumber, pageSize);
@@ -462,6 +478,10 @@ namespace Item.Controllers
             if (userID == 0)
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
+            if (userID == -1)
+            {
+                return BadRequest(ReturnMessage.Create("Account not found"));
             }
             try
             {
@@ -491,6 +511,10 @@ namespace Item.Controllers
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
             }
+            if (userID == -1)
+            {
+                return BadRequest(ReturnMessage.Create("Account not found"));
+            }
             try
             {
                 ListVM<BriefItem>? listRecommendItem = await _itemRepository.GetListRecommend(userID, pageNumber, pageSize);
@@ -517,6 +541,10 @@ namespace Item.Controllers
             if (userID == 0)
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
+            if (userID == -1)
+            {
+                return BadRequest(ReturnMessage.Create("Account not found"));
             }
             try
             {
