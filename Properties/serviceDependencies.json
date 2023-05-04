@@ -13,10 +13,6 @@
       "type": "mssql",
       "connectionId": "ConnectionStrings:MobyDBLocallam"
     },
-    "signalr1": {
-      "type": "signalr",
-      "connectionId": "Azure:SignalR:ConnectionString"
-    },
     "mssql2": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:MobyDBAzure55"
@@ -24,6 +20,10 @@
     "secrets1": {
       "type": "secrets",
       "connectionId": "VaultUri"
+    },
+    "signalr1": {
+      "ignored": "true",
+      "type": "signalr"
     }
   }
 }

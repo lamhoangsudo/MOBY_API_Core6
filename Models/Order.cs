@@ -25,6 +25,7 @@ namespace MOBY_API_Core6.Models
         public string? TransactionNo { get; set; }
         public string? CardType { get; set; }
         public string? BankCode { get; set; }
+        public string? TransactionDate { get; set; }
 
         public virtual Item Item { get; set; } = null!;
         public virtual UserAccount User { get; set; } = null!;

@@ -456,7 +456,7 @@ namespace Item.Controllers
 
         [Authorize]
         [HttpPost("CreateRecordUserSearch")]
-        public async Task<IActionResult> CreateRecordUserSearch(RecordSearchVM recordSearchVM)
+        public async Task<IActionResult> CreateRecordUserSearch([FromBody] RecordSearchVM recordSearchVM)
         {
             int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             if (userID == 0)
@@ -465,7 +465,7 @@ namespace Item.Controllers
             }
             try
             {
-                recordSearchVM.UserId = userID;
+                recordSearchVM.UserId = 5;
                 bool createRecordUserSearch = await _itemRepository.RecordUserSearch(recordSearchVM);
                 if (createRecordUserSearch)
                 {

@@ -901,10 +901,23 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                if (!(recordSearchVM.CategoryId == null && recordSearchVM.SubCategoryId == null && String.IsNullOrEmpty(recordSearchVM.TitleName.Trim())))
+                if (!(recordSearchVM.CategoryId == null && recordSearchVM.SubCategoryId == null && String.IsNullOrEmpty(recordSearchVM.TitleName) && String.IsNullOrWhiteSpace(recordSearchVM.TitleName)))
                 {
                     RecordSearch? recordSearch = null;
-                    recordSearch = await _context.RecordSearches.Where(rs => rs.UserId == recordSearchVM.UserId && rs.CategoryId == recordSearchVM.CategoryId && rs.SubCategoryId == recordSearchVM.SubCategoryId && rs.TitleName == recordSearchVM.TitleName.Trim()).FirstOrDefaultAsync();
+                    var query = _context.RecordSearches.Where(rs => rs.UserId == recordSearchVM.UserId);
+                    if (recordSearchVM.CategoryId != null)
+                    {
+                        query = query.Where(rs => rs.CategoryId == recordSearchVM.CategoryId);
+                    }
+                    if (recordSearchVM.SubCategoryId != null)
+                    {
+                        query = query.Where(rs => rs.SubCategoryId == recordSearchVM.SubCategoryId);
+                    }
+                    if (!String.IsNullOrEmpty(recordSearchVM.TitleName) && !String.IsNullOrWhiteSpace(recordSearchVM.TitleName))
+                    {
+                        query = query.Where(rs => rs.TitleName == recordSearchVM.TitleName.Trim());
+                    }
+                    recordSearch = await query.FirstOrDefaultAsync();
                     if (recordSearch != null)
                     {
                         recordSearch.Count++;
@@ -916,9 +929,10 @@ namespace MOBY_API_Core6.Repository
                             UserId = recordSearchVM.UserId,
                             CategoryId = recordSearchVM.CategoryId,
                             SubCategoryId = recordSearchVM.SubCategoryId,
-                            TitleName = recordSearchVM.TitleName.Trim()
+                            Count = 1,
+                            TitleName = recordSearchVM.TitleName
                         };
-                        await _context.AddAsync(recordSearch);
+                        await _context.RecordSearches.AddAsync(recordSearch);
                     }
                     await _context.SaveChangesAsync();
                     return true;
