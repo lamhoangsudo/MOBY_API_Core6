@@ -231,6 +231,7 @@ namespace MOBY_API_Core6.Repository
                 newOrder.Quantity = cartDetail.ItemQuantity;
                 newOrder.Price = cartDetail.Item.ItemSalePrice!.Value;
                 newOrder.TransactionNo = cartDetailIDList.vnp_TransactionNo;
+                newOrder.TransactionDate = cartDetailIDList.TransactionDate;
                 newOrder.CardType = cartDetailIDList.vnp_CardType;
                 newOrder.BankCode = cartDetailIDList.vnp_BankCode;
                 context.Orders.Add(newOrder);
