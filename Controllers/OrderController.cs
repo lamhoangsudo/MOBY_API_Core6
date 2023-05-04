@@ -31,6 +31,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
                 List<OrderBriefVM> listOrder = await orderDAO.GetOrderByRecieverID(uid, pagging, orderStatusVM);
                 int total = await orderDAO.GetOrderByRecieverIDCount(uid, orderStatusVM);
                 PaggingReturnVM<OrderBriefVM> result = new PaggingReturnVM<OrderBriefVM>(listOrder, pagging, total);
@@ -55,6 +59,10 @@ namespace MOBY_API_Core6.Controllers
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
                 }
                 List<OrderBriefVM> listOrder = await orderDAO.GetOrderBySharerID(uid, pagging, orderStatusVM);
                 int total = await orderDAO.GetOrderBySharerIDCount(uid, orderStatusVM);
@@ -166,6 +174,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
                 Order? currentOrder = await orderDAO.GetOrderByOrderID(updateOrderVM.OrderId);
                 if (currentOrder == null)
                 {
@@ -209,6 +221,56 @@ namespace MOBY_API_Core6.Controllers
                 }
 
                 return BadRequest(ReturnMessage.Create("error at UpdateOrder"));
+
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut]
+        [Route("api/order/cancel")]
+        public async Task<IActionResult> CancelOrder([FromBody] CancelOrderVM cancelOrdervm)
+        {
+            try
+            {
+                if (cancelOrdervm.ReasonCancel == null || cancelOrdervm.ReasonCancel.Equals(""))
+                {
+                    return BadRequest(ReturnMessage.Create("must have reseaon to cancel"));
+                }
+                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (uid == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
+                Order? currentOrder = await orderDAO.GetOrderByOrderID(cancelOrdervm.OrderId);
+                if (currentOrder == null)
+                {
+                    return BadRequest(ReturnMessage.Create("order not found"));
+                }
+
+                bool pernament = true;
+                TimeSpan totalDays = DateTime.Now - currentOrder.DateCreate;
+                int totalDaysint = Convert.ToInt32(totalDays.TotalDays);
+                if (totalDaysint >= 7)
+                {
+                    pernament = false;
+                }
+
+                if (await orderDAO.cancelOrder(currentOrder, cancelOrdervm.ReasonCancel, uid, pernament))
+                {
+
+                    return Ok(ReturnMessage.Create("success"));
+                }
+
+                return BadRequest(ReturnMessage.Create("error at cancelOrder"));
 
 
             }

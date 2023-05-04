@@ -27,6 +27,10 @@ namespace MOBY_API_Core6.Controllers
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
             }
+            if (currentUid == -1)
+            {
+                return BadRequest(ReturnMessage.Create("Account not found"));
+            }
             if (await cartDAO.CheackExistedCartByUid(currentUid))
             {
                 return Ok(ReturnMessage.Create("this user already has a cart"));
@@ -47,6 +51,10 @@ namespace MOBY_API_Core6.Controllers
             if (currentUid == 0)
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
+            if (currentUid == -1)
+            {
+                return BadRequest(ReturnMessage.Create("Account not found"));
             }
             var currenCart = await cartDAO.GetCartByUid(currentUid);
             if (currenCart == null)
@@ -69,6 +77,10 @@ namespace MOBY_API_Core6.Controllers
             if (currentUid == 0)
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
+            }
+            if (currentUid == -1)
+            {
+                return BadRequest(ReturnMessage.Create("Account not found"));
             }
             Data_View_Model.CartVM? currentCart = await cartDAO.GetCartVMByUid(currentUid);
             return Ok(currentCart);

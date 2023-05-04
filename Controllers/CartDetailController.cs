@@ -63,6 +63,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
+                if (currentUid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
                 String check = await cartDetailDAO.CheclExistCartDetail(createdRequestDetail);
                 if (check.Equals("succes"))
                 {
@@ -165,6 +169,10 @@ namespace MOBY_API_Core6.Controllers
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
                 }
                 if (listCartDetailID == null || listCartDetailID.Length == 0)
                 {

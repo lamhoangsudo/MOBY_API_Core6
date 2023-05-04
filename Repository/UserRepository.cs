@@ -68,13 +68,17 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<int> getUserIDByUserCode(String userCode)// nay laf tren token
         {
-            UserAccount? Userfound = await context.UserAccounts.Where(u => u.UserCode == userCode && u.UserStatus == true).FirstOrDefaultAsync();
+            UserAccount? Userfound = await context.UserAccounts.Where(u => u.UserCode == userCode).FirstOrDefaultAsync();
             if (Userfound != null)
             {
+                if (Userfound.UserStatus == false)
+                {
+                    return 0;
+                }
                 return Userfound.UserId;
             }
 
-            return 0;
+            return -1;
 
         }
 
