@@ -10,6 +10,7 @@ namespace MOBY_API_Core6.Repository
     public class BabyRepository : IBabyRepository
     {
         public readonly MOBYContext _context;
+        public static string? ErrorMessage { get; set; }
         public BabyRepository(MOBYContext context)
         {
             _context = context;
@@ -44,8 +45,9 @@ namespace MOBY_API_Core6.Repository
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -82,8 +84,9 @@ namespace MOBY_API_Core6.Repository
                 }
                 return false;
             }
-            catch
+            catch (Exception ex)
             {
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
@@ -96,8 +99,9 @@ namespace MOBY_API_Core6.Repository
                 babies = await _context.Babies.Where(bb => bb.UserId == id).ToListAsync();
                 return babies;
             }
-            catch
+            catch (Exception ex)
             {
+                ErrorMessage = ex.Message;
                 return null;
             }
         }

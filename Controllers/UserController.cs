@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository;
 using MOBY_API_Core6.Repository.IRepository;
 
 namespace MOBY_API_Core6.Controllers
@@ -289,7 +290,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest(ReturnMessage.Create(BabyRepository.ErrorMessage));
                 }
             }
             catch (Exception ex)
@@ -311,7 +312,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest(ReturnMessage.Create(BabyRepository.ErrorMessage));
                 }
             }
             catch (Exception ex)
@@ -338,7 +339,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest(ReturnMessage.Create(BabyRepository.ErrorMessage));
                 }
             }
             catch (Exception ex)
