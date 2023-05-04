@@ -60,7 +60,7 @@ namespace MOBY_API_Core6.Repository
                             return false;
                         }
                     }
-                    if(_JsonToObj.TransformLocation(itemVM.itemShippingAddress) == null)
+                    if (_JsonToObj.TransformLocation(itemVM.itemShippingAddress) == null)
                     {
                         return false;
                     }
@@ -215,34 +215,35 @@ namespace MOBY_API_Core6.Repository
             {
                 DetailItemVM? itemDetail = await _context.DetailItems
                     .Where(di => di.ItemId == itemID)
-                    .Select(di => new DetailItemVM {
-                         ItemId = di.ItemId,
-                         ItemCode = di.ItemCode, 
-                         ItemTitle = di.ItemTitle, 
-                         ItemDetailedDescription = di.ItemDetailedDescription, 
-                         ItemMass = di.ItemMass, 
-                         ItemSize = di.ItemSize, 
-                         ItemEstimateValue = di.ItemEstimateValue, 
-                         ItemSalePrice = di.ItemSalePrice, 
-                         ItemShareAmount = di.ItemShareAmount, 
-                         ItemExpiredTime = di.ItemExpiredTime,
-                         ItemShippingAddress = _JsonToObj.TransformJsonLocation(di.ItemShippingAddress),
-                         ItemDateCreated = di.ItemDateCreated, 
-                         ItemStatus = di.ItemStatus, 
-                         Share = di.Share, 
-                         Image = di.Image, 
-                         UserName = di.UserName, 
-                         UserId = di.UserId, 
-                         SubCategoryId = di.SubCategoryId, 
-                         SubCategoryName = di.SubCategoryName, 
-                         CategoryId = di.CategoryId, 
-                         CategoryName = di.CategoryName, 
-                         MaxAge = di.MaxAge, 
-                         MinAge = di.MinAge, 
-                         MaxWeight = di.MaxWeight, 
-                         MinWeight = di.MinWeight, 
-                         MinHeight = di.MinHeight, 
-                         MaxHeight = di.MaxHeight,
+                    .Select(di => new DetailItemVM
+                    {
+                        ItemId = di.ItemId,
+                        ItemCode = di.ItemCode,
+                        ItemTitle = di.ItemTitle,
+                        ItemDetailedDescription = di.ItemDetailedDescription,
+                        ItemMass = di.ItemMass,
+                        ItemSize = di.ItemSize,
+                        ItemEstimateValue = di.ItemEstimateValue,
+                        ItemSalePrice = di.ItemSalePrice,
+                        ItemShareAmount = di.ItemShareAmount,
+                        ItemExpiredTime = di.ItemExpiredTime,
+                        ItemShippingAddress = _JsonToObj.TransformJsonLocation(di.ItemShippingAddress),
+                        ItemDateCreated = di.ItemDateCreated,
+                        ItemStatus = di.ItemStatus,
+                        Share = di.Share,
+                        Image = di.Image,
+                        UserName = di.UserName,
+                        UserId = di.UserId,
+                        SubCategoryId = di.SubCategoryId,
+                        SubCategoryName = di.SubCategoryName,
+                        CategoryId = di.CategoryId,
+                        CategoryName = di.CategoryName,
+                        MaxAge = di.MaxAge,
+                        MinAge = di.MinAge,
+                        MaxWeight = di.MaxWeight,
+                        MinWeight = di.MinWeight,
+                        MinHeight = di.MinHeight,
+                        MaxHeight = di.MaxHeight,
                     })
                 .FirstOrDefaultAsync();
                 return itemDetail;
@@ -734,7 +735,10 @@ namespace MOBY_API_Core6.Repository
                 if (dynamicFilterVM.Location != null)
                 {
                     string? locationString = _JsonToObj.TransformLocation(dynamicFilterVM.Location);
-                    query = query.Where(query => query.bfit.it.ItemShippingAddress.StartsWith(locationString));
+                    if (locationString != null)
+                    {
+                        query = query.Where(query => query.bfit.it.ItemShippingAddress.StartsWith(locationString));
+                    }
                 }
                 if (dynamicFilterVM.MaxPrice >= dynamicFilterVM.MinPrice && dynamicFilterVM.MaxPrice != 0)
                 {
@@ -1007,11 +1011,11 @@ namespace MOBY_API_Core6.Repository
                     List<BriefItem> listListRecommend = new();
                     int itemsToSkip = (pageNumber - 1) * pageSize;
                     var query = _context.BriefItems
-                    .Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new {bf, it})
-                    .Where(bfit => bfit.bf.Share == true 
-                    && bfit.bf.ItemStatus == true 
+                    .Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
+                    .Where(bfit => bfit.bf.Share == true
+                    && bfit.bf.ItemStatus == true
                     && bfit.bf.UserId != userID);
-                    if(age)
+                    if (age)
                     {
                         LocalDateTime now = DateTime.Now.ToLocalDateTime();
                         LocalDateTime babyBirth = baby.DateOfBirth.ToLocalDateTime();
