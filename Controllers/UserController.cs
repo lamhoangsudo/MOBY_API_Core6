@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository;
 using MOBY_API_Core6.Repository.IRepository;
 
 namespace MOBY_API_Core6.Controllers
@@ -281,10 +282,9 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
-                if (uid == -1)
-                {
-                    return BadRequest(ReturnMessage.Create("Account not found"));
-                }
+
+                babyVM.UserId = userID;
+
                 bool checkInput = await babyRepository.InputInformationBaby(babyVM);
                 if (checkInput)
                 {
@@ -292,7 +292,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest(ReturnMessage.Create(BabyRepository.ErrorMessage));
                 }
             }
             catch (Exception ex)
@@ -310,11 +310,11 @@ namespace MOBY_API_Core6.Controllers
                 bool checkInput = await babyRepository.UpdateInformationBaby(babyVM);
                 if (checkInput)
                 {
-                    return Ok();
+                    return Ok(ReturnMessage.Create("success"));
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest(ReturnMessage.Create(BabyRepository.ErrorMessage));
                 }
             }
             catch (Exception ex)
@@ -341,7 +341,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest(ReturnMessage.Create(BabyRepository.ErrorMessage));
                 }
             }
             catch (Exception ex)
