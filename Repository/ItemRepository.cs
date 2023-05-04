@@ -919,6 +919,7 @@ namespace MOBY_API_Core6.Repository
                     else
                     {
                         recordSearchVM.TitleName = null;
+                        query = query.Where(rs => rs.TitleName == recordSearchVM.TitleName);
                     }
                     recordSearch = await query.FirstOrDefaultAsync();
                     if (recordSearch != null)

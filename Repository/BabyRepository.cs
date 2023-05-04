@@ -10,7 +10,7 @@ namespace MOBY_API_Core6.Repository
     public class BabyRepository : IBabyRepository
     {
         public readonly MOBYContext _context;
-        public static string? ErrorMessage { get; set; }
+        public static string ErrorMessage { get; set; } = "";
         public BabyRepository(MOBYContext context)
         {
             _context = context;
