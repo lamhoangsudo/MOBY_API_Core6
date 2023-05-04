@@ -14,7 +14,7 @@ namespace MOBY_API_Core6.Repository
         {
             _context = context;
         }
-        public async Task<bool> InputInformationBaby(BabyVM babyVM)
+        public async Task<bool> InputInformationBaby(CreateBabyVM babyVM)
         {
             try
             {
