@@ -1019,8 +1019,13 @@ namespace MOBY_API_Core6.Repository
                     {
                         LocalDateTime now = DateTime.Now.ToLocalDateTime();
                         LocalDateTime babyBirth = baby.DateOfBirth.ToLocalDateTime();
-                        Period period = Period.Between(babyBirth, now, PeriodUnits.Months);
-                        int monthsAge = period.Months;
+                        Period period = Period.Between(babyBirth, now, PeriodUnits.AllDateUnits);
+                        double monthsAge = (double) period.Months;
+                        if (monthsAge == 0)
+                        {
+                            double dayAge = (double) period.Days;
+                            monthsAge = (double) dayAge / 30;
+                        }
                         query = query.Where(bfit => bfit.it.MaxAge >= monthsAge && bfit.it.MinAge <= monthsAge);
                     }
                     if (weight)

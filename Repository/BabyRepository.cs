@@ -20,10 +20,17 @@ namespace MOBY_API_Core6.Repository
             {
                 LocalDateTime now = DateTime.Now.ToLocalDateTime();
                 LocalDateTime babyBirth = babyVM.DateOfBirth.ToLocalDateTime();
-                Period period = Period.Between(babyBirth, now, PeriodUnits.Months);
-                int monthsAge = period.Months;
-                if (monthsAge <= 0) {
+                Period period = Period.Between(babyBirth, now, PeriodUnits.AllDateUnits);
+                double monthsAge = (double) period.Months;
+                if (monthsAge < 0) {
                     return false;
+                }
+                if (monthsAge == 0)
+                {
+                    double dayAge = (double) period.Days;
+                    if (dayAge <= 0) {
+                        return false;
+                    }
                 }
                 Baby baby = new()
                 {
@@ -50,11 +57,19 @@ namespace MOBY_API_Core6.Repository
                 Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == babyVM.Idbaby).FirstOrDefaultAsync();
                 LocalDateTime now = DateTime.Now.ToLocalDateTime();
                 LocalDateTime babyBirth = babyVM.DateOfBirth.ToLocalDateTime();
-                Period period = Period.Between(babyBirth, now, PeriodUnits.Months);
-                int monthsAge = period.Months;
-                if (monthsAge <= 0)
+                Period period = Period.Between(babyBirth, now, PeriodUnits.AllDateUnits);
+                double monthsAge = (double)period.Months;
+                if (monthsAge < 0)
                 {
                     return false;
+                }
+                if (monthsAge == 0)
+                {
+                    double dayAge = (double)period.Days;
+                    if (dayAge <= 0)
+                    {
+                        return false;
+                    }
                 }
                 if (baby != null)
                 {
