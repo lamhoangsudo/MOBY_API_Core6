@@ -17,6 +17,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime? DatePackage { get; set; }
         public DateTime? DateReceived { get; set; }
         public string? TransactionNo { get; set; }
+        public string? TransactionDate { get; set; }
         public string? CardType { get; set; }
         public string? BankCode { get; set; }
 
@@ -39,6 +40,7 @@ namespace MOBY_API_Core6.Data_View_Model
                 DatePackage = order.DatePackage,
                 DateReceived = order.DateReceived,
                 TransactionNo = order.TransactionNo,
+                TransactionDate = order.TransactionDate,
                 CardType = order.CardType,
                 BankCode = order.BankCode,
             };

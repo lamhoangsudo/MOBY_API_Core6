@@ -904,18 +904,17 @@ namespace MOBY_API_Core6.Repository
                 if (!(recordSearchVM.CategoryId == null && recordSearchVM.SubCategoryId == null && String.IsNullOrEmpty(recordSearchVM.TitleName) && String.IsNullOrWhiteSpace(recordSearchVM.TitleName)))
                 {
                     RecordSearch? recordSearch = null;
-                    var query = _context.RecordSearches.Where(rs => rs.UserId == recordSearchVM.UserId);
-                    if (recordSearchVM.CategoryId != null)
-                    {
-                        query = query.Where(rs => rs.CategoryId == recordSearchVM.CategoryId);
-                    }
-                    if (recordSearchVM.SubCategoryId != null)
-                    {
-                        query = query.Where(rs => rs.SubCategoryId == recordSearchVM.SubCategoryId);
-                    }
+                    var query = _context.RecordSearches
+                        .Where(rs => rs.UserId == recordSearchVM.UserId
+                        && rs.CategoryId == recordSearchVM.CategoryId
+                        && rs.SubCategoryId == recordSearchVM.SubCategoryId);
                     if (!String.IsNullOrEmpty(recordSearchVM.TitleName) && !String.IsNullOrWhiteSpace(recordSearchVM.TitleName))
                     {
                         query = query.Where(rs => rs.TitleName == recordSearchVM.TitleName.Trim());
+                    }
+                    else
+                    {
+                        recordSearchVM.TitleName = null;
                     }
                     recordSearch = await query.FirstOrDefaultAsync();
                     if (recordSearch != null)
