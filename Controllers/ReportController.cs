@@ -33,9 +33,9 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
-                if (userID == 0)
+                if (userID == -1)
                 {
-                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                    return BadRequest(ReturnMessage.Create("Account not found"));
                 }
                 UserAccount? user = await _userRepository.FindUserByUid(userID);
                 if (user == null)
@@ -209,6 +209,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
+                if (userID == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
                 UserAccount? user = await _userRepository.FindUserByUidWithoutStatus(userID);
                 if (user == null)
                 {
@@ -361,7 +365,7 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 StatusAndReasonHidenViewModel? statusAndReasonHidenViewModel = await _reportRepository.GetStatusAndReasonHiden(id, type);
-                if(statusAndReasonHidenViewModel != null)
+                if (statusAndReasonHidenViewModel != null)
                 {
                     return Ok(statusAndReasonHidenViewModel);
                 }

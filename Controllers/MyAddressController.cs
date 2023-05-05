@@ -29,6 +29,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
 
                 if (await userAddressDAO.CheckExitedAddress(createMyAddressVM, uid))
                 {
@@ -63,6 +67,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
                 List<MyAddressVM>? addresses = await userAddressDAO.getMylistAddress(uid);
 
                 return Ok(addresses);
@@ -85,6 +93,10 @@ namespace MOBY_API_Core6.Controllers
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
                 }
                 UserAddress? currentUserAddress = await userAddressDAO.FindUserAddressByUserAddressID(updateMyAddressVM.userAddressID, uid);
                 if (currentUserAddress != null)
@@ -113,6 +125,10 @@ namespace MOBY_API_Core6.Controllers
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
                 }
                 UserAddress? currentUserAddress = await userAddressDAO.FindUserAddressByUserAddressID(myAddressIdVM.userAddressID, uid);
                 if (currentUserAddress != null)
