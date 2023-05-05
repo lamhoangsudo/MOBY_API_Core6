@@ -74,6 +74,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
                 if (await CommentRepository.CreateComment(cmt, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
@@ -99,6 +103,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
                 if (await CommentRepository.UpdateComment(cmt, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
@@ -122,6 +130,10 @@ namespace MOBY_API_Core6.Controllers
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
                 }
                 if (await CommentRepository.DeleteComment(cmtid, uid))
                 {

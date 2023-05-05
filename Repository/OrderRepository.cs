@@ -310,5 +310,30 @@ namespace MOBY_API_Core6.Repository
 
             return false;
         }
+
+        public async Task<bool> cancelOrder(Order order, string reasonCancel, int uid, bool pernament)
+        {
+            if (order.UserId != uid)
+            {
+                return false;
+            }
+            order.Status = 3;
+            order.ReasonCancel = reasonCancel;
+            if (pernament)
+            {
+                if (order.User.Reputation <= 3)
+                {
+                    order.User.Reputation = 0;
+                    order.User.UserStatus = false;
+                }
+                else
+                {
+                    order.User.Reputation -= 3;
+                }
+
+            }
+            await context.SaveChangesAsync();
+            return true;
+        }
     }
 }

@@ -6,8 +6,6 @@ using MOBY_API_Core6.Repository.IRepository;
 using Newtonsoft.Json;
 using NodaTime;
 using NodaTime.Extensions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MOBY_API_Core6.Repository
 {

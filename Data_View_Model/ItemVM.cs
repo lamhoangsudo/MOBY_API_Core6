@@ -50,7 +50,11 @@
                 ItemId = item.ItemId,
                 UserId = item.UserId,
                 ItemTitle = item.ItemTitle,
+                ItemSalePrice = item.ItemSalePrice,
+                ItemShareAmount = item.ItemShareAmount,
+
                 Image = item.Image,
+                ItemStatus = item.ItemStatus,
             };
 
 

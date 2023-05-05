@@ -120,6 +120,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
                 }
+                if (UserID == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
                 List<BlogSimpleVM> ListBlog = await BlogDAO.getBlogBySelf(UserID, pagging);
                 int totalBlog = await BlogDAO.getBlogByBySelfCount(UserID);
                 PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
@@ -143,6 +147,10 @@ namespace MOBY_API_Core6.Controllers
                 if (UserID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (UserID == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
                 }
                 if (await BlogDAO.CreateBlog(createdBlog, UserID))
                 {
@@ -172,6 +180,10 @@ namespace MOBY_API_Core6.Controllers
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
                 }
                 Blog? foundblog = await BlogDAO.getBlogByBlogIDAndUserId(UpdatedBlog.BlogId, uid);
                 if (foundblog != null)
@@ -268,6 +280,10 @@ namespace MOBY_API_Core6.Controllers
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (uid == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
                 }
                 Blog? foundblog = await BlogDAO.getBlogByBlogIDAndUserId(blogId.BlogId, uid);
                 if (foundblog != null)

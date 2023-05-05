@@ -11,7 +11,7 @@ namespace MOBY_API_Core6.Data_View_Model
 
         public UserVM? UserRecieverVM { get; set; }
         public UserVM? UserSharerVM { get; set; }
-        public ItemVM? itemVM { get; set; }
+        public ItemVMForOrderBriefVM? itemVM { get; set; }
 
         public static OrderBriefVM OrderToBriefVewModel(Order order)
         {
@@ -31,7 +31,7 @@ namespace MOBY_API_Core6.Data_View_Model
             orderBriefVM.UserRecieverVM = UserVM.UserAccountToVewModel(user);
 
             var item = order.Item;
-            orderBriefVM.itemVM = ItemVM.ItemForOrderToViewModel(item);
+            orderBriefVM.itemVM = ItemVMForOrderBriefVM.ItemForOrderToViewModel(item);
             return orderBriefVM;
         }
     }
