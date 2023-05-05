@@ -358,7 +358,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpDelete("api/useraccount/baby")]
-        public async Task<IActionResult> DeleteBabyByID([FromBody]int id)
+        public async Task<IActionResult> DeleteBabyByID([FromQuery]int id)
         {
             try
             {
