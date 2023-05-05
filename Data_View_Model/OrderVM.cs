@@ -13,11 +13,12 @@ namespace MOBY_API_Core6.Data_View_Model
         public int Status { get; set; }
         public string? ReasonCancel { get; set; }
         public bool? AllowReport { get; set; } = false;
-        public int? daysLeftForReport { get; set; }
-        public int? daysLeftForCancel { get; set; }
+        public int? DaysLeftForReport { get; set; }
+        public int? DaysLeftForCancel { get; set; }
         public DateTime DateCreate { get; set; }
         public DateTime? DatePackage { get; set; }
         public DateTime? DateReceived { get; set; }
+        public DateTime? DateCancel { get; set; }
         public string? TransactionNo { get; set; }
         public string? TransactionDate { get; set; }
         public string? CardType { get; set; }
@@ -25,7 +26,7 @@ namespace MOBY_API_Core6.Data_View_Model
 
         public UserVM? UserSharerVM { get; set; }
         public UserVM? UserRecieverVM { get; set; }
-        public ItemVMForOrderBriefVM? itemVM { get; set; }
+        public ItemVMForOrderBriefVM? ItemVM { get; set; }
 
 
         public static OrderVM OrderToViewModel(Order order)
@@ -39,6 +40,7 @@ namespace MOBY_API_Core6.Data_View_Model
                 Price = order.Price,
                 Status = order.Status,
                 ReasonCancel = order.ReasonCancel,
+                DateCancel = order.DateCancel,
                 Note = order.Note,
                 DateCreate = order.DateCreate,
                 DatePackage = order.DatePackage,
@@ -54,7 +56,7 @@ namespace MOBY_API_Core6.Data_View_Model
                 int totalDaysint = Convert.ToInt32(totalDays.TotalDays);
                 if (totalDaysint < 14)
                 {
-                    orderVM.daysLeftForReport = 14 - totalDaysint;
+                    orderVM.DaysLeftForReport = 14 - totalDaysint;
                 }
                 if (totalDaysint >= 14)
                 {
@@ -65,7 +67,7 @@ namespace MOBY_API_Core6.Data_View_Model
             {
                 TimeSpan totalDays = DateTime.Now - order.DateCreate;
                 int totalDaysint = Convert.ToInt32(totalDays.TotalDays);
-                orderVM.daysLeftForCancel = 7 - totalDaysint;
+                orderVM.DaysLeftForCancel = 7 - totalDaysint;
             }
 
             var userSharer = order.Item.User;
@@ -73,7 +75,7 @@ namespace MOBY_API_Core6.Data_View_Model
             var userReciever = order.User;
             orderVM.UserRecieverVM = UserVM.UserAccountToVewModel(userReciever);
             var item = order.Item;
-            orderVM.itemVM = ItemVMForOrderBriefVM.ItemForOrderToViewModel(item);
+            orderVM.ItemVM = ItemVMForOrderBriefVM.ItemForOrderToViewModel(item);
 
             return orderVM;
         }

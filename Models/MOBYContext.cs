@@ -395,6 +395,8 @@ namespace MOBY_API_Core6.Models
                     .HasMaxLength(10)
                     .IsFixedLength();
 
+                entity.Property(e => e.DateCancel).HasColumnType("smalldatetime");
+
                 entity.Property(e => e.DateCreate).HasColumnType("smalldatetime");
 
                 entity.Property(e => e.DatePackage).HasColumnType("smalldatetime");

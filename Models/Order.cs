@@ -20,6 +20,7 @@ namespace MOBY_API_Core6.Models
         public DateTime DateCreate { get; set; }
         public DateTime? DatePackage { get; set; }
         public DateTime? DateReceived { get; set; }
+        public DateTime? DateCancel { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }
         public string? TransactionNo { get; set; }

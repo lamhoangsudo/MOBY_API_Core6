@@ -964,14 +964,17 @@ namespace MOBY_API_Core6.Repository
                 {
                     int itemsToSkip = (pageNumber - 1) * pageSize;
                     var query = _context.BriefItems
-                    .Where(bf => bf.Share == true && bf.ItemStatus == true && bf.UserId != userID);
+                    .Where(bf => bf.Share == true
+                    && bf.ItemStatus == true
+                    && bf.UserId != userID
+                    && bf.ItemStatus != false);
                     if (recordSearch.CategoryId != null)
                     {
                         query = query.Where(bf => bf.CategoryId == recordSearch.CategoryId);
-                        if (recordSearch.SubCategoryId != null)
-                        {
-                            query = query.Where(bf => bf.SubCategoryId == recordSearch.SubCategoryId);
-                        }
+                    }
+                    if (recordSearch.SubCategoryId != null)
+                    {
+                        query = query.Where(bf => bf.SubCategoryId == recordSearch.SubCategoryId);
                     }
                     if (recordSearch.TitleName != null)
                     {
@@ -1019,11 +1022,11 @@ namespace MOBY_API_Core6.Repository
                         LocalDateTime now = DateTime.Now.ToLocalDateTime();
                         LocalDateTime babyBirth = baby.DateOfBirth.ToLocalDateTime();
                         Period period = Period.Between(babyBirth, now, PeriodUnits.AllDateUnits);
-                        double monthsAge = (double) period.Months;
+                        double monthsAge = (double)period.Months;
                         if (monthsAge == 0)
                         {
-                            double dayAge = (double) period.Days;
-                            monthsAge = (double) dayAge / 30;
+                            double dayAge = (double)period.Days;
+                            monthsAge = (double)dayAge / 30;
                         }
                         query = query.Where(bfit => bfit.it.MaxAge >= monthsAge && bfit.it.MinAge <= monthsAge);
                     }

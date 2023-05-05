@@ -318,6 +318,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
             order.Status = 3;
+            order.DateCancel = DateTime.Now;
             order.ReasonCancel = reasonCancel;
             if (pernament)
             {
