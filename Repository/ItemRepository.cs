@@ -955,10 +955,8 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                ListVM<BriefItem>? listVM = null;
                 List<BriefItem> listListRecommend = new();
-                int total = 0;
-                int totalPage = 0;
+                ListVM<BriefItem>? listVM = new(0, 0, listListRecommend);
                 RecordSearch? recordSearch = await _context.RecordSearches.Where(rs => rs.UserId == userID).OrderByDescending(rs => rs.Count).FirstOrDefaultAsync();
                 if (recordSearch != null)
                 {
@@ -980,8 +978,8 @@ namespace MOBY_API_Core6.Repository
                     {
                         query = query.Where(bf => bf.ItemTitle.Contains(recordSearch.TitleName.Trim()));
                     }
-                    total = query.Count();
-                    totalPage = total / pageSize;
+                    int total = query.Count();
+                    int totalPage = total / pageSize;
                     if (total % pageSize != 0)
                     {
                         ++totalPage;
@@ -991,8 +989,10 @@ namespace MOBY_API_Core6.Repository
                         .Skip(itemsToSkip)
                         .Take(pageSize)
                         .ToListAsync();
+                    listVM.TotalPage = totalPage;
+                    listVM.Total = total;
+                    listVM.List = listListRecommend;
                 }
-                listVM = new(total, totalPage, listListRecommend);
                 return listVM;
             }
             catch (Exception ex)
