@@ -105,5 +105,25 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
+
+        public async Task<bool> DeleteBaby(int id)
+        {
+            try
+            {
+                Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == id).FirstOrDefaultAsync();
+                if (baby != null)
+                {
+                    _context.Babies.Remove(baby);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return false;
+            }
+        }
     }
 }

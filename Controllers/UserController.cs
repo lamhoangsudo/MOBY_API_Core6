@@ -349,5 +349,27 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpDelete("api/useraccount/baby")]
+        public async Task<IActionResult> DeleteBabyByID([FromBody]int id)
+        {
+            try
+            {
+                bool check = await babyRepository.DeleteBaby(id);
+                if (check)
+                {
+                    return Ok(ReturnMessage.Create("success"));
+                }
+                else
+                {
+                    return BadRequest(ReturnMessage.Create(BabyRepository.ErrorMessage));
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }
