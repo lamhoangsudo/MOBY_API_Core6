@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace MOBY_API_Core6.Data_View_Model
 {
@@ -10,14 +9,14 @@ namespace MOBY_API_Core6.Data_View_Model
         public String? address { get; set; }
         [DefaultValue("")]
         public String? note { get; set; }
-        [Required]
+        [DefaultValue(null)]
         public string vnp_TransactionNo { get; set; }
-        [Required]
+        [DefaultValue(null)]
         public string? vnp_CardType { get; set; }
-        [Required]
-        public string vnp_BankCode { get; set; }
-        [Required]
-        public string TransactionDate { get; set; }
+        [DefaultValue(null)]
+        public string? vnp_BankCode { get; set; }
+        [DefaultValue(null)]
+        public string? TransactionDate { get; set; }
         public List<int>? listCartDetailID { get; set; }
     }
 }
