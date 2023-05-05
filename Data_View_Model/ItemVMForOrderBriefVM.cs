@@ -5,9 +5,6 @@
         public int ItemId { get; set; }
         public int UserId { get; set; }
         public string ItemTitle { get; set; } = null!;
-
-        public double? ItemSalePrice { get; set; }
-        public int ItemShareAmount { get; set; }
         public string Image { get; set; } = null!;
         public bool? ItemStatus { get; set; }
 
@@ -19,9 +16,6 @@
                 ItemId = item.ItemId,
                 UserId = item.UserId,
                 ItemTitle = item.ItemTitle,
-                ItemSalePrice = item.ItemSalePrice,
-                ItemShareAmount = item.ItemShareAmount,
-
                 Image = item.Image,
                 ItemStatus = item.ItemStatus,
             };
