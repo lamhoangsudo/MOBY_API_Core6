@@ -56,7 +56,7 @@ namespace MOBY_API_Core6.Repository
         {
             try
             {
-                Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == babyVM.Idbaby).FirstOrDefaultAsync();
+                Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == babyVM.Idbaby && bb.UserId == babyVM.UserID).FirstOrDefaultAsync();
                 LocalDateTime now = DateTime.Now.ToLocalDateTime();
                 LocalDateTime babyBirth = babyVM.DateOfBirth.ToLocalDateTime();
                 Period period = Period.Between(babyBirth, now, PeriodUnits.AllDateUnits);
@@ -106,11 +106,11 @@ namespace MOBY_API_Core6.Repository
             }
         }
 
-        public async Task<bool> DeleteBaby(int id)
+        public async Task<bool> DeleteBaby(int id, int us)
         {
             try
             {
-                Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == id).FirstOrDefaultAsync();
+                Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == id && bb.UserId == us).FirstOrDefaultAsync();
                 if (baby != null)
                 {
                     _context.Babies.Remove(baby);

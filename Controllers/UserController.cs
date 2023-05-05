@@ -307,6 +307,12 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
+                int userID = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (userID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                babyVM.UserID = userID;
                 bool checkInput = await babyRepository.UpdateInformationBaby(babyVM);
                 if (checkInput)
                 {
@@ -356,7 +362,12 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                bool check = await babyRepository.DeleteBaby(id);
+                int userID = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (userID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                bool check = await babyRepository.DeleteBaby(id, userID);
                 if (check)
                 {
                     return Ok(ReturnMessage.Create("success"));
