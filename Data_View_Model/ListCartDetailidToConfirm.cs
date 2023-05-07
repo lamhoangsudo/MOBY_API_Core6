@@ -9,13 +9,13 @@ namespace MOBY_API_Core6.Data_View_Model
         public String? address { get; set; }
         [DefaultValue("")]
         public String? note { get; set; }
-        [DefaultValue(null)]
+        [DefaultValue("")]
         public string vnp_TransactionNo { get; set; }
-        [DefaultValue(null)]
+        [DefaultValue("")]
         public string? vnp_CardType { get; set; }
-        [DefaultValue(null)]
+        [DefaultValue("")]
         public string? vnp_BankCode { get; set; }
-        [DefaultValue(null)]
+        [DefaultValue("")]
         public string? TransactionDate { get; set; }
         public List<int>? listCartDetailID { get; set; }
     }
