@@ -230,10 +230,47 @@ namespace MOBY_API_Core6.Repository
                 newOrder.DateCreate = DateTime.Now;
                 newOrder.Quantity = cartDetail.ItemQuantity;
                 newOrder.Price = cartDetail.Item.ItemSalePrice!.Value;
-                newOrder.TransactionNo = cartDetailIDList.vnp_TransactionNo;
-                newOrder.TransactionDate = cartDetailIDList.TransactionDate;
-                newOrder.CardType = cartDetailIDList.vnp_CardType;
-                newOrder.BankCode = cartDetailIDList.vnp_BankCode;
+                if (cartDetailIDList.vnp_TransactionNo == null || cartDetailIDList.vnp_TransactionNo.Equals(""))
+                {
+                    newOrder.TransactionNo = null;
+                }
+                else
+                {
+                    newOrder.TransactionNo = cartDetailIDList.vnp_TransactionNo;
+                }
+
+
+                if (cartDetailIDList.TransactionDate == null || cartDetailIDList.TransactionDate.Equals(""))
+                {
+                    newOrder.TransactionDate = null;
+                }
+                else
+                {
+                    newOrder.TransactionDate = cartDetailIDList.TransactionDate;
+                }
+
+
+                if (cartDetailIDList.vnp_CardType == null || cartDetailIDList.vnp_CardType.Equals(""))
+                {
+                    newOrder.CardType = null;
+                }
+                else
+                {
+                    newOrder.CardType = cartDetailIDList.vnp_CardType;
+                }
+
+
+                if (cartDetailIDList.vnp_BankCode == null || cartDetailIDList.vnp_BankCode.Equals(""))
+                {
+                    newOrder.BankCode = null;
+                }
+                else
+                {
+                    newOrder.BankCode = cartDetailIDList.vnp_BankCode;
+                }
+                newOrder.DateCancel = null;
+
+
                 context.Orders.Add(newOrder);
                 cartDetail.Item.ItemShareAmount -= cartDetail.ItemQuantity;
 
