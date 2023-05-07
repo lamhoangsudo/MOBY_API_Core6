@@ -503,7 +503,7 @@ namespace Item.Controllers
         }
 
         [Authorize]
-        [HttpPost("GetListRecommend")]
+        [HttpGet("GetListRecommend")]
         public async Task<IActionResult> GetListRecommend(int pageNumber, int pageSize)
         {
             int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
