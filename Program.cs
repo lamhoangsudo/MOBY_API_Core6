@@ -11,10 +11,6 @@ using System.Text.Json.Serialization;
 using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
-
-var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUriSA"));
-builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
-
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

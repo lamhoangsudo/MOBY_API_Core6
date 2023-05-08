@@ -16,10 +16,6 @@
     "signalr1": {
       "ignored": "true",
       "type": "signalr"
-    },
-    "secrets1": {
-      "type": "secrets",
-      "connectionId": "VaultUriSA"
     }
   }
 }
