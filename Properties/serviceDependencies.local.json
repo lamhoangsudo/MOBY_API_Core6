@@ -4,15 +4,29 @@
       "ignored": "True",
       "type": "apis"
     },
-    "secrets1": {
-      "ignored": "true",
-      "type": "secrets.keyVault"
-    },
     "mssql2": {
       "secretStore": "LocalSecretsFile",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/mobyes/databases/MOBY",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:MOBYAZUREEA"
+    },
+    "secrets1": {
+      "secretStore": null,
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/mobykeyvaultsa",
+      "type": "secrets.keyVault",
+      "connectionId": "VaultUriSA"
+    },
+    "mssql5": {
+      "secretStore": "AzureKeyVault",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/mobys/databases/MOBY",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:MOBYAZUREEAKEYVAULT"
+    },
+    "mssql4": {
+      "secretStore": "AzureKeyVault",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/mobyes/databases/MOBY",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:MOBYAZURESAKEYVAULT"
     },
     "mssql3": {
       "secretStore": "LocalSecretsFile",

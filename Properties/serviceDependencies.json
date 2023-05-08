@@ -21,6 +21,18 @@
       "type": "mssql",
       "connectionId": "ConnectionStrings:MOBYAZUREEA"
     },
+    "secrets1": {
+      "type": "secrets",
+      "connectionId": "VaultUriSA"
+    },
+    "mssql5": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:MOBYAZUREEAKEYVAULT"
+    },
+    "mssql4": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:MOBYAZURESAKEYVAULT"
+    },
     "mssql3": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:MOBYAZURESA"
