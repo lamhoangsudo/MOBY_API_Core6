@@ -16,6 +16,12 @@
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/mobys/databases/MOBY",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:mobys"
+    },
+    "mssql3": {
+      "secretStore": "AzureKeyVault",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/mobyes/databases/MOBY",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:mobyes"
     }
   }
 }

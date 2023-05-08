@@ -10,8 +10,7 @@
         "EmailUserName": "hlam5370@gmail.com",
         "MobyDBLocalbao": "Server=DESKTOP-PBF0GCO\\MSSQLSERVER01;Database=MOBY;Trusted_Connection=True;Integrated Security=true;Trust Server Certificate=true",
         "AZURE_USERNAME": "hlam5370@gmail.com",
-        "MobyDBLocallam": "Data Source=DESKTOP-H1G0RQO;Initial Catalog=MOBY;Persist Security Info=True;User ID=sa;Password=123456789;MultipleActiveResultSets=True;Trusted_Connection=True;TrustServerCertificate=True;",
-        "VaultUri": "https://mobyapikeyvault1.vault.azure.net/secrets/ConnectionStrings--mobys/07f1a1bf38274c40830eff4c65b3d20c"
+        "MobyDBLocallam": "Data Source=DESKTOP-H1G0RQO;Initial Catalog=MOBY;Persist Security Info=True;User ID=sa;Password=123456789;MultipleActiveResultSets=True;Trusted_Connection=True;TrustServerCertificate=True;"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7217;http://localhost:5209",
