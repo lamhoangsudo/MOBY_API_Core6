@@ -13,14 +13,6 @@
       "type": "mssql",
       "connectionId": "ConnectionStrings:MobyDBLocallam"
     },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:MobyDBAzure55"
-    },
-    "secrets1": {
-      "type": "secrets",
-      "connectionId": "VaultUri"
-    },
     "signalr1": {
       "ignored": "true",
       "type": "signalr"

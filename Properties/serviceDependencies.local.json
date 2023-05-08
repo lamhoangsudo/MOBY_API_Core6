@@ -3,18 +3,6 @@
     "apis1": {
       "ignored": "True",
       "type": "apis"
-    },
-    "mssql2": {
-      "secretStore": "AzureKeyVault",
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/mobys/databases/MOBY",
-      "type": "mssql.azure",
-      "connectionId": "ConnectionStrings:MobyDBAzure55"
-    },
-    "secrets1": {
-      "secretStore": null,
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/MOBYAPICore6vault",
-      "type": "secrets.keyVault",
-      "connectionId": "VaultUri"
     }
   }
 }
