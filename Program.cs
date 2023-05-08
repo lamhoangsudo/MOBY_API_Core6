@@ -10,75 +10,79 @@ using MOBY_API_Core6.Repository.IRepository;
 using System.Text.Json.Serialization;
 using Azure.Identity;
 
-var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+internal class Program
+{
+    private static void Main(string[] args)
     {
-        var projectId = "moby-177a8";
-        options.Authority = $"https://securetoken.google.com/{projectId}";
-        options.TokenValidationParameters = new TokenValidationParameters
+        var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                var projectId = "moby-177a8";
+                options.Authority = $"https://securetoken.google.com/{projectId}";
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = $"https://securetoken.google.com/{projectId}",
+                    ValidateAudience = true,
+                    ValidAudience = projectId,
+                    ValidateLifetime = true
+                };
+            });
+        builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+
+        string connectionString = "";
+
+        if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != null)
         {
-            ValidateIssuer = true,
-            ValidIssuer = $"https://securetoken.google.com/{projectId}",
-            ValidateAudience = true,
-            ValidAudience = projectId,
-            ValidateLifetime = true
-        };
-    });
-builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
-
-string connectionString = "";
-
-if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != null)
-{
-    connectionString = Environment.GetEnvironmentVariable("MobyDB")!;
-}
-else
-{
-    connectionString = builder.Configuration.GetConnectionString("MobyDBAzure");
-}
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<MOBYContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
-builder.Services.AddScoped<IItemRepository, ItemRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ICartRepository, CartRepository>();
-builder.Services.AddScoped<ICartDetailRepository, CartDetailRepository>();
-builder.Services.AddScoped<IBlogCategoryRepository, BlogCategoryRepository>();
-builder.Services.AddScoped<IBlogRepository, BlogRepository>();
-builder.Services.AddScoped<IReportRepository, ReportRepository>();
-builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<IReplyRepository, ReplyRepository>();
-builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IUserAddressRepository, UserAddressRepository>();
-builder.Services.AddScoped<IBannerRepository, BannerRepository>();
-builder.Services.AddScoped<IEmailRepository, EmailRepository>();
-builder.Services.AddScoped<IImageVerifyRepository, ImageVerifyRepository>();
-builder.Services.AddScoped<ITransationRepository, TransationRepository>();
-builder.Services.AddScoped<IRecordPenaltyRepository, RecordPenaltyRepository>();
-builder.Services.AddScoped<IBabyRepository, BabyRepository>();
-builder.Services.AddScoped<JsonToObj>();
-
-builder.Configuration.AddUserSecrets<Program>(true);
-builder.Services.AddSwaggerGen(swagger =>
-{
-    swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Moby API" });
-    swagger.AddSecurityDefinition("Bearer",
-        new OpenApiSecurityScheme
-        {
-            In = ParameterLocation.Header,
-            Description = "Enter Firebase access token",
-            Name = "Authorization",
-            Scheme = "Bearer",
-            Type = SecuritySchemeType.ApiKey
+            connectionString = Environment.GetEnvironmentVariable("MobyDB")!;
         }
-    );
-    swagger.AddSecurityRequirement(new OpenApiSecurityRequirement()
-{
+        else
+        {
+            connectionString = builder.Configuration.GetConnectionString("MobyDBAzure");
+        }
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+        builder.Services.AddDbContext<MOBYContext>(options => options.UseSqlServer(connectionString));
+        builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+        builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+        builder.Services.AddScoped<IItemRepository, ItemRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<ICartRepository, CartRepository>();
+        builder.Services.AddScoped<ICartDetailRepository, CartDetailRepository>();
+        builder.Services.AddScoped<IBlogCategoryRepository, BlogCategoryRepository>();
+        builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+        builder.Services.AddScoped<IReportRepository, ReportRepository>();
+        builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+        builder.Services.AddScoped<IReplyRepository, ReplyRepository>();
+        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+        builder.Services.AddScoped<IUserAddressRepository, UserAddressRepository>();
+        builder.Services.AddScoped<IBannerRepository, BannerRepository>();
+        builder.Services.AddScoped<IEmailRepository, EmailRepository>();
+        builder.Services.AddScoped<IImageVerifyRepository, ImageVerifyRepository>();
+        builder.Services.AddScoped<ITransationRepository, TransationRepository>();
+        builder.Services.AddScoped<IRecordPenaltyRepository, RecordPenaltyRepository>();
+        builder.Services.AddScoped<IBabyRepository, BabyRepository>();
+        builder.Services.AddScoped<JsonToObj>();
+
+        builder.Configuration.AddUserSecrets<Program>(true);
+        builder.Services.AddSwaggerGen(swagger =>
+        {
+            swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Moby API" });
+            swagger.AddSecurityDefinition("Bearer",
+                new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Enter Firebase access token",
+                    Name = "Authorization",
+                    Scheme = "Bearer",
+                    Type = SecuritySchemeType.ApiKey
+                }
+            );
+            swagger.AddSecurityRequirement(new OpenApiSecurityRequirement()
+        {
     {
         new OpenApiSecurityScheme
         {
@@ -94,37 +98,39 @@ builder.Services.AddSwaggerGen(swagger =>
         },
         new List<string>()
     }
-});
-});
+        });
+        });
 
-var app = builder.Build();
+        var app = builder.Build();
 
-app.UseAuthentication();
+        app.UseAuthentication();
 
-app.UseRouting();
+        app.UseRouting();
 
-app.UseAuthorization();
+        app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
-FirebaseApp.Create(new AppOptions()
-{
-    Credential = GoogleCredential.FromFile("appsettings.json")
-});
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
+        FirebaseApp.Create(new AppOptions()
+        {
+            Credential = GoogleCredential.FromFile("appsettings.json")
+        });
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
 
+        }
+        app.UseSwagger();
+
+        app.UseSwaggerUI();
+
+        app.UseHttpsRedirection();
+
+        app.MapControllers();
+
+        app.Run();
+    }
 }
-app.UseSwagger();
-
-app.UseSwaggerUI();
-
-app.UseHttpsRedirection();
-
-app.MapControllers();
-
-app.Run();
