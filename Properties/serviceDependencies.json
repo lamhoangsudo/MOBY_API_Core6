@@ -16,14 +16,6 @@
     "signalr1": {
       "ignored": "true",
       "type": "signalr"
-    },
-    "secrets1": {
-      "type": "secrets",
-      "connectionId": "VaultUriSA"
-    },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:MOBYDBSA"
     }
   }
 }
