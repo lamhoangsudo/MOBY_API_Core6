@@ -32,11 +32,7 @@ string connectionString = "";
 
 if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != null)
 {
-    connectionString = Environment.GetEnvironmentVariable("MobyDB")!;
-}
-else
-{
-    connectionString = builder.Configuration.GetConnectionString("MobyDBAzure");
+    connectionString = Environment.GetEnvironmentVariable("")!;
 }
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
