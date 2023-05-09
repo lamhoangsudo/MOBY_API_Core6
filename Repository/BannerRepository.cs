@@ -14,7 +14,7 @@ namespace MOBY_API_Core6.Repository
         }
 
         public static string? ErrorMessage { get; set; }
-
+        //done
         public async Task<bool> CreateBanner(CreateBannerVM bannerVM)
         {
             try
@@ -36,7 +36,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> UpdateBanner(UpdateBannerVM updateBanner)
         {
             try
@@ -64,7 +64,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> DeleteBanner(int id)
         {
             try
@@ -88,7 +88,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<List<BannerVM>?> GetAllBanner()
         {
             try

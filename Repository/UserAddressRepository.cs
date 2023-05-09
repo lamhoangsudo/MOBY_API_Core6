@@ -15,13 +15,13 @@ namespace MOBY_API_Core6.Repository
             _context = context;
         }
 
-        public async Task<bool> createNewAddress(CreateMyAddressVM createMyAddressVM, int uid)
+        public async Task<bool> CreateNewAddress(CreateMyAddressVM createMyAddressVM, int uid)
         {
             try
             {
                 UserAddress userAddress = new UserAddress();
 
-                userAddress.Address = createMyAddressVM.address;
+                userAddress.Address = createMyAddressVM.Address;
 
                 userAddress.UserId = uid;
                 await _context.UserAddresses.AddAsync(userAddress);
@@ -42,7 +42,7 @@ namespace MOBY_API_Core6.Repository
         {
 
             UserAddress? addresses = await _context.UserAddresses
-                .Where(ua => ua.UserId == uid && ua.Address.Equals(createMyAddressVM.address))
+                .Where(ua => ua.UserId == uid && ua.Address.Equals(createMyAddressVM.Address))
                 .FirstOrDefaultAsync();
 
             if (addresses == null)
@@ -53,7 +53,7 @@ namespace MOBY_API_Core6.Repository
 
         }
 
-        public async Task<List<MyAddressVM>?> getMylistAddress(int userID)
+        public async Task<List<MyAddressVM>?> GetMylistAddress(int userID)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> deleteMyAddress(UserAddress userAddress)
+        public async Task<bool> DeleteMyAddress(UserAddress userAddress)
         {
 
 

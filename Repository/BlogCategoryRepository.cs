@@ -13,6 +13,7 @@ namespace MOBY_API_Core6.Repository
         {
             this.context = context;
         }
+        //done
         public async Task<List<BlogCategoryOnlyVM>> GetAllBlogCategory(int status)
         {
             List<BlogCategoryOnlyVM> blogCategories = new List<BlogCategoryOnlyVM>();
@@ -33,8 +34,8 @@ namespace MOBY_API_Core6.Repository
             }
             return blogCategories;
         }
-
-        public async Task<bool> createBlogCategory(String name)
+        //done
+        public async Task<bool> CreateBlogCategory(String name)
         {
             BlogCategory? existBlogCate = await context.BlogCategories
                 .Where(bc => bc.BlogCategoryName.Equals(name)).FirstOrDefaultAsync();
@@ -50,7 +51,7 @@ namespace MOBY_API_Core6.Repository
             return true;
 
         }
-
+        //done
         public async Task<bool> UpdateBlogCategory(UpdateBlogCategoryVM updateBlogCategoryVM)
         {
             BlogCategory? existBlogCate = await context.BlogCategories
@@ -65,7 +66,7 @@ namespace MOBY_API_Core6.Repository
             return true;
 
         }
-
+        //done
         public async Task<bool> DeleteBlogCategory(BlogCateGetVM blogCateGetVM)
         {
             BlogCategory? existBlogCate = await context.BlogCategories
@@ -80,8 +81,7 @@ namespace MOBY_API_Core6.Repository
             return true;
 
         }
-
-
+        //done
         public async Task<BlogCategoryVM?> GetBlogCateByID(int blogCateId)
         {
             BlogCategoryVM? foundBlogCate = await context.BlogCategories
@@ -100,6 +100,5 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
     }
 }

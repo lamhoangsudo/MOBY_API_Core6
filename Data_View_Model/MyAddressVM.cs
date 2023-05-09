@@ -7,7 +7,7 @@ namespace MOBY_API_Core6.Data_View_Model
     {
         public int UserAddressID { get; set; }
         [DefaultValue(null)]
-        public string? address { get; set; }
+        public string? Address { get; set; }
 
 
         public static MyAddressVM MyAddressToViewModel(UserAddress userAddress)
@@ -15,7 +15,7 @@ namespace MOBY_API_Core6.Data_View_Model
             return new MyAddressVM
             {
                 UserAddressID = userAddress.Id,
-                address = userAddress.Address
+                Address = userAddress.Address
             };
         }
     }

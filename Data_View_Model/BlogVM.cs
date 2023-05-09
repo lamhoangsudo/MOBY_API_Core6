@@ -16,7 +16,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public int? BlogStatus { get; set; }
         public string? ReasonDeny { get; set; }
 
-        public BlogCategoryVMForBlogVM? blogCategory { get; set; }
+        public BlogCategoryVMForBlogVM? BlogCategory { get; set; }
         public UserVM? UserVM { get; set; }
         public List<CommentVM>? ListComment { get; set; }
         public static BlogVM BlogToVewModel(Blog blog)
@@ -37,7 +37,7 @@ namespace MOBY_API_Core6.Data_View_Model
                 ReasonDeny = blog.ReasonDeny
             };
             var blogcate = blog.BlogCategory;
-            blogView.blogCategory = BlogCategoryVMForBlogVM.BlogCategoryVMForBlogVMToVewModel(blogcate);
+            blogView.BlogCategory = BlogCategoryVMForBlogVM.BlogCategoryVMForBlogVMToVewModel(blogcate);
             var user = blog.User;
             blogView.UserVM = UserVM.UserAccountToVewModel(user);
             var ListComment = blog.Comments.Select(b => CommentVM.CommentToVewModel(b)).ToList();

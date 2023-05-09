@@ -2,6 +2,6 @@
 {
     public class DeleteCategoryVM
     {
-        public int categoryID { get; set; }
+        public int CategoryID { get; set; }
     }
 }

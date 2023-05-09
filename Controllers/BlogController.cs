@@ -27,8 +27,8 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                List<BlogSimpleVM> ListBlog = await BlogDAO.getAllBlog(pagging);
-                int totalBlog = await BlogDAO.getAllBlogCount();
+                List<BlogSimpleVM> ListBlog = await BlogDAO.GetAllBlog(pagging);
+                int totalBlog = await BlogDAO.GetAllBlogCount();
                 PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
 
                 return Ok(result);
@@ -48,8 +48,8 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                List<BlogBriefVM> ListBlog = await BlogDAO.getAllUncheckBlog(pagging, blogStatusVM);
-                int totalBlog = await BlogDAO.getAllUncheckBlogcount(blogStatusVM);
+                List<BlogBriefVM> ListBlog = await BlogDAO.GetAllUncheckBlog(pagging, blogStatusVM);
+                int totalBlog = await BlogDAO.GetAllUncheckBlogcount(blogStatusVM);
                 PaggingReturnVM<BlogBriefVM> result = new PaggingReturnVM<BlogBriefVM>(ListBlog, pagging, totalBlog);
 
                 return Ok(result);
@@ -68,31 +68,31 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 List<BlogSimpleVM> ListBlog = new List<BlogSimpleVM>();
-                if (blogGetVM.categoryId != null)
+                if (blogGetVM.CategoryId != null)
                 {
-                    ListBlog = await BlogDAO.getBlogByBlogCateID(blogGetVM.categoryId.Value, pagging);
-                    int totalBlog = await BlogDAO.getBlogByCateCount(blogGetVM.categoryId.Value);
+                    ListBlog = await BlogDAO.GetBlogByBlogCateID(blogGetVM.CategoryId.Value, pagging);
+                    int totalBlog = await BlogDAO.GetBlogByCateCount(blogGetVM.CategoryId.Value);
                     PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
                     return Ok(result);
 
                 }
-                else if (blogGetVM.userId != null)
+                else if (blogGetVM.UserId != null)
                 {
-                    ListBlog = await BlogDAO.getBlogByUserID(blogGetVM.userId.Value, pagging);
-                    int totalBlog = await BlogDAO.getBlogByUserIDCount(blogGetVM.userId.Value);
+                    ListBlog = await BlogDAO.GetBlogByUserID(blogGetVM.UserId.Value, pagging);
+                    int totalBlog = await BlogDAO.GetBlogByUserIDCount(blogGetVM.UserId.Value);
                     PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
                     return Ok(result);
                 }
-                else if (blogGetVM.tittle != null)
+                else if (blogGetVM.Tittle != null)
                 {
-                    ListBlog = await BlogDAO.SearchlBlog(pagging, blogGetVM.tittle);
-                    int totalBlog = await BlogDAO.getSearchBlogCount(blogGetVM.tittle);
+                    ListBlog = await BlogDAO.SearchlBlog(pagging, blogGetVM.Tittle);
+                    int totalBlog = await BlogDAO.GetSearchBlogCount(blogGetVM.Tittle);
                     PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
                     return Ok(result);
                 }
                 else if (blogGetVM.BlogId != null)
                 {
-                    BlogVM? foundBlog = await BlogDAO.getBlogVMByBlogID(blogGetVM.BlogId.Value);
+                    BlogVM? foundBlog = await BlogDAO.GetBlogVMByBlogID(blogGetVM.BlogId.Value);
                     if (foundBlog != null)
                     {
                         return Ok(foundBlog);
@@ -115,7 +115,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int UserID = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int UserID = await UserDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (UserID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -124,8 +124,8 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                List<BlogSimpleVM> ListBlog = await BlogDAO.getBlogBySelf(UserID, pagging);
-                int totalBlog = await BlogDAO.getBlogByBySelfCount(UserID);
+                List<BlogSimpleVM> ListBlog = await BlogDAO.GetBlogBySelf(UserID, pagging);
+                int totalBlog = await BlogDAO.GetBlogByBySelfCount(UserID);
                 PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
                 return Ok(result);
             }
@@ -143,7 +143,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int UserID = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int UserID = await UserDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (UserID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -176,7 +176,7 @@ namespace MOBY_API_Core6.Controllers
             try
             {
 
-                int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await UserDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -185,7 +185,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                Blog? foundblog = await BlogDAO.getBlogByBlogIDAndUserId(UpdatedBlog.BlogId, uid);
+                Blog? foundblog = await BlogDAO.GetBlogByBlogIDAndUserId(UpdatedBlog.BlogId, uid);
                 if (foundblog != null)
                 {
                     if (await BlogDAO.UpdateBlog(foundblog, UpdatedBlog))
@@ -210,7 +210,7 @@ namespace MOBY_API_Core6.Controllers
             try
             {
 
-                Blog? foundblog = await BlogDAO.getBlogByBlogID(blogId.BlogId);
+                Blog? foundblog = await BlogDAO.GetBlogByBlogID(blogId.BlogId);
                 if (foundblog != null)
                 {
                     if (await BlogDAO.ConfirmBlog(foundblog, 1))
@@ -240,12 +240,12 @@ namespace MOBY_API_Core6.Controllers
             try
             {
 
-                Blog? foundblog = await BlogDAO.getBlogByBlogID(blogId.BlogId);
+                Blog? foundblog = await BlogDAO.GetBlogByBlogID(blogId.BlogId);
                 if (foundblog != null)
                 {
-                    if (blogId.reason != null && !blogId.reason.Equals(""))
+                    if (blogId.Reason != null && !blogId.Reason.Equals(""))
                     {
-                        if (await BlogDAO.DenyBlog(foundblog, blogId.reason))
+                        if (await BlogDAO.DenyBlog(foundblog, blogId.Reason))
                         {
                             return Ok(ReturnMessage.Create("success"));
                         }
@@ -276,7 +276,7 @@ namespace MOBY_API_Core6.Controllers
             try
             {
 
-                int uid = await UserDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await UserDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -285,7 +285,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                Blog? foundblog = await BlogDAO.getBlogByBlogIDAndUserId(blogId.BlogId, uid);
+                Blog? foundblog = await BlogDAO.GetBlogByBlogIDAndUserId(blogId.BlogId, uid);
                 if (foundblog != null)
                 {
                     if (await BlogDAO.ConfirmBlog(foundblog, 3))

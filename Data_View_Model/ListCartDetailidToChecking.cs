@@ -2,6 +2,6 @@
 {
     public class ListCartDetailidToChecking
     {
-        public List<int>? listCartDetailID { get; set; }
+        public List<int>? ListCartDetailID { get; set; }
     }
 }

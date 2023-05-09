@@ -28,7 +28,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (userID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -42,25 +42,25 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
                 }
-                reportVM.userID = userID;
+                reportVM.UserID = userID;
                 bool checkCreate = false;
-                if (reportVM.itemID != null)
+                if (reportVM.ItemID != null)
                 {
                     checkCreate = await _reportRepository.CreateItemReport(reportVM);
                 }
-                else if (reportVM.orderID != null)
+                else if (reportVM.OrderID != null)
                 {
                     checkCreate = await _reportRepository.CreateOrderReport(reportVM);
                 }
-                else if (reportVM.commentID != null)
+                else if (reportVM.CommentID != null)
                 {
                     checkCreate = await _reportRepository.CreateCommentReport(reportVM);
                 }
-                else if (reportVM.replyID != null)
+                else if (reportVM.ReplyID != null)
                 {
                     checkCreate = await _reportRepository.CreateReplyReport(reportVM);
                 }
-                else if (reportVM.blogID != null)
+                else if (reportVM.BlogID != null)
                 {
                     checkCreate = await _reportRepository.CreateBlogReport(reportVM);
                 }
@@ -204,7 +204,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (userID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));

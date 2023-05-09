@@ -8,20 +8,18 @@ namespace MOBY_API_Core6.Repository
 {
     public class CategoryRepository : ICategoryRepository
     {
-        public static string? errorMessage;
         private readonly MOBYContext _context;
-
+        public static string? ErrorMessage { get; set; }
         public CategoryRepository(MOBYContext context)
         {
             _context = context;
         }
-
+        //done
         public async Task<CategoryVM?> GetCategoryByID(int categoryID)
         {
             try
             {
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-                CategoryVM checkCategory = await _context.Categories
+                CategoryVM? checkCategory = await _context.Categories
                     .Where(ct => ct.CategoryId == categoryID)
                     .Select(ct => new CategoryVM(
                         ct.CategoryId,
@@ -30,27 +28,28 @@ namespace MOBY_API_Core6.Repository
                         ct.CategoryStatus
                         ))
                     .FirstOrDefaultAsync();
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
                 return checkCategory;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
-
+        //done
         public async Task<bool> CreateCategory(CreateCategoryVM categoryVM)
         {
-            var checkCategory = await _context.Categories.Where(ct => ct.CategoryName.Equals(categoryVM.categoryName)).FirstOrDefaultAsync();
+            var checkCategory = await _context.Categories.Where(ct => ct.CategoryName.Equals(categoryVM.CategoryName)).FirstOrDefaultAsync();
             if (checkCategory == null)
             {
-                Models.Category category = new Models.Category();
+                Models.Category category = new()
+                {
 #pragma warning disable CS8601 // Possible null reference assignment.
-                category.CategoryName = categoryVM.categoryName;
+                    CategoryName = categoryVM.CategoryName,
 #pragma warning restore CS8601 // Possible null reference assignment.
-                category.CategoryImage = categoryVM.categoryImage;
-                category.CategoryStatus = true;
+                    CategoryImage = categoryVM.CategoryImage,
+                    CategoryStatus = true
+                };
                 await _context.Categories.AddAsync(category);
                 await _context.SaveChangesAsync();
                 return true;
@@ -60,34 +59,34 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> UpdateCategory(UpdateCategoryVM categoryVM)
         {
             try
             {
-                Models.Category? updateCategory = await _context.Categories.Where(ct => ct.CategoryId == categoryVM.categoryID).FirstOrDefaultAsync();
+                Models.Category? updateCategory = await _context.Categories.Where(ct => ct.CategoryId == categoryVM.CategoryID).FirstOrDefaultAsync();
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 #pragma warning disable CS8601 // Possible null reference assignment.
-                updateCategory.CategoryName = categoryVM.categoryName;
+                updateCategory.CategoryName = categoryVM.CategoryName;
 #pragma warning restore CS8601 // Possible null reference assignment.
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-                updateCategory.CategoryImage = categoryVM.categoryImage;
+                updateCategory.CategoryImage = categoryVM.CategoryImage;
                 updateCategory.CategoryStatus = true;
                 await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
-
+        //done
         public async Task<bool> DeleteCategory(DeleteCategoryVM categoryVM)
         {
             try
             {
-                Models.Category? deleteCategory = await _context.Categories.Where(ct => ct.CategoryId == categoryVM.categoryID).FirstOrDefaultAsync();
+                Models.Category? deleteCategory = await _context.Categories.Where(ct => ct.CategoryId == categoryVM.CategoryID).FirstOrDefaultAsync();
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 deleteCategory.CategoryStatus = false;
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -96,16 +95,16 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
-
+        //done
         public async Task<List<CategoryVM>?> GetAllCategoriesAndSubCategory()
         {
             try
             {
-                List<CategoryVM> categoryVMs = new List<CategoryVM>();
+                List<CategoryVM> categoryVMs = new();
                 categoryVMs = await _context.Categories
                     .Include(ct => ct.SubCategories)
                     .Select(ct => new CategoryVM(
@@ -123,11 +122,11 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
-
+        //done
         public async Task<List<CategoryVM>?> GetCategoriesByStatus(bool categoryStatus)
         {
             var listCategory = await _context.Categories
@@ -142,7 +141,7 @@ namespace MOBY_API_Core6.Repository
                 .ToListAsync();
             return listCategory;
         }
-
+        //done
         public async Task<List<CategoryVM>?> GetCategoriesByName(string categoryName)
         {
             var listCategory = await _context.Categories

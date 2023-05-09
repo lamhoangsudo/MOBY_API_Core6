@@ -75,7 +75,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                if (await BlogCateDAO.createBlogCategory(blogCateName.BlogCategoryName))
+                if (await BlogCateDAO.CreateBlogCategory(blogCateName.BlogCategoryName))
                 {
                     return Ok(ReturnMessage.Create("success"));
                 }

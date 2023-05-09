@@ -5,6 +5,6 @@ namespace MOBY_API_Core6.Data_View_Model
     public class CreateMyAddressVM
     {
         [Required]
-        public string? address { get; set; }
+        public string? Address { get; set; }
     }
 }

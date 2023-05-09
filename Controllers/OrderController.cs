@@ -26,7 +26,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -55,7 +55,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -169,7 +169,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("unknown function"));
                 }
-                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -205,7 +205,7 @@ namespace MOBY_API_Core6.Controllers
                         Email newEmail = new Email();
                         newEmail.To = currentOrder.User.UserGmail;
                         newEmail.Subject = "your order has been shipping";
-                        newEmail.Body = "your order has been shipping";
+                        newEmail.Link = "your order has been shipping";
                         await emailDAO.SendEmai(newEmail);
                     }
                     else
@@ -214,7 +214,7 @@ namespace MOBY_API_Core6.Controllers
                         Email newEmail = new Email();
                         newEmail.To = currentOrder.Item.User.UserGmail;
                         newEmail.Subject = "your order has been recievied";
-                        newEmail.Body = "your order has been recievied";
+                        newEmail.Link = "your order has been recievied";
                         await emailDAO.SendEmai(newEmail);
                     }
                     return Ok(ReturnMessage.Create("success"));
@@ -241,7 +241,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("must have reseaon to cancel"));
                 }
-                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -264,7 +264,7 @@ namespace MOBY_API_Core6.Controllers
                     pernament = false;
                 }
 
-                if (await orderDAO.cancelOrder(currentOrder, cancelOrdervm.ReasonCancel, uid, pernament))
+                if (await orderDAO.CancelOrder(currentOrder, cancelOrdervm.ReasonCancel, uid, pernament))
                 {
 
                     return Ok(ReturnMessage.Create("success"));

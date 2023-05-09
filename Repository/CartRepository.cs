@@ -34,11 +34,11 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<bool> UpdateCart(Models.Cart cart, UpdateCartVM updatedCart)
         {
-            if (updatedCart.address == null || updatedCart.address == "")
+            if (updatedCart.Address == null || updatedCart.Address == "")
             {
                 return false;
             }
-            cart.Address = updatedCart.address;
+            cart.Address = updatedCart.Address;
 
             if (await context.SaveChangesAsync() != 0)
             {

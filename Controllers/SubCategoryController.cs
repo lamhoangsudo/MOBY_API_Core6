@@ -62,7 +62,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                var subCategory = await _subCategoryRepository.GetSubCategoryByID(subCategoryVM.subCategoryID);
+                var subCategory = await _subCategoryRepository.GetSubCategoryByID(subCategoryVM.SubCategoryID);
                 if (subCategory == null || subCategory.SubCategoryStatus == false)
                 {
                     return StatusCode(StatusCodes.Status404NotFound);
@@ -91,7 +91,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                var subCategory = await _subCategoryRepository.GetSubCategoryByID(subCategoryVM.subCategoryID);
+                var subCategory = await _subCategoryRepository.GetSubCategoryByID(subCategoryVM.SubCategoryID);
                 if (subCategory == null || subCategory.SubCategoryStatus == false)
                 {
                     return StatusCode(StatusCodes.Status404NotFound);

@@ -8,7 +8,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public int? UserId { get; set; }
         public string Address { get; set; } = null!;
         public UserVM? UserVM { get; set; }
-        public List<CartDetailVM>? cartDetailList { get; set; }
+        public List<CartDetailVM>? CartDetailList { get; set; }
 
 
         public static CartVM CartToVewModel(Cart cart)
@@ -22,7 +22,7 @@ namespace MOBY_API_Core6.Data_View_Model
             var user = cart.User;
             cartvm.UserVM = UserVM.UserAccountToVewModel(user);
             var ListCartDetail = cart.CartDetails.Select(cd => CartDetailVM.RequestDetailToVewModel(cd)).ToList();
-            cartvm.cartDetailList = ListCartDetail;
+            cartvm.CartDetailList = ListCartDetail;
             return cartvm;
         }
 

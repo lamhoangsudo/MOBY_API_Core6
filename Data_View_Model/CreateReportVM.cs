@@ -7,25 +7,25 @@ namespace MOBY_API_Core6.Data_View_Model
     public class CreateReportVM
     {
         [DefaultValue(null)]
-        public int? itemID { get; set; }
+        public int? ItemID { get; set; }
         [DefaultValue(null)]
-        public int? orderID { get; set; }
+        public int? OrderID { get; set; }
         [DefaultValue(null)]
-        public int? commentID { get; set; }
+        public int? CommentID { get; set; }
         [DefaultValue(null)]
-        public int? replyID { get; set; }
+        public int? ReplyID { get; set; }
         [DefaultValue(null)]
-        public int? blogID { get; set; }
+        public int? BlogID { get; set; }
         [ReadOnly(true)]
-        public int userID { get; set; }
+        public int UserID { get; set; }
         [Required]
-        public string? title { get; set; }
+        public string? Title { get; set; }
         [DefaultValue(0)]
         [ReadOnly(true)]
-        public int status { get; set; }
+        public int Status { get; set; }
         [Required]
-        public string? content { get; set; }
+        public string? Content { get; set; }
         [Required]
-        public string? image { get; set; }
+        public string? Image { get; set; }
     }
 }

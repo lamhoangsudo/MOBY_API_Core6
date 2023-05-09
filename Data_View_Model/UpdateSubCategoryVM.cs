@@ -4,9 +4,11 @@ namespace MOBY_API_Core6.Data_View_Model
 {
     public class UpdateSubCategoryVM
     {
-        public int subCategoryID { get; set; }
         [Required]
-        public string? subCategoryName { get; set; }
-        public int categoryID { get; set; }
+        public int SubCategoryID { get; set; }
+        [Required]
+        public string? SubCategoryName { get; set; }
+        [Required]
+        public int CategoryID { get; set; }
     }
 }

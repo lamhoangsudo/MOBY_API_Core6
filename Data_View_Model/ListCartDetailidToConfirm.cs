@@ -16,7 +16,7 @@ namespace MOBY_API_Core6.Data_View_Model
         [DefaultValue("")]
         public string? vnp_BankCode { get; set; }
         [DefaultValue("")]
-        public string? TransactionDate { get; set; }
+        public string? transactionDate { get; set; }
         public List<int>? listCartDetailID { get; set; }
     }
 }

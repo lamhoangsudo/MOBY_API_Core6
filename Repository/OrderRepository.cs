@@ -19,9 +19,9 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<List<OrderBriefVM>> GetOrderByRecieverID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM)
         {
-            int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
+            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
             List<OrderBriefVM> listOrder = new List<OrderBriefVM>();
-            if (pagging.orderBy)
+            if (pagging.OrderBy)
             {
                 if (orderStatusVM.OrderStatus == null)
                 {
@@ -30,7 +30,7 @@ namespace MOBY_API_Core6.Repository
                     .Include(o => o.Item)
                     .ThenInclude(i => i.User)
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .OrderByDescending(o => o.OrderId)
                     .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
                     .ToListAsync();
@@ -42,7 +42,7 @@ namespace MOBY_API_Core6.Repository
                     .Include(o => o.Item)
                     .ThenInclude(i => i.User)
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .OrderByDescending(o => o.OrderId)
                     .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
                     .ToListAsync();
@@ -57,7 +57,7 @@ namespace MOBY_API_Core6.Repository
                     .Include(o => o.Item)
                     .ThenInclude(i => i.User)
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
                     .ToListAsync();
                 }
@@ -68,7 +68,7 @@ namespace MOBY_API_Core6.Repository
                     .Include(o => o.Item)
                     .ThenInclude(i => i.User)
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
                     .ToListAsync();
                 }
@@ -93,9 +93,9 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<List<OrderBriefVM>> GetOrderBySharerID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM)
         {
-            int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
+            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
             List<OrderBriefVM> listOrder = new List<OrderBriefVM>();
-            if (pagging.orderBy)
+            if (pagging.OrderBy)
             {
                 if (orderStatusVM.OrderStatus == null)
                 {
@@ -105,7 +105,7 @@ namespace MOBY_API_Core6.Repository
                     .ThenInclude(i => i.User)
                     .Where(r => r.Item.UserId == uid)
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .OrderByDescending(o => o.OrderId)
                     .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
                     .ToListAsync();
@@ -118,7 +118,7 @@ namespace MOBY_API_Core6.Repository
                     .ThenInclude(i => i.User)
                     .Where(o => o.Item.UserId == uid && o.Status == orderStatusVM.OrderStatus)
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .OrderByDescending(o => o.OrderId)
                     .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
                     .ToListAsync();
@@ -134,7 +134,7 @@ namespace MOBY_API_Core6.Repository
                     .ThenInclude(i => i.User)
                     .Where(r => r.Item.UserId == uid)
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
                     .ToListAsync();
                 }
@@ -146,7 +146,7 @@ namespace MOBY_API_Core6.Repository
                     .ThenInclude(i => i.User)
                     .Where(o => o.Item.UserId == uid && o.Status == orderStatusVM.OrderStatus)
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .Select(o => OrderBriefVM.OrderToBriefVewModel(o))
                     .ToListAsync();
                 }
@@ -311,7 +311,7 @@ namespace MOBY_API_Core6.Repository
             return false;
         }
 
-        public async Task<bool> cancelOrder(Order order, string reasonCancel, int uid, bool pernament)
+        public async Task<bool> CancelOrder(Order order, string reasonCancel, int uid, bool pernament)
         {
             if (order.UserId != uid)
             {

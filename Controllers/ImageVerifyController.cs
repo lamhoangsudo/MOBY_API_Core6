@@ -20,7 +20,7 @@ namespace MOBY_API_Core6.Controllers
         [Route("api/image/verify")]
         public async Task<IActionResult> ImageVerify([FromBody] ImageVerifyVM imageVerifyVM)
         {
-            bool result = await imageVerifyRepository.verify(imageVerifyVM.imageURL);
+            bool result = await imageVerifyRepository.Verify(imageVerifyVM.ImageURL);
             return Ok(result);
         }
     }

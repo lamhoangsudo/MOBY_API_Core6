@@ -6,7 +6,7 @@
         public string CategoryName { get; set; } = null!;
         public string? CategoryImage { get; set; }
         public bool CategoryStatus { get; set; }
-        public List<SubCategoryVM>? subCategoryVMs { get; set; }
+        public List<SubCategoryVM>? SubCategoryVMs { get; set; }
 
         public CategoryVM(int categoryId, string categoryName, string? categoryImage, bool categoryStatus, List<SubCategoryVM>? subCategoryVMs)
         {
@@ -14,7 +14,7 @@
             CategoryName = categoryName;
             CategoryImage = categoryImage;
             CategoryStatus = categoryStatus;
-            this.subCategoryVMs = subCategoryVMs;
+            this.SubCategoryVMs = subCategoryVMs;
         }
 
         public CategoryVM(int categoryId, string categoryName, string? categoryImage, bool categoryStatus)

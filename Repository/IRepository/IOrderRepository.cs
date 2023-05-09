@@ -15,6 +15,6 @@ namespace MOBY_API_Core6.Repository.IRepository
         public Task<Order?> GetOrderByOrderID(int orderID);
         public Task<OrderVM?> GetOrderVMByOrderID(int orderID);
         public Task<bool> UpdateStatusOrder(Order order, int status);
-        public Task<bool> cancelOrder(Order order, string reasonCancel, int uid, bool pernament);
+        public Task<bool> CancelOrder(Order order, string reasonCancel, int uid, bool pernament);
     }
 }

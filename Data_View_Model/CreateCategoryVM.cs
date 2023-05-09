@@ -6,8 +6,8 @@ namespace MOBY_API_Core6.Data_View_Model
     public class CreateCategoryVM
     {
         [Required]
-        public string? categoryName { get; set; }
+        public string? CategoryName { get; set; }
         [Required]
-        public string? categoryImage { get; set; }
+        public string? CategoryImage { get; set; }
     }
 }

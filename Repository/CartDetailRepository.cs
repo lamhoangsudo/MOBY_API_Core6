@@ -194,15 +194,15 @@ namespace MOBY_API_Core6.Repository
         {
 
             String? address;
-            String? note = cartDetailIDList.note;
-            if (cartDetailIDList.address == null || cartDetailIDList.address == "")
+            String? note = cartDetailIDList.Note;
+            if (cartDetailIDList.Address == null || cartDetailIDList.Address == "")
             {
                 address = await context.Carts.Where(c => c.UserId == uid)
                 .Select(c => c.Address).FirstOrDefaultAsync();
             }
             else
             {
-                address = cartDetailIDList.address;
+                address = cartDetailIDList.Address;
             }
 
             if (address == null || address == "")
@@ -211,7 +211,7 @@ namespace MOBY_API_Core6.Repository
             }
             List<UserAccount> itemOwner = new List<UserAccount>();
             IDictionary<int, String> itemOwnerDic = new Dictionary<int, String>();
-            List<CartDetail> currentCartDetails = await context.CartDetails.Where(cd => cartDetailIDList.listCartDetailID!.Contains(cd.CartDetailId))
+            List<CartDetail> currentCartDetails = await context.CartDetails.Where(cd => cartDetailIDList.ListCartDetailID!.Contains(cd.CartDetailId))
                 .Include(cd => cd.Item)
                 .ThenInclude(i => i.User)
                 .ToListAsync();
@@ -230,13 +230,13 @@ namespace MOBY_API_Core6.Repository
                 newOrder.DateCreate = DateTime.Now;
                 newOrder.Quantity = cartDetail.ItemQuantity;
                 newOrder.Price = cartDetail.Item.ItemSalePrice!.Value;
-                if (cartDetailIDList.vnp_TransactionNo == null || cartDetailIDList.vnp_TransactionNo.Equals(""))
+                if (cartDetailIDList.Vnp_TransactionNo == null || cartDetailIDList.Vnp_TransactionNo.Equals(""))
                 {
                     newOrder.TransactionNo = null;
                 }
                 else
                 {
-                    newOrder.TransactionNo = cartDetailIDList.vnp_TransactionNo;
+                    newOrder.TransactionNo = cartDetailIDList.Vnp_TransactionNo;
                 }
 
 
@@ -250,23 +250,23 @@ namespace MOBY_API_Core6.Repository
                 }
 
 
-                if (cartDetailIDList.vnp_CardType == null || cartDetailIDList.vnp_CardType.Equals(""))
+                if (cartDetailIDList.Vnp_CardType == null || cartDetailIDList.Vnp_CardType.Equals(""))
                 {
                     newOrder.CardType = null;
                 }
                 else
                 {
-                    newOrder.CardType = cartDetailIDList.vnp_CardType;
+                    newOrder.CardType = cartDetailIDList.Vnp_CardType;
                 }
 
 
-                if (cartDetailIDList.vnp_BankCode == null || cartDetailIDList.vnp_BankCode.Equals(""))
+                if (cartDetailIDList.Vnp_BankCode == null || cartDetailIDList.Vnp_BankCode.Equals(""))
                 {
                     newOrder.BankCode = null;
                 }
                 else
                 {
-                    newOrder.BankCode = cartDetailIDList.vnp_BankCode;
+                    newOrder.BankCode = cartDetailIDList.Vnp_BankCode;
                 }
                 newOrder.DateCancel = null;
 
@@ -285,7 +285,7 @@ namespace MOBY_API_Core6.Repository
                 Email newEmail = new Email();
                 newEmail.To = owner.Value;
                 newEmail.Subject = "you have an order";
-                newEmail.Body = "you have an order";
+                newEmail.Link = "you have an order";
                 await emailDAO.SendEmai(newEmail);
             }
 

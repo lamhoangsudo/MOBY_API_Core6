@@ -8,62 +8,60 @@ namespace MOBY_API_Core6.Repository
 {
     public class SubCategoryRepository : ISubCategoryRepository
     {
-        public static string? errorMessage;
         private readonly MOBYContext _context;
+
+        public static string? ErrorMessage { get; set; }
+
         public SubCategoryRepository(MOBYContext context)
         {
             _context = context;
         }
-
+        //done
         public async Task<bool> CreateSubCategory(CreateSubCategoryVM subCategoryVM)
         {
             try
             {
-                var checkCategory = await _context.Categories
-                                .Where(ct => ct.CategoryId == subCategoryVM.categoryID)
-                                .FirstOrDefaultAsync();
-                if (checkCategory == null || subCategoryVM.subCategoryName == null || subCategoryVM.subCategoryName.Equals(""))
+                if (!(String.IsNullOrEmpty(subCategoryVM.SubCategoryName) || String.IsNullOrWhiteSpace(subCategoryVM.SubCategoryName)))
                 {
-                    errorMessage = "Category không tồn tại";
-                    return false;
-                }
-                else
-                {
-                    var checkSubCategory = await _context.SubCategories
-                        .Where(sc => sc.SubCategoryName.Equals(subCategoryVM.subCategoryName))
-                        .FirstOrDefaultAsync();
-                    if (checkSubCategory == null)
+                    var checkCategory = await _context.Categories
+                                    .Where(ct => ct.CategoryId == subCategoryVM.CategoryID)
+                                    .FirstOrDefaultAsync();
+                    if (checkCategory != null)
                     {
-                        SubCategory subCategory = new SubCategory();
-                        subCategory.SubCategoryName = subCategoryVM.subCategoryName;
-                        subCategory.SubCategoryStatus = true;
-                        subCategory.CategoryId = subCategoryVM.categoryID;
-                        await _context.SubCategories.AddAsync(subCategory);
-                        await _context.SaveChangesAsync();
-                        return true;
-                    }
-                    else
-                    {
-                        errorMessage = "SubCategory không tồn tại";
-                        return false;
+                        var checkSubCategory = await _context.SubCategories
+                            .Where(sc => sc.SubCategoryName.Equals(subCategoryVM.SubCategoryName))
+                            .FirstOrDefaultAsync();
+                        if (checkSubCategory == null)
+                        {
+                            SubCategory subCategory = new()
+                            {
+                                SubCategoryName = subCategoryVM.SubCategoryName,
+                                SubCategoryStatus = true,
+                                CategoryId = subCategoryVM.CategoryID
+                            };
+                            await _context.SubCategories.AddAsync(subCategory);
+                            await _context.SaveChangesAsync();
+                            return true;
+                        }
                     }
                 }
+                return false;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
-
+        //done
         public async Task<bool> DeleteSubCategory(DeleteSubCategoryVM subCategoryVM)
         {
             try
             {
-                SubCategory? subCategoryDelete = await _context.SubCategories.Where(sc => sc.SubCategoryId == subCategoryVM.subCategoryID).FirstOrDefaultAsync();
+                SubCategory? subCategoryDelete = await _context.SubCategories.Where(sc => sc.SubCategoryId == subCategoryVM.SubCategoryID).FirstOrDefaultAsync();
                 if (subCategoryDelete == null)
                 {
-                    errorMessage = "không tìm thấy";
+                    ErrorMessage = "không tìm thấy";
                     return false;
                 }
                 subCategoryDelete.SubCategoryStatus = false;
@@ -72,12 +70,12 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
 
         }
-
+        //done
         public async Task<List<SubCategoryVM>?> GetSubCategoriesByName(string subCategoryName)
         {
             try
@@ -94,12 +92,12 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
 
         }
-
+        //done
         public async Task<List<SubCategoryVM>?> GetAllSubCategory(int categoryID)
         {
             try
@@ -109,7 +107,7 @@ namespace MOBY_API_Core6.Repository
                                 .FirstOrDefaultAsync();
                 if (checkCategory == null)
                 {
-                    errorMessage = "Category không tồn tại";
+                    ErrorMessage = "Category không tồn tại";
                     return null;
                 }
                 else
@@ -127,11 +125,11 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
         }
-
+        //done
         public async Task<SubCategoryVM?> GetSubCategoryByID(int subCategoryID)
         {
             try
@@ -156,45 +154,43 @@ namespace MOBY_API_Core6.Repository
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return null;
             }
 
         }
-
+        //done
         public async Task<bool> UpdateSubCategory(UpdateSubCategoryVM subCategoryVM)
         {
             try
             {
-                var checkCategory = await _context.Categories
-                                .Where(ct => ct.CategoryId == subCategoryVM.categoryID)
+                if (!(String.IsNullOrEmpty(subCategoryVM.SubCategoryName) || String.IsNullOrWhiteSpace(subCategoryVM.SubCategoryName)))
+                {
+                    var checkCategory = await _context.Categories
+                                .Where(ct => ct.CategoryId == subCategoryVM.CategoryID)
                                 .FirstOrDefaultAsync();
-                if (checkCategory == null || subCategoryVM.subCategoryName == null || subCategoryVM.subCategoryName.Equals(""))
-                {
-                    return false;
-                }
-                else
-                {
-                    SubCategory? subCategoryUpdate = await _context.SubCategories
-                        .Where(sc => sc.SubCategoryId == subCategoryVM.subCategoryID)
-                        .FirstOrDefaultAsync();
-                    if (subCategoryUpdate == null)
+                    if (checkCategory != null)
                     {
-                        return false;
+                        SubCategory? subCategoryUpdate = await _context.SubCategories
+                            .Where(sc => sc.SubCategoryId == subCategoryVM.SubCategoryID)
+                            .FirstOrDefaultAsync();
+                        if (subCategoryUpdate != null)
+                        {
+                            subCategoryUpdate.SubCategoryName = subCategoryVM.SubCategoryName;
+                            subCategoryUpdate.CategoryId = subCategoryVM.CategoryID;
+                            subCategoryUpdate.SubCategoryStatus = true;
+                            await _context.SaveChangesAsync();
+                            return true;
+                        }
                     }
-                    subCategoryUpdate.SubCategoryName = subCategoryVM.subCategoryName;
-                    subCategoryUpdate.CategoryId = subCategoryVM.categoryID;
-                    subCategoryUpdate.SubCategoryStatus = true;
-                    await _context.SaveChangesAsync();
-                    return true;
                 }
+                return false;
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
-
         }
     }
 }

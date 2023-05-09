@@ -6,9 +6,9 @@ namespace MOBY_API_Core6.Data_View_Model
     public class DeleteReportVM
     {
         [Required]
-        public int reportID { get; set; }
+        public int ReportID { get; set; }
         [DefaultValue(3)]
         [ReadOnly(true)]
-        public int isDelete { get; set; }
+        public int IsDelete { get; set; }
     }
 }

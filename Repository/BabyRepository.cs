@@ -15,6 +15,7 @@ namespace MOBY_API_Core6.Repository
         {
             _context = context;
         }
+        //done
         public async Task<bool> InputInformationBaby(CreateBabyVM babyVM)
         {
             try
@@ -51,7 +52,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> UpdateInformationBaby(UpdateBabyVM babyVM)
         {
             try
@@ -90,7 +91,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<List<Baby>?> GetBabyByUserID(int id)
         {
             try
@@ -105,7 +106,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<bool> DeleteBaby(int id, int us)
         {
             try

@@ -66,7 +66,7 @@ namespace MOBY_API_Core6.Repository
 
         }*/
 
-        public async Task<int> getUserIDByUserCode(String userCode)// nay laf tren token
+        public async Task<int> GetUserIDByUserCode(String userCode)// nay laf tren token
         {
             UserAccount? Userfound = await context.UserAccounts.Where(u => u.UserCode == userCode).FirstOrDefaultAsync();
             if (Userfound != null)
@@ -161,7 +161,7 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<List<UserVM>> GetAllUser(PaggingVM pagging, UserAccountFilterVM userAccountFilterVM)
         {
-            int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
+            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
             List<UserVM> accountListVM = new List<UserVM>();
             if (userAccountFilterVM.UserName == null || userAccountFilterVM.UserGmail == null)
             {
@@ -169,12 +169,12 @@ namespace MOBY_API_Core6.Repository
             }
             if (userAccountFilterVM.UserStatus != null)
             {
-                if (pagging.orderBy)
+                if (pagging.OrderBy)
                 {
                     accountListVM = await context.UserAccounts
                     .Where(uc => uc.UserStatus == userAccountFilterVM.UserStatus && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .OrderByDescending(x => x.UserId)
                     .Select(u => UserVM.UserAccountToVewModel(u))
                     .ToListAsync();
@@ -185,7 +185,7 @@ namespace MOBY_API_Core6.Repository
                     accountListVM = await context.UserAccounts
                     .Where(uc => uc.UserStatus == userAccountFilterVM.UserStatus && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .Select(u => UserVM.UserAccountToVewModel(u))
                     .ToListAsync();
 
@@ -193,12 +193,12 @@ namespace MOBY_API_Core6.Repository
             }
             else
             {
-                if (pagging.orderBy)
+                if (pagging.OrderBy)
                 {
                     accountListVM = await context.UserAccounts
                     .Where(uc => uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .OrderByDescending(x => x.UserId)
                     .Select(u => UserVM.UserAccountToVewModel(u))
                     .ToListAsync();
@@ -209,7 +209,7 @@ namespace MOBY_API_Core6.Repository
                     accountListVM = await context.UserAccounts
                     .Where(uc => uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
                     .Skip(itemsToSkip)
-                    .Take(pagging.pageSize)
+                    .Take(pagging.PageSize)
                     .Select(u => UserVM.UserAccountToVewModel(u))
                     .ToListAsync();
 
@@ -236,10 +236,13 @@ namespace MOBY_API_Core6.Repository
             {
                 foundAccount.UserStatus = false;
                 await context.SaveChangesAsync();
-                Email newEmail = new Email();
-                newEmail.To = foundAccount.UserGmail;
-                newEmail.Subject = "your has been ban";
-                newEmail.Body = foundAccount.UserGmail + " has been banned by admintrator at " + DateTime.Now.ToString();
+                Email newEmail = new()
+                {
+                    To = foundAccount.UserGmail,
+                    Subject = "your has been ban",
+                    Obj = "Account",
+                    Link = foundAccount.UserGmail + " has been banned by admintrator at " + DateTime.Now.ToString()
+                };
                 await emailDAO.SendEmai(newEmail);
                 return true;
             }
@@ -257,10 +260,12 @@ namespace MOBY_API_Core6.Repository
             {
                 foundAccount.UserStatus = true;
                 await context.SaveChangesAsync();
-                Email newEmail = new Email();
-                newEmail.To = foundAccount.UserGmail;
-                newEmail.Subject = "your has been unbanned";
-                newEmail.Body = foundAccount.UserGmail + " has been unbanned by admintrator at " + DateTime.Now.ToString();
+                Email newEmail = new Email
+                {
+                    To = foundAccount.UserGmail,
+                    Subject = "your has been unbanned",
+                    Link = foundAccount.UserGmail + " has been unbanned by admintrator at " + DateTime.Now.ToString()
+                };
                 await emailDAO.SendEmai(newEmail);
                 return true;
 

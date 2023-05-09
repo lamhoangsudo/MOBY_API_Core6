@@ -37,10 +37,8 @@ namespace MOBY_API_Core6.Data_View_Model
                 CartId = cartDetail.CartId,
                 ItemId = cartDetail.ItemId,
                 ItemQuantity = cartDetail.ItemQuantity,
-
+                ItemVM = ItemVM.ItemToViewModel(item)
             };
-
-            RequestDetailVM.ItemVM = ItemVM.ItemToViewModel(item);
 
 
             return RequestDetailVM;

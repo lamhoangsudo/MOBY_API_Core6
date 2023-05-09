@@ -14,7 +14,7 @@ namespace MOBY_API_Core6.Repository
         {
             _context = context;
         }
-
+        //done
         public async Task<List<RecordPenaltyPoint>?> GetRecordPenaltyPointsByUserID(int userID)
         {
             try
@@ -29,7 +29,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<bool> CreateRecord(RecordPenaltyPoint recordPenaltyPoint)
         {
             try

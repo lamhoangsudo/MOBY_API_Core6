@@ -36,7 +36,7 @@ internal class Program
 
         if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") != null)
         {
-            connectionString = Environment.GetEnvironmentVariable("MobyDB")!;
+            connectionString = Environment.GetEnvironmentVariable("MobyDBLocallam")!;
         }
         else
         {

@@ -19,12 +19,22 @@ namespace Item.Controllers
             _itemRepository = itemRepository;
             _userRepository = userRepository;
         }
-
+        [Authorize]
         [HttpPost("CreateItem")]
         public async Task<IActionResult> CreateItem([FromBody] CreateItemVM itemVM)
         {
             try
             {
+                int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (userID == 0)
+                {
+                    return BadRequest(ReturnMessage.Create("Account has been suspended"));
+                }
+                if (userID == -1)
+                {
+                    return BadRequest(ReturnMessage.Create("Account not found"));
+                }
+                itemVM.UserId = userID;
                 bool checkCreate = await _itemRepository.CreateItem(itemVM);
                 if (checkCreate)
                 {
@@ -321,7 +331,7 @@ namespace Item.Controllers
         {
             try
             {
-                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (userID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -354,7 +364,7 @@ namespace Item.Controllers
         {
             try
             {
-                int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (userID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -411,7 +421,7 @@ namespace Item.Controllers
         [HttpGet("GetListAllOtherPersonRequestItem")]
         public async Task<IActionResult> GetListAllOtherPersonRequestItem(bool share, bool status, int pageNumber, int pageSize)
         {
-            int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             if (userID == 0)
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -443,7 +453,7 @@ namespace Item.Controllers
         [HttpGet("GetListAllMyRequestItem")]
         public async Task<IActionResult> GetListAllMyRequestItem(bool share, bool status, int pageNumber, int pageSize)
         {
-            int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             if (userID == 0)
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -474,7 +484,7 @@ namespace Item.Controllers
         [HttpPost("CreateRecordUserSearch")]
         public async Task<IActionResult> CreateRecordUserSearch([FromBody] RecordSearchVM recordSearchVM)
         {
-            int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             if (userID == 0)
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -506,7 +516,7 @@ namespace Item.Controllers
         [HttpGet("GetListRecommend")]
         public async Task<IActionResult> GetListRecommend(int pageNumber, int pageSize)
         {
-            int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             if (userID == 0)
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -537,7 +547,7 @@ namespace Item.Controllers
         [HttpGet("GetListRecommendByBaby")]
         public async Task<IActionResult> GetListRecommendByBaby(int babyID, int pageNumber, int pageSize, bool age, bool weight, bool height)
         {
-            int userID = await _userRepository.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+            int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
             if (userID == 0)
             {
                 return BadRequest(ReturnMessage.Create("Account has been suspended"));

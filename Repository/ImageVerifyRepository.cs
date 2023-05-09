@@ -6,10 +6,12 @@ namespace MOBY_API_Core6.Repository
 {
     public class ImageVerifyRepository : IImageVerifyRepository
     {
-        public async Task<bool> verify(String url)
+        public async Task<bool> Verify(String url)
         {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("https://vision.googleapis.com");
+            HttpClient client = new()
+            {
+                BaseAddress = new Uri("https://vision.googleapis.com")
+            };
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var jsonRequestString = "{  'requests': [    {      'image': {        'source': {            'imageUri': '" + url + "'        }      },      'features': [        {          'type': 'SAFE_SEARCH_DETECTION'        }      ]    }  ]}";

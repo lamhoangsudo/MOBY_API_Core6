@@ -42,7 +42,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                var category = await _categoryRepository.GetCategoryByID(categoryVM.categoryID);
+                var category = await _categoryRepository.GetCategoryByID(categoryVM.CategoryID);
                 if (category == null)
                 {
                     return NotFound(ReturnMessage.Create("khong tim thay"));
@@ -71,7 +71,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                var category = await _categoryRepository.GetCategoryByID(categoryVM.categoryID);
+                var category = await _categoryRepository.GetCategoryByID(categoryVM.CategoryID);
                 if (category == null || category.CategoryStatus == false)
                 {
                     return NotFound(ReturnMessage.Create("khong tim thay"));
@@ -105,13 +105,13 @@ namespace MOBY_API_Core6.Controllers
                 if (listCategory == null)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(CategoryRepository.errorMessage));
+                    return BadRequest(ReturnMessage.Create(CategoryRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
                 if (listCategory.Count == 0)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return NotFound(ReturnMessage.Create(CategoryRepository.errorMessage));
+                    return NotFound(ReturnMessage.Create(CategoryRepository.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else

@@ -16,7 +16,7 @@ namespace MOBY_API_Core6.Data_View_Model
 
         public static ReplyVM ReplyToVewModel(Reply rep)
         {
-            ReplyVM replyVM = new ReplyVM()
+            ReplyVM replyVM = new()
             {
                 ReplyId = rep.ReplyId,
                 CommentId = rep.CommentId,

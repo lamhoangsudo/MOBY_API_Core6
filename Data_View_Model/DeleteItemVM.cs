@@ -2,7 +2,7 @@
 {
     public class DeleteItemVM
     {
-        public int itemID { get; set; } 
-        public int userID { get; set; }
+        public int ItemID { get; set; } 
+        public int UserID { get; set; }
     }
 }

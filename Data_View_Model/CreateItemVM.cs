@@ -5,34 +5,33 @@ namespace MOBY_API_Core6.Data_View_Model
 {
     public class CreateItemVM
     {
+        [ReadOnly(true)]
+        public int UserId { get; set; }
         [Required]
-        public int userId { get; set; }
+        public int SubCategoryId { get; set; }
         [Required]
-        public int subCategoryId { get; set; }
+        public string ItemTitle { get; set; }
         [Required]
-        public string itemTitle { get; set; }
-        [Required]
-        public string itemDetailedDescription { get; set; }
+        public string ItemDetailedDescription { get; set; }
         [Range(0, 100)]
-        public double itemMass { get; set; }
+        public double ItemMass { get; set; }
         [DefaultValue(false)]
-        public bool itemSize { get; set; }
-        public string? itemQuanlity { get; set; }
+        public bool ItemSize { get; set; }
         [Range (40, 100)]
         [DefaultValue(40)]
-        public double itemEstimateValue { get; set; }
+        public double ItemEstimateValue { get; set; }
         [DefaultValue(0)]
-        public double itemSalePrice { get; set; }
+        public double ItemSalePrice { get; set; }
         [DefaultValue(1)]
-        public int itemShareAmount { get; set; }
+        public int ItemShareAmount { get; set; }
         [Required]
-        public string itemShippingAddress { get; set; }
+        public string ItemShippingAddress { get; set; }
         [Required]
-        public string image { get; set; }
+        public string Image { get; set; }
         [DefaultValue(null)]
-        public string? stringDateTimeExpired { get; set; }
+        public string? StringDateTimeExpired { get; set; }
         [DefaultValue(true)]
-        public bool share { get; set; }
+        public bool Share { get; set; }
         [DefaultValue(0)]
         public double? MaxAge { get; set; }
         [DefaultValue(0)]
@@ -46,22 +45,21 @@ namespace MOBY_API_Core6.Data_View_Model
         [DefaultValue(0)]
         public double? MinHeight { get; set; }
 
-        public CreateItemVM(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, string? itemQuanlity, double itemEstimateValue, double itemSalePrice, int itemShareAmount, string itemShippingAddress, string image, string? stringDateTimeExpired, bool share, double? maxAge, double? minAge, double? maxWeight, double? minWeight, double? maxHeight, double? minHeight)
+        public CreateItemVM(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, double itemEstimateValue, double itemSalePrice, int itemShareAmount, string itemShippingAddress, string image, string? stringDateTimeExpired, bool share, double? maxAge, double? minAge, double? maxWeight, double? minWeight, double? maxHeight, double? minHeight)
         {
-            this.userId = userId;
-            this.subCategoryId = subCategoryId;
-            this.itemTitle = itemTitle;
-            this.itemDetailedDescription = itemDetailedDescription;
-            this.itemMass = itemMass;
-            this.itemSize = itemSize;
-            this.itemQuanlity = itemQuanlity;
-            this.itemEstimateValue = itemEstimateValue;
-            this.itemSalePrice = itemSalePrice;
-            this.itemShareAmount = itemShareAmount;
-            this.itemShippingAddress = itemShippingAddress;
-            this.image = image;
-            this.stringDateTimeExpired = stringDateTimeExpired;
-            this.share = share;
+            this.UserId = userId;
+            this.SubCategoryId = subCategoryId;
+            this.ItemTitle = itemTitle;
+            this.ItemDetailedDescription = itemDetailedDescription;
+            this.ItemMass = itemMass;
+            this.ItemSize = itemSize;
+            this.ItemEstimateValue = itemEstimateValue;
+            this.ItemSalePrice = itemSalePrice;
+            this.ItemShareAmount = itemShareAmount;
+            this.ItemShippingAddress = itemShippingAddress;
+            this.Image = image;
+            this.StringDateTimeExpired = stringDateTimeExpired;
+            this.Share = share;
             MaxAge = maxAge;
             MinAge = minAge;
             MaxWeight = maxWeight;

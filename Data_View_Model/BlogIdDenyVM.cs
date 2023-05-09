@@ -9,6 +9,6 @@ namespace MOBY_API_Core6.Data_View_Model
         public int BlogId { get; set; }
 
         [DefaultValue("other reason")]
-        public String? reason { get; set; }
+        public String? Reason { get; set; }
     }
 }

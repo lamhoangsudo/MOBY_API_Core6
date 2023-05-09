@@ -24,7 +24,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -39,7 +39,7 @@ namespace MOBY_API_Core6.Controllers
                     return BadRequest(ReturnMessage.Create("this address already existed"));
                 }
 
-                if (await userAddressDAO.createNewAddress(createMyAddressVM, uid))
+                if (await userAddressDAO.CreateNewAddress(createMyAddressVM, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
                 }
@@ -62,7 +62,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -71,7 +71,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                List<MyAddressVM>? addresses = await userAddressDAO.getMylistAddress(uid);
+                List<MyAddressVM>? addresses = await userAddressDAO.GetMylistAddress(uid);
 
                 return Ok(addresses);
 
@@ -89,7 +89,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -98,7 +98,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                UserAddress? currentUserAddress = await userAddressDAO.FindUserAddressByUserAddressID(updateMyAddressVM.userAddressID, uid);
+                UserAddress? currentUserAddress = await userAddressDAO.FindUserAddressByUserAddressID(updateMyAddressVM.UserAddressID, uid);
                 if (currentUserAddress != null)
                 {
                     if (await userAddressDAO.UpdateUserAddress(updateMyAddressVM, currentUserAddress))
@@ -121,7 +121,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await userDAO.getUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -130,10 +130,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                UserAddress? currentUserAddress = await userAddressDAO.FindUserAddressByUserAddressID(myAddressIdVM.userAddressID, uid);
+                UserAddress? currentUserAddress = await userAddressDAO.FindUserAddressByUserAddressID(myAddressIdVM.UserAddressID, uid);
                 if (currentUserAddress != null)
                 {
-                    if (await userAddressDAO.deleteMyAddress(currentUserAddress))
+                    if (await userAddressDAO.DeleteMyAddress(currentUserAddress))
                     {
                         return Ok(ReturnMessage.Create("success"));
                     }

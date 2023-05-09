@@ -67,13 +67,13 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<List<TransationLogVM>> GetTransationLog(bool status, PaggingVM pagging)
         {
-            int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
+            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
             List<TransationLogVM>? transationLogList = await context.TransationLogs
                 .Where(t => t.TransactionStatus == status)
                 .Include(t => t.User)
                 .OrderByDescending(t => t.TransactionId)
                 .Skip(itemsToSkip)
-                .Take(pagging.pageSize)
+                .Take(pagging.PageSize)
                 .Select(t => TransationLogVM.TransactionToVewModel(t))
                 .ToListAsync();
             return transationLogList;
@@ -88,13 +88,13 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<List<TransationLogVM>> GetTransationLogByUserID(int uid, PaggingVM pagging)
         {
-            int itemsToSkip = (pagging.pageNumber - 1) * pagging.pageSize;
+            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
             List<TransationLogVM>? transationLogList = await context.TransationLogs
                 .Where(t => t.UserId == uid)
                 .Include(t => t.User)
                 .OrderByDescending(t => t.TransactionId)
                 .Skip(itemsToSkip)
-                .Take(pagging.pageSize)
+                .Take(pagging.PageSize)
                 .Select(t => TransationLogVM.TransactionToVewModel(t))
                 .ToListAsync();
             return transationLogList;

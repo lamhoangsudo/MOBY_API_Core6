@@ -2,17 +2,17 @@
 {
     public class PaggingReturnVM<T>
     {
-        public int totalRecord { get; set; }
-        public int pageNumber { get; set; }
-        public int pageSize { get; set; }
+        public int TotalRecord { get; set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
 
         public List<T>? ListModel { get; set; }
         public PaggingReturnVM(IEnumerable<T> results, PaggingVM pagging, int totalRecords)
         {
             ListModel = new List<T>(results);
-            pageNumber = pagging.pageNumber;
-            pageSize = pagging.pageSize;
-            totalRecord = totalRecords;
+            PageNumber = pagging.PageNumber;
+            PageSize = pagging.PageSize;
+            TotalRecord = totalRecords;
         }
 
 

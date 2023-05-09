@@ -19,28 +19,28 @@ namespace MOBY_API_Core6.Repository
             _emailRepository = emailRepository;
             _recordPenaltyRepository = recordPenaltyRepository;
         }
-
+        //done
         public async Task<bool> CreateItemReport(CreateReportVM reportVM)
         {
             try
             {
-                bool checkItem = await _context.Items.Where(it => it.ItemId == reportVM.itemID && it.ItemStatus == true).AnyAsync();
-                bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.userID && us.UserStatus == true).AnyAsync();
+                bool checkItem = await _context.Items.Where(it => it.ItemId == reportVM.ItemID && it.ItemStatus == true).AnyAsync();
+                bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.UserID && us.UserStatus == true).AnyAsync();
                 if (checkItem == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
                     Report report = new()
                     {
                         ReportDateCreate = dateTimeCreate,
-                        ItemId = reportVM.itemID,
-                        UserId = reportVM.userID,
+                        ItemId = reportVM.ItemID,
+                        UserId = reportVM.UserID,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                        Title = reportVM.title,
+                        Title = reportVM.Title,
 #pragma warning restore CS8601 // Possible null reference assignment.
-                        ReportStatus = reportVM.status,
+                        ReportStatus = reportVM.Status,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                        ReportContent = reportVM.content,
-                        Evident = reportVM.image
+                        ReportContent = reportVM.Content,
+                        Evident = reportVM.Image
                     };
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
@@ -59,28 +59,28 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> CreateOrderReport(CreateReportVM reportVM)
         {
             try
             {
-                bool checkOrder = await _context.Orders.Where(or => or.OrderId == reportVM.orderID && or.Status != 3).AnyAsync();
-                bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.userID && us.UserStatus == true).AnyAsync();
+                bool checkOrder = await _context.Orders.Where(or => or.OrderId == reportVM.OrderID && or.Status != 3).AnyAsync();
+                bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.UserID && us.UserStatus == true).AnyAsync();
                 if (checkOrder == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
                     Report report = new()
                     {
                         ReportDateCreate = dateTimeCreate,
-                        ItemId = reportVM.itemID,
-                        UserId = reportVM.userID,
+                        ItemId = reportVM.ItemID,
+                        UserId = reportVM.UserID,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                        Title = reportVM.title,
+                        Title = reportVM.Title,
 #pragma warning restore CS8601 // Possible null reference assignment.
-                        ReportStatus = reportVM.status,
+                        ReportStatus = reportVM.Status,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                        ReportContent = reportVM.content,
-                        Evident = reportVM.image
+                        ReportContent = reportVM.Content,
+                        Evident = reportVM.Image
                     };
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
@@ -99,28 +99,28 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> CreateCommentReport(CreateReportVM reportVM)
         {
             try
             {
-                bool checkComment = await _context.Comments.Where(cm => cm.CommentId == reportVM.commentID).AnyAsync();
-                bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.userID && us.UserStatus == true).AnyAsync();
+                bool checkComment = await _context.Comments.Where(cm => cm.CommentId == reportVM.CommentID).AnyAsync();
+                bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.UserID && us.UserStatus == true).AnyAsync();
                 if (checkComment == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
                     Report report = new()
                     {
                         ReportDateCreate = dateTimeCreate,
-                        CommentId = reportVM.commentID,
-                        UserId = reportVM.userID,
+                        CommentId = reportVM.CommentID,
+                        UserId = reportVM.UserID,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                        Title = reportVM.title,
+                        Title = reportVM.Title,
 #pragma warning restore CS8601 // Possible null reference assignment.
-                        ReportStatus = reportVM.status,
+                        ReportStatus = reportVM.Status,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                        ReportContent = reportVM.content,
-                        Evident = reportVM.image
+                        ReportContent = reportVM.Content,
+                        Evident = reportVM.Image
                     };
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
@@ -139,28 +139,28 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> CreateReplyReport(CreateReportVM reportVM)
         {
             try
             {
-                bool checkReply = await _context.Replies.Where(rp => rp.ReplyId == reportVM.replyID).AnyAsync();
-                bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.userID && us.UserStatus == true).AnyAsync();
+                bool checkReply = await _context.Replies.Where(rp => rp.ReplyId == reportVM.ReplyID).AnyAsync();
+                bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.UserID && us.UserStatus == true).AnyAsync();
                 if (checkReply == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
                     Report report = new()
                     {
                         ReportDateCreate = dateTimeCreate,
-                        ReplyId = reportVM.replyID,
-                        UserId = reportVM.userID,
+                        ReplyId = reportVM.ReplyID,
+                        UserId = reportVM.UserID,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                        Title = reportVM.title,
+                        Title = reportVM.Title,
 #pragma warning restore CS8601 // Possible null reference assignment.
-                        ReportStatus = reportVM.status,
+                        ReportStatus = reportVM.Status,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                        ReportContent = reportVM.content,
-                        Evident = reportVM.image
+                        ReportContent = reportVM.Content,
+                        Evident = reportVM.Image
                     };
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
@@ -179,28 +179,28 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> CreateBlogReport(CreateReportVM reportVM)
         {
             try
             {
-                bool checkBlog = await _context.Blogs.Where(bg => bg.BlogId == reportVM.blogID && bg.BlogStatus == 1).AnyAsync();
-                bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.userID && us.UserStatus == true).AnyAsync();
+                bool checkBlog = await _context.Blogs.Where(bg => bg.BlogId == reportVM.BlogID && bg.BlogStatus == 1).AnyAsync();
+                bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.UserID && us.UserStatus == true).AnyAsync();
                 if (checkBlog == true && checkUser == true)
                 {
                     DateTime dateTimeCreate = DateTime.Now;
                     Report report = new()
                     {
                         ReportDateCreate = dateTimeCreate,
-                        BlogId = reportVM.blogID,
-                        UserId = reportVM.userID,
+                        BlogId = reportVM.BlogID,
+                        UserId = reportVM.UserID,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                        Title = reportVM.title,
+                        Title = reportVM.Title,
 #pragma warning restore CS8601 // Possible null reference assignment.
-                        ReportStatus = reportVM.status,
+                        ReportStatus = reportVM.Status,
 #pragma warning disable CS8601 // Possible null reference assignment.
-                        ReportContent = reportVM.content,
-                        Evident = reportVM.image
+                        ReportContent = reportVM.Content,
+                        Evident = reportVM.Image
                     };
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
@@ -219,7 +219,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> ApprovedReport(ApprovedReportVM reportVM)
         {
             try
@@ -269,7 +269,7 @@ namespace MOBY_API_Core6.Repository
                         {
                             To = gmail,
                             Subject = "your report has been accepted",
-                            Body = "Dear " + username + "/n" + "your report: https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId + "&type=" + type + "has been accepted by admintrator"
+                            Link = "Dear " + username + "/n" + "your report: https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId + "&type=" + type + "has been accepted by admintrator"
                         };
                         await _emailRepository.SendEmai(email);
                     }
@@ -290,14 +290,14 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> DenyReport(DenyReportVM reportVM)
         {
             try
             {
                 var query = _context.Reports
                     .Join(_context.UserAccounts, rp => rp.UserId, us => us.UserId, (rp, us) => new { rp, us })
-                    .Where(rpus => rpus.rp.ReportId == reportVM.reportID
+                    .Where(rpus => rpus.rp.ReportId == reportVM.ReportID
                     && rpus.rp.ReportStatus == 0
                     && rpus.us.UserStatus == true);
                 Report? report = await query
@@ -338,13 +338,13 @@ namespace MOBY_API_Core6.Repository
                         {
                             To = gmail,
                             Subject = "your report has been deny",
-                            Body = "Dear " + username + "/n" + "your report: https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId + "&type=" + type + "has been rejected by admintrator"
+                            Link = "Dear " + username + "/n" + "your report: https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId + "&type=" + type + "has been rejected by admintrator"
                         };
                         await _emailRepository.SendEmai(email);
                     }
                     report.ReportDateResolve = DateTime.Now;
                     report.ReportStatus = 2;
-                    report.ReasonDeny = reportVM.reason;
+                    report.ReasonDeny = reportVM.Reason;
                     await _context.SaveChangesAsync();
                     return true;
                 }
@@ -360,19 +360,19 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> UpdateReport(UpdateReportVM reportVM)
         {
             try
             {
-                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
+                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.ReportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
                 if (report != null)
                 {
                     report.ReportDateResolve = DateTime.Now;
 #pragma warning disable CS8601 // Possible null reference assignment.
-                    report.ReportContent = reportVM.content;
-                    report.Title = reportVM.title;
-                    report.Evident = reportVM.image;
+                    report.ReportContent = reportVM.Content;
+                    report.Title = reportVM.Title;
+                    report.Evident = reportVM.Image;
 #pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.SaveChangesAsync();
                     return true;
@@ -389,16 +389,16 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> DeleteReport(DeleteReportVM reportVM)
         {
             try
             {
-                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.reportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
+                Report? report = await _context.Reports.Where(rp => rp.ReportId == reportVM.ReportID && rp.ReportStatus == 0).FirstOrDefaultAsync();
                 if (report != null)
                 {
                     report.ReportDateResolve = DateTime.Now;
-                    report.ReportStatus = reportVM.isDelete;
+                    report.ReportStatus = reportVM.IsDelete;
                     await _context.SaveChangesAsync();
                     return true;
                 }
@@ -414,7 +414,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<ListVM<ViewReport>?> GetReports(DynamicFilterReportVM dynamicFilterReportVM)
         {
             try
@@ -541,7 +541,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ViewReportItem?> ItemReportDetail(int reportID)
         {
             try
@@ -559,7 +559,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ViewReportBlog?> BlogReportDetail(int reportID)
         {
             try
@@ -577,7 +577,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ViewReportComment?> CommentReportDetail(int reportID)
         {
             try
@@ -595,7 +595,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ViewReportReply?> ReplyReportDetail(int reportID)
         {
             try
@@ -613,7 +613,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ViewReportOrder?> OrderReportDetail(int reportID)
         {
             try
@@ -631,7 +631,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public void AutoDeleteAllBanUser()
         {
             try
@@ -659,7 +659,7 @@ namespace MOBY_API_Core6.Repository
                 ErrorMessage = ex.Message;
             }
         }
-
+        //done
         public async Task<bool> HiddenOject(HiddenAndPunish hideAndPunish)
         {
             try
@@ -688,7 +688,7 @@ namespace MOBY_API_Core6.Repository
                             {
                                 To = userAccount.UserGmail,
                                 Subject = "your order has been hidden",
-                                Body = "Dear "
+                                Link = "Dear "
                                 + userAccount.UserName
                                 + "/n"
                                 + "your order: https://moby-customer.vercel.app/product/"
@@ -725,7 +725,7 @@ namespace MOBY_API_Core6.Repository
                             {
                                 To = userAccount.UserGmail,
                                 Subject = "your order has been cancel",
-                                Body = "Dear "
+                                Link = "Dear "
                                 + userAccount.UserName
                                 + "/n"
                                 + "your order: https://moby-customer.vercel.app/order/"
@@ -762,7 +762,7 @@ namespace MOBY_API_Core6.Repository
                             {
                                 To = userAccount.UserGmail,
                                 Subject = "your comment has been hidden",
-                                Body = "Dear "
+                                Link = "Dear "
                                 + userAccount.UserName
                                 + "/n"
                                 + "your comment: https://moby-customer.vercel.app/order/"
@@ -799,7 +799,7 @@ namespace MOBY_API_Core6.Repository
                             {
                                 To = userAccount.UserGmail,
                                 Subject = "your reply has been hidden",
-                                Body = "Dear "
+                                Link = "Dear "
                                 + userAccount.UserName
                                 + "/n"
                                 + "your comment: https://moby-customer.vercel.app/order/"
@@ -836,7 +836,7 @@ namespace MOBY_API_Core6.Repository
                             {
                                 To = userAccount.UserGmail,
                                 Subject = "your blog has been hidden",
-                                Body = "Dear "
+                                Link = "Dear "
                                 + userAccount.UserName
                                 + "/n"
                                 + "your blog: https://moby-customer.vercel.app/order/"
@@ -863,7 +863,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<bool> PunishViolators(HiddenAndPunish hideAndPunish)
         {
             try
@@ -911,7 +911,7 @@ namespace MOBY_API_Core6.Repository
                                     {
                                         To = userAccountItem.UserGmail,
                                         Subject = "your blog has been hidden",
-                                        Body = "Dear " + userAccountItem.UserName + "/n" + "your order: https://moby-customer.vercel.app/order/" + item.ItemId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                        Link = "Dear " + userAccountItem.UserName + "/n" + "your order: https://moby-customer.vercel.app/order/" + item.ItemId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
                                     };
                                     await _emailRepository.SendEmai(email);
                                 }
@@ -968,7 +968,7 @@ namespace MOBY_API_Core6.Repository
                                 {
                                     To = userAccountOrder.UserGmail,
                                     Subject = "your blog has been hidden",
-                                    Body = "Dear " + userAccountOrder.UserName + "/n" + "your order: https://moby-customer.vercel.app/order/" + order.OrderId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                    Link = "Dear " + userAccountOrder.UserName + "/n" + "your order: https://moby-customer.vercel.app/order/" + order.OrderId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
                                 };
                                 await _emailRepository.SendEmai(email);
                             }
@@ -1019,7 +1019,7 @@ namespace MOBY_API_Core6.Repository
                                     {
                                         To = userAccountComment.UserGmail,
                                         Subject = "your blog has been hidden",
-                                        Body = "Dear " + userAccountComment.UserName + "/n" + "your commnet: https://moby-customer.vercel.app/order/" + comment.CommentId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                        Link = "Dear " + userAccountComment.UserName + "/n" + "your commnet: https://moby-customer.vercel.app/order/" + comment.CommentId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
                                     };
                                     await _emailRepository.SendEmai(email);
                                 }
@@ -1071,7 +1071,7 @@ namespace MOBY_API_Core6.Repository
                                     {
                                         To = userAccountReply.UserGmail,
                                         Subject = "your blog has been hidden",
-                                        Body = "Dear " + userAccountReply.UserName + "/n" + "your comment: https://moby-customer.vercel.app/order/" + reply.ReplyId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                        Link = "Dear " + userAccountReply.UserName + "/n" + "your comment: https://moby-customer.vercel.app/order/" + reply.ReplyId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
                                     };
 
                                     await _emailRepository.SendEmai(email);
@@ -1124,7 +1124,7 @@ namespace MOBY_API_Core6.Repository
                                     {
                                         To = userAccountBlog.UserGmail,
                                         Subject = "your blog has been hidden",
-                                        Body = "Dear " + userAccountBlog.UserName + "/n" + "your blog: https://moby-customer.vercel.app/order/" + blog.BlogId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                        Link = "Dear " + userAccountBlog.UserName + "/n" + "your blog: https://moby-customer.vercel.app/order/" + blog.BlogId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
                                     };
 
                                     await _emailRepository.SendEmai(email);
@@ -1149,7 +1149,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<StatusAndReasonHidenViewModel?> GetStatusAndReasonHiden(int id, int type)
         {
             StatusAndReasonHidenViewModel? statusAndReasonHidenViewModel = null;

@@ -21,101 +21,96 @@ namespace MOBY_API_Core6.Repository
             _JsonToObj = jsonToObj;
             _context = context;
         }
+        //done
         public async Task<bool> CreateItem(CreateItemVM itemVM)
         {
             try
             {
-                var checkUserExist = await _context.UserAccounts
-                    .Where(u => u.UserId == itemVM.userId)
-                    .SingleOrDefaultAsync();
-                var checkSubCategoryExists = await _context.SubCategories
-                    .Where(sc => sc.SubCategoryId == itemVM.subCategoryId)
-                    .SingleOrDefaultAsync();
-                if (checkSubCategoryExists == null || checkUserExist == null)
+                DateTime dateTimeCreate = DateTime.Now;
+                DateTime? dateTimeExpired = null;
+                if (!string.IsNullOrEmpty(itemVM.StringDateTimeExpired) && !string.IsNullOrWhiteSpace(itemVM.StringDateTimeExpired) && itemVM.Share == false)
                 {
-                    ErrorMessage = "danh mục or tài khoản bạn nhập không tồn tại";
+                    try
+                    {
+                        dateTimeExpired = DateTime.Parse(itemVM.StringDateTimeExpired);
+                        bool check = dateTimeExpired > dateTimeCreate;
+                        if (check == false)
+                        {
+                            return false;
+                        }
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                }
+                if (_JsonToObj.TransformLocation(itemVM.ItemShippingAddress) == null)
+                {
+                    return false;
+                }
+                if (itemVM.MaxAge < itemVM.MinAge || itemVM.MaxWeight < itemVM.MinWeight || itemVM.MaxHeight < itemVM.MinHeight || itemVM.MinAge < 0 || itemVM.MinWeight < 0 || itemVM.MinHeight < 0)
+                {
                     return false;
                 }
                 else
                 {
-                    DateTime dateTimeCreate = DateTime.Now;
-                    DateTime? dateTimeExpired = null;
-                    if (!string.IsNullOrEmpty(itemVM.stringDateTimeExpired) && !string.IsNullOrWhiteSpace(itemVM.stringDateTimeExpired) && itemVM.share == false)
+                    var checkSubCategoryExists = await _context.SubCategories
+                    .Where(sc => sc.SubCategoryId == itemVM.SubCategoryId)
+                    .FirstOrDefaultAsync();
+                    if (checkSubCategoryExists != null)
                     {
-                        try
+                        string itemCode = Guid.NewGuid().ToString();
+                        Models.Item item = new()
                         {
-                            dateTimeExpired = DateTime.Parse(itemVM.stringDateTimeExpired);
-                            bool check = dateTimeExpired > dateTimeCreate;
-                            if (check == false)
-                            {
-                                ErrorMessage = "bạn đã nhập ngày hết hạn sau ngày tạo";
-                                return false;
-                            }
-                        }
-                        catch
-                        {
-                            ErrorMessage = "bạn đã nhập sai format ngày, fotmat của chúng tôi là yyyy/mm/dd";
-                            return false;
-                        }
+                            UserId = itemVM.UserId,
+                            ItemCode = itemCode,
+                            SubCategoryId = itemVM.SubCategoryId,
+                            ItemTitle = itemVM.ItemTitle,
+                            ItemDetailedDescription = itemVM.ItemDetailedDescription,
+                            ItemMass = itemVM.ItemMass,
+                            ItemSize = itemVM.ItemSize,
+                            ItemEstimateValue = itemVM.ItemEstimateValue,
+                            ItemSalePrice = itemVM.ItemSalePrice,
+                            ItemShareAmount = itemVM.ItemShareAmount,
+                            ItemExpiredTime = dateTimeExpired,
+                            ItemShippingAddress = _JsonToObj.TransformLocation(itemVM.ItemShippingAddress),
+                            MaxAge = itemVM.MaxAge,
+                            MinAge = itemVM.MinAge,
+                            MaxHeight = itemVM.MaxHeight,
+                            MinHeight = itemVM.MinHeight,
+                            MaxWeight = itemVM.MaxWeight,
+                            MinWeight = itemVM.MinWeight,
+                            ItemDateCreated = dateTimeCreate,
+                            ItemStatus = true,
+                            Share = itemVM.Share,
+                            Image = itemVM.Image
+                        };
+                        await _context.Items.AddAsync(item);
+                        await _context.SaveChangesAsync();
+                        return true;
                     }
-                    if (_JsonToObj.TransformLocation(itemVM.itemShippingAddress) == null)
-                    {
-                        return false;
-                    }
-                    if (itemVM.MaxAge < itemVM.MinAge || itemVM.MaxWeight < itemVM.MinWeight || itemVM.MaxHeight < itemVM.MinHeight || itemVM.MinAge < 0 || itemVM.MinWeight < 0 || itemVM.MinHeight < 0)
-                    {
-                        return false;
-                    }
-                    string itemCode = Guid.NewGuid().ToString();
-                    Models.Item item = new()
-                    {
-                        UserId = itemVM.userId,
-                        ItemCode = itemCode,
-                        SubCategoryId = itemVM.subCategoryId,
-                        ItemTitle = itemVM.itemTitle,
-                        ItemDetailedDescription = itemVM.itemDetailedDescription,
-                        ItemMass = itemVM.itemMass,
-                        ItemSize = itemVM.itemSize,
-                        ItemEstimateValue = itemVM.itemEstimateValue,
-                        ItemSalePrice = itemVM.itemSalePrice,
-                        ItemShareAmount = itemVM.itemShareAmount,
-                        ItemExpiredTime = dateTimeExpired,
-                        ItemShippingAddress = _JsonToObj.TransformLocation(itemVM.itemShippingAddress),
-                        MaxAge = itemVM.MaxAge,
-                        MinAge = itemVM.MinAge,
-                        MaxHeight = itemVM.MaxHeight,
-                        MinHeight = itemVM.MinHeight,
-                        MaxWeight = itemVM.MaxWeight,
-                        MinWeight = itemVM.MinWeight,
-                        ItemDateCreated = dateTimeCreate,
-                        ItemStatus = true,
-                        Share = itemVM.share,
-                        Image = itemVM.image
-                    };
-                    await _context.Items.AddAsync(item);
-                    await _context.SaveChangesAsync();
-                    return true;
+                    return false;
                 }
             }
             catch (Exception ex)
             {
-                ErrorMessage = "có lỗi khi tạo sản phẩm này" + ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
-
+        //done
         public async Task<List<int>> GetListItemIDByUserID(int userId)
         {
             List<int> ItemIDList = await _context.Items.Where(i => i.UserId == userId).Select(i => i.ItemId).ToListAsync();
             return ItemIDList;
         }
-
+        //done
         public async Task<int> GetQuantityByItemID(int itemID)
         {
             int itemQuantity = await _context.Items.Where(i => i.ItemId == itemID).Select(i => i.ItemShareAmount).FirstOrDefaultAsync();
             return itemQuantity;
         }
-
+        //done
         public async Task<List<BriefItem>?> GetAllBriefItemAndBriefRequest(bool share, bool status, int pageNumber, int pageSize)
         {
             try
@@ -140,14 +135,14 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<List<BriefItem>?> SearchBriefItemByTitle(string itemTitle, bool status)
         {
             try
             {
                 List<BriefItem> listBriefItemByTitle = new();
                 listBriefItemByTitle = await _context.BriefItems
-                    .Where(bf => bf.ItemTitle.Equals(itemTitle))
+                    .Where(bf => bf.ItemTitle.Equals(itemTitle) && bf.ItemStatus == status)
                     .ToListAsync();
                 if (listBriefItemByTitle.Count == 0)
                 {
@@ -161,7 +156,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<List<BriefItem>?> GetBriefItemByOrBriefRequestUserID(int userID, bool status, bool share, int pageNumber, int pageSize)
         {
             try
@@ -185,7 +180,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<List<BriefItem>?> GetBriefItemByShare(bool share, bool status)
         {
             try
@@ -206,7 +201,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<DetailItemVM?> GetItemDetail(int itemID)
         {
             try
@@ -252,7 +247,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<DetailItemRequestVM?> GetRequestDetail(int itemID)
         {
             try
@@ -295,7 +290,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<List<BriefItem>?> SearchBriefItemByOrBriefRequestBySubCategoryID(int subCategoryID, bool status, bool share, int pageNumber, int pageSize)
         {
             try
@@ -321,7 +316,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<List<BriefItem>?> SearchBriefItemOrBriefRequestByCategoryID(int categoryID, bool status, bool share, int pageNumber, int pageSize)
         {
             try
@@ -347,14 +342,14 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<bool> DeleteItem(DeleteItemVM itemVM)
         {
             try
             {
                 bool check = await _context
                     .Orders
-                    .Where(or => or.ItemId == itemVM.itemID && or.Status == 0)
+                    .Where(or => or.ItemId == itemVM.ItemID && or.Status == 0)
                     .AnyAsync();
                 if (check)
                 {
@@ -363,13 +358,13 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    var item = await _context.Items.Where(it => it.ItemId == itemVM.itemID
-                    && it.UserId == itemVM.userID)
+                    var item = await _context.Items.Where(it => it.ItemId == itemVM.ItemID
+                    && it.UserId == itemVM.UserID)
                         .FirstOrDefaultAsync();
                     if (item != null)
                     {
                         item.ItemStatus = null;
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
                         return true;
                     }
                     else
@@ -385,95 +380,82 @@ namespace MOBY_API_Core6.Repository
             }
 
         }
-
+        //done
         public async Task<bool> UpdateItem(UpdateItemVM itemVM)
         {
             try
             {
-                bool checkCurrentItem = await _context.Orders
-                    .Where(or => or.ItemId == itemVM.itemID && or.Status == 0)
-                    .AnyAsync();
-                if (checkCurrentItem)
+
+                Models.Item? currentItem = await _context.Items
+                    .Where(it => it.ItemId == itemVM.ItemID && it.UserId == itemVM.UserId && it.ItemStatus != null)
+                    .FirstOrDefaultAsync();
+                var checkSubCategoryExists = await _context.SubCategories
+                    .Where(sc => sc.SubCategoryId == itemVM.SubCategoryId)
+                    .FirstOrDefaultAsync();
+                if (currentItem == null)
                 {
-                    ErrorMessage = "sản phẩm của bạn đang có người muốn nhận nên bạn không thể cập nhật sản phẩm này";
+                    return false;
+                }
+                if (checkSubCategoryExists == null)
+                {
+                    return false;
+                }
+                DateTime dateTimeUpdate = DateTime.Now;
+                DateTime? dateTimeExpired = null;
+                try
+                {
+                    if (!string.IsNullOrEmpty(itemVM.StringDateTimeExpired) && !string.IsNullOrWhiteSpace(itemVM.StringDateTimeExpired) && itemVM.Share == false)
+                    {
+                        dateTimeExpired = DateTime.Parse(itemVM.StringDateTimeExpired);
+                        bool checkDate = dateTimeExpired > dateTimeUpdate;
+                        if (checkDate == false)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+                if (itemVM.MaxAge < itemVM.MinAge || itemVM.MaxWeight < itemVM.MinWeight || itemVM.MaxHeight < itemVM.MinHeight || itemVM.MinAge < 0 || itemVM.MinWeight < 0 || itemVM.MinHeight < 0)
+                {
                     return false;
                 }
                 else
                 {
-                    Models.Item? currentItem = await _context.Items
-                        .Where(it => it.ItemId == itemVM.itemID && it.UserId == itemVM.userId)
-                        .FirstOrDefaultAsync();
-                    var checkSubCategoryExists = await _context.SubCategories
-                        .Where(sc => sc.SubCategoryId == itemVM.subCategoryId)
-                        .FirstOrDefaultAsync();
-                    if (currentItem == null || currentItem.ItemStatus == null)
-                    {
-                        ErrorMessage = "sản phẩm này của bạn không còn tồn tại trong dữ liệu";
-                        return false;
-                    }
-                    if (checkSubCategoryExists == null)
-                    {
-                        ErrorMessage = "danh mục bạn chọn không còn tồn tại trong dữ liệu, mong bạn chọn danh mục khác";
-                        return false;
-                    }
-                    if (itemVM.MaxAge < itemVM.MinAge || itemVM.MaxWeight < itemVM.MinWeight || itemVM.MaxHeight < itemVM.MinHeight || itemVM.MinAge < 0 || itemVM.MinWeight < 0 || itemVM.MinHeight < 0)
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        DateTime dateTimeUpdate = DateTime.Now;
-                        DateTime? dateTimeExpired = null;
-                        try
-                        {
-                            if (!string.IsNullOrEmpty(itemVM.stringDateTimeExpired) && !string.IsNullOrWhiteSpace(itemVM.stringDateTimeExpired) && itemVM.share == false)
-                            {
-                                dateTimeExpired = DateTime.Parse(itemVM.stringDateTimeExpired);
-                                bool checkDate = dateTimeExpired > dateTimeUpdate;
-                                if (checkDate == false)
-                                {
-                                    ErrorMessage = "bạn đã nhập ngày hết hạn sau ngày cập nhật";
-                                    return false;
-                                }
-                            }
-                        }
-                        catch
-                        {
-                            ErrorMessage = "bạn đã nhập sai format ngày, fotmat của chúng tôi là yyyy/mm/dd";
-                            return false;
-                        }
-                        currentItem.SubCategoryId = itemVM.subCategoryId;
-                        currentItem.ItemTitle = itemVM.itemTitle;
-                        currentItem.ItemDetailedDescription = itemVM.itemDetailedDescription;
-                        currentItem.ItemMass = itemVM.itemMass;
-                        currentItem.ItemSize = itemVM.itemSize;
-                        currentItem.ItemStatus = true;
-                        currentItem.ItemEstimateValue = itemVM.itemEstimateValue;
-                        currentItem.ItemSalePrice = itemVM.itemSalePrice;
-                        currentItem.ItemShareAmount = itemVM.itemShareAmount;
-                        currentItem.ItemShippingAddress = _JsonToObj.TransformLocation(itemVM.itemShippingAddress);
-                        currentItem.MaxAge = itemVM.MaxAge;
-                        currentItem.MinAge = itemVM.MinAge;
-                        currentItem.MaxHeight = itemVM.MaxHeight;
-                        currentItem.MinHeight = itemVM.MinHeight;
-                        currentItem.MaxWeight = itemVM.MaxWeight;
-                        currentItem.MinWeight = itemVM.MinWeight;
-                        currentItem.Image = itemVM.image;
-                        currentItem.ItemExpiredTime = dateTimeExpired;
-                        currentItem.ItemDateUpdate = dateTimeUpdate;
-                        currentItem.Share = itemVM.share;
-                        await _context.SaveChangesAsync();
-                        return true;
-                    }
+                    currentItem.SubCategoryId = itemVM.SubCategoryId;
+                    currentItem.ItemTitle = itemVM.ItemTitle;
+                    currentItem.ItemDetailedDescription = itemVM.ItemDetailedDescription;
+                    currentItem.ItemMass = itemVM.ItemMass;
+                    currentItem.ItemSize = itemVM.ItemSize;
+                    currentItem.ItemStatus = true;
+                    currentItem.ItemEstimateValue = itemVM.ItemEstimateValue;
+                    currentItem.ItemSalePrice = itemVM.ItemSalePrice;
+                    currentItem.ItemShareAmount = itemVM.ItemShareAmount;
+                    currentItem.ItemShippingAddress = _JsonToObj.TransformLocation(itemVM.ItemShippingAddress);
+                    currentItem.MaxAge = itemVM.MaxAge;
+                    currentItem.MinAge = itemVM.MinAge;
+                    currentItem.MaxHeight = itemVM.MaxHeight;
+                    currentItem.MinHeight = itemVM.MinHeight;
+                    currentItem.MaxWeight = itemVM.MaxWeight;
+                    currentItem.MinWeight = itemVM.MinWeight;
+                    currentItem.Image = itemVM.Image;
+                    currentItem.ItemExpiredTime = dateTimeExpired;
+                    currentItem.ItemDateUpdate = dateTimeUpdate;
+                    currentItem.Share = itemVM.Share;
+                    await _context.SaveChangesAsync();
+                    return true;
                 }
+
             }
             catch (Exception ex)
             {
-                ErrorMessage = "có lỗi khi cập nhật sản phẩm này" + ex.Message;
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
-
+        //done
         public async Task<List<BriefItem>?> GetAllMyBriefItemAndBriefRequest(int userID, bool share)
         {
             try
@@ -495,7 +477,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<List<BriefItem>?> GetAllMyBriefItemAndBriefRequestActiveandUnActive(int userID, bool share, bool status)
         {
             try
@@ -518,12 +500,11 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ListVM<BriefItem>?> GetAllMyShareAndRequest(int userID, bool share, bool status, int pageNumber, int pageSize)
         {
             try
             {
-                DateTime dateTimeNow = DateTime.Now;
                 int itemsToSkip = (pageNumber - 1) * pageSize;
                 List<BriefItem> listMyShareAndRequest = new();
                 var query = _context.BriefItems
@@ -553,7 +534,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ListVM<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize)
         {
             try
@@ -591,7 +572,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ListVM<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int? userID)
         {
             try
@@ -632,7 +613,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ListVM<BriefItem>?> GetAllShareNearYou(string location, int pageNumber, int pageSize, int userID)
         {
             try
@@ -676,7 +657,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<bool> DeactivateAllExpiredProducts()
         {
             try
@@ -705,7 +686,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<ListVM<BriefItem>?> GetItemDynamicFilters(DynamicFilterItemVM dynamicFilterVM)
         {
             try
@@ -830,7 +811,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ListVM<BriefItem>?> GetListAllOtherPersonRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize)
         {
             try
@@ -865,7 +846,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ListVM<BriefItem>?> GetListAllMyRequestItem(bool share, bool status, int userID, int pageNumber, int pageSize)
         {
             try
@@ -898,7 +879,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<bool> RecordUserSearch(RecordSearchVM recordSearchVM)
         {
             try
@@ -950,7 +931,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
         }
-
+        //done
         public async Task<ListVM<BriefItem>?> GetListRecommend(int userID, int pageNumber, int pageSize)
         {
             try
@@ -1001,7 +982,7 @@ namespace MOBY_API_Core6.Repository
                 return null;
             }
         }
-
+        //done
         public async Task<ListVM<BriefItem>?> GetListRecommendByBaby(int babyID, int userID, int pageNumber, int pageSize, bool age, bool weight, bool height)
         {
             try
