@@ -6,11 +6,11 @@ namespace MOBY_API_Core6.Data_View_Model
     public class ListCartDetailidToConfirm
     {
         [DefaultValue("")]
-        public String? address { get; set; }
+        public string? address { get; set; }
         [DefaultValue("")]
-        public String? note { get; set; }
+        public string? note { get; set; }
         [DefaultValue("")]
-        public string vnp_TransactionNo { get; set; }
+        public string? vnp_TransactionNo { get; set; }
         [DefaultValue("")]
         public string? vnp_CardType { get; set; }
         [DefaultValue("")]
