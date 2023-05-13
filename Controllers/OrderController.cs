@@ -204,8 +204,10 @@ namespace MOBY_API_Core6.Controllers
                     {
                         Email newEmail = new Email();
                         newEmail.To = currentOrder.User.UserGmail;
-                        newEmail.Subject = "your order has been shipping";
-                        newEmail.Link = "your order has been shipping";
+                        newEmail.UserName = currentOrder.User.UserName;
+                        newEmail.Subject = "Đơn hàng của bạn đang được giao";
+                        newEmail.Obj = "Đơn Hàng";
+                        newEmail.Link = "https://moby-customer.vercel.app/account/order/order/" + currentOrder.OrderId + "";
                         await emailDAO.SendEmai(newEmail);
                     }
                     else
@@ -213,8 +215,10 @@ namespace MOBY_API_Core6.Controllers
                     {
                         Email newEmail = new Email();
                         newEmail.To = currentOrder.Item.User.UserGmail;
-                        newEmail.Subject = "your order has been recievied";
-                        newEmail.Link = "your order has been recievied";
+                        newEmail.UserName = currentOrder.Item.User.UserName;
+                        newEmail.Subject = "Đơn hàng của bạn đang được nhận thành công";
+                        newEmail.Obj = "Đơn Hàng";
+                        newEmail.Link = "https://moby-customer.vercel.app/account/order/order/" + currentOrder.OrderId + "";
                         await emailDAO.SendEmai(newEmail);
                     }
                     return Ok(ReturnMessage.Create("success"));
