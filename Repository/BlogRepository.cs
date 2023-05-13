@@ -348,8 +348,8 @@ namespace MOBY_API_Core6.Repository
                 Email newEmail = new()
                 {
                     To = blog.User.UserGmail,
-                    Subject = "your blog has been accepted",
                     UserName = blog.User.UserName,
+                    Subject = "Bài Blog của bạn đã được phê duyệt",
                     Obj = "Blog",
                     Link = "https://moby-customer.vercel.app/blog/" + blog.BlogId
                 };
@@ -366,7 +366,7 @@ namespace MOBY_API_Core6.Repository
             Email newEmail = new()
             {
                 To = blog.User.UserGmail,
-                Subject = "your blog has been denied",
+                Subject = "Bài Blog của bạn đã bị từ chối",
                 UserName = blog.User.UserName,
                 Obj = "Blog",
                 Link = "https://moby-customer.vercel.app/blog/" + blog.BlogId

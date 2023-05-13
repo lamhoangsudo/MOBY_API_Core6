@@ -34,22 +34,17 @@ namespace MOBY_API_Core6.Repository
                         ReportDateCreate = dateTimeCreate,
                         ItemId = reportVM.ItemID,
                         UserId = reportVM.UserID,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         Title = reportVM.Title,
-#pragma warning restore CS8601 // Possible null reference assignment.
                         ReportStatus = reportVM.Status,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         ReportContent = reportVM.Content,
                         Evident = reportVM.Image
                     };
-#pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
                     return true;
                 }
                 else
                 {
-                    ErrorMessage = "sản phẩm này không có tồn tại";
                     return false;
                 }
             }
@@ -74,22 +69,17 @@ namespace MOBY_API_Core6.Repository
                         ReportDateCreate = dateTimeCreate,
                         ItemId = reportVM.ItemID,
                         UserId = reportVM.UserID,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         Title = reportVM.Title,
-#pragma warning restore CS8601 // Possible null reference assignment.
                         ReportStatus = reportVM.Status,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         ReportContent = reportVM.Content,
                         Evident = reportVM.Image
                     };
-#pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
                     return true;
                 }
                 else
                 {
-                    ErrorMessage = "sản phẩm này không có tồn tại";
                     return false;
                 }
             }
@@ -114,22 +104,17 @@ namespace MOBY_API_Core6.Repository
                         ReportDateCreate = dateTimeCreate,
                         CommentId = reportVM.CommentID,
                         UserId = reportVM.UserID,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         Title = reportVM.Title,
-#pragma warning restore CS8601 // Possible null reference assignment.
                         ReportStatus = reportVM.Status,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         ReportContent = reportVM.Content,
                         Evident = reportVM.Image
                     };
-#pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
                     return true;
                 }
                 else
                 {
-                    ErrorMessage = "sản phẩm này không có tồn tại";
                     return false;
                 }
             }
@@ -154,22 +139,17 @@ namespace MOBY_API_Core6.Repository
                         ReportDateCreate = dateTimeCreate,
                         ReplyId = reportVM.ReplyID,
                         UserId = reportVM.UserID,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         Title = reportVM.Title,
-#pragma warning restore CS8601 // Possible null reference assignment.
                         ReportStatus = reportVM.Status,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         ReportContent = reportVM.Content,
                         Evident = reportVM.Image
                     };
-#pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
                     return true;
                 }
                 else
                 {
-                    ErrorMessage = "sản phẩm này không có tồn tại";
                     return false;
                 }
             }
@@ -194,22 +174,17 @@ namespace MOBY_API_Core6.Repository
                         ReportDateCreate = dateTimeCreate,
                         BlogId = reportVM.BlogID,
                         UserId = reportVM.UserID,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         Title = reportVM.Title,
-#pragma warning restore CS8601 // Possible null reference assignment.
                         ReportStatus = reportVM.Status,
-#pragma warning disable CS8601 // Possible null reference assignment.
                         ReportContent = reportVM.Content,
                         Evident = reportVM.Image
                     };
-#pragma warning restore CS8601 // Possible null reference assignment.
                     await _context.Reports.AddAsync(report);
                     await _context.SaveChangesAsync();
                     return true;
                 }
                 else
                 {
-                    ErrorMessage = "sản phẩm này không có tồn tại";
                     return false;
                 }
             }
@@ -268,8 +243,10 @@ namespace MOBY_API_Core6.Repository
                         Email email = new()
                         {
                             To = gmail,
-                            Subject = "your report has been accepted",
-                            Link = "Dear " + username + "/n" + "your report: https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId + "&type=" + type + "has been accepted by admintrator"
+                            Subject = "Báo cáo của bạn đã được phê duyệt",
+                            UserName = username,
+                            Obj = "Report",
+                            Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId
                         };
                         await _emailRepository.SendEmai(email);
                     }
@@ -338,7 +315,9 @@ namespace MOBY_API_Core6.Repository
                         {
                             To = gmail,
                             Subject = "your report has been deny",
-                            Link = "Dear " + username + "/n" + "your report: https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId + "&type=" + type + "has been rejected by admintrator"
+                            UserName = username,
+                            Obj = "Report",
+                            Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId
                         };
                         await _emailRepository.SendEmai(email);
                     }
@@ -350,7 +329,6 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    ErrorMessage = "report này không tồn tại";
                     return false;
                 }
             }
@@ -379,7 +357,6 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    ErrorMessage = "report này không có tồn tại";
                     return false;
                 }
             }
@@ -404,7 +381,6 @@ namespace MOBY_API_Core6.Repository
                 }
                 else
                 {
-                    ErrorMessage = "report này không tồn tại";
                     return false;
                 }
             }
@@ -669,7 +645,7 @@ namespace MOBY_API_Core6.Repository
                 switch (type)
                 {
                     case 0:
-                        //order
+                        //item
                         var queryItem = _context.Items
                             .Where(it => it.ItemId == id && it.ItemStatus == true)
                             .Join(_context.UserAccounts, it => it.UserId, us => us.UserId, (it, us) => new { it, us });
@@ -687,22 +663,16 @@ namespace MOBY_API_Core6.Repository
                             Email email = new()
                             {
                                 To = userAccount.UserGmail,
-                                Subject = "your order has been hidden",
-                                Link = "Dear "
-                                + userAccount.UserName
-                                + "/n"
-                                + "your order: https://moby-customer.vercel.app/product/"
-                                + item.ItemId
-                                + "has been hidden by admintrator. \n"
-                                + "Reason: "
-                                + item.ReasonHiden
+                                Subject = "sản phẩm của bạn đã bị ẩn đi",
+                                UserName = userAccount.UserName,
+                                Obj = "sản phẩm",
+                                Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + item.ItemId
                             };
                             await _emailRepository.SendEmai(email);
                             return true;
                         }
                         else
                         {
-                            ErrorMessage = "sản phẩm này đã bị xóa";
                             return false;
                         }
                     case 1:
@@ -724,22 +694,16 @@ namespace MOBY_API_Core6.Repository
                             Email email = new()
                             {
                                 To = userAccount.UserGmail,
-                                Subject = "your order has been cancel",
-                                Link = "Dear "
-                                + userAccount.UserName
-                                + "/n"
-                                + "your order: https://moby-customer.vercel.app/order/"
-                                + order.OrderId
-                                + "has been cancel by admintrator \n"
-                                + "Reason: "
-                                + order.ReasonCancel
+                                Subject = "đơn hàng của bạn đã bị hủy",
+                                UserName = userAccount.UserName,
+                                Obj = "đơn hàng",
+                                Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + order.OrderId
                             };
                             await _emailRepository.SendEmai(email);
                             return true;
                         }
                         else
                         {
-                            ErrorMessage = "Đơn hàng này đã bị hủy";
                             return false;
                         }
                     case 2:
@@ -761,22 +725,16 @@ namespace MOBY_API_Core6.Repository
                             Email email = new()
                             {
                                 To = userAccount.UserGmail,
-                                Subject = "your comment has been hidden",
-                                Link = "Dear "
-                                + userAccount.UserName
-                                + "/n"
-                                + "your comment: https://moby-customer.vercel.app/order/"
-                                + comment.CommentId
-                                + "has been hidden by admintrator \n"
-                                + "Reason: "
-                                + comment.ReasonHiden
+                                Subject = "Bình luận của bạn đã bị ẩn",
+                                UserName = userAccount.UserName,
+                                Obj = "bình luận",
+                                Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + comment.CommentId
                             };
                             await _emailRepository.SendEmai(email);
                             return true;
                         }
                         else
                         {
-                            ErrorMessage = "bình luận này đã bị xóa";
                             return false;
                         }
                     case 3:
@@ -798,15 +756,10 @@ namespace MOBY_API_Core6.Repository
                             Email email = new()
                             {
                                 To = userAccount.UserGmail,
-                                Subject = "your reply has been hidden",
-                                Link = "Dear "
-                                + userAccount.UserName
-                                + "/n"
-                                + "your comment: https://moby-customer.vercel.app/order/"
-                                + reply.ReplyId
-                                + "has been hidden by admintrator \n"
-                                + "Reason: "
-                                + reply.ReasonHiden
+                                Subject = "Bình luận của bạn đã bị ẩn",
+                                UserName = userAccount.UserName,
+                                Obj = "bình luận",
+                                Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + reply.ReplyId
                             };
                             await _emailRepository.SendEmai(email);
                             return true;
@@ -835,26 +788,19 @@ namespace MOBY_API_Core6.Repository
                             Email email = new()
                             {
                                 To = userAccount.UserGmail,
-                                Subject = "your blog has been hidden",
-                                Link = "Dear "
-                                + userAccount.UserName
-                                + "/n"
-                                + "your blog: https://moby-customer.vercel.app/order/"
-                                + blog.BlogId
-                                + "has been hidden by admintrator \n"
-                                + "Reason: "
-                                + blog.ReasonDeny
+                                Subject = "Bài viết của bạn đã bị ẩn đi",
+                                UserName = userAccount.UserName,
+                                Obj = "bài viết",
+                                Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + blog.BlogId
                             };
                             await _emailRepository.SendEmai(email);
                             return true;
                         }
                         else
                         {
-                            ErrorMessage = "bài bg này đã bị xóa";
                             return false;
                         }
                 }
-                ErrorMessage = "định dạng không tồn tại";
                 return false;
             }
             catch (Exception ex)
@@ -874,7 +820,7 @@ namespace MOBY_API_Core6.Repository
                 switch (type)
                 {
                     case 0:
-                        //order
+                        //item
                         var queryItem = _context.Items
                             .Join(_context.UserAccounts, it => it.UserId, us => us.UserId, (it, us) => new { it, us })
                             .Where(itus => itus.it.ItemId == id);
@@ -910,8 +856,10 @@ namespace MOBY_API_Core6.Repository
                                     Email email = new()
                                     {
                                         To = userAccountItem.UserGmail,
-                                        Subject = "your blog has been hidden",
-                                        Link = "Dear " + userAccountItem.UserName + "/n" + "your order: https://moby-customer.vercel.app/order/" + item.ItemId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                        Subject = "sản phẩm của bạn đã vi phạm quy định",
+                                        UserName = userAccountItem.UserName,
+                                        Obj = "sản phẩm",
+                                        Link = ""
                                     };
                                     await _emailRepository.SendEmai(email);
                                 }
@@ -926,7 +874,6 @@ namespace MOBY_API_Core6.Repository
                         }
                         else
                         {
-                            ErrorMessage = "người dùng này đã bị khóa tài khoản";
                             return false;
                         }
                     case 1:
@@ -967,8 +914,10 @@ namespace MOBY_API_Core6.Repository
                                 Email email = new()
                                 {
                                     To = userAccountOrder.UserGmail,
-                                    Subject = "your blog has been hidden",
-                                    Link = "Dear " + userAccountOrder.UserName + "/n" + "your order: https://moby-customer.vercel.app/order/" + order.OrderId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                    Subject = "đơn hàng của bạn đã vi phạm quy định",
+                                    UserName = userAccountOrder.UserName,
+                                    Obj = "đơn hàng",
+                                    Link = ""
                                 };
                                 await _emailRepository.SendEmai(email);
                             }
@@ -978,7 +927,6 @@ namespace MOBY_API_Core6.Repository
                     }
                     else
                     {
-                        ErrorMessage = "Đơn hàng này đã bị hủy";
                         return false;
                     }
                     case 2:
@@ -1018,8 +966,10 @@ namespace MOBY_API_Core6.Repository
                                     Email email = new()
                                     {
                                         To = userAccountComment.UserGmail,
-                                        Subject = "your blog has been hidden",
-                                        Link = "Dear " + userAccountComment.UserName + "/n" + "your commnet: https://moby-customer.vercel.app/order/" + comment.CommentId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                        Subject = "bình luận của bạn đã vi phạm quy định",
+                                        UserName = userAccountComment.UserName,
+                                        Obj = "bình luận",
+                                        Link = ""
                                     };
                                     await _emailRepository.SendEmai(email);
                                 }
@@ -1030,7 +980,6 @@ namespace MOBY_API_Core6.Repository
                         }
                         else
                         {
-                            ErrorMessage = "bình luận này đã bị xóa";
                             return false;
                         }
                     case 3:
@@ -1070,8 +1019,10 @@ namespace MOBY_API_Core6.Repository
                                     Email email = new()
                                     {
                                         To = userAccountReply.UserGmail,
-                                        Subject = "your blog has been hidden",
-                                        Link = "Dear " + userAccountReply.UserName + "/n" + "your comment: https://moby-customer.vercel.app/order/" + reply.ReplyId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                        Subject = "bình luận của bạn đã vi phạm quy định",
+                                        UserName = userAccountReply.UserName,
+                                        Obj = "bình luận",
+                                        Link = ""
                                     };
 
                                     await _emailRepository.SendEmai(email);
@@ -1083,7 +1034,6 @@ namespace MOBY_API_Core6.Repository
                         }
                         else
                         {
-                            ErrorMessage = "bình luận này đã bị xóa";
                             return false;
                         }
                     case 4:
@@ -1123,8 +1073,10 @@ namespace MOBY_API_Core6.Repository
                                     Email email = new()
                                     {
                                         To = userAccountBlog.UserGmail,
-                                        Subject = "your blog has been hidden",
-                                        Link = "Dear " + userAccountBlog.UserName + "/n" + "your blog: https://moby-customer.vercel.app/order/" + blog.BlogId + " has seriously violated our policy \n" + "Reason: " + hideAndPunish.Reason
+                                        Subject = "bình luận của bạn đã vi phạm quy định",
+                                        UserName = userAccountBlog.UserName,
+                                        Obj = "bình luận",
+                                        Link = ""
                                     };
 
                                     await _emailRepository.SendEmai(email);
@@ -1136,11 +1088,9 @@ namespace MOBY_API_Core6.Repository
                         }
                         else
                         {
-                            ErrorMessage = "bài bg này đã bị xóa";
                             return false;
                         }
                 }
-                ErrorMessage = "định dạng không tồn tại";
                 return false;
             }
             catch (Exception ex)
@@ -1227,7 +1177,6 @@ namespace MOBY_API_Core6.Repository
                         break;
 
                 }
-                ErrorMessage = "định dạng không tồn tại";
             }
             catch (Exception ex)
             {

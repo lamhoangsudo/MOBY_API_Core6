@@ -210,7 +210,7 @@ namespace MOBY_API_Core6.Repository
                 return false;
             }
             List<UserAccount> itemOwner = new List<UserAccount>();
-            IDictionary<int, String> itemOwnerDic = new Dictionary<int, String>();
+            IDictionary<int, UserAccount> itemOwnerDic = new Dictionary<int, UserAccount>();
             List<CartDetail> currentCartDetails = await context.CartDetails.Where(cd => cartDetailIDList.ListCartDetailID!.Contains(cd.CartDetailId))
                 .Include(cd => cd.Item)
                 .ThenInclude(i => i.User)
@@ -276,16 +276,18 @@ namespace MOBY_API_Core6.Repository
 
                 if (!(itemOwnerDic.ContainsKey(cartDetail.Item.UserId)))
                 {
-                    itemOwnerDic.Add(cartDetail.Item.UserId, cartDetail.Item.User.UserGmail);
+                    itemOwnerDic.Add(cartDetail.Item.UserId, cartDetail.Item.User);
                 }
                 context.CartDetails.Remove(cartDetail);
             }
             foreach (var owner in itemOwnerDic)
             {
                 Email newEmail = new Email();
-                newEmail.To = owner.Value;
-                newEmail.Subject = "you have an order";
-                newEmail.Link = "you have an order";
+                newEmail.To = owner.Value.UserGmail;
+                newEmail.UserName = owner.Value.UserName;
+                newEmail.Subject = "Bạn có đơn hàng đã được khởi tạo";
+                newEmail.Obj = "Đơn hàng";
+                newEmail.Link = "https://moby-customer.vercel.app/account/order?itemType=sharer&status=0";
                 await emailDAO.SendEmai(newEmail);
             }
 
