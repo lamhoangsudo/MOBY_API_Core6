@@ -215,8 +215,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     Email newEmail = new Email();
                     newEmail.To = user.UserGmail;
-                    newEmail.Subject = "your order has been shipping";
-                    newEmail.Link = "your order has been shipping";
+                    newEmail.UserName = user.UserName;
+                    newEmail.Subject = "Đơn hàng của bạn đã được khởi tạo";
+                    newEmail.Obj = "Đơn Hàng";
+                    newEmail.Link = "https://moby-customer.vercel.app/account/order?itemType=receiver&status=0";
                     await emailDAO.SendEmai(newEmail);
                     return Ok(ReturnMessage.Create("Success"));
                 }
