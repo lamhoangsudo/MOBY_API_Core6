@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -10,9 +10,9 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class MyAddressController : ControllerBase
     {
-        private IUserAddressRepository userAddressDAO;
-        private readonly IUserRepository userDAO;
-        public MyAddressController(IUserAddressRepository userAddressDAO, IUserRepository userDAO)
+        private IUserAddressService userAddressDAO;
+        private readonly IUserService userDAO;
+        public MyAddressController(IUserAddressService userAddressDAO, IUserService userDAO)
         {
             this.userAddressDAO = userAddressDAO;
             this.userDAO = userDAO;

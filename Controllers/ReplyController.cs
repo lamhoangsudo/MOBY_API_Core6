@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -10,10 +10,10 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class ReplyController : ControllerBase
     {
-        private readonly IUserRepository UserRepository;
-        private readonly IReplyRepository ReplyRepository;
+        private readonly IUserService UserRepository;
+        private readonly IReplyService ReplyRepository;
 
-        public ReplyController(IUserRepository userRepository, IReplyRepository ReplyRepository)
+        public ReplyController(IUserService userRepository, IReplyService ReplyRepository)
         {
             this.UserRepository = userRepository;
             this.ReplyRepository = ReplyRepository;

@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -11,11 +11,11 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class ReportController : ControllerBase
     {
-        public readonly IReportRepository _reportRepository;
-        public readonly IUserRepository _userRepository;
-        public readonly IRecordPenaltyRepository _recordPenaltyRepository;
+        public readonly IReportService _reportRepository;
+        public readonly IUserService _userRepository;
+        public readonly IRecordPenaltyService _recordPenaltyRepository;
 
-        public ReportController(IReportRepository reportRepository, IUserRepository userRepository, IRecordPenaltyRepository recordPenaltyRepository)
+        public ReportController(IReportService reportRepository, IUserService userRepository, IRecordPenaltyService recordPenaltyRepository)
         {
             _reportRepository = reportRepository;
             _userRepository = userRepository;
@@ -72,7 +72,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -96,7 +96,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -119,7 +119,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -142,7 +142,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -165,7 +165,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -188,7 +188,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -236,7 +236,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -305,7 +305,7 @@ namespace MOBY_API_Core6.Controllers
                         }
                 }
 #pragma warning disable CS8604 // Possible null reference argument.
-                return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+                return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
             }
             catch (Exception ex)
@@ -327,7 +327,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -350,7 +350,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -372,7 +372,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ReportRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -395,7 +395,7 @@ namespace MOBY_API_Core6.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(RecordPenaltyRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(RecordPenaltyService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }

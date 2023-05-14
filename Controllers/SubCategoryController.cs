@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -9,8 +9,8 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class SubCategoryController : ControllerBase
     {
-        private readonly ISubCategoryRepository _subCategoryRepository;
-        public SubCategoryController(ISubCategoryRepository subCategoryRepository)
+        private readonly ISubCategoryService _subCategoryRepository;
+        public SubCategoryController(ISubCategoryService subCategoryRepository)
         {
             _subCategoryRepository = subCategoryRepository;
         }

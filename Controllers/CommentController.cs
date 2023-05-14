@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -10,9 +10,9 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly IUserRepository UserRepository;
-        private readonly ICommentRepository CommentRepository;
-        public CommentController(IUserRepository userRepository, ICommentRepository CommentRepository)
+        private readonly IUserService UserRepository;
+        private readonly ICommentService CommentRepository;
+        public CommentController(IUserService userRepository, ICommentService CommentRepository)
         {
             this.UserRepository = userRepository;
             this.CommentRepository = CommentRepository;

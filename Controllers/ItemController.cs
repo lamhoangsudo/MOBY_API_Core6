@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service;
+using MOBY_API_Core6.Service.IService;
 
 namespace Item.Controllers
 {
@@ -11,10 +11,10 @@ namespace Item.Controllers
     [ApiController]
     public class ItemController : ControllerBase
     {
-        private readonly IItemRepository _itemRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IItemService _itemRepository;
+        private readonly IUserService _userRepository;
 
-        public ItemController(IItemRepository itemRepository, IUserRepository userRepository)
+        public ItemController(IItemService itemRepository, IUserService userRepository)
         {
             _itemRepository = itemRepository;
             _userRepository = userRepository;
@@ -43,7 +43,7 @@ namespace Item.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ItemService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -60,7 +60,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share, status, pageNumber, pageSize);
                 if (listBriefItem == null)
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
                 else
                 {
@@ -123,7 +123,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItemByUserID = await _itemRepository.GetBriefItemByOrBriefRequestUserID(userID, status, share, pageNumber, pageSize);
                 if (listBriefItemByUserID == null)
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
                 else
                 {
@@ -144,7 +144,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItemByItemTitle = await _itemRepository.SearchBriefItemByTitle(itemTitle, status);
                 if (listBriefItemByItemTitle == null)
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
                 else
                 {
@@ -165,7 +165,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItemBySubCategoryID = await _itemRepository.SearchBriefItemByOrBriefRequestBySubCategoryID(subCategoryID, status, share, pageNumber, pageSize);
                 if (listBriefItemBySubCategoryID == null)
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
                 else
                 {
@@ -186,7 +186,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItemByCategoryID = await _itemRepository.SearchBriefItemOrBriefRequestByCategoryID(categoryID, status, share, pageNumber, pageSize);
                 if (listBriefItemByCategoryID == null)
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
                 else
                 {
@@ -212,7 +212,7 @@ namespace Item.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return NotFound(ReturnMessage.Create(ItemRepository.ErrorMessage));
+                    return NotFound(ReturnMessage.Create(ItemService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -235,7 +235,7 @@ namespace Item.Controllers
                 else
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ItemService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
@@ -253,7 +253,7 @@ namespace Item.Controllers
                 List<BriefItem>? listBriefItemAndBriefRequestByUserID = await _itemRepository.GetAllMyBriefItemAndBriefRequest(userID, share);
                 if (listBriefItemAndBriefRequestByUserID == null)
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
                 else
                 {
@@ -277,7 +277,7 @@ namespace Item.Controllers
                 if (listAllShareRecently == null)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ItemService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else
@@ -290,7 +290,7 @@ namespace Item.Controllers
                     else
                     {
 #pragma warning disable CS8604 // Possible null reference argument.
-                        return NotFound(ReturnMessage.Create(ItemRepository.ErrorMessage));
+                        return NotFound(ReturnMessage.Create(ItemService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                     }
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
@@ -311,7 +311,7 @@ namespace Item.Controllers
                 if (listAllShareFree == null)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ItemService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else
@@ -344,7 +344,7 @@ namespace Item.Controllers
                 if (listAllMyShareAndRequest == null)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ItemService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else
@@ -382,7 +382,7 @@ namespace Item.Controllers
                 if (listAllShareNearYou == null)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(ItemRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(ItemService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else
@@ -404,7 +404,7 @@ namespace Item.Controllers
                 ListVM<BriefItem>? listVM = await _itemRepository.GetItemDynamicFilters(dynamicFilterVM);
                 if (listVM == null)
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
                 else
                 {
@@ -440,7 +440,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
             }
             catch (Exception ex)
@@ -471,7 +471,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
             }
             catch (Exception ex)
@@ -503,7 +503,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
             }
             catch (Exception ex)
@@ -534,7 +534,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
             }
             catch (Exception ex)
@@ -565,7 +565,7 @@ namespace Item.Controllers
                 }
                 else
                 {
-                    return BadRequest(ItemRepository.ErrorMessage);
+                    return BadRequest(ItemService.ErrorMessage);
                 }
             }
             catch (Exception ex)

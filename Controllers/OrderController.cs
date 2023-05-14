@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -10,10 +10,10 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IOrderRepository orderDAO;
-        private readonly IUserRepository userDAO;
-        private readonly IEmailRepository emailDAO;
-        public OrderController(IOrderRepository orderDAO, IUserRepository userDAO, IEmailRepository emailDAO)
+        private readonly IOrderService orderDAO;
+        private readonly IUserService userDAO;
+        private readonly IEmailService emailDAO;
+        public OrderController(IOrderService orderDAO, IUserService userDAO, IEmailService emailDAO)
         {
             this.orderDAO = orderDAO;
             this.userDAO = userDAO;

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -10,8 +10,8 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryRepository _categoryRepository;
-        public CategoryController(ICategoryRepository categoryRepository)
+        private readonly ICategoryService _categoryRepository;
+        public CategoryController(ICategoryService categoryRepository)
         {
             _categoryRepository = categoryRepository;
         }
@@ -105,13 +105,13 @@ namespace MOBY_API_Core6.Controllers
                 if (listCategory == null)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return BadRequest(ReturnMessage.Create(CategoryRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(CategoryService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
                 if (listCategory.Count == 0)
                 {
 #pragma warning disable CS8604 // Possible null reference argument.
-                    return NotFound(ReturnMessage.Create(CategoryRepository.ErrorMessage));
+                    return NotFound(ReturnMessage.Create(CategoryService.ErrorMessage));
 #pragma warning restore CS8604 // Possible null reference argument.
                 }
                 else

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -10,9 +10,9 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class TransationController : ControllerBase
     {
-        private readonly ITransationRepository transationRepository;
-        private readonly IUserRepository userRepository;
-        public TransationController(ITransationRepository transationRepository, IUserRepository userRepository)
+        private readonly ITransationService transationRepository;
+        private readonly IUserService userRepository;
+        public TransationController(ITransationService transationRepository, IUserService userRepository)
         {
 
             this.transationRepository = transationRepository;

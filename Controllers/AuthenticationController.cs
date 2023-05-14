@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -8,8 +8,8 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IUserRepository userDAO;
-        public AuthenticationController(IUserRepository userDao)
+        private readonly IUserService userDAO;
+        public AuthenticationController(IUserService userDao)
         {
             this.userDAO = userDao;
         }

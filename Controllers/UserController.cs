@@ -2,20 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository userDAO;
+        private readonly IUserService userDAO;
 
-        private readonly ITransationRepository transationRepository;
+        private readonly ITransationService transationRepository;
 
-        private readonly IBabyRepository babyRepository;
-        public UserController(IUserRepository userDao, ITransationRepository transationRepository, IBabyRepository babyRepository)
+        private readonly IBabyService babyRepository;
+        public UserController(IUserService userDao, ITransationService transationRepository, IBabyService babyRepository)
         {
             this.userDAO = userDao;
             this.transationRepository = transationRepository;
@@ -292,7 +292,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.Create(BabyRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(BabyService.ErrorMessage));
                 }
             }
             catch (Exception ex)
@@ -320,7 +320,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.Create(BabyRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(BabyService.ErrorMessage));
                 }
             }
             catch (Exception ex)
@@ -347,7 +347,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.Create(BabyRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(BabyService.ErrorMessage));
                 }
             }
             catch (Exception ex)
@@ -374,7 +374,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.Create(BabyRepository.ErrorMessage));
+                    return BadRequest(ReturnMessage.Create(BabyService.ErrorMessage));
                 }
             }
             catch (Exception ex)

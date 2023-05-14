@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -10,11 +10,11 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class BlogController : ControllerBase
     {
-        private readonly IBlogCategoryRepository BlogCateDAO;
-        private readonly IBlogRepository BlogDAO;
-        private readonly IUserRepository UserDAO;
+        private readonly IBlogCategoryService BlogCateDAO;
+        private readonly IBlogService BlogDAO;
+        private readonly IUserService UserDAO;
 
-        public BlogController(IBlogRepository BlogDAO, IBlogCategoryRepository BlogCateDAO, IUserRepository userDAO)
+        public BlogController(IBlogService BlogDAO, IBlogCategoryService BlogCateDAO, IUserService userDAO)
         {
             this.BlogDAO = BlogDAO;
             this.BlogCateDAO = BlogCateDAO;

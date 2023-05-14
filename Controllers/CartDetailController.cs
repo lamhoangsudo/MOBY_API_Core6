@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -10,12 +10,12 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class CartDetailController : ControllerBase
     {
-        private readonly IUserRepository userDAO;
+        private readonly IUserService userDAO;
 
-        private readonly ICartDetailRepository cartDetailDAO;
+        private readonly ICartDetailService cartDetailDAO;
 
-        private readonly IEmailRepository emailDAO;
-        public CartDetailController(ICartDetailRepository cartDetailDAO, IUserRepository userDAO, IEmailRepository emailDAO)
+        private readonly IEmailService emailDAO;
+        public CartDetailController(ICartDetailService cartDetailDAO, IUserService userDAO, IEmailService emailDAO)
         {
             this.userDAO = userDAO;
             this.cartDetailDAO = cartDetailDAO;

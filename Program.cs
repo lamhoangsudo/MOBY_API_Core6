@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository;
-using MOBY_API_Core6.Repository.IRepository;
 using System.Text.Json.Serialization;
 using Azure.Identity;
+using MOBY_API_Core6.Service;
+using MOBY_API_Core6.Service.IService;
 
 internal class Program
 {
@@ -46,25 +46,25 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<MOBYContext>(options => options.UseSqlServer(connectionString));
-        builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-        builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
-        builder.Services.AddScoped<IItemRepository, ItemRepository>();
-        builder.Services.AddScoped<IUserRepository, UserRepository>();
-        builder.Services.AddScoped<ICartRepository, CartRepository>();
-        builder.Services.AddScoped<ICartDetailRepository, CartDetailRepository>();
-        builder.Services.AddScoped<IBlogCategoryRepository, BlogCategoryRepository>();
-        builder.Services.AddScoped<IBlogRepository, BlogRepository>();
-        builder.Services.AddScoped<IReportRepository, ReportRepository>();
-        builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-        builder.Services.AddScoped<IReplyRepository, ReplyRepository>();
-        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-        builder.Services.AddScoped<IUserAddressRepository, UserAddressRepository>();
-        builder.Services.AddScoped<IBannerRepository, BannerRepository>();
-        builder.Services.AddScoped<IEmailRepository, EmailRepository>();
-        builder.Services.AddScoped<IImageVerifyRepository, ImageVerifyRepository>();
-        builder.Services.AddScoped<ITransationRepository, TransationRepository>();
-        builder.Services.AddScoped<IRecordPenaltyRepository, RecordPenaltyRepository>();
-        builder.Services.AddScoped<IBabyRepository, BabyRepository>();
+        builder.Services.AddScoped<ICategoryService, CategoryService>();
+        builder.Services.AddScoped<ISubCategoryService, SubCategoryService>();
+        builder.Services.AddScoped<IItemService, ItemService>();
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<ICartService, CartService>();
+        builder.Services.AddScoped<ICartDetailService, CartDetailService>();
+        builder.Services.AddScoped<IBlogCategoryService, BlogCategoryService>();
+        builder.Services.AddScoped<IBlogService, BlogService>();
+        builder.Services.AddScoped<IReportService, ReportService>();
+        builder.Services.AddScoped<ICommentService, CommentService>();
+        builder.Services.AddScoped<IReplyService, ReplyService>();
+        builder.Services.AddScoped<IOrderService, OrderService>();
+        builder.Services.AddScoped<IUserAddressService, UserAddressService>();
+        builder.Services.AddScoped<IBannerService, BannerService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
+        builder.Services.AddScoped<IImageVerifyService, ImageVerifyService>();
+        builder.Services.AddScoped<ITransationService, TransationService>();
+        builder.Services.AddScoped<IRecordPenaltyService, RecordPenaltyService>();
+        builder.Services.AddScoped<IBabyService, BabyService>();
         builder.Services.AddScoped<JsonToObj>();
 
         builder.Configuration.AddUserSecrets<Program>(true);

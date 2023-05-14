@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Models;
-using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Controllers
 {
@@ -8,9 +8,9 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class EmailController : ControllerBase
     {
-        private readonly IEmailRepository _emailRepository;
+        private readonly IEmailService _emailRepository;
 
-        public EmailController(IEmailRepository emailRepository)
+        public EmailController(IEmailService emailRepository)
         {
             _emailRepository = emailRepository;
         }
