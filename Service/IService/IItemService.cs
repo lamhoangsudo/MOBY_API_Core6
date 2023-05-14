@@ -29,7 +29,7 @@ namespace MOBY_API_Core6.Service.IService
 
         Task<List<BriefItem>?> GetAllMyBriefItemAndBriefRequestActiveandUnActive(int userID, bool share, bool status);
 
-        Task<ListVM<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize, int? userID);
+        Task<ListVM<BriefItem>?> GetAllShareRecently(int pageNumber, int pageSize);
 
         Task<ListVM<BriefItem>?> GetAllShareFree(int pageNumber, int pageSize);
 

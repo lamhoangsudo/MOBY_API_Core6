@@ -27,5 +27,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public string? Content { get; set; }
         [Required]
         public string? Image { get; set; }
+        [Required]
+        public int Type { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Service
@@ -9,25 +10,18 @@ namespace MOBY_API_Core6.Service
     public class CategoryService : ICategoryService
     {
         private readonly MOBYContext _context;
+        private readonly ICategoryRepository _categoryRepository;
         public static string? ErrorMessage { get; set; }
-        public CategoryService(MOBYContext context)
+        public CategoryService(MOBYContext context, ICategoryRepository categoryRepository)
         {
             _context = context;
+            _categoryRepository = categoryRepository;
         }
-        //done
         public async Task<CategoryVM?> GetCategoryByID(int categoryID)
         {
             try
             {
-                CategoryVM? checkCategory = await _context.Categories
-                    .Where(ct => ct.CategoryId == categoryID)
-                    .Select(ct => new CategoryVM(
-                        ct.CategoryId,
-                        ct.CategoryName,
-                        ct.CategoryImage,
-                        ct.CategoryStatus
-                        ))
-                    .FirstOrDefaultAsync();
+                CategoryVM? checkCategory = await _categoryRepository.GetCategoryByID(categoryID);
                 return checkCategory;
             }
             catch (Exception ex)
@@ -36,43 +30,32 @@ namespace MOBY_API_Core6.Service
                 return null;
             }
         }
-        //done
         public async Task<bool> CreateCategory(CreateCategoryVM categoryVM)
         {
-            var checkCategory = await _context.Categories.Where(ct => ct.CategoryName.Equals(categoryVM.CategoryName)).FirstOrDefaultAsync();
-            if (checkCategory == null)
+            try
             {
-                Models.Category category = new()
+                int check = await _categoryRepository.CreateCategory(categoryVM);
+                if (check <= 0)
                 {
-#pragma warning disable CS8601 // Possible null reference assignment.
-                    CategoryName = categoryVM.CategoryName,
-#pragma warning restore CS8601 // Possible null reference assignment.
-                    CategoryImage = categoryVM.CategoryImage,
-                    CategoryStatus = true
-                };
-                await _context.Categories.AddAsync(category);
-                await _context.SaveChangesAsync();
+                    return false;
+                }
                 return true;
             }
-            else
+            catch (Exception ex)
             {
+                ErrorMessage = ex.Message;
                 return false;
             }
         }
-        //done
         public async Task<bool> UpdateCategory(UpdateCategoryVM categoryVM)
         {
             try
             {
-                Models.Category? updateCategory = await _context.Categories.Where(ct => ct.CategoryId == categoryVM.CategoryID).FirstOrDefaultAsync();
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-#pragma warning disable CS8601 // Possible null reference assignment.
-                updateCategory.CategoryName = categoryVM.CategoryName;
-#pragma warning restore CS8601 // Possible null reference assignment.
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-                updateCategory.CategoryImage = categoryVM.CategoryImage;
-                updateCategory.CategoryStatus = true;
-                await _context.SaveChangesAsync();
+                int check = await _categoryRepository.UpdateCategory(categoryVM);
+                if (check <= 0)
+                {
+                    return false;
+                }
                 return true;
             }
             catch (Exception ex)
@@ -81,16 +64,15 @@ namespace MOBY_API_Core6.Service
                 return false;
             }
         }
-        //done
         public async Task<bool> DeleteCategory(DeleteCategoryVM categoryVM)
         {
             try
             {
-                Models.Category? deleteCategory = await _context.Categories.Where(ct => ct.CategoryId == categoryVM.CategoryID).FirstOrDefaultAsync();
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                deleteCategory.CategoryStatus = false;
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-                await _context.SaveChangesAsync();
+                int check = await _categoryRepository.DeleteCategory(categoryVM);
+                if (check <= 0)
+                {
+                    return false;
+                }
                 return true;
             }
             catch (Exception ex)
@@ -99,25 +81,12 @@ namespace MOBY_API_Core6.Service
                 return false;
             }
         }
-        //done
         public async Task<List<CategoryVM>?> GetAllCategoriesAndSubCategory()
         {
             try
             {
-                List<CategoryVM> categoryVMs = new();
-                categoryVMs = await _context.Categories
-                    .Include(ct => ct.SubCategories)
-                    .Select(ct => new CategoryVM(
-                        ct.CategoryId,
-                        ct.CategoryName,
-                        ct.CategoryImage,
-                        ct.CategoryStatus,
-                        ct.SubCategories.Select(sc => new SubCategoryVM(
-                            sc.SubCategoryId,
-                            sc.SubCategoryName,
-                            sc.SubCategoryStatus
-                            )).ToList()
-                    )).ToListAsync();
+                List<CategoryVM>? categoryVMs = new();
+                categoryVMs = await _categoryRepository.GetAllCategoriesAndSubCategory();
                 return categoryVMs;
             }
             catch (Exception ex)
@@ -126,35 +95,34 @@ namespace MOBY_API_Core6.Service
                 return null;
             }
         }
-        //done
         public async Task<List<CategoryVM>?> GetCategoriesByStatus(bool categoryStatus)
         {
-            var listCategory = await _context.Categories
-                .Where(ct => ct.CategoryStatus == categoryStatus)
-                .Select(ct => new CategoryVM
-                (
-                    ct.CategoryId,
-                    ct.CategoryName,
-                    ct.CategoryImage,
-                    ct.CategoryStatus
-                ))
-                .ToListAsync();
-            return listCategory;
+            try
+            {
+                List<CategoryVM>? listCategory = new();
+                listCategory = await _categoryRepository.GetCategoriesByStatus(categoryStatus);
+                return listCategory;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
+
         }
-        //done
         public async Task<List<CategoryVM>?> GetCategoriesByName(string categoryName)
         {
-            var listCategory = await _context.Categories
-                .Where(ct => ct.CategoryName.Contains(categoryName))
-                .Select(category => new CategoryVM
-                (
-                    category.CategoryId,
-                    category.CategoryName,
-                    category.CategoryImage,
-                    category.CategoryStatus
-                ))
-                .ToListAsync();
-            return listCategory;
+            try
+            {
+                List<CategoryVM>? listCategory = new();
+                listCategory = await _categoryRepository.GetCategoriesByName(categoryName);
+                return listCategory;
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return null;
+            }
         }
     }
 }

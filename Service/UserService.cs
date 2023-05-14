@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
 using System.Security.Claims;
 
@@ -8,23 +9,16 @@ namespace MOBY_API_Core6.Service
 {
     public class UserService : IUserService
     {
-        private readonly MOBYContext context;
-        private readonly IEmailService emailDAO;
-        public UserService(MOBYContext context, IEmailService emailDAO)
+        private readonly IUserRepository userRepository;
+
+        public UserService(IUserRepository userRepository)
         {
-            this.context = context;
-            this.emailDAO = emailDAO;
+            this.userRepository = userRepository;
         }
 
         public async Task<bool> CheckExistedUser(string userCode)
         {
-            //FirebaseToken decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
-
-            //UserRecord user = await FirebaseAuth.DefaultInstance.GetUserAsync(decodedToken.Uid);
-
-
-            var existUser = await context.UserAccounts.Where(u => u.UserCode == userCode).FirstOrDefaultAsync();
-
+            var existUser = await userRepository.CheckExistedUser(userCode);
             if (existUser != null)
             {
                 return true;
@@ -34,244 +28,61 @@ namespace MOBY_API_Core6.Service
 
         public async Task<UserAccount?> FindUserByCode(string userCode)
         {
-            UserAccount? foundAccount = await context.UserAccounts
-                .Where(u => u.UserCode == userCode && u.UserStatus == true)
-                .Include(u => u.Carts)
-                .FirstOrDefaultAsync();
+            UserAccount? foundAccount = await userRepository.FindUserByCode(userCode);
             return foundAccount;
         }
 
         public async Task<UserAccount?> FindUserByUid(int uid)
         {
-            UserAccount? foundAccount = await context.UserAccounts.Where(u => u.UserId == uid && u.UserStatus == true)
-                .Include(u => u.Carts)
-                .FirstOrDefaultAsync();
+            UserAccount? foundAccount = await userRepository.FindUserByUid(uid);
             return foundAccount;
         }
 
         public async Task<UserAccount?> FindUserByUidWithoutStatus(int uid)
         {
-            UserAccount? foundAccount = await context.UserAccounts.Where(u => u.UserId == uid)
-                .Include(u => u.Carts)
-                .FirstOrDefaultAsync();
+            UserAccount? foundAccount = await userRepository.FindUserByUidWithoutStatus(uid);
             return foundAccount;
         }
 
-        /*public async Task<int?> GetRoleByToken(IEnumerable<Claim> claims)
-        {
-            var uid = claims.First(i => i.Type == "user_id").Value;
-
-            UserAccount foundAccount = context.UserAccounts.Where(u => u.UserCode == uid).FirstOrDefault();
-            return foundAccount.RoleId;
-
-        }*/
-
         public async Task<int> GetUserIDByUserCode(string userCode)// nay laf tren token
         {
-            UserAccount? Userfound = await context.UserAccounts.Where(u => u.UserCode == userCode).FirstOrDefaultAsync();
-            if (Userfound != null)
-            {
-                if (Userfound.UserStatus == false)
-                {
-                    return 0;
-                }
-                return Userfound.UserId;
-            }
-
-            return -1;
-
+            return await userRepository.GetUserIDByUserCode(userCode);
         }
-
-
 
         public async Task<bool> CreateUser(IEnumerable<Claim> claims, CreateAccountVM createUserVM)
         {
-
-
-            UserAccount newUser = new UserAccount();
-            newUser.UserCode = claims.First(i => i.Type == "user_id").Value;
-            newUser.RoleId = 1;
-            newUser.Reputation = 80;
-            newUser.Balance = 0;
-            newUser.UserName = claims.First(i => i.Type.Contains("identity/claims/name")).Value;
-            newUser.UserGmail = claims.First(i => i.Type.Contains("emailaddress")).Value;
-            newUser.UserAddress = createUserVM.UserAddress;
-            newUser.UserPhone = createUserVM.UserPhone;
-            newUser.UserSex = createUserVM.UserSex;
-
-
-            newUser.UserDateOfBirth = DateTime.Parse(createUserVM.UserDateOfBirth);
-            newUser.UserImage = claims.First(i => i.Type == "picture").Value;
-            newUser.UserStatus = true;
-            newUser.UserDateCreate = DateTime.Now;
-
-            //new cart: 
-            Cart cart = new Cart
-            {
-                Address = newUser.UserAddress,
-
-            };
-            newUser.Carts.Add(cart);
-
-
-            var addUser = context.UserAccounts.AddAsync(newUser);
-            if (await context.SaveChangesAsync() != 0)
-            {
-                return true;
-            }
-            return false;
-
-
+            return await userRepository.CreateUser(claims, createUserVM);
         }
 
         public async Task<bool> EditUser(UserAccount currentUser, UpdateAccountVM accountVM)
         {
-            currentUser.UserName = accountVM.UserName;
-            currentUser.UserAddress = accountVM.UserAddress;
-            currentUser.UserPhone = accountVM.UserPhone;
-            currentUser.UserSex = accountVM.UserSex;
-            currentUser.UserDateOfBirth = DateTime.Parse(accountVM.UserDateOfBirth);
-            currentUser.UserImage = accountVM.UserImage;
-
-            currentUser.UserMoreInformation = accountVM.UserMoreInformation;
-            currentUser.UserDateUpdate = DateTime.Now;
-
-            if (await context.SaveChangesAsync() != 0)
-            {
-                return true;
-            }
-            return false;
-
+            return await userRepository.EditUser(currentUser, accountVM);
         }
 
         public async Task<bool> EditBankAccount(UserAccount currentUser, UpdateBankAccount accountVM)
         {
-
-
-            currentUser.CardNumber = accountVM.CardNumber;
-            currentUser.BankName = accountVM.BankName;
-
-            if (await context.SaveChangesAsync() != 0)
-            {
-                return true;
-            }
-            return false;
-
+            return await userRepository.EditBankAccount(currentUser, accountVM);
         }
 
         public async Task<List<UserVM>> GetAllUser(PaggingVM pagging, UserAccountFilterVM userAccountFilterVM)
         {
-            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
-            List<UserVM> accountListVM = new List<UserVM>();
-            if (userAccountFilterVM.UserName == null || userAccountFilterVM.UserGmail == null)
-            {
-                return accountListVM;
-            }
-            if (userAccountFilterVM.UserStatus != null)
-            {
-                if (pagging.OrderBy)
-                {
-                    accountListVM = await context.UserAccounts
-                    .Where(uc => uc.UserStatus == userAccountFilterVM.UserStatus && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
-                    .Skip(itemsToSkip)
-                    .Take(pagging.PageSize)
-                    .OrderByDescending(x => x.UserId)
-                    .Select(u => UserVM.UserAccountToVewModel(u))
-                    .ToListAsync();
-
-                }
-                else
-                {
-                    accountListVM = await context.UserAccounts
-                    .Where(uc => uc.UserStatus == userAccountFilterVM.UserStatus && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
-                    .Skip(itemsToSkip)
-                    .Take(pagging.PageSize)
-                    .Select(u => UserVM.UserAccountToVewModel(u))
-                    .ToListAsync();
-
-                }
-            }
-            else
-            {
-                if (pagging.OrderBy)
-                {
-                    accountListVM = await context.UserAccounts
-                    .Where(uc => uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
-                    .Skip(itemsToSkip)
-                    .Take(pagging.PageSize)
-                    .OrderByDescending(x => x.UserId)
-                    .Select(u => UserVM.UserAccountToVewModel(u))
-                    .ToListAsync();
-
-                }
-                else
-                {
-                    accountListVM = await context.UserAccounts
-                    .Where(uc => uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
-                    .Skip(itemsToSkip)
-                    .Take(pagging.PageSize)
-                    .Select(u => UserVM.UserAccountToVewModel(u))
-                    .ToListAsync();
-
-                }
-            }
-
+            List<UserVM> accountListVM = await userRepository.GetAllUser(pagging, userAccountFilterVM);
             return accountListVM;
         }
+
         public async Task<int> GetAllUserCount()
         {
-
-            int totalCount = await context.UserAccounts.CountAsync();
-
-            return totalCount;
+            return await userRepository.GetAllUserCount();
         }
-
 
         public async Task<bool> BanUser(UserUidVM uid)
         {
-
-
-            UserAccount? foundAccount = await context.UserAccounts.Where(u => u.UserId == uid.UserId).FirstOrDefaultAsync();
-            if (foundAccount != null)
-            {
-                foundAccount.UserStatus = false;
-                await context.SaveChangesAsync();
-                Email newEmail = new()
-                {
-                    To = foundAccount.UserGmail,
-                    Subject = "your has been ban",
-                    Obj = "Account",
-                    Link = foundAccount.UserGmail + " has been banned by admintrator at " + DateTime.Now.ToString()
-                };
-                await emailDAO.SendEmai(newEmail);
-                return true;
-            }
-
-
-            return false;
+            return await userRepository.BanUser(uid);
         }
 
         public async Task<bool> UnbanUser(UserUidVM uid)
         {
-
-
-            UserAccount? foundAccount = await context.UserAccounts.Where(u => u.UserId == uid.UserId).FirstOrDefaultAsync();
-            if (foundAccount != null)
-            {
-                foundAccount.UserStatus = true;
-                await context.SaveChangesAsync();
-                Email newEmail = new Email
-                {
-                    To = foundAccount.UserGmail,
-                    Subject = "your has been unbanned",
-                    Link = foundAccount.UserGmail + " has been unbanned by admintrator at " + DateTime.Now.ToString()
-                };
-                await emailDAO.SendEmai(newEmail);
-                return true;
-
-            }
-            return false;
-
+            return await userRepository.UnbanUser(uid);
         }
     }
 }

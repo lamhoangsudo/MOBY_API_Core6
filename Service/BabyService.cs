@@ -4,18 +4,18 @@ using MOBY_API_Core6.Models;
 using NodaTime.Extensions;
 using NodaTime;
 using MOBY_API_Core6.Service.IService;
+using MOBY_API_Core6.Repository.IRepository;
 
 namespace MOBY_API_Core6.Service
 {
     public class BabyService : IBabyService
     {
-        public readonly MOBYContext _context;
+        public readonly IBabyRepository _babyRepository;
         public static string ErrorMessage { get; set; } = "";
-        public BabyService(MOBYContext context)
+        public BabyService(IBabyRepository babyRepository)
         {
-            _context = context;
+            _babyRepository = babyRepository;
         }
-        //done
         public async Task<bool> InputInformationBaby(CreateBabyVM babyVM)
         {
             try
@@ -36,16 +36,11 @@ namespace MOBY_API_Core6.Service
                         return false;
                     }
                 }
-                Baby baby = new()
+                int check = await _babyRepository.InputInformationBaby(babyVM);
+                if (check <= 0)
                 {
-                    UserId = babyVM.UserId,
-                    Sex = babyVM.Sex,
-                    DateOfBirth = babyVM.DateOfBirth,
-                    Weight = babyVM.Weight,
-                    Height = babyVM.Height
-                };
-                await _context.AddAsync(baby);
-                await _context.SaveChangesAsync();
+                    return false;
+                }
                 return true;
             }
             catch (Exception ex)
@@ -54,12 +49,10 @@ namespace MOBY_API_Core6.Service
                 return false;
             }
         }
-        //done
         public async Task<bool> UpdateInformationBaby(UpdateBabyVM babyVM)
         {
             try
             {
-                Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == babyVM.Idbaby && bb.UserId == babyVM.UserID).FirstOrDefaultAsync();
                 LocalDateTime now = DateTime.Now.ToLocalDateTime();
                 LocalDateTime babyBirth = babyVM.DateOfBirth.ToLocalDateTime();
                 Period period = Period.Between(babyBirth, now, PeriodUnits.AllDateUnits);
@@ -76,16 +69,12 @@ namespace MOBY_API_Core6.Service
                         return false;
                     }
                 }
-                if (baby != null)
+                int check = await _babyRepository.UpdateInformationBaby(babyVM);
+                if (check <= 0) 
                 {
-                    baby.Sex = babyVM.Sex;
-                    baby.DateOfBirth = babyVM.DateOfBirth;
-                    baby.Weight = babyVM.Weight;
-                    baby.Height = babyVM.Height;
-                    await _context.SaveChangesAsync();
-                    return true;
+                    return true; 
                 }
-                return false;
+                return true;
             }
             catch (Exception ex)
             {
@@ -93,13 +82,12 @@ namespace MOBY_API_Core6.Service
                 return false;
             }
         }
-        //done
         public async Task<List<Baby>?> GetBabyByUserID(int id)
         {
             try
             {
-                List<Baby> babies = new();
-                babies = await _context.Babies.Where(bb => bb.UserId == id).ToListAsync();
+                List<Baby>? babies = new();
+                babies = await _babyRepository.GetBabyByUserID(id);
                 return babies;
             }
             catch (Exception ex)
@@ -108,19 +96,16 @@ namespace MOBY_API_Core6.Service
                 return null;
             }
         }
-        //done
         public async Task<bool> DeleteBaby(int id, int us)
         {
             try
             {
-                Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == id && bb.UserId == us).FirstOrDefaultAsync();
-                if (baby != null)
+                int check = await _babyRepository.DeleteBaby(id, us);
+                if (check <= 0)
                 {
-                    _context.Babies.Remove(baby);
-                    await _context.SaveChangesAsync();
-                    return true;
+                    return false;
                 }
-                return false;
+                return true;
             }
             catch (Exception ex)
             {

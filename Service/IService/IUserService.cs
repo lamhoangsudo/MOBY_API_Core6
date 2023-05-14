@@ -11,7 +11,6 @@ namespace MOBY_API_Core6.Service.IService
         public Task<UserAccount?> FindUserByUid(int uid);
         public Task<UserAccount?> FindUserByUidWithoutStatus(int uid);
         public Task<int> GetUserIDByUserCode(string userCode);
-        //public Task<int?> GetRoleByToken(IEnumerable<Claim> claims);
         public Task<bool> CreateUser(IEnumerable<Claim> claims, CreateAccountVM createUserVm);
         public Task<bool> EditUser(UserAccount currentUser, UpdateAccountVM accountVM);
         public Task<bool> EditBankAccount(UserAccount currentUser, UpdateBankAccount accountVM);

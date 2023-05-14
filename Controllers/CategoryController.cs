@@ -10,10 +10,10 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService _categoryRepository;
-        public CategoryController(ICategoryService categoryRepository)
+        private readonly ICategoryService _categoryService;
+        public CategoryController(ICategoryService categoryService)
         {
-            _categoryRepository = categoryRepository;
+            _categoryService = categoryService;
         }
 
         [HttpPost("CreateCategory")]
@@ -21,7 +21,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                bool checkCreate = await _categoryRepository.CreateCategory(categoryVM);
+                bool checkCreate = await _categoryService.CreateCategory(categoryVM);
                 if (checkCreate)
                 {
                     return Ok(ReturnMessage.Create("da tao thanh cong"));
@@ -42,14 +42,14 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                var category = await _categoryRepository.GetCategoryByID(categoryVM.CategoryID);
+                var category = await _categoryService.GetCategoryByID(categoryVM.CategoryID);
                 if (category == null)
                 {
                     return NotFound(ReturnMessage.Create("khong tim thay"));
                 }
                 else
                 {
-                    bool check = await _categoryRepository.UpdateCategory(categoryVM);
+                    bool check = await _categoryService.UpdateCategory(categoryVM);
                     if (check == true)
                     {
                         return Ok(ReturnMessage.Create("da edit thanh cong"));
@@ -71,14 +71,14 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                var category = await _categoryRepository.GetCategoryByID(categoryVM.CategoryID);
+                var category = await _categoryService.GetCategoryByID(categoryVM.CategoryID);
                 if (category == null || category.CategoryStatus == false)
                 {
                     return NotFound(ReturnMessage.Create("khong tim thay"));
                 }
                 else
                 {
-                    bool check = await _categoryRepository.DeleteCategory(categoryVM);
+                    bool check = await _categoryService.DeleteCategory(categoryVM);
                     if (check == true)
                     {
                         return Ok(ReturnMessage.Create("da update thanh cong"));
@@ -100,7 +100,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                var listCategory = await _categoryRepository.GetAllCategoriesAndSubCategory();
+                var listCategory = await _categoryService.GetAllCategoriesAndSubCategory();
 
                 if (listCategory == null)
                 {
@@ -130,7 +130,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                var listCategory = await _categoryRepository.GetCategoriesByStatus(categoryStatus);
+                var listCategory = await _categoryService.GetCategoriesByStatus(categoryStatus);
                 if (listCategory == null || listCategory.Count == 0)
                 {
                     return StatusCode(StatusCodes.Status404NotFound);
@@ -153,7 +153,7 @@ namespace MOBY_API_Core6.Controllers
             {
                 if (categoryName == null || categoryName.Equals(""))
                 {
-                    var listCategory = await _categoryRepository.GetAllCategoriesAndSubCategory();
+                    var listCategory = await _categoryService.GetAllCategoriesAndSubCategory();
                     if (listCategory == null || listCategory.Count == 0)
                     {
                         return StatusCode(StatusCodes.Status404NotFound);
@@ -165,7 +165,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    var listCategory = await _categoryRepository.GetCategoriesByName(categoryName);
+                    var listCategory = await _categoryService.GetCategoriesByName(categoryName);
                     if (listCategory == null || listCategory.Count == 0)
                     {
                         return StatusCode(StatusCodes.Status404NotFound);

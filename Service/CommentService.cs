@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Service
@@ -8,70 +9,40 @@ namespace MOBY_API_Core6.Service
     public class CommentService : ICommentService
     {
         private readonly MOBYContext context;
-
-        public CommentService(MOBYContext context)
+        private readonly ICommentRepository commentRepository;
+        public CommentService(MOBYContext context, ICommentRepository commentRepository)
         {
             this.context = context;
+            this.commentRepository = commentRepository;
         }
 
         public async Task<List<CommentVM>> GetAllComment()
         {
-            List<CommentVM> ListComment = await context.Comments
-                .Include(c => c.User)
-                .Include(c => c.Replies)
-                .ThenInclude(rep => rep.User)
-                .Select(c => CommentVM.CommentToVewModel(c))
-                .ToListAsync();
-
+            List<CommentVM> ListComment = await commentRepository.GetAllComment();
             return ListComment;
         }
         public async Task<CommentVM?> GetCommentByCommentID(int id)
         {
-            CommentVM? Comment = await context.Comments.Where(cmt => cmt.CommentId == id)
-                .Include(c => c.User)
-                .Select(c => CommentVM.CommentOnlyToVewModel(c))
-                .FirstOrDefaultAsync();
-
-
+            CommentVM? Comment = await commentRepository.GetCommentByCommentID(id);
             return Comment;
         }
 
         public async Task<List<CommentVM>> GetCommentByBlogID(int id)
         {
-            List<CommentVM> ListComment = await context.Comments.Where(cmt => cmt.BlogId == id)
-                .Include(c => c.User)
-                .Include(c => c.Replies)
-                .ThenInclude(rep => rep.User)
-                .Select(c => CommentVM.CommentToVewModel(c))
-                .ToListAsync();
-
-
+            List<CommentVM> ListComment = await commentRepository.GetCommentByBlogID(id);
             return ListComment;
         }
 
         public async Task<List<CommentVM>> GetCommentByItemID(int id)
         {
-            List<CommentVM> ListComment = await context.Comments.Where(cmt => cmt.ItemId == id)
-                .Include(c => c.User)
-                .Include(c => c.Replies)
-                .ThenInclude(rep => rep.User)
-                .Select(c => CommentVM.CommentToVewModel(c))
-                .ToListAsync();
+            List<CommentVM> ListComment = await commentRepository.GetCommentByItemID(id);
             return ListComment;
         }
 
         public async Task<bool> CreateComment(CreateCommentVM cmt, int userId)
         {
-            Comment newCmt = new Comment();
-            newCmt.ItemId = cmt.ItemId;
-            newCmt.BlogId = cmt.BlogId;
-            newCmt.UserId = userId;
-            newCmt.CommentContent = cmt.CommentContent;
-            newCmt.Status = true;
-            newCmt.DateCreate = DateTime.Now;
-
-            await context.AddAsync(newCmt);
-            if (await context.SaveChangesAsync() != 0)
+            int check = await commentRepository.CreateComment(cmt, userId);
+            if (check != 0)
             {
                 return true;
             }
@@ -80,43 +51,20 @@ namespace MOBY_API_Core6.Service
 
         public async Task<bool> UpdateComment(UpdateCommentVM comment, int userId)
         {
-            Comment? currentcmt = await context.Comments.Where(c => c.CommentId == comment.CommentId && c.UserId == userId).FirstOrDefaultAsync();
-
-            if (currentcmt != null)
+            int check = await commentRepository.UpdateComment(comment, userId);
+            if (check != 0)
             {
-                currentcmt.CommentContent = comment.CommentContent;
-                currentcmt.DateUpdate = DateTime.Now;
-
-                if (await context.SaveChangesAsync() != 0)
-                {
-                    return true;
-                }
-                return false;
+                return true;
             }
-            return false;
+            return true;
         }
 
         public async Task<bool> DeleteComment(GetCommentIDVM cmt, int userId)
         {
-            Comment? currentcmt = await context.Comments.Where(c => c.CommentId == cmt.CommentId && c.UserId == userId)
-                .Include(c => c.Replies).FirstOrDefaultAsync();
-
-            if (currentcmt != null)
+            int check = await commentRepository.DeleteComment(cmt, userId);
+            if (check != 0)
             {
-                if (currentcmt.Replies != null && currentcmt.Replies.Count != 0)
-                {
-                    List<Reply> listRep = currentcmt.Replies.ToList();
-                    foreach (Reply rep in listRep)
-                    {
-                        context.Replies.Remove(rep);
-                    }
-                }
-                context.Comments.Remove(currentcmt);
-                if (await context.SaveChangesAsync() != 0)
-                {
-                    return true;
-                }
-                return false;
+                return true;
             }
             return false;
         }

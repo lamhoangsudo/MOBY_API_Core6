@@ -1,96 +1,55 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Service
 {
     public class BlogCategoryService : IBlogCategoryService
     {
-        private readonly MOBYContext context;
-
-        public BlogCategoryService(MOBYContext context)
+        private readonly IBlogCategoryRepository blogCategoryRepository;
+        public BlogCategoryService(IBlogCategoryRepository blogCategoryRepository)
         {
-            this.context = context;
+            this.blogCategoryRepository = blogCategoryRepository;
         }
-        //done
         public async Task<List<BlogCategoryOnlyVM>> GetAllBlogCategory(int status)
         {
-            List<BlogCategoryOnlyVM> blogCategories = new List<BlogCategoryOnlyVM>();
-            if (status == 0)
-            {
-                blogCategories = await context.BlogCategories
-                .Where(bc => bc.Status == null || bc.Status == "ennable")
-                .Select(bc => BlogCategoryOnlyVM.BlogCategoryToVewModel(bc))
-                .ToListAsync();
-
-            }
-            else
-            {
-                blogCategories = await context.BlogCategories
-                .Select(bc => BlogCategoryOnlyVM.BlogCategoryToVewModel(bc))
-                .ToListAsync();
-
-            }
+            List<BlogCategoryOnlyVM> blogCategories = await blogCategoryRepository.GetAllBlogCategory(status);
             return blogCategories;
         }
-        //done
         public async Task<bool> CreateBlogCategory(string name)
         {
-            BlogCategory? existBlogCate = await context.BlogCategories
-                .Where(bc => bc.BlogCategoryName.Equals(name)).FirstOrDefaultAsync();
-            if (existBlogCate != null)
+            int check = await blogCategoryRepository.CreateBlogCategory(name);
+            if (check <= 0)
             {
                 return false;
             }
-            BlogCategory newBlogCategory = new BlogCategory();
-            newBlogCategory.BlogCategoryName = name;
-            newBlogCategory.Status = "ennable";
-            await context.BlogCategories.AddAsync(newBlogCategory);
-            context.SaveChanges();
             return true;
 
         }
-        //done
         public async Task<bool> UpdateBlogCategory(UpdateBlogCategoryVM updateBlogCategoryVM)
         {
-            BlogCategory? existBlogCate = await context.BlogCategories
-                .Where(bc => bc.BlogCategoryId == updateBlogCategoryVM.BlogCategoryId).FirstOrDefaultAsync();
-            if (existBlogCate == null)
+            int check = await blogCategoryRepository.UpdateBlogCategory(updateBlogCategoryVM);
+            if (check <= 0)
             {
                 return false;
             }
-            existBlogCate.BlogCategoryName = updateBlogCategoryVM.BlogCategoryName;
-            existBlogCate.Status = "ennable";
-            await context.SaveChangesAsync();
             return true;
 
         }
-        //done
         public async Task<bool> DeleteBlogCategory(BlogCateGetVM blogCateGetVM)
         {
-            BlogCategory? existBlogCate = await context.BlogCategories
-                .Where(bc => bc.BlogCategoryId == blogCateGetVM.BlogCategoryId).FirstOrDefaultAsync();
-            if (existBlogCate == null)
+            int check = await blogCategoryRepository.DeleteBlogCategory(blogCateGetVM);
+            if (check <= 0)
             {
                 return false;
             }
-
-            existBlogCate.Status = "disable";
-            await context.SaveChangesAsync();
             return true;
-
         }
-        //done
         public async Task<BlogCategoryVM?> GetBlogCateByID(int blogCateId)
         {
-            BlogCategoryVM? foundBlogCate = await context.BlogCategories
-                .Where(bc => bc.BlogCategoryId == blogCateId && (bc.Status == null || bc.Status == "ennable"))
-                .Include(bc => bc.Blogs.Where(b => b.BlogStatus == 1))
-                .ThenInclude(b => b.User)
-                .Select(bc => BlogCategoryVM.BlogCategoryVMToVewModel(bc))
-                .FirstOrDefaultAsync();
-
+            BlogCategoryVM? foundBlogCate = await blogCategoryRepository.GetBlogCateByID(blogCateId);
             if (foundBlogCate != null)
             {
                 return foundBlogCate;

@@ -1,368 +1,136 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MOBY_API_Core6.Data_View_Model;
+﻿using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Service
 {
     public class BlogService : IBlogService
     {
-        private readonly MOBYContext context;
         private readonly IEmailService emailDAO;
-        public BlogService(MOBYContext context, IEmailService emailDAO)
+        private readonly IBlogRepository blogRepository;
+        public BlogService(IEmailService emailDAO, IBlogRepository blogRepository)
         {
-            this.context = context;
             this.emailDAO = emailDAO;
+            this.blogRepository = blogRepository;
         }
-        //done
         public async Task<List<BlogSimpleVM>> GetAllBlog(PaggingVM pagging)
         {
-            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
-            List<BlogSimpleVM> blogList = new();
-            if (pagging.OrderBy)
-            {
-                blogList = await context.Blogs
-                .Include(b => b.BlogCategory)
-                .Include(b => b.User)
-                .Where(b => b.BlogStatus == 1)
-                .OrderByDescending(b => b.BlogId)
-                .Skip(itemsToSkip)
-                .Take(pagging.PageSize)
-                .Select(b => BlogSimpleVM.BlogSimpleToVewModel(b))
-                .ToListAsync();
-
-            }
-            else
-            {
-                blogList = await context.Blogs
-                .Include(b => b.BlogCategory)
-                .Include(b => b.User)
-                .Where(b => b.BlogStatus == 1)
-                .Skip(itemsToSkip)
-                .Take(pagging.PageSize)
-                .Select(b => BlogSimpleVM.BlogSimpleToVewModel(b))
-                .ToListAsync();
-
-            }
+            List<BlogSimpleVM> blogList = await blogRepository.GetAllBlog(pagging);
             return blogList;
         }
-        //done
         public async Task<int> GetAllBlogCount()
         {
-            int count;
-            count = await context.Blogs
-                .Where(b => b.BlogStatus == 1)
-                .CountAsync();
-            return count;
+            return await blogRepository.GetAllBlogCount();
         }
-        //done
         public async Task<List<BlogSimpleVM>> SearchlBlog(PaggingVM pagging, string tittle)
         {
-            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
-            List<BlogSimpleVM> blogList = new();
-            if (pagging.OrderBy)
-            {
-                blogList = await context.Blogs
-                .Include(b => b.BlogCategory)
-                .Include(b => b.User)
-                .Where(b => b.BlogStatus == 1 && b.BlogTitle.Contains(tittle))
-                .OrderByDescending(b => b.BlogId)
-                .Skip(itemsToSkip)
-                .Take(pagging.PageSize)
-                .Select(b => BlogSimpleVM.BlogSimpleToVewModel(b))
-                .ToListAsync();
-
-            }
-            else
-            {
-                blogList = await context.Blogs
-                .Include(b => b.BlogCategory)
-                .Include(b => b.User)
-                .Where(b => b.BlogStatus == 1 && b.BlogTitle.Contains(tittle))
-                .Skip(itemsToSkip)
-                .Take(pagging.PageSize)
-                .Select(b => BlogSimpleVM.BlogSimpleToVewModel(b))
-                .ToListAsync();
-            }
-
+            List<BlogSimpleVM> blogList = await blogRepository.SearchlBlog(pagging, tittle);
             return blogList;
         }
-        //done
         public async Task<int> GetSearchBlogCount(string tittle)
         {
-            int count;
-            count = await context.Blogs.Where(b => b.BlogStatus == 1 && b.BlogTitle.Contains(tittle))
-                .CountAsync();
-            return count;
+            return await blogRepository.GetSearchBlogCount(tittle);
         }
-        //done
         public async Task<List<BlogBriefVM>> GetAllUncheckBlog(PaggingVM pagging, BlogStatusVM blogStatusVM)
         {
-            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
-            List<BlogBriefVM> blogList = new();
-            if (blogStatusVM.BlogStatus == null)
-            {
-                blogList = await context.Blogs
-               .Include(b => b.User)
-               .Skip(itemsToSkip)
-               .Take(pagging.PageSize)
-               .Select(b => BlogBriefVM.BlogBriefToVewModel(b))
-               .ToListAsync();
-
-                return blogList;
-            }
-            blogList = await context.Blogs
-               .Include(b => b.User)
-               .Where(b => b.BlogStatus == blogStatusVM.BlogStatus)
-               .Skip(itemsToSkip)
-               .Take(pagging.PageSize)
-               .Select(b => BlogBriefVM.BlogBriefToVewModel(b))
-               .ToListAsync();
-
+            List<BlogBriefVM> blogList = await blogRepository.GetAllUncheckBlog(pagging, blogStatusVM);
             return blogList;
         }
-        //done
         public async Task<int> GetAllUncheckBlogcount(BlogStatusVM blogStatusVM)
         {
-            int blogListcount;
-            if (blogStatusVM.BlogStatus == null)
-            {
-                blogListcount = await context.Blogs.CountAsync();
-            }
-            blogListcount = await context.Blogs.Where(b => b.BlogStatus == blogStatusVM.BlogStatus).CountAsync();
-
-            return blogListcount;
+            return await blogRepository.GetAllUncheckBlogcount(blogStatusVM);
         }
-        //done
         public async Task<Blog?> GetBlogByBlogID(int id)
         {
 
-            Blog? blogFound = await context.Blogs.Where(b => b.BlogId == id)
-                .Include(b => b.User)
-                .FirstOrDefaultAsync();
-
+            Blog? blogFound = await blogRepository.GetBlogByBlogID(id);
             return blogFound;
         }
-        //done
         public async Task<BlogVM?> GetBlogVMByBlogID(int id)
         {
-
-            BlogVM? blogFound = await context.Blogs.Where(b => b.BlogId == id)
-                .Include(b => b.BlogCategory)
-                .Include(b => b.User)
-                .Include(b => b.Comments)
-                .ThenInclude(c => c.User)
-                .Include(b => b.Comments)
-                .ThenInclude(cmt => cmt.Replies)
-                .ThenInclude(rep => rep.User)
-                .Select(b => BlogVM.BlogToVewModel(b))
-                .FirstOrDefaultAsync();
-
+            BlogVM? blogFound = await blogRepository.GetBlogVMByBlogID(id);
             return blogFound;
         }
-        //done
         public async Task<Blog?> GetBlogByBlogIDAndUserId(int blogId, int userId)
         {
 
-            Blog? blogFound = await context.Blogs
-                .Where(b => b.BlogId == blogId && b.UserId == userId)
-                .FirstOrDefaultAsync();
-
+            Blog? blogFound = await blogRepository.GetBlogByBlogIDAndUserId(blogId, userId);
             return blogFound;
         }
-        //done
         public async Task<List<BlogSimpleVM>> GetBlogByBlogCateID(int blogCateID, PaggingVM pagging)
         {
-            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
-            List<BlogSimpleVM> blogList = new();
-            if (pagging.OrderBy)
-            {
-                blogList = await context.Blogs.Where(b => b.BlogCategoryId == blogCateID && b.BlogStatus == 1)
-                .Include(b => b.BlogCategory)
-                .Include(b => b.User)
-                .OrderByDescending(b => b.BlogId)
-                .Skip(itemsToSkip)
-                .Take(pagging.PageSize)
-                .Select(b => BlogSimpleVM.BlogSimpleToVewModel(b))
-                .ToListAsync();
-            }
-            else
-            {
-                blogList = await context.Blogs.Where(b => b.BlogCategoryId == blogCateID && b.BlogStatus == 1)
-                .Include(b => b.BlogCategory)
-                .Include(b => b.User)
-                .Skip(itemsToSkip)
-                .Take(pagging.PageSize)
-                .Select(b => BlogSimpleVM.BlogSimpleToVewModel(b))
-                .ToListAsync();
-            }
-
+            List<BlogSimpleVM> blogList = await blogRepository.GetBlogByBlogCateID(blogCateID, pagging);
             return blogList;
         }
-        //done
         public async Task<int> GetBlogByCateCount(int blogCateID)
         {
-            int count;
-            count = await context.Blogs.Where(b => b.BlogStatus == 1 && b.BlogCategoryId == blogCateID)
-                .CountAsync();
-
-            return count;
+            return await blogRepository.GetBlogByCateCount(blogCateID);
         }
-        //done
         public async Task<List<BlogSimpleVM>> GetBlogByUserID(int userID, PaggingVM pagging)
         {
-            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
-            List<BlogSimpleVM> blogList = new();
-            if (pagging.OrderBy)
-            {
-
-                blogList = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus == 1)
-                    .Include(b => b.BlogCategory)
-                    .Include(b => b.User)
-                    .Skip(itemsToSkip)
-                    .Take(pagging.PageSize)
-                    .OrderByDescending(b => b.BlogId)
-                    .Select(b => BlogSimpleVM.BlogSimpleToVewModel(b))
-                    .ToListAsync();
-            }
-            else
-            {
-                blogList = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus == 1)
-                    .Include(b => b.BlogCategory)
-                    .Include(b => b.User)
-                    .Skip(itemsToSkip)
-                    .Take(pagging.PageSize)
-                    .Select(b => BlogSimpleVM.BlogSimpleToVewModel(b))
-                    .ToListAsync();
-            }
-
+            List<BlogSimpleVM> blogList = await blogRepository.GetBlogByUserID(userID, pagging);
             return blogList;
         }
-        //done
         public async Task<int> GetBlogByUserIDCount(int userID)
         {
-            int count;
-            count = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus == 1)
-                .CountAsync();
-
-            return count;
+            return await blogRepository.GetBlogByUserIDCount(userID);
         }
-        //done
         public async Task<List<BlogSimpleVM>> GetBlogBySelf(int userID, PaggingVM pagging)
         {
-            int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;
-            List<BlogSimpleVM> blogList = new();
-            if (pagging.OrderBy)
-            {
-                blogList = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus != 3)
-                .Include(b => b.User)
-                .Include(b => b.BlogCategory)
-                .Skip(itemsToSkip)
-                .Take(pagging.PageSize)
-                .OrderByDescending(b => b.BlogId)
-                .Select(b => BlogSimpleVM.BlogSimpleToVewModel(b))
-                .ToListAsync();
-            }
-            else
-            {
-                blogList = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus != 3)
-                .Include(b => b.User)
-                .Include(b => b.BlogCategory)
-                .Skip(itemsToSkip)
-                .Take(pagging.PageSize)
-                .Select(b => BlogSimpleVM.BlogSimpleToVewModel(b))
-                .ToListAsync();
-            }
-
+            List<BlogSimpleVM> blogList = await blogRepository.GetBlogBySelf(userID, pagging);
             return blogList;
         }
-        //done
         public async Task<int> GetBlogByBySelfCount(int userID)
         {
-            int count;
-            count = await context.Blogs.Where(b => b.UserId == userID && b.BlogStatus != 3)
-                .CountAsync();
-
-            return count;
+            return await blogRepository.GetBlogByBySelfCount(userID);
         }
-        //done
         public async Task<bool> CreateBlog(CreateBlogVM blogvm, int UserID)
         {
-
-            Blog newblog = new()
-            {
-                BlogCategoryId = blogvm.BlogCategoryId,
-                UserId = UserID,
-                BlogTitle = blogvm.BlogTitle,
-                Image = blogvm.Image,
-                BlogDescription = blogvm.BlogDescription,
-                BlogContent = blogvm.BlogContent,
-                BlogDateCreate = DateTime.Now,
-                BlogStatus = 0
-            };
-            await context.Blogs.AddAsync(newblog);
-            if (await context.SaveChangesAsync() != 0)
+            int check = await blogRepository.CreateBlog(blogvm, UserID);
+            if (check != 0)
             {
                 return true;
             }
             return false;
-
         }
-        //done
         public async Task<bool> UpdateBlog(Blog blog, UpdateBlogVM blogvm)
         {
-
-            if (blog.BlogStatus != 3)
+            int check = await blogRepository.UpdateBlog(blog, blogvm);
+            if (check != 0)
             {
-                blog.BlogCategoryId = blogvm.BlogCategoryId;
-                blog.BlogTitle = blogvm.BlogTitle;
-                blog.Image = blogvm.Image;
-                blog.BlogDescription = blogvm.BlogDescription;
-                blog.BlogContent = blogvm.BlogContent;
-                blog.BlogDateUpdate = DateTime.Now;
-                if (blog.BlogStatus == 1 || blog.BlogStatus == 2)
-                {
-                    blog.BlogStatus = 0;
-                    blog.ReasonDeny = null;
-                }
-                await context.SaveChangesAsync();
                 return true;
-
-
             }
             else
             {
                 return false;
             }
-
-
         }
-        //done
         public async Task<bool> ConfirmBlog(Blog blog, int decision)
         {
-            blog.BlogStatus = decision;
-            blog.ReasonDeny = null;
-            await context.SaveChangesAsync();
-            if (decision == 1)
+            int check = await blogRepository.ConfirmBlog(blog, decision);
+            if (check == 0)
             {
-                Email newEmail = new()
-                {
-                    To = blog.User.UserGmail,
-                    UserName = blog.User.UserName,
-                    Subject = "Bài Blog của bạn đã được phê duyệt",
-                    Obj = "Blog",
-                    Link = "https://moby-customer.vercel.app/blog/" + blog.BlogId
-                };
-                await emailDAO.SendEmai(newEmail);
+                return false;
             }
+            Email newEmail = new()
+            {
+                To = blog.User.UserGmail,
+                UserName = blog.User.UserName,
+                Subject = "Bài Blog của bạn đã được phê duyệt",
+                Obj = "Blog",
+                Link = "https://moby-customer.vercel.app/blog/" + blog.BlogId
+            };
+            await emailDAO.SendEmai(newEmail);
             return true;
         }
-        //done
         public async Task<bool> DenyBlog(Blog blog, string reason)
         {
-            blog.BlogStatus = 2;
-            blog.ReasonDeny = reason;
-            await context.SaveChangesAsync();
+            int check = await blogRepository.DenyBlog(blog, reason);
+            if (check == 0)
+            {
+                return false;
+            }
             Email newEmail = new()
             {
                 To = blog.User.UserGmail,

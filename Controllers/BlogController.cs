@@ -10,14 +10,12 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class BlogController : ControllerBase
     {
-        private readonly IBlogCategoryService BlogCateDAO;
         private readonly IBlogService BlogDAO;
         private readonly IUserService UserDAO;
 
-        public BlogController(IBlogService BlogDAO, IBlogCategoryService BlogCateDAO, IUserService userDAO)
+        public BlogController(IBlogService BlogDAO, IUserService userDAO)
         {
             this.BlogDAO = BlogDAO;
-            this.BlogCateDAO = BlogCateDAO;
             UserDAO = userDAO;
         }
 
@@ -29,8 +27,7 @@ namespace MOBY_API_Core6.Controllers
             {
                 List<BlogSimpleVM> ListBlog = await BlogDAO.GetAllBlog(pagging);
                 int totalBlog = await BlogDAO.GetAllBlogCount();
-                PaggingReturnVM<BlogSimpleVM> result = new PaggingReturnVM<BlogSimpleVM>(ListBlog, pagging, totalBlog);
-
+                PaggingReturnVM<BlogSimpleVM> result = new(ListBlog, pagging, totalBlog);
                 return Ok(result);
 
             }
@@ -44,7 +41,7 @@ namespace MOBY_API_Core6.Controllers
 
         [HttpGet]
         [Route("api/admin/blog")]
-        public async Task<IActionResult> getAllUncheckBlog([FromQuery] PaggingVM pagging, [FromQuery] BlogStatusVM blogStatusVM)
+        public async Task<IActionResult> GetAllUncheckBlog([FromQuery] PaggingVM pagging, [FromQuery] BlogStatusVM blogStatusVM)
         {
             try
             {
@@ -63,7 +60,7 @@ namespace MOBY_API_Core6.Controllers
 
         [HttpGet]
         [Route("api/blog")]
-        public async Task<IActionResult> getBlogByQuery([FromQuery] BlogGetVM blogGetVM, [FromQuery] PaggingVM pagging)
+        public async Task<IActionResult> GetBlogByQuery([FromQuery] BlogGetVM blogGetVM, [FromQuery] PaggingVM pagging)
         {
             try
             {
@@ -111,7 +108,7 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpGet]
         [Route("api/useraccount/blog")]
-        public async Task<IActionResult> getBlogByToken([FromQuery] PaggingVM pagging)
+        public async Task<IActionResult> GetBlogByToken([FromQuery] PaggingVM pagging)
         {
             try
             {
@@ -215,7 +212,6 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (await BlogDAO.ConfirmBlog(foundblog, 1))
                     {
-
                         return Ok(ReturnMessage.Create("success"));
                     }
                 }

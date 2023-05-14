@@ -8,11 +8,11 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class EmailController : ControllerBase
     {
-        private readonly IEmailService _emailRepository;
+        private readonly IEmailService _emailService;
 
-        public EmailController(IEmailService emailRepository)
+        public EmailController(IEmailService emailService)
         {
-            _emailRepository = emailRepository;
+            _emailService = emailService;
         }
 
         [HttpPost("SendEmail")]
@@ -20,7 +20,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                _emailRepository.SendEmai(email);
+                _emailService.SendEmai(email);
                 return Ok(email);
             }
             catch (Exception ex)
