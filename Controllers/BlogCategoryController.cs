@@ -11,15 +11,11 @@ namespace MOBY_API_Core6.Controllers
     public class BlogCategoryController : ControllerBase
     {
         private readonly IBlogCategoryService BlogCateDAO;
-        private readonly IBlogService BlogDAO;
 
-        public BlogCategoryController(IBlogCategoryService BlogCateDAO, IBlogService blogDAO)
+        public BlogCategoryController(IBlogCategoryService BlogCateDAO)
         {
             this.BlogCateDAO = BlogCateDAO;
-            BlogDAO = blogDAO;
         }
-
-
         [HttpGet]
         [Route("api/blogcategory/all")]
         public async Task<IActionResult> GetALlBlogCategory()
@@ -35,7 +31,6 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
         [HttpGet]
         [Route("api/admin/blogcategory/all")]
         public async Task<IActionResult> GetALlBlogCategoryForAdmin()
@@ -51,7 +46,6 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
         [HttpGet]
         [Route("api/blogcategory")]
         public async Task<IActionResult> GetBlogCategoryByID([FromQuery] BlogCateGetVM blogCateGetVM)
@@ -60,7 +54,6 @@ namespace MOBY_API_Core6.Controllers
             try
             {
                 BlogCategoryVM? BlogCateName = await BlogCateDAO.GetBlogCateByID(blogCateGetVM.BlogCategoryId);
-
                 return Ok(BlogCateName);
             }
             catch (Exception ex)

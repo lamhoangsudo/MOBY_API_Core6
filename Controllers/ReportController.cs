@@ -11,15 +11,15 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class ReportController : ControllerBase
     {
-        public readonly IReportService _reportRepository;
-        public readonly IUserService _userRepository;
-        public readonly IRecordPenaltyService _recordPenaltyRepository;
+        public readonly IReportService _reportService;
+        public readonly IUserService _userService;
+        public readonly IRecordPenaltyService _recordPenaltyService;
 
-        public ReportController(IReportService reportRepository, IUserService userRepository, IRecordPenaltyService recordPenaltyRepository)
+        public ReportController(IReportService reportService, IUserService userService, IRecordPenaltyService recordPenaltyService)
         {
-            _reportRepository = reportRepository;
-            _userRepository = userRepository;
-            _recordPenaltyRepository = recordPenaltyRepository;
+            _reportService = reportService;
+            _userService = userService;
+            _recordPenaltyService = recordPenaltyService;
         }
 
         [Authorize]
@@ -28,7 +28,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int userID = await _userService.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (userID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -37,43 +37,20 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                UserAccount? user = await _userRepository.FindUserByUid(userID);
+                UserAccount? user = await _userService.FindUserByUid(userID);
                 if (user == null)
                 {
                     return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
                 }
                 reportVM.UserID = userID;
-                bool checkCreate = false;
-                if (reportVM.ItemID != null)
-                {
-                    checkCreate = await _reportRepository.CreateItemReport(reportVM);
-                }
-                else if (reportVM.OrderID != null)
-                {
-                    checkCreate = await _reportRepository.CreateOrderReport(reportVM);
-                }
-                else if (reportVM.CommentID != null)
-                {
-                    checkCreate = await _reportRepository.CreateCommentReport(reportVM);
-                }
-                else if (reportVM.ReplyID != null)
-                {
-                    checkCreate = await _reportRepository.CreateReplyReport(reportVM);
-                }
-                else if (reportVM.BlogID != null)
-                {
-                    checkCreate = await _reportRepository.CreateBlogReport(reportVM);
-                }
-
+                bool checkCreate = await _reportService.CreateReport(reportVM);
                 if (checkCreate)
                 {
                     return Ok(ReturnMessage.Create("đã tạo thành công"));
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -88,16 +65,14 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                bool checkUpdate = await _reportRepository.UpdateReport(reportVM);
+                bool checkUpdate = await _reportService.UpdateReport(reportVM);
                 if (checkUpdate)
                 {
                     return Ok(ReturnMessage.Create("đã cập nhập thành công"));
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -105,22 +80,20 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        [Authorize]
         [HttpPatch("ApprovedReport")]
         public async Task<IActionResult> ApprovedReport([FromBody] ApprovedReportVM reportVM)
         {
             try
             {
-                bool checkDelete = await _reportRepository.ApprovedReport(reportVM);
+                bool checkDelete = await _reportService.ApprovedReport(reportVM);
                 if (checkDelete)
                 {
                     return Ok(ReturnMessage.Create("đã duyệt"));
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -128,22 +101,20 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        [Authorize]
         [HttpPatch("DenyReport")]
         public async Task<IActionResult> DenyReport([FromBody] DenyReportVM reportVM)
         {
             try
             {
-                bool checkDelete = await _reportRepository.DenyReport(reportVM);
+                bool checkDelete = await _reportService.DenyReport(reportVM);
                 if (checkDelete)
                 {
                     return Ok(ReturnMessage.Create("đã từ chối"));
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -151,22 +122,20 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        [Authorize]
         [HttpPatch("DeleteReport")]
         public async Task<IActionResult> DeleteReport([FromBody] DeleteReportVM reportVM)
         {
             try
             {
-                bool checkDelete = await _reportRepository.DeleteReport(reportVM);
+                bool checkDelete = await _reportService.DeleteReport(reportVM);
                 if (checkDelete)
                 {
                     return Ok(ReturnMessage.Create("đã hủy"));
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -174,22 +143,20 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        [Authorize]
         [HttpPost("GetAllReport")]
         public async Task<IActionResult> GetReport([FromBody] DynamicFilterReportVM dynamicFilterReportVM)
         {
             try
             {
-                ListVM<ViewReport>? reports = await _reportRepository.GetReports(dynamicFilterReportVM);
+                ListVM<ViewReport>? reports = await _reportService.GetReports(dynamicFilterReportVM);
                 if (reports != null)
                 {
                     return Ok(reports);
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -197,14 +164,13 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
         [Authorize]
         [HttpPost("GetAllReportByUser")]
         public async Task<IActionResult> GetAllReportByUser([FromBody] DynamicFilterReportVM dynamicFilterReportVM)
         {
             try
             {
-                int userID = await _userRepository.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int userID = await _userService.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (userID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -213,31 +179,20 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                UserAccount? user = await _userRepository.FindUserByUidWithoutStatus(userID);
+                UserAccount? user = await _userService.FindUserByUidWithoutStatus(userID);
                 if (user == null)
                 {
                     return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
                 }
                 dynamicFilterReportVM.UserID = userID;
-                ListVM<ViewReport>? reports = await _reportRepository.GetReports(dynamicFilterReportVM);
+                ListVM<ViewReport>? reports = await _reportService.GetReports(dynamicFilterReportVM);
                 if (reports != null)
                 {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                    if (reports.List.Count == 0 || reports.List == null)
-                    {
-                        return NotFound(ReturnMessage.Create("không có report nào"));
-                    }
-                    else
-                    {
                         return Ok(reports);
-                    }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -245,7 +200,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        [Authorize]
         [HttpGet("GetDetailReport")]
         public async Task<IActionResult> GetDetailReport(int report, int type)
         {
@@ -254,7 +209,7 @@ namespace MOBY_API_Core6.Controllers
                 switch (type)
                 {
                     case 0:
-                        ViewReportItem? viewReportItem = await _reportRepository.ItemReportDetail(report);
+                        ViewReportItem? viewReportItem = await _reportService.ItemReportDetail(report);
                         if (viewReportItem != null)
                         {
                             return Ok(viewReportItem);
@@ -264,7 +219,7 @@ namespace MOBY_API_Core6.Controllers
                             return NotFound(ReturnMessage.Create("report không tồn tại"));
                         }
                     case 4:
-                        ViewReportBlog? viewReportBlog = await _reportRepository.BlogReportDetail(report);
+                        ViewReportBlog? viewReportBlog = await _reportService.BlogReportDetail(report);
                         if (viewReportBlog != null)
                         {
                             return Ok(viewReportBlog);
@@ -274,7 +229,7 @@ namespace MOBY_API_Core6.Controllers
                             return NotFound(ReturnMessage.Create("report không tồn tại"));
                         }
                     case 2:
-                        ViewReportComment? viewReportCommnent = await _reportRepository.CommentReportDetail(report);
+                        ViewReportComment? viewReportCommnent = await _reportService.CommentReportDetail(report);
                         if (viewReportCommnent != null)
                         {
                             return Ok(viewReportCommnent);
@@ -284,7 +239,7 @@ namespace MOBY_API_Core6.Controllers
                             return NotFound(ReturnMessage.Create("report không tồn tại"));
                         }
                     case 3:
-                        ViewReportReply? viewReportReply = await _reportRepository.ReplyReportDetail(report);
+                        ViewReportReply? viewReportReply = await _reportService.ReplyReportDetail(report);
                         if (viewReportReply != null)
                         {
                             return Ok(viewReportReply);
@@ -294,7 +249,7 @@ namespace MOBY_API_Core6.Controllers
                             return NotFound(ReturnMessage.Create("report không tồn tại"));
                         }
                     case 1:
-                        ViewReportOrder? viewReportOrder = await _reportRepository.OrderReportDetail(report);
+                        ViewReportOrder? viewReportOrder = await _reportService.OrderReportDetail(report);
                         if (viewReportOrder != null)
                         {
                             return Ok(viewReportOrder);
@@ -304,31 +259,27 @@ namespace MOBY_API_Core6.Controllers
                             return NotFound(ReturnMessage.Create("report không tồn tại"));
                         }
                 }
-#pragma warning disable CS8604 // Possible null reference argument.
                 return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        [Authorize]
         [HttpPatch("HiddenObject")]
         public async Task<IActionResult> HideObject([FromBody] HiddenAndPunish hiddenAndPunish)
         {
             try
             {
-                bool checkHidden = await _reportRepository.HiddenOject(hiddenAndPunish);
+                bool checkHidden = await _reportService.HiddenOject(hiddenAndPunish);
                 if (checkHidden)
                 {
                     return Ok(ReturnMessage.Create("đã ẩn đối tượng thành công"));
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -336,22 +287,20 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        [Authorize]
         [HttpPut("PunishViolators")]
         public async Task<IActionResult> PunishViolators([FromBody] HiddenAndPunish hideAndPunish)
         {
             try
             {
-                bool checkHide = await _reportRepository.PunishViolators(hideAndPunish);
+                bool checkHide = await _reportService.PunishViolators(hideAndPunish);
                 if (checkHide)
                 {
                     return Ok(ReturnMessage.Create("đã trừ điểm user thành công"));
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -359,21 +308,20 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpGet("GetStatusAndReasonHiden")]
         public async Task<IActionResult> GetStatusAndReasonHiden([FromQuery] int id, [FromQuery] int type)
         {
             try
             {
-                StatusAndReasonHidenViewModel? statusAndReasonHidenViewModel = await _reportRepository.GetStatusAndReasonHiden(id, type);
+                StatusAndReasonHidenViewModel? statusAndReasonHidenViewModel = await _reportService.GetStatusAndReasonHiden(id, type);
                 if (statusAndReasonHidenViewModel != null)
                 {
                     return Ok(statusAndReasonHidenViewModel);
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(ReportService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)
@@ -381,22 +329,20 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
+        [Authorize]
         [HttpGet("GetRecordPenaltyPointsByUser")]
         public async Task<IActionResult> GetRecordPenaltyPointsByUser([FromQuery] int userID)
         {
             try
             {
-                List<RecordPenaltyPoint>? recordPenaltyPoints = await _recordPenaltyRepository.GetRecordPenaltyPointsByUserID(userID);
+                List<RecordPenaltyPoint>? recordPenaltyPoints = await _recordPenaltyService.GetRecordPenaltyPointsByUserID(userID);
                 if (recordPenaltyPoints != null)
                 {
                     return Ok(recordPenaltyPoints);
                 }
                 else
                 {
-#pragma warning disable CS8604 // Possible null reference argument.
                     return BadRequest(ReturnMessage.Create(RecordPenaltyService.ErrorMessage));
-#pragma warning restore CS8604 // Possible null reference argument.
                 }
             }
             catch (Exception ex)

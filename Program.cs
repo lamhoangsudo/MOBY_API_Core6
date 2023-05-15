@@ -9,6 +9,8 @@ using System.Text.Json.Serialization;
 using Azure.Identity;
 using MOBY_API_Core6.Service;
 using MOBY_API_Core6.Service.IService;
+using MOBY_API_Core6.Repository.IRepository;
+using MOBY_API_Core6.Repository;
 
 internal class Program
 {
@@ -66,7 +68,23 @@ internal class Program
         builder.Services.AddScoped<IRecordPenaltyService, RecordPenaltyService>();
         builder.Services.AddScoped<IBabyService, BabyService>();
         builder.Services.AddScoped<JsonToObj>();
-
+        builder.Services.AddScoped<IBabyRepository, BabyRepository>();
+        builder.Services.AddScoped<IBannerRepository, BannerRepository>();
+        builder.Services.AddScoped<IBlogCategoryRepository, BlogCategoryRepository>();
+        builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+        builder.Services.AddScoped<ICartRepository, CartRepository>();
+        builder.Services.AddScoped<ICartDetailRepository, CartDetailRepository>();
+        builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+        builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+        builder.Services.AddScoped<IItemRepository, ItemRepository>();
+        builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+        builder.Services.AddScoped<IReplyRepository, ReplyRepository>();
+        builder.Services.AddScoped<IRecordPenaltyRepository, RecordPenaltyRepository>();
+        builder.Services.AddScoped<IReportRepository, ReportRepository>();
+        builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+        builder.Services.AddScoped<ITransationRepository, TransationRepository>();
+        builder.Services.AddScoped<IUserAddressRepository, UserAddressRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Configuration.AddUserSecrets<Program>(true);
         builder.Services.AddSwaggerGen(swagger =>
         {

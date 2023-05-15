@@ -1,27 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Models;
+using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
 
 namespace MOBY_API_Core6.Service
 {
     public class RecordPenaltyService : IRecordPenaltyService
     {
-        private readonly MOBYContext _context;
+        private readonly IRecordPenaltyRepository _recordPenaltyRepository;
+        public static string ErrorMessage { get; set; } = string.Empty;
 
-        public static string? ErrorMessage { get; set; }
-
-        public RecordPenaltyService(MOBYContext context)
+        public RecordPenaltyService(IRecordPenaltyRepository recordPenaltyRepository)
         {
-            _context = context;
+            _recordPenaltyRepository = recordPenaltyRepository;
         }
-        //done
         public async Task<List<RecordPenaltyPoint>?> GetRecordPenaltyPointsByUserID(int userID)
         {
             try
             {
-                List<RecordPenaltyPoint> recordPenaltyPoints = new();
-                recordPenaltyPoints = await _context.RecordPenaltyPoints.Where(rc => rc.UserId == userID).ToListAsync();
-                return recordPenaltyPoints;
+                return await _recordPenaltyRepository.GetRecordPenaltyPointsByUserID(userID);
             }
             catch (Exception ex)
             {
@@ -29,13 +26,15 @@ namespace MOBY_API_Core6.Service
                 return null;
             }
         }
-        //done
         public async Task<bool> CreateRecord(RecordPenaltyPoint recordPenaltyPoint)
         {
             try
             {
-                await _context.AddAsync(recordPenaltyPoint);
-                await _context.SaveChangesAsync();
+                int check = await _recordPenaltyRepository.CreateRecord(recordPenaltyPoint);
+                if (check <= 0)
+                {
+                    return false;
+                }
                 return true;
             }
             catch (Exception ex)

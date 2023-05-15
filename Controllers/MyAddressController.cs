@@ -10,21 +10,21 @@ namespace MOBY_API_Core6.Controllers
     [ApiController]
     public class MyAddressController : ControllerBase
     {
-        private IUserAddressService userAddressDAO;
-        private readonly IUserService userDAO;
-        public MyAddressController(IUserAddressService userAddressDAO, IUserService userDAO)
+        private readonly IUserAddressService userAddressService;
+        private readonly IUserService userService;
+        public MyAddressController(IUserAddressService userAddressService, IUserService userService)
         {
-            this.userAddressDAO = userAddressDAO;
-            this.userDAO = userDAO;
+            this.userAddressService = userAddressService;
+            this.userService = userService;
         }
 
         [Authorize]
         [HttpPost("api/useraddress")]
-        public async Task<IActionResult> createNewAddress([FromBody] CreateMyAddressVM createMyAddressVM)
+        public async Task<IActionResult> CreateNewAddress([FromBody] CreateMyAddressVM createMyAddressVM)
         {
             try
             {
-                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userService.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -33,21 +33,13 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-
-                if (await userAddressDAO.CheckExitedAddress(createMyAddressVM, uid))
-                {
-                    return BadRequest(ReturnMessage.Create("this address already existed"));
-                }
-
-                if (await userAddressDAO.CreateNewAddress(createMyAddressVM, uid))
+                if (await userAddressService.CreateNewAddress(createMyAddressVM, uid))
                 {
                     return Ok(ReturnMessage.Create("success"));
                 }
                 else
                 {
-
                     return BadRequest(ReturnMessage.Create("error at createNewAddress"));
-
                 }
             }
             catch (Exception ex)
@@ -58,11 +50,11 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpGet("api/useraddress")]
-        public async Task<IActionResult> myListAddress()
+        public async Task<IActionResult> MyListAddress()
         {
             try
             {
-                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userService.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -71,7 +63,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                List<MyAddressVM>? addresses = await userAddressDAO.GetMylistAddress(uid);
+                List<MyAddressVM>? addresses = await userAddressService.GetMylistAddress(uid);
 
                 return Ok(addresses);
 
@@ -89,7 +81,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userService.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -98,10 +90,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                UserAddress? currentUserAddress = await userAddressDAO.FindUserAddressByUserAddressID(updateMyAddressVM.UserAddressID, uid);
+                UserAddress? currentUserAddress = await userAddressService.FindUserAddressByUserAddressID(updateMyAddressVM.UserAddressID, uid);
                 if (currentUserAddress != null)
                 {
-                    if (await userAddressDAO.UpdateUserAddress(updateMyAddressVM, currentUserAddress))
+                    if (await userAddressService.UpdateUserAddress(updateMyAddressVM, currentUserAddress))
                     {
                         return Ok(ReturnMessage.Create("success"));
                     }
@@ -117,11 +109,11 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpDelete("api/useraddress")]
-        public async Task<IActionResult> deleteNewAddress([FromQuery] MyAddressIdVM myAddressIdVM)
+        public async Task<IActionResult> DeleteNewAddress([FromQuery] MyAddressIdVM myAddressIdVM)
         {
             try
             {
-                int uid = await userDAO.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int uid = await userService.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (uid == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -130,10 +122,10 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                UserAddress? currentUserAddress = await userAddressDAO.FindUserAddressByUserAddressID(myAddressIdVM.UserAddressID, uid);
+                UserAddress? currentUserAddress = await userAddressService.FindUserAddressByUserAddressID(myAddressIdVM.UserAddressID, uid);
                 if (currentUserAddress != null)
                 {
-                    if (await userAddressDAO.DeleteMyAddress(currentUserAddress))
+                    if (await userAddressService.DeleteMyAddress(currentUserAddress))
                     {
                         return Ok(ReturnMessage.Create("success"));
                     }

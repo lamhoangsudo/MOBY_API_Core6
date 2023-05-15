@@ -147,7 +147,7 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> BanUser([FromBody] UserUidVM uid)
         {
             //UserAccounts currentUser = new UserAccounts();
-            // UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
+            // UserAccount currentUser = await userService.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
 
             try
             {
@@ -170,7 +170,7 @@ namespace MOBY_API_Core6.Controllers
         public async Task<IActionResult> UnBanUser([FromBody] UserUidVM uid)
         {
             //UserAccounts currentUser = new UserAccounts();
-            //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
+            //UserAccount currentUser = await userService.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
             try
             {
                 if (await userDAO.UnbanUser(uid))
@@ -204,7 +204,7 @@ namespace MOBY_API_Core6.Controllers
                 int totalUser = await userDAO.GetAllUserCount();
                 PaggingReturnVM<UserVM> result = new PaggingReturnVM<UserVM>(listUser, pagging, totalUser);
                 //UserAccounts currentUser = new UserAccounts();
-                //UserAccount currentUser = await userDAO.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
+                //UserAccount currentUser = await userService.FindUserByID(this.User.Claims.First(i => i.Type == "user_id").Value);
 
 
                 return Ok(result); ;
