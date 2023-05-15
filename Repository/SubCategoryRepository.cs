@@ -50,7 +50,7 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<List<SubCategoryVM>?> GetSubCategoriesByName(string subCategoryName)
         {
-            List<SubCategoryVM> listSubCategory = await _context.SubCategories
+            return await _context.SubCategories
                             .Where(sc => sc.SubCategoryName.Contains(subCategoryName)).Select(subCategory => new SubCategoryVM
                             (
                                 subCategory.SubCategoryId,
@@ -58,7 +58,6 @@ namespace MOBY_API_Core6.Repository
                                 subCategory.SubCategoryName,
                                 subCategory.SubCategoryStatus
                             )).ToListAsync();
-            return listSubCategory;
         }
         public async Task<List<SubCategoryVM>?> GetAllSubCategory(int categoryID)
         {

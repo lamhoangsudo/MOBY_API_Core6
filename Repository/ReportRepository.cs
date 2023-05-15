@@ -31,7 +31,6 @@ namespace MOBY_API_Core6.Repository
                 }
                 await _context.SaveChangesAsync();
             }
-            throw new KeyNotFoundException();
         }
         public async Task<int> CreateItemReport(CreateReportVM reportVM)
         {
@@ -65,10 +64,9 @@ namespace MOBY_API_Core6.Repository
                 Report report = new()
                 {
                     ReportDateCreate = dateTimeCreate,
-                    ItemId = reportVM.ItemID,
+                    OrderId = reportVM.OrderID,
                     UserId = reportVM.UserID,
                     Title = reportVM.Title,
-
                     ReportStatus = reportVM.Status,
                     ReportContent = reportVM.Content,
                     Evident = reportVM.Image

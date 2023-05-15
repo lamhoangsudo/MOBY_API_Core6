@@ -20,7 +20,7 @@ namespace MOBY_API_Core6.Controllers
 
         [HttpGet]
         [Route("api/comment/all")]
-        public async Task<IActionResult> getAllComment()
+        public async Task<IActionResult> GetAllComment()
         {
             try
             {
@@ -35,7 +35,7 @@ namespace MOBY_API_Core6.Controllers
 
         [HttpGet]
         [Route("api/comment")]
-        public async Task<IActionResult> getCommentByQuery([FromQuery] GetCommentVM id)
+        public async Task<IActionResult> GetCommentByQuery([FromQuery] GetCommentVM id)
         {
             try
             {

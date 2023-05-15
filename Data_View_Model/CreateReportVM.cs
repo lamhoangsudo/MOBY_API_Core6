@@ -16,7 +16,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public int? ReplyID { get; set; }
         [DefaultValue(null)]
         public int? BlogID { get; set; }
-        [ReadOnly(true)]
+        //[ReadOnly(true)]
         public int UserID { get; set; }
         [Required]
         public string? Title { get; set; }

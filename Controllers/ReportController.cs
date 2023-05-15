@@ -22,13 +22,12 @@ namespace MOBY_API_Core6.Controllers
             _recordPenaltyService = recordPenaltyService;
         }
 
-        [Authorize]
         [HttpPost("CreateReport")]
         public async Task<IActionResult> CreateReport([FromBody] CreateReportVM reportVM)
         {
             try
             {
-                int userID = await _userService.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                /*int userID = await _userService.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (userID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -42,7 +41,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
                 }
-                reportVM.UserID = userID;
+                reportVM.UserID = userID;*/
                 bool checkCreate = await _reportService.CreateReport(reportVM);
                 if (checkCreate)
                 {
@@ -58,8 +57,6 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-
-        [Authorize]
         [HttpPut("UpdateReport")]
         public async Task<IActionResult> UpdateReport([FromBody] UpdateReportVM reportVM)
         {
@@ -80,7 +77,6 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [Authorize]
         [HttpPatch("ApprovedReport")]
         public async Task<IActionResult> ApprovedReport([FromBody] ApprovedReportVM reportVM)
         {
@@ -101,7 +97,6 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [Authorize]
         [HttpPatch("DenyReport")]
         public async Task<IActionResult> DenyReport([FromBody] DenyReportVM reportVM)
         {
@@ -122,7 +117,6 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [Authorize]
         [HttpPatch("DeleteReport")]
         public async Task<IActionResult> DeleteReport([FromBody] DeleteReportVM reportVM)
         {
@@ -143,7 +137,6 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [Authorize]
         [HttpPost("GetAllReport")]
         public async Task<IActionResult> GetReport([FromBody] DynamicFilterReportVM dynamicFilterReportVM)
         {
@@ -266,7 +259,6 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [Authorize]
         [HttpPatch("HiddenObject")]
         public async Task<IActionResult> HideObject([FromBody] HiddenAndPunish hiddenAndPunish)
         {
@@ -287,7 +279,6 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [Authorize]
         [HttpPut("PunishViolators")]
         public async Task<IActionResult> PunishViolators([FromBody] HiddenAndPunish hideAndPunish)
         {
@@ -308,7 +299,6 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [Authorize]
         [HttpGet("GetStatusAndReasonHiden")]
         public async Task<IActionResult> GetStatusAndReasonHiden([FromQuery] int id, [FromQuery] int type)
         {
@@ -329,7 +319,6 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
-        [Authorize]
         [HttpGet("GetRecordPenaltyPointsByUser")]
         public async Task<IActionResult> GetRecordPenaltyPointsByUser([FromQuery] int userID)
         {
