@@ -580,7 +580,6 @@ namespace MOBY_API_Core6.Repository
                     AutoDeleteAllBanUser();
                 }
                 Models.Item? item = await queryItem
-                    .Where(query => query.it.ItemStatus == true)
                     .Select(query => query.it)
                     .FirstOrDefaultAsync();
                 if (item != null)
@@ -630,7 +629,6 @@ namespace MOBY_API_Core6.Repository
                     AutoDeleteAllBanUser();
                 }
                 Order? order = await queryOrder
-                    .Where(queryOrder => queryOrder.orit.or.Status != 3)
                     .Select(queryOrder => queryOrder.orit.or)
                     .FirstOrDefaultAsync();
                 if (order != null)
@@ -679,7 +677,6 @@ namespace MOBY_API_Core6.Repository
                     AutoDeleteAllBanUser();
                 }
                 Comment? comment = await queryComment
-                    .Where(queryComment => queryComment.cm.Status == true)
                     .Select(queryComment => queryComment.cm)
                     .FirstOrDefaultAsync();
                 if (comment != null)
@@ -728,7 +725,6 @@ namespace MOBY_API_Core6.Repository
                     AutoDeleteAllBanUser();
                 }
                 Reply? reply = await queryReply
-                    .Where(queryReply => queryReply.rp.Status == true)
                     .Select(queryReply => queryReply.rp)
                     .FirstOrDefaultAsync();
                 if (reply != null)
@@ -778,7 +774,6 @@ namespace MOBY_API_Core6.Repository
                     AutoDeleteAllBanUser();
                 }
                 Blog? blog = await queryBlog
-                    .Where(queryBlog => queryBlog.blg.BlogStatus != 2)
                     .Select(queryBlog => queryBlog.blg)
                     .FirstOrDefaultAsync();
                 if (blog != null)
