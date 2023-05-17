@@ -22,12 +22,13 @@ namespace MOBY_API_Core6.Controllers
             _recordPenaltyService = recordPenaltyService;
         }
 
+        [Authorize]
         [HttpPost("CreateReport")]
         public async Task<IActionResult> CreateReport([FromBody] CreateReportVM reportVM)
         {
             try
             {
-                /*int userID = await _userService.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
+                int userID = await _userService.GetUserIDByUserCode(this.User.Claims.First(i => i.Type == "user_id").Value);
                 if (userID == 0)
                 {
                     return BadRequest(ReturnMessage.Create("Account has been suspended"));
@@ -41,7 +42,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
                 }
-                reportVM.UserID = userID;*/
+                reportVM.UserID = userID;
                 bool checkCreate = await _reportService.CreateReport(reportVM);
                 if (checkCreate)
                 {
