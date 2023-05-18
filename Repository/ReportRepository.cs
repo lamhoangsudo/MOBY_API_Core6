@@ -606,7 +606,8 @@ namespace MOBY_API_Core6.Repository
                         await emailRepository.SendEmai(email);
                     }
                 }
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
@@ -655,7 +656,8 @@ namespace MOBY_API_Core6.Repository
                         await emailRepository.SendEmai(email);
                     }
                 }
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
@@ -703,7 +705,8 @@ namespace MOBY_API_Core6.Repository
                         await emailRepository.SendEmai(email);
                     }
                 }
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
@@ -752,7 +755,8 @@ namespace MOBY_API_Core6.Repository
                         await emailRepository.SendEmai(email);
                     }
                 }
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
@@ -801,7 +805,8 @@ namespace MOBY_API_Core6.Repository
                         await emailRepository.SendEmai(email);
                     }
                 }
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }

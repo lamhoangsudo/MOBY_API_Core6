@@ -194,7 +194,7 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<int> DeleteItem(DeleteItemVM itemVM)
         {
-            bool check = await _context.Orders.Where(or => or.ItemId == itemVM.ItemID && or.Status == 0).AnyAsync();
+            bool check = await _context.Orders.Where(or => or.ItemId == itemVM.ItemID && or.Status < 3).AnyAsync();
             if (!check)
             {
                 var item = await _context.Items.Where(it => it.ItemId == itemVM.ItemID
