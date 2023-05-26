@@ -69,7 +69,7 @@ namespace MOBY_API_Core6.Controllers
 
         //[Authorize]
         [HttpDelete("DeleteBanner")]
-        public async Task<IActionResult> DeleteBanner([FromQuery] int id)
+        public async Task<IActionResult> DeleteBanner([FromBody] int id)
         {
             try
             {
