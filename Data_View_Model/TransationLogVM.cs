@@ -11,7 +11,7 @@ namespace MOBY_API_Core6.Data_View_Model
         public DateTime DateCreate { get; set; }
         public DateTime? DateUpdate { get; set; }
 
-        public UserVM? UserVM { get; set; }
+        public UserForTransactionVM? UserVM { get; set; }
 
         public static TransationLogVM TransactionToVewModel(TransationLog log)
         {
@@ -26,7 +26,7 @@ namespace MOBY_API_Core6.Data_View_Model
 
             };
             var user = log.User;
-            transactionLog.UserVM = UserVM.UserAccountToVewModel(user);
+            transactionLog.UserVM = UserForTransactionVM.UserAccountToVewModel(user);
 
             return transactionLog;
         }
