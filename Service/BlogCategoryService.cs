@@ -26,7 +26,6 @@ namespace MOBY_API_Core6.Service
                 return false;
             }
             return true;
-
         }
         public async Task<bool> UpdateBlogCategory(UpdateBlogCategoryVM updateBlogCategoryVM)
         {

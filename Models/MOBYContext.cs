@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MOBY_API_Core6.Models
 {
@@ -43,10 +46,7 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<ViewReportOrder> ViewReportOrders { get; set; } = null!;
         public virtual DbSet<ViewReportReply> ViewReportReplies { get; set; } = null!;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

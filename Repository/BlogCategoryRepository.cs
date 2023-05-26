@@ -17,13 +17,14 @@ namespace MOBY_API_Core6.Repository
             if (status == 0)
             {
                 return await context.BlogCategories
-                .Where(bc => bc.Status == null || bc.Status == "ennable")
+                .Where(bc => bc.Status == true)
                 .Select(bc => BlogCategoryOnlyVM.BlogCategoryToVewModel(bc))
                 .ToListAsync();
             }
-            else
+            if (status == 1)
             {
                 return await context.BlogCategories
+                .Where(bc => bc.Status == false)
                 .Select(bc => BlogCategoryOnlyVM.BlogCategoryToVewModel(bc))
                 .ToListAsync();
             }
@@ -38,12 +39,13 @@ namespace MOBY_API_Core6.Repository
                 BlogCategory newBlogCategory = new()
                 {
                     BlogCategoryName = name,
-                    Status = "ennable"
+                    Status = true
                 };
                 await context.BlogCategories.AddAsync(newBlogCategory);
-                return await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
+                return 1;
             }
-            throw new DuplicateWaitObjectException();
+            return 0;
         }
         public async Task<int> UpdateBlogCategory(UpdateBlogCategoryVM updateBlogCategoryVM)
         {
@@ -52,10 +54,11 @@ namespace MOBY_API_Core6.Repository
             if (existBlogCate != null)
             {
                 existBlogCate.BlogCategoryName = updateBlogCategoryVM.BlogCategoryName;
-                existBlogCate.Status = "ennable";
-                return await context.SaveChangesAsync();
+                existBlogCate.Status = true;
+                await context.SaveChangesAsync();
+                return 1;
             }
-            throw new KeyNotFoundException();
+            return 0;
         }
         public async Task<int> DeleteBlogCategory(BlogCateGetVM blogCateGetVM)
         {
@@ -63,15 +66,16 @@ namespace MOBY_API_Core6.Repository
                 .Where(bc => bc.BlogCategoryId == blogCateGetVM.BlogCategoryId).FirstOrDefaultAsync();
             if (existBlogCate != null)
             {
-                existBlogCate.Status = "disable";
-                return await context.SaveChangesAsync();
+                existBlogCate.Status = false;
+                await context.SaveChangesAsync();
+                return 1;
             }
-            throw new KeyNotFoundException();
+            return 0;
         }
         public async Task<BlogCategoryVM?> GetBlogCateByID(int blogCateId)
         {
             return await context.BlogCategories
-                .Where(bc => bc.BlogCategoryId == blogCateId && (bc.Status == null || bc.Status == "ennable"))
+                .Where(bc => bc.BlogCategoryId == blogCateId && bc.Status == true)
                 .Include(bc => bc.Blogs.Where(b => b.BlogStatus == 1))
                 .ThenInclude(b => b.User)
                 .Select(bc => BlogCategoryVM.BlogCategoryVMToVewModel(bc))

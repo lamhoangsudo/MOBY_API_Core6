@@ -33,12 +33,21 @@ namespace MOBY_API_Core6.Controllers
         }
         [HttpGet]
         [Route("api/admin/blogcategory/all")]
-        public async Task<IActionResult> GetALlBlogCategoryForAdmin()
+        public async Task<IActionResult> GetALlBlogCategoryForAdmin([FromQuery] BlogCategoryStatusVM blogCategoryStatusVM)
         {
 
             try
             {
-                List<BlogCategoryOnlyVM> BlogCateList = await BlogCateDAO.GetAllBlogCategory(1);
+                int status;
+                if (blogCategoryStatusVM.blogCateStatus == true)
+                {
+                    status = 0;
+                }
+                else
+                {
+                    status = 1;
+                }
+                List<BlogCategoryOnlyVM> BlogCateList = await BlogCateDAO.GetAllBlogCategory(status);
                 return Ok(BlogCateList);
             }
             catch (Exception ex)
