@@ -32,7 +32,7 @@ namespace MOBY_API_Core6.Repository
             {
                 banner.BannerLink = updateBanner.Link;
                 banner.DateUpdate = DateTime.Now;
-                banner.Image = updateBanner.Imange;
+                banner.Image = updateBanner.Image;
                 return await _context.SaveChangesAsync();
             }
             throw new KeyNotFoundException();
