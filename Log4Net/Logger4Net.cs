@@ -14,7 +14,7 @@ namespace MOBY_API_Core6.Log4Net
                 var log = new Logger();
                 XmlConfigurator.Configure(logRepository, new FileInfo("Log4Net\\log4netconfig.config"));
                 log.Info("Starting the web application");
-                log.Error(ex.Message, ex.InnerException);
+                log.Error(ex.Source + ex.StackTrace +ex.Message, ex.InnerException);
             }
             catch
             {
