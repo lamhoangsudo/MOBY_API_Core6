@@ -1,6 +1,7 @@
 ﻿using Category.Data_View_Model;
 using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
@@ -14,6 +15,7 @@ namespace MOBY_API_Core6.Service
     {
         private readonly IItemRepository _itemRepository;
         private readonly JsonToObj _JsonToObj;
+        private readonly Logger4Net _logger4Net;
 
         public static string ErrorMessage { get; set; } = string.Empty;
 
@@ -21,6 +23,7 @@ namespace MOBY_API_Core6.Service
         {
             _JsonToObj = jsonToObj;
             _itemRepository = itemRepository;
+            _logger4Net = new Logger4Net();
         }
         public async Task<bool> CreateItem(CreateItemVM itemVM)
         {
@@ -349,6 +352,7 @@ namespace MOBY_API_Core6.Service
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
+                _logger4Net.Loggers(ex);
                 return null;
             }
         }

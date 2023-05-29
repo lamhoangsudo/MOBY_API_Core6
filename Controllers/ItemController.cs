@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Service;
 using MOBY_API_Core6.Service.IService;
@@ -13,11 +14,12 @@ namespace Item.Controllers
     {
         private readonly IItemService _itemService;
         private readonly IUserService _userService;
-
+        private readonly Logger4Net _logger4Net;
         public ItemController(IItemService itemService, IUserService userService)
         {
             _itemService = itemService;
             _userService = userService;
+            _logger4Net = new Logger4Net();
         }
         [Authorize]
         [HttpPost("CreateItem")]
@@ -298,6 +300,7 @@ namespace Item.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
