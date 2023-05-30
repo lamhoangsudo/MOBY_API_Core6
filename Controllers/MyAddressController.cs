@@ -109,7 +109,7 @@ namespace MOBY_API_Core6.Controllers
 
         [Authorize]
         [HttpDelete("api/useraddress")]
-        public async Task<IActionResult> DeleteNewAddress([FromQuery] int id)
+        public async Task<IActionResult> DeleteNewAddress([FromQuery] int userAddressID)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 MyAddressIdVM myAddressIdVM = new()
                 {
-                    UserAddressID = uid
+                    UserAddressID = userAddressID
                 };
                 UserAddress? currentUserAddress = await userAddressService.FindUserAddressByUserAddressID(myAddressIdVM.UserAddressID, uid);
                 if (currentUserAddress != null)
