@@ -147,8 +147,9 @@ namespace MOBY_API_Core6.Controllers
                     {
                         return Ok(ReturnMessage.Create("Success"));
                     }
+                    return BadRequest(ReturnMessage.Create("error at DeleteRequestDetail"));
                 }
-                return BadRequest(ReturnMessage.Create("error at DeleteRequestDetail"));
+                return NotFound(ReturnMessage.Create("Not found cartdetail"));
             }
             catch (Exception ex)
             {
