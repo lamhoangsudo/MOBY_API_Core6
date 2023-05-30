@@ -136,11 +136,11 @@ namespace MOBY_API_Core6.Controllers
         [Authorize]
         [HttpDelete]
         [Route("api/cartdetail")]
-        public async Task<IActionResult> DeleteCartDetail([FromQuery] int id)
+        public async Task<IActionResult> DeleteCartDetail([FromQuery] int cartDetailid)
         {
             try
             {
-                CartDetail? requestDetail = await cartDetailDAO.GetCartDetailByCartDetailID(id);
+                CartDetail? requestDetail = await cartDetailDAO.GetCartDetailByCartDetailID(cartDetailid);
                 if (requestDetail != null)
                 {
                     if (await cartDetailDAO.DeleteCartDetail(requestDetail))
