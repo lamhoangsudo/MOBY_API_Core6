@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Service.IService;
 
@@ -11,10 +12,11 @@ namespace MOBY_API_Core6.Controllers
     public class BlogCategoryController : ControllerBase
     {
         private readonly IBlogCategoryService BlogCateDAO;
-
-        public BlogCategoryController(IBlogCategoryService BlogCateDAO)
+        private readonly Logger4Net _logger4Net;
+        public BlogCategoryController(IBlogCategoryService BlogCateDAO, Logger4Net _logger4Net)
         {
             this.BlogCateDAO = BlogCateDAO;
+            this._logger4Net = _logger4Net;
         }
         [HttpGet]
         [Route("api/blogcategory/all")]
@@ -28,6 +30,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -52,6 +55,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -67,6 +71,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -83,12 +88,13 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return BadRequest(ReturnMessage.Create("this name already existed"));
 
+                    return BadRequest(ReturnMessage.Create("this name already existed"));
                 }
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -111,6 +117,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -133,6 +140,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }

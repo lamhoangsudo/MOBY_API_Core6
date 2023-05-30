@@ -2,6 +2,6 @@
 {
     public interface IImageVerifyService
     {
-        public Task<bool> Verify(string url);
+        public Task<string> Verify(string url);
     }
 }

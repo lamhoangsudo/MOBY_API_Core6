@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MOBY_API_Core6.Data_View_Model;
+﻿using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
@@ -26,7 +25,38 @@ namespace MOBY_API_Core6.Service
         {
             return await orderRepository.GetOrderByRecieverIDCount(uid, orderStatusVM);
         }
+        public async Task<bool> CheckOrderReceivedDate(int uid)
+        {
+            List<Order> listShippingOrder = await orderRepository.GetShippingOrder(uid);
+            if (listShippingOrder == null)
+            {
+                return false;
+            }
+            foreach (Order o in listShippingOrder)
+            {
+                if (o.Reports.Any())
+                {
+                    foreach (Report r in o.Reports)
+                    {
+                        if (r.ReportStatus == 1 || r.ReportStatus == 0)
+                        {
+                            listShippingOrder.Remove(o);
+                            break;
+                        }
+                    }
+                }
+            }
 
+            foreach (Order o in listShippingOrder)
+            {
+                TimeSpan totalDays = DateTime.Now - o.DatePackage!.Value;
+                if (totalDays.TotalDays >= 16)
+                {
+                    await orderRepository.UpdateStatusOrder(o, 2);
+                }
+            }
+            return true;
+        }
         public async Task<List<OrderBriefVM>> GetOrderBySharerID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM)
         {
             List<OrderBriefVM> listOrder = await orderRepository.GetOrderBySharerID(uid, pagging, orderStatusVM);

@@ -6,7 +6,7 @@ namespace MOBY_API_Core6.Service
 {
     public class ImageVerifyService : IImageVerifyService
     {
-        public async Task<bool> Verify(string url)
+        public async Task<string> Verify(string url)
         {
             HttpClient client = new()
             {
@@ -36,13 +36,28 @@ namespace MOBY_API_Core6.Service
             var racy = (string)responseData.responses[0].safeSearchAnnotation.racy;
 
             List<string> rates = new List<string> { "VERY_LIKELY", "POSSIBLE" };
-
-            if (rates.Contains(adult) || rates.Contains(medical) || rates.Contains(violence) || rates.Contains(racy))
+            string result = "Hình ảnh hợp lệ";
+            if (rates.Contains(adult))
             {
-                return false;
+                result = "Hình ảnh mang tính gợi dục. Vui lòng chọn ảnh khác";
             }
 
-            return true;
+            if (rates.Contains(medical))
+            {
+                result = "Hình ảnh liên quan đến các vấn đề pháp y, bệnh lý. Vui lòng chọn ảnh khác";
+            }
+
+            if (rates.Contains(violence))
+            {
+                result = "Hình ảnh mang tính bạo lực. Vui lòng chọn ảnh khác";
+            }
+
+            if (rates.Contains(racy))
+            {
+                result = "Hình ảnh mang tính phân biệt chủng tộc. Vui lòng chọn ảnh khác";
+            }
+
+            return result;
         }
     }
 }

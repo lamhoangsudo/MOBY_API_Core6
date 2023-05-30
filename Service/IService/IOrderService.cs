@@ -8,6 +8,7 @@ namespace MOBY_API_Core6.Service.IService
         public Task<List<OrderBriefVM>> GetOrderByRecieverID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM);
 
         public Task<int> GetOrderByRecieverIDCount(int uid, OrderStatusVM orderStatusVM);
+        public Task<bool> CheckOrderReceivedDate(int uid);
 
         public Task<List<OrderBriefVM>> GetOrderBySharerID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM);
 

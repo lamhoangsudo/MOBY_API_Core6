@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Service.IService;
 
@@ -12,11 +13,13 @@ namespace MOBY_API_Core6.Controllers
     {
         private readonly IUserService UserRepository;
         private readonly IReplyService ReplyRepository;
+        private readonly Logger4Net _logger4Net;
 
-        public ReplyController(IUserService userRepository, IReplyService ReplyRepository)
+        public ReplyController(IUserService userRepository, IReplyService ReplyRepository, Logger4Net _logger4Net)
         {
             this.UserRepository = userRepository;
             this.ReplyRepository = ReplyRepository;
+            this._logger4Net = _logger4Net;
         }
 
         [HttpGet]
@@ -30,6 +33,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -58,6 +62,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -86,6 +91,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -114,6 +120,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }

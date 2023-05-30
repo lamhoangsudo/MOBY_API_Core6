@@ -37,11 +37,7 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("Account not found"));
                 }
-                UserAccount? user = await _userService.FindUserByUid(userID);
-                if (user == null)
-                {
-                    return BadRequest(ReturnMessage.Create("tài khoảng không tồn tại"));
-                }
+
                 reportVM.UserID = userID;
                 bool checkCreate = await _reportService.CreateReport(reportVM);
                 if (checkCreate)
@@ -182,7 +178,7 @@ namespace MOBY_API_Core6.Controllers
                 ListVM<ViewReport>? reports = await _reportService.GetReports(dynamicFilterReportVM);
                 if (reports != null)
                 {
-                        return Ok(reports);
+                    return Ok(reports);
                 }
                 else
                 {

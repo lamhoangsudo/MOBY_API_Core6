@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Service;
 using MOBY_API_Core6.Service.IService;
@@ -15,11 +16,13 @@ namespace MOBY_API_Core6.Controllers
         private readonly ITransationService transationRepository;
 
         private readonly IBabyService babyRepository;
-        public UserController(IUserService userDao, ITransationService transationRepository, IBabyService babyRepository)
+        private readonly Logger4Net _logger4Net;
+        public UserController(IUserService userDao, ITransationService transationRepository, IBabyService babyRepository, Logger4Net _logger4Net)
         {
             this.userDAO = userDao;
             this.transationRepository = transationRepository;
             this.babyRepository = babyRepository;
+            this._logger4Net = _logger4Net;
         }
         [Authorize]
         [HttpPost]
@@ -29,7 +32,8 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                if (!(await userDAO.CheckExistedUser(this.User.Claims.First(i => i.Type == "user_id").Value)))
+                string existedUserAccount = await userDAO.CheckExistedUser(this.User.Claims.First(i => i.Type == "user_id").Value);
+                if (existedUserAccount.Equals("new user"))
                 {
                     if (await userDAO.CreateUser(this.User.Claims, createUserVM))
                     {
@@ -43,6 +47,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
 
@@ -74,6 +79,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -103,6 +109,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -137,6 +144,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -160,6 +168,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -182,6 +191,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -211,6 +221,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -240,6 +251,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -267,6 +279,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -297,6 +310,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -325,6 +339,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -352,13 +367,14 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         [Authorize]
         [HttpDelete("api/useraccount/baby")]
-        public async Task<IActionResult> DeleteBabyByID([FromQuery]int id)
+        public async Task<IActionResult> DeleteBabyByID([FromQuery] int id)
         {
             try
             {
@@ -379,6 +395,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
