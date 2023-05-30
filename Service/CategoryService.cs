@@ -1,6 +1,7 @@
 ﻿using Category.Data_View_Model;
 using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
@@ -9,13 +10,13 @@ namespace MOBY_API_Core6.Service
 {
     public class CategoryService : ICategoryService
     {
-        private readonly MOBYContext _context;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly Logger4Net _logger4Net;
         public static string? ErrorMessage { get; set; }
-        public CategoryService(MOBYContext context, ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository)
         {
-            _context = context;
             _categoryRepository = categoryRepository;
+            _logger4Net = new Logger4Net();
         }
         public async Task<CategoryVM?> GetCategoryByID(int categoryID)
         {
@@ -26,6 +27,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -43,6 +45,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return false;
             }
@@ -60,6 +63,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return false;
             }
@@ -77,6 +81,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return false;
             }
@@ -91,6 +96,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -105,6 +111,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -120,6 +127,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }

@@ -20,7 +20,7 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<UserAccount?> CheckExistedUser(string userCode)
         {
-            return await context.UserAccounts.Where(u => u.UserCode == userCode).FirstOrDefaultAsync();
+            return await context.UserAccounts.Where(u => u.UserCode == userCode).Include(u => u.Role).FirstOrDefaultAsync();
         }
 
         public async Task<UserAccount?> FindUserByCode(string userCode)

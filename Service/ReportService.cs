@@ -1,4 +1,5 @@
 ﻿using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
@@ -9,12 +10,14 @@ namespace MOBY_API_Core6.Service
     {
         private readonly IEmailService _emailService;
         private readonly IReportRepository _reportRepository;
+        private readonly Logger4Net _logger4Net;
         public static string ErrorMessage { get; set; } = string.Empty;
 
         public ReportService(IEmailService emailService, IReportRepository reportRepository)
         {
             _emailService = emailService;
             _reportRepository = reportRepository;
+            _logger4Net = new Logger4Net();
         }
         public async Task<bool> CreateReport(CreateReportVM reportVM)
         {
@@ -69,6 +72,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return false;
             }
@@ -137,6 +141,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return false;
             }
@@ -155,6 +160,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -168,6 +174,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -181,6 +188,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -194,6 +202,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -207,6 +216,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -220,6 +230,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -278,6 +289,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return false;
             }
@@ -337,6 +349,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return false;
             }
@@ -358,6 +371,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
             }
             return statusAndReasonHidenViewModel;

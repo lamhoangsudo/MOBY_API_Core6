@@ -6,7 +6,7 @@ namespace MOBY_API_Core6.Service.IService
 {
     public interface IUserService
     {
-        public Task<bool> CheckExistedUser(string userCode);
+        public Task<string> CheckExistedUser(string userCode);
         public Task<UserAccount?> FindUserByCode(string userCode);
         public Task<UserAccount?> FindUserByUid(int uid);
         public Task<UserAccount?> FindUserByUidWithoutStatus(int uid);

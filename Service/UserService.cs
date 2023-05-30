@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MOBY_API_Core6.Data_View_Model;
+﻿using MOBY_API_Core6.Data_View_Model;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
@@ -16,14 +15,24 @@ namespace MOBY_API_Core6.Service
             this.userRepository = userRepository;
         }
 
-        public async Task<bool> CheckExistedUser(string userCode)
+        public async Task<string> CheckExistedUser(string userCode)
         {
+            string result;
             var existUser = await userRepository.CheckExistedUser(userCode);
-            if (existUser != null)
+            if (existUser == null)
             {
-                return true;
+                result = "new user";
             }
-            return false;
+            else if (existUser.Role.RoleName.Equals("Admin"))
+            {
+                result = "Admin";
+            }
+            else
+            {
+                result = "User existed";
+            }
+
+            return result;
         }
 
         public async Task<UserAccount?> FindUserByCode(string userCode)

@@ -2,6 +2,7 @@
 using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Service.IService;
 
@@ -10,7 +11,6 @@ namespace MOBY_API_Core6.Service
     public class EmailService : IEmailService
     {
         private readonly IConfiguration _configuration;
-
         public EmailService(IConfiguration configuration)
         {
             _configuration = configuration;

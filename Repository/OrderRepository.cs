@@ -86,6 +86,17 @@ namespace MOBY_API_Core6.Repository
             return listOrderCount;
         }
 
+        public async Task<List<Order>> GetShippingOrder(int uid)
+        {
+            List<Order> listShippingOrder = await context.Orders
+                    .Include(o => o.Reports)
+                    .Include(o => o.Item)
+                    .ThenInclude(i => i.User)
+                    .Where(o => o.Item.UserId == uid && o.Status == 1)
+                    .ToListAsync();
+            return listShippingOrder;
+        }
+
         public async Task<List<OrderBriefVM>> GetOrderBySharerID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM)
         {
             int itemsToSkip = (pagging.PageNumber - 1) * pagging.PageSize;

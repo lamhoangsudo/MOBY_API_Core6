@@ -67,6 +67,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return false;
             }
@@ -87,13 +88,15 @@ namespace MOBY_API_Core6.Service
             {
                 List<BriefItem>? listBriefItem;
                 listBriefItem = await _itemRepository.GetAllBriefItemAndBriefRequest(share, status, pageNumber, pageSize);
-                if (listBriefItem == null) { 
+                if (listBriefItem == null)
+                {
                     listBriefItem = new List<BriefItem>();
                 }
                 return listBriefItem;
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -112,6 +115,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -130,6 +134,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -149,6 +154,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -166,6 +172,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -183,6 +190,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -201,6 +209,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -219,6 +228,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage += ex.Message;
                 return null;
             }
@@ -234,8 +244,9 @@ namespace MOBY_API_Core6.Service
                 }
                 return true;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return false;
             }
@@ -285,6 +296,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return false;
             }
@@ -303,6 +315,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -317,6 +330,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -334,6 +348,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -363,12 +378,13 @@ namespace MOBY_API_Core6.Service
                 ListVM<BriefItem>? listVM = await _itemRepository.GetAllShareRecently(pageNumber, pageSize);
                 if (listVM == null)
                 {
-                    listVM = new ListVM<BriefItem>(0,0, new List<BriefItem>());
+                    listVM = new ListVM<BriefItem>(0, 0, new List<BriefItem>());
                 }
                 return listVM;
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -388,6 +404,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -396,7 +413,7 @@ namespace MOBY_API_Core6.Service
         {
             try
             {
-                
+
                 ListVM<BriefItem>? listVM = await _itemRepository.GetItemDynamicFilters(dynamicFilterVM);
                 if (listVM == null)
                 {
@@ -406,6 +423,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -423,6 +441,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -440,6 +459,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -464,6 +484,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return false;
             }
@@ -482,6 +503,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
@@ -500,6 +522,7 @@ namespace MOBY_API_Core6.Service
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
             }
