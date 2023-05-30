@@ -140,11 +140,7 @@ namespace MOBY_API_Core6.Controllers
         {
             try
             {
-                CartDetailIdVM cartDetailid = new()
-                {
-                    CartDetailid = id
-                };
-                CartDetail? requestDetail = await cartDetailDAO.GetCartDetailByCartDetailID(cartDetailid.CartDetailid);
+                CartDetail? requestDetail = await cartDetailDAO.GetCartDetailByCartDetailID(id);
                 if (requestDetail != null)
                 {
                     if (await cartDetailDAO.DeleteCartDetail(requestDetail))
