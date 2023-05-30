@@ -7,6 +7,7 @@ namespace MOBY_API_Core6.Repository.IRepository
     {
         public Task<List<OrderBriefVM>> GetOrderByRecieverID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM);
         public Task<int> GetOrderByRecieverIDCount(int uid, OrderStatusVM orderStatusVM);
+        public Task<List<Order>> GetShippingOrder(int uid);
         public Task<List<OrderBriefVM>> GetOrderBySharerID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM);
         public Task<int> GetOrderBySharerIDCount(int uid, OrderStatusVM orderStatusVM);
         public Task<Order?> GetOrderByOrderID(int orderID);

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Service.IService;
 
@@ -12,11 +13,13 @@ namespace MOBY_API_Core6.Controllers
     {
         private readonly ITransationService transationRepository;
         private readonly IUserService userRepository;
-        public TransationController(ITransationService transationRepository, IUserService userRepository)
+        private readonly Logger4Net _logger4Net;
+        public TransationController(ITransationService transationRepository, IUserService userRepository, Logger4Net _logger4Net)
         {
 
             this.transationRepository = transationRepository;
             this.userRepository = userRepository;
+            this._logger4Net = _logger4Net;
         }
 
 
@@ -45,6 +48,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -73,6 +77,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -99,6 +104,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -126,6 +132,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
