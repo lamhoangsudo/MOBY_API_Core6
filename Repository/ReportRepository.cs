@@ -56,23 +56,27 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<int> CreateOrderReport(CreateReportVM reportVM)
         {
-            bool checkOrder = await _context.Orders.Where(or => or.OrderId == reportVM.OrderID && or.Status != 3).AnyAsync();
+            Order? checkOrder = await _context.Orders.Where(or => or.OrderId == reportVM.OrderID && or.Status != 3).FirstOrDefaultAsync();
             bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.UserID && us.UserStatus == true).AnyAsync();
-            if (checkOrder == true && checkUser == true)
+            if (checkOrder != null && checkUser == true)
             {
-                DateTime dateTimeCreate = DateTime.Now;
-                Report report = new()
+                DateTime dateTimeNow = DateTime.Now;
+                TimeSpan distance = (TimeSpan)(checkOrder.DatePackage - dateTimeNow);
+                if (distance.TotalDays >= 16) 
                 {
-                    ReportDateCreate = dateTimeCreate,
-                    OrderId = reportVM.OrderID,
-                    UserId = reportVM.UserID,
-                    Title = reportVM.Title,
-                    ReportStatus = reportVM.Status,
-                    ReportContent = reportVM.Content,
-                    Evident = reportVM.Image
-                };
-                await _context.Reports.AddAsync(report);
-                return await _context.SaveChangesAsync();
+                    Report report = new()
+                    {
+                        ReportDateCreate = dateTimeNow,
+                        OrderId = reportVM.OrderID,
+                        UserId = reportVM.UserID,
+                        Title = reportVM.Title,
+                        ReportStatus = reportVM.Status,
+                        ReportContent = reportVM.Content,
+                        Evident = reportVM.Image
+                    };
+                    await _context.Reports.AddAsync(report);
+                    return await _context.SaveChangesAsync();
+                }
             }
             throw new KeyNotFoundException();
         }

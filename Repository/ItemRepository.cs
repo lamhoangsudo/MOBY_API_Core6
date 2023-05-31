@@ -6,6 +6,7 @@ using NodaTime.Extensions;
 using NodaTime;
 using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service;
+using MOBY_API_Core6.Log4Net;
 
 namespace MOBY_API_Core6.Repository
 {
@@ -13,10 +14,12 @@ namespace MOBY_API_Core6.Repository
     {
         private readonly MOBYContext _context;
         private readonly JsonToObj _JsonToObj;
+        private readonly Logger4Net _logger4Net;
         public ItemRepository(MOBYContext context, JsonToObj jsonToObj)
         {
             _JsonToObj = jsonToObj;
             _context = context;
+            _logger4Net = new Logger4Net();
         }
         public async Task<int> CreateItem(CreateItemVM itemVM, DateTime dateTimeCreate, DateTime? dateTimeExpired)
         {
@@ -349,8 +352,9 @@ namespace MOBY_API_Core6.Repository
                 }
                 return false;
             }
-            catch
+            catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return false;
             }
         }
