@@ -31,7 +31,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest);
+                    return BadRequest(ReturnMessage.Create(CategoryService.ErrorMessage));
                 }
             }
             catch (Exception ex)
@@ -60,7 +60,7 @@ namespace MOBY_API_Core6.Controllers
                     }
                     else
                     {
-                        return StatusCode(StatusCodes.Status400BadRequest);
+                        return BadRequest(ReturnMessage.Create(CategoryService.ErrorMessage));
                     }
                 }
             }
@@ -90,7 +90,7 @@ namespace MOBY_API_Core6.Controllers
                     }
                     else
                     {
-                        return StatusCode(StatusCodes.Status400BadRequest);
+                        return BadRequest(ReturnMessage.Create(CategoryService.ErrorMessage));
                     }
                 }
             }
@@ -140,7 +140,7 @@ namespace MOBY_API_Core6.Controllers
                 var listCategory = await _categoryService.GetCategoriesByStatus(categoryStatus);
                 if (listCategory == null || listCategory.Count == 0)
                 {
-                    return StatusCode(StatusCodes.Status404NotFound);
+                    return NotFound(ReturnMessage.Create(CategoryService.ErrorMessage));
                 }
                 else
                 {
@@ -164,7 +164,7 @@ namespace MOBY_API_Core6.Controllers
                     var listCategory = await _categoryService.GetAllCategoriesAndSubCategory();
                     if (listCategory == null || listCategory.Count == 0)
                     {
-                        return StatusCode(StatusCodes.Status404NotFound);
+                        return NotFound(ReturnMessage.Create(CategoryService.ErrorMessage));
                     }
                     else
                     {
@@ -176,7 +176,7 @@ namespace MOBY_API_Core6.Controllers
                     var listCategory = await _categoryService.GetCategoriesByName(categoryName);
                     if (listCategory == null || listCategory.Count == 0)
                     {
-                        return StatusCode(StatusCodes.Status404NotFound);
+                        return NotFound(ReturnMessage.Create(CategoryService.ErrorMessage));
                     }
                     else
                     {

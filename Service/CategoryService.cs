@@ -12,7 +12,7 @@ namespace MOBY_API_Core6.Service
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly Logger4Net _logger4Net;
-        public static string? ErrorMessage { get; set; }
+        public static string ErrorMessage { get; set; } = "";
         public CategoryService(ICategoryRepository categoryRepository)
         {
             _categoryRepository = categoryRepository;
