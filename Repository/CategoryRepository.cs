@@ -36,7 +36,8 @@ namespace MOBY_API_Core6.Repository
                     CategoryStatus = true
                 };
                 await _context.Categories.AddAsync(category);
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new DuplicateWaitObjectException();
         }
@@ -48,7 +49,8 @@ namespace MOBY_API_Core6.Repository
                 updateCategory.CategoryName = categoryVM.CategoryName;
                 updateCategory.CategoryImage = categoryVM.CategoryImage;
                 updateCategory.CategoryStatus = true;
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }

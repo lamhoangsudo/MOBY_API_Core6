@@ -32,7 +32,8 @@ namespace MOBY_API_Core6.Repository
                         CategoryId = subCategoryVM.CategoryID
                     };
                     await _context.SubCategories.AddAsync(subCategory);
-                    return await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                    return 1;
                 }
             }
             throw new KeyNotFoundException();
@@ -43,7 +44,8 @@ namespace MOBY_API_Core6.Repository
             if (subCategoryDelete != null)
             {
                 subCategoryDelete.SubCategoryStatus = false;
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
 
@@ -111,7 +113,8 @@ namespace MOBY_API_Core6.Repository
                     subCategoryUpdate.SubCategoryName = subCategoryVM.SubCategoryName;
                     subCategoryUpdate.CategoryId = subCategoryVM.CategoryID;
                     subCategoryUpdate.SubCategoryStatus = true;
-                    return await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                    return 1;
                 }
             }
             throw new KeyNotFoundException();
