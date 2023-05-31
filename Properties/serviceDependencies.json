@@ -22,10 +22,6 @@
       "connectionId": "VaultUri",
       "dynamicId": null
     },
-    "mssql2": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:mobys"
-    },
     "mssql3": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:mobyes"
