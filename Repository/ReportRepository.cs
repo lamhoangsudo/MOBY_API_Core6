@@ -454,8 +454,8 @@ namespace MOBY_API_Core6.Repository
             var queryOrder = _context.Orders
                             .Where(or => or.OrderId == hideAndPunish.Id && or.Status != 3)
                             .Join(_context.UserAccounts, or => or.UserId, us => us.UserId, (or, us) => new { or, us });
-            Order? order = await _context.Orders
-                .Where(or => or.OrderId == hideAndPunish.Id && or.Status != 3)
+            Order? order = await queryOrder
+                .Select(orus => orus.or)
                 .FirstOrDefaultAsync();
             if (order != null)
             {
@@ -464,6 +464,10 @@ namespace MOBY_API_Core6.Repository
                     .FirstOrDefaultAsync();
                 order.Status = 3;
                 order.ReasonCancel = hideAndPunish.Reason;
+                if (userAccount.UserStatus == false)
+                {
+                    userAccount.Balance += (order.Price * order.Quantity);
+                }
                 await _context.SaveChangesAsync();
                 Email email = new()
                 {

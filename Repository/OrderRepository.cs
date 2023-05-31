@@ -90,6 +90,7 @@ namespace MOBY_API_Core6.Repository
         {
             List<Order> listShippingOrder = await context.Orders
                     .Include(o => o.Reports)
+                    .ThenInclude(r => r.User)
                     .Include(o => o.Item)
                     .ThenInclude(i => i.User)
                     .Where(o => o.Item.UserId == uid && o.Status == 1)
@@ -215,6 +216,14 @@ namespace MOBY_API_Core6.Repository
             {
                 order.Status = status;
                 order.DateReceived = DateTime.Now;
+                if (order.Item.User.Reputation > 90)
+                {
+                    order.Item.User.Reputation = 100;
+                }
+                else
+                {
+                    order.Item.User.Reputation += 10;
+                }
                 if (order.Item.User.Balance == null)
                 {
                     order.Item.User.Balance = order.Quantity * order.Price;
@@ -242,17 +251,18 @@ namespace MOBY_API_Core6.Repository
             order.ReasonCancel = reasonCancel;
             if (pernament)
             {
-                if (order.User.Reputation <= 3)
+                if (order.User.Reputation <= 5)
                 {
                     order.User.Reputation = 0;
                     order.User.UserStatus = false;
                 }
                 else
                 {
-                    order.User.Reputation -= 3;
+                    order.User.Reputation -= 5;
                 }
 
             }
+            order.User.Balance += (order.Price * order.Quantity);
             await context.SaveChangesAsync();
             return true;
         }

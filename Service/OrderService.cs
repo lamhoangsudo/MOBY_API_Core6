@@ -38,7 +38,7 @@ namespace MOBY_API_Core6.Service
                 {
                     foreach (Report r in o.Reports)
                     {
-                        if (r.ReportStatus == 1 || r.ReportStatus == 0)
+                        if (r.ReportStatus == 0 && r.User.UserStatus == true)
                         {
                             listShippingOrder.Remove(o);
                             break;
