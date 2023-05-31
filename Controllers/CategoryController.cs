@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Service;
 using MOBY_API_Core6.Service.IService;
@@ -11,9 +12,11 @@ namespace MOBY_API_Core6.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly Logger4Net _logger4Net;
         public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
+            _logger4Net = new Logger4Net();
         }
 
         [HttpPost("CreateCategory")]
@@ -31,9 +34,10 @@ namespace MOBY_API_Core6.Controllers
                     return StatusCode(StatusCodes.Status400BadRequest);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                _logger4Net.Loggers(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -60,9 +64,10 @@ namespace MOBY_API_Core6.Controllers
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                _logger4Net.Loggers(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -89,9 +94,10 @@ namespace MOBY_API_Core6.Controllers
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                _logger4Net.Loggers(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -121,6 +127,7 @@ namespace MOBY_API_Core6.Controllers
             }
             catch (Exception ex)
             {
+                _logger4Net.Loggers(ex);
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -140,9 +147,10 @@ namespace MOBY_API_Core6.Controllers
                     return Ok(listCategory);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                _logger4Net.Loggers(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -176,9 +184,10 @@ namespace MOBY_API_Core6.Controllers
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                _logger4Net.Loggers(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }

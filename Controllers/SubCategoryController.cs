@@ -36,7 +36,7 @@ namespace MOBY_API_Core6.Controllers
             catch (Exception ex)
             {
                 _logger4Net.Loggers(ex);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -58,7 +58,7 @@ namespace MOBY_API_Core6.Controllers
             catch (Exception ex)
             {
                 _logger4Net.Loggers(ex);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -88,7 +88,7 @@ namespace MOBY_API_Core6.Controllers
             catch (Exception ex)
             {
                 _logger4Net.Loggers(ex);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -118,7 +118,7 @@ namespace MOBY_API_Core6.Controllers
             catch (Exception ex)
             {
                 _logger4Net.Loggers(ex);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -140,7 +140,7 @@ namespace MOBY_API_Core6.Controllers
             catch (Exception ex)
             {
                 _logger4Net.Loggers(ex);
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
     }
