@@ -64,7 +64,7 @@ namespace MOBY_API_Core6.Repository
             UserAccount newUser = new()
             {
                 UserCode = claims.First(i => i.Type == "user_id").Value,
-                RoleId = 1,
+                RoleId = 2,
                 Reputation = 80,
                 Balance = 0,
                 UserName = claims.First(i => i.Type.Contains("identity/claims/name")).Value,

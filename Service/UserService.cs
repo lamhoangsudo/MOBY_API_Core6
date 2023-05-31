@@ -31,7 +31,6 @@ namespace MOBY_API_Core6.Service
             {
                 result = "User existed";
             }
-
             return result;
         }
 
