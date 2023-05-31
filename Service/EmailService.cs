@@ -24,7 +24,7 @@ namespace MOBY_API_Core6.Service
             bodyBuilder.HtmlBody = streamReader.ReadToEnd();
             bodyBuilder.HtmlBody = bodyBuilder.HtmlBody.Replace("[user-name]", emailTo.UserName);
             bodyBuilder.HtmlBody = bodyBuilder.HtmlBody.Replace("[obj]", emailTo.Obj);
-            bodyBuilder.HtmlBody = bodyBuilder.HtmlBody.Replace("[date-create]", emailTo.Link);
+            bodyBuilder.HtmlBody = bodyBuilder.HtmlBody.Replace("[link]", emailTo.Link);
             email.From.Add(MailboxAddress.Parse(_configuration.GetSection("EmailHost").Value));
             email.To.Add(MailboxAddress.Parse(emailTo.To));
             email.Subject = emailTo.Subject;

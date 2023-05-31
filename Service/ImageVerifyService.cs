@@ -35,14 +35,16 @@ namespace MOBY_API_Core6.Service
             var violence = (string)responseData.responses[0].safeSearchAnnotation.violence;
             var racy = (string)responseData.responses[0].safeSearchAnnotation.racy;
 
-            List<string> rates = new List<string> { "VERY_LIKELY", "POSSIBLE" };
+            List<string> rates = new List<string> { "VERY_LIKELY", "LIKELY", "POSSIBLE" };
+            List<string> rates2 = new List<string> { "VERY_LIKELY", "LIKELY" };
+
             string result = "Hình ảnh hợp lệ";
-            if (rates.Contains(adult))
+            if (rates2.Contains(adult))
             {
                 result = "Hình ảnh mang tính gợi dục. Vui lòng chọn ảnh khác";
             }
 
-            if (rates.Contains(medical))
+            if (medical.Contains("VERY_LIKELY"))
             {
                 result = "Hình ảnh liên quan đến các vấn đề pháp y, bệnh lý. Vui lòng chọn ảnh khác";
             }
@@ -52,10 +54,10 @@ namespace MOBY_API_Core6.Service
                 result = "Hình ảnh mang tính bạo lực. Vui lòng chọn ảnh khác";
             }
 
-            if (rates.Contains(racy))
+            /*if (rates.Contains(racy))
             {
                 result = "Hình ảnh mang tính phân biệt chủng tộc. Vui lòng chọn ảnh khác";
-            }
+            }*/
 
             return result;
         }

@@ -250,7 +250,8 @@ namespace MOBY_API_Core6.Repository
         {
             return await _context.BriefItems
                 .Where(bf => bf.Share == share
-                && bf.UserId == userID)
+                && bf.UserId == userID
+                && bf.ItemStatus != null)
                 .ToListAsync();
         }
         public async Task<List<BriefItem>?> GetAllMyBriefItemAndBriefRequestActiveandUnActive(int userID, bool share, bool status)
