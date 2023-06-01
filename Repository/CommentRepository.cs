@@ -68,6 +68,7 @@ namespace MOBY_API_Core6.Repository
             {
                 currentcmt.CommentContent = comment.CommentContent;
                 currentcmt.DateUpdate = DateTime.Now;
+                currentcmt.ReasonHiden = null;
                 return await context.SaveChangesAsync();
             }
             return 0;

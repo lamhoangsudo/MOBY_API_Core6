@@ -42,6 +42,7 @@ namespace MOBY_API_Core6.Repository
             {
                 currentRep.ReplyContent = rep.ReplyContent;
                 currentRep.DateUpdate = DateTime.Now;
+                currentRep.ReasonHiden = null;
                 return await context.SaveChangesAsync();
             }
             return 0;

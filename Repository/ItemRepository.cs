@@ -242,6 +242,7 @@ namespace MOBY_API_Core6.Repository
                 currentItem.ItemExpiredTime = dateTimeExpired;
                 currentItem.ItemDateUpdate = dateTimeUpdate;
                 currentItem.Share = itemVM.Share;
+                currentItem.ReasonHiden = null;
                 return await _context.SaveChangesAsync();
             }
             throw new KeyNotFoundException();

@@ -262,6 +262,7 @@ namespace MOBY_API_Core6.Repository
                 blog.BlogDescription = blogvm.BlogDescription;
                 blog.BlogContent = blogvm.BlogContent;
                 blog.BlogDateUpdate = DateTime.Now;
+                blog.ReasonDeny = null;
                 if (blog.BlogStatus == 1 || blog.BlogStatus == 2)
                 {
                     blog.BlogStatus = 0;
