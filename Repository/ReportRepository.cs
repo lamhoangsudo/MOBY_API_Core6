@@ -280,7 +280,7 @@ namespace MOBY_API_Core6.Repository
             if (report != null)
             {
                 report.ReportDateResolve = DateTime.Now;
-                report.ReportStatus = reportVM.IsDelete;
+                report.ReportStatus = 3;
                 await _context.SaveChangesAsync();
                 return 1;
             }
