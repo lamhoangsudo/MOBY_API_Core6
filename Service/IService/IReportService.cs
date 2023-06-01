@@ -32,5 +32,7 @@ namespace MOBY_API_Core6.Service.IService
         Task<bool> PunishViolators(HiddenAndPunish hideAndPunish);
 
         Task<StatusAndReasonHidenViewModel?> GetStatusAndReasonHiden(int id, int type);
+
+        Task<UserAccount?> GetUserByObjID(GetUserObj getUserObj);
     }
 }

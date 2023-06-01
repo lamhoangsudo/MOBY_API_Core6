@@ -350,5 +350,26 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [HttpGet("GetUserByOBJ")]
+        public async Task<IActionResult> GetUserByObj([FromBody] GetUserObj getUserObj)
+        {
+            try
+            {
+                UserAccount? userAccount = await _reportService.GetUserByObjID(getUserObj);
+                if (userAccount != null)
+                {
+                    return Ok(userAccount);
+                }
+                else
+                {
+                    return NotFound(ReturnMessage.Create(RecordPenaltyService.ErrorMessage));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger4Net.Loggers(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }

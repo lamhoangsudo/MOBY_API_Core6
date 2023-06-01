@@ -44,7 +44,7 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<string> CreateCartDetail(CreateCartDetailVM createdRequestDetail, int uid)
         {
-            ItemVM? itemfound = await context.Items.Where(i => i.ItemId == createdRequestDetail.ItemId)
+            ItemVM? itemfound = await context.sadas.Where(i => i.ItemId == createdRequestDetail.ItemId)
                 .Select(i => ItemVM.ItemToViewModel(i)).FirstOrDefaultAsync();
             if (itemfound == null)
             {
@@ -70,7 +70,7 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<string> UpdateCartDetail(CartDetail cartDetail, UpdateCartDetailVM updatedcartDetail)
         {
-            int quantityleft = await context.Items.Where(i => i.ItemId == cartDetail.ItemId)
+            int quantityleft = await context.sadas.Where(i => i.ItemId == cartDetail.ItemId)
                 .Select(i => i.ItemShareAmount)
                 .FirstOrDefaultAsync();
             if (quantityleft < updatedcartDetail.ItemQuantity)

@@ -34,7 +34,7 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<int> CreateItemReport(CreateReportVM reportVM)
         {
-            bool checkItem = await _context.Items.Where(it => it.ItemId == reportVM.ItemID && it.ItemStatus == true).AnyAsync();
+            bool checkItem = await _context.sadas.Where(it => it.ItemId == reportVM.ItemID && it.ItemStatus == true).AnyAsync();
             bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.UserID && us.UserStatus == true).AnyAsync();
             if (checkItem == true && checkUser == true)
             {
@@ -62,7 +62,7 @@ namespace MOBY_API_Core6.Repository
             {
                 DateTime dateTimeNow = DateTime.Now;
                 TimeSpan distance = (TimeSpan)(dateTimeNow - checkOrder.DatePackage);
-                if (distance.TotalDays >= 14 && distance.TotalDays < 16 && checkOrder.DatePackage != null) 
+                if (distance.TotalDays >= 14 && distance.TotalDays < 16 && checkOrder.DatePackage != null)
                 {
                     Report report = new()
                     {
@@ -394,7 +394,7 @@ namespace MOBY_API_Core6.Repository
             {
                 ++totalPage;
             }
-            return new (total, totalPage, await query
+            return new(total, totalPage, await query
                 .Select(vrus => vrus.vr)
                 .Skip(itemsToSkip)
                 .Take(dynamicFilterReportVM.PageSize)
@@ -422,7 +422,7 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<bool> HiddenItems(HiddenAndPunish hideAndPunish, IEmailService emailRepository)
         {
-            var queryItem = _context.Items
+            var queryItem = _context.sadas
                             .Where(it => it.ItemId == hideAndPunish.Id && it.ItemStatus == true)
                             .Join(_context.UserAccounts, it => it.UserId, us => us.UserId, (it, us) => new { it, us });
             Models.Item? item = await queryItem
@@ -572,7 +572,7 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<int> PunishViolatorsItems(HiddenAndPunish hideAndPunish, RecordPenaltyPoint recordPenaltyPoint, IEmailService emailRepository)
         {
-            var queryItem = _context.Items
+            var queryItem = _context.sadas
                             .Join(_context.UserAccounts, it => it.UserId, us => us.UserId, (it, us) => new { it, us })
                             .Where(itus => itus.it.ItemId == hideAndPunish.Id);
             UserAccount? userAccountItem = await queryItem
@@ -622,7 +622,7 @@ namespace MOBY_API_Core6.Repository
         public async Task<int> PunishViolatorsOrders(HiddenAndPunish hideAndPunish, RecordPenaltyPoint recordPenaltyPoint, IEmailService emailRepository)
         {
             var queryOrder = _context.Orders
-                        .Join(_context.Items, or => or.ItemId, it => it.ItemId, (or, it) => new { or, it })
+                        .Join(_context.sadas, or => or.ItemId, it => it.ItemId, (or, it) => new { or, it })
                         .Join(_context.UserAccounts, orit => orit.it.UserId, us => us.UserId, (orit, us) => new { orit, us })
                         .Where(oritus => oritus.orit.or.OrderId == hideAndPunish.Id);
             UserAccount? userAccountOrder = await queryOrder
@@ -820,7 +820,7 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<StatusAndReasonHidenViewModel?> GetStatusAndReasonHidenItems(int id, StatusAndReasonHidenViewModel? statusAndReasonHidenViewModel)
         {
-            Models.Item? item = await _context.Items.Where(it => it.ItemId == id).FirstOrDefaultAsync();
+            Models.Item? item = await _context.sadas.Where(it => it.ItemId == id).FirstOrDefaultAsync();
             if (item != null)
             {
                 return statusAndReasonHidenViewModel = new()
@@ -885,6 +885,72 @@ namespace MOBY_API_Core6.Repository
                     StatusInt = blog.BlogStatus,
                     ReasonHiden = blog.ReasonDeny
                 };
+            }
+            throw new KeyNotFoundException();
+        }
+        public async Task<UserAccount?> GetUserByItemID(int id)
+        {
+            UserAccount? userAccount = await _context.sadas
+                .Join(_context.UserAccounts, it => it.UserId, us => us.UserId, (it, us) => new { it, us })
+                .Where(itus => itus.it.ItemId == id)
+                .Select(itus => itus.us)
+                .FirstOrDefaultAsync();
+            if (userAccount != null)
+            {
+                return userAccount;
+            }
+            throw new KeyNotFoundException();
+        }
+        public async Task<UserAccount?> GetUserByOrderID(int id)
+        {
+            UserAccount? userAccount = await _context.Orders
+                .Join(_context.sadas, or => or.ItemId, it => it.UserId, (or, it) => new { or, it })
+                .Join(_context.UserAccounts, orit => orit.it.UserId, us => us.UserId, (orit, us) => new { orit, us })
+                .Where(oritus => oritus.orit.or.OrderId == id)
+                .Select(oritus => oritus.us)
+                .FirstOrDefaultAsync();
+            if (userAccount != null)
+            {
+                return userAccount;
+            }
+            throw new KeyNotFoundException();
+        }
+        public async Task<UserAccount?> GetUserByCommentID(int id)
+        {
+            UserAccount? userAccount = await _context.Comments
+                .Join(_context.UserAccounts, cm => cm.UserId, us => us.UserId, (cm, us) => new { cm, us })
+                .Where(cmus => cmus.cm.CommentId == id)
+                .Select(cmus => cmus.us)
+                .FirstOrDefaultAsync();
+            if (userAccount != null)
+            {
+                return userAccount;
+            }
+            throw new KeyNotFoundException();
+        }
+        public async Task<UserAccount?> GetUserByReplyID(int id)
+        {
+            UserAccount? userAccount = await _context.Replies
+                .Join(_context.UserAccounts, rp => rp.UserId, us => us.UserId, (rp, us) => new { rp, us })
+                .Where(rpus => rpus.rp.ReplyId == id)
+                .Select(rpus => rpus.us)
+                .FirstOrDefaultAsync();
+            if (userAccount != null)
+            {
+                return userAccount;
+            }
+            throw new KeyNotFoundException();
+        }
+        public async Task<UserAccount?> GetUserByBlogID(int id)
+        {
+            UserAccount? userAccount = await _context.Blogs
+                .Join(_context.UserAccounts, bg => bg.UserId, us => us.UserId, (bg, us) => new { bg, us })
+                .Where(bgus => bgus.bg.BlogId == id)
+                .Select(bgus => bgus.us)
+                .FirstOrDefaultAsync();
+            if (userAccount != null)
+            {
+                return userAccount;
             }
             throw new KeyNotFoundException();
         }

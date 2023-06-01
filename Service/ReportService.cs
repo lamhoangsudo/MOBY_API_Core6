@@ -376,5 +376,66 @@ namespace MOBY_API_Core6.Service
             }
             return statusAndReasonHidenViewModel;
         }
+
+        public async Task<UserAccount?> GetUserByObjID(GetUserObj getUserObj)
+        {
+            try
+            {
+                int id = getUserObj.Id;
+                int type = getUserObj.Type;
+                UserAccount? user = null;
+                RecordPenaltyPoint? recordPenaltyPoint = new();
+                switch (type)
+                {
+                    case 0:
+                        //item
+                        user = await _reportRepository.GetUserByItemID(id);
+                        if (user != null)
+                        {
+                            return user;
+                        }
+                        break;
+                    case 1:
+                        //order
+                        user = await _reportRepository.GetUserByOrderID(id);
+                        if (user != null)
+                        {
+                            return user;
+                        }
+                        break;
+                    case 2:
+                        //comment
+                        user = await _reportRepository.GetUserByCommentID(id);
+                        if (user != null)
+                        {
+                            return user;
+                        }
+                        break;
+                    case 3:
+                        //reply
+                        user = await _reportRepository.GetUserByReplyID(id);
+                        if (user != null)
+                        {
+                            return user;
+                        }
+                        break;
+                    case 4:
+                        //bg
+                        user = await _reportRepository.GetUserByBlogID(id);
+                        if (user != null)
+                        {
+                            return user;
+                        }
+                        break;
+                }
+                throw new ArgumentOutOfRangeException();
+            }
+            catch (Exception ex)
+            {
+                _logger4Net.Loggers(ex);
+                ErrorMessage = ex.Message;
+                return null;
+            }
+        }
     }
 }

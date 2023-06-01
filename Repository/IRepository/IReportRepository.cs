@@ -36,5 +36,10 @@ namespace MOBY_API_Core6.Repository.IRepository
         Task<StatusAndReasonHidenViewModel?> GetStatusAndReasonHidenComments(int id, StatusAndReasonHidenViewModel? statusAndReasonHidenViewModel);
         Task<StatusAndReasonHidenViewModel?> GetStatusAndReasonHidenReplies(int id, StatusAndReasonHidenViewModel? statusAndReasonHidenViewModel);
         Task<StatusAndReasonHidenViewModel?> GetStatusAndReasonHidenBlogs(int id, StatusAndReasonHidenViewModel? statusAndReasonHidenViewModel);
+        Task<UserAccount?> GetUserByItemID(int id);
+        Task<UserAccount?> GetUserByOrderID(int id);
+        Task<UserAccount?> GetUserByCommentID(int id);
+        Task<UserAccount?> GetUserByReplyID(int id);
+        Task<UserAccount?> GetUserByBlogID(int id);
     }
 }

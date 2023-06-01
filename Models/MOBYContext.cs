@@ -27,7 +27,7 @@ namespace MOBY_API_Core6.Models
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<DetailItem> DetailItems { get; set; } = null!;
         public virtual DbSet<DetailItemRequest> DetailItemRequests { get; set; } = null!;
-        public virtual DbSet<Item> Items { get; set; } = null!;
+        public virtual DbSet<Item> sadas { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<RecordPenaltyPoint> RecordPenaltyPoints { get; set; } = null!;
         public virtual DbSet<RecordSearch> RecordSearches { get; set; } = null!;
