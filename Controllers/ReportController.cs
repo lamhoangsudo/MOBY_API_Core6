@@ -351,7 +351,7 @@ namespace MOBY_API_Core6.Controllers
             }
         }
         [HttpGet("GetUserByOBJ")]
-        public async Task<IActionResult> GetUserByObj([FromBody] GetUserObj getUserObj)
+        public async Task<IActionResult> GetUserByObj([FromQuery] GetUserObj getUserObj)
         {
             try
             {
