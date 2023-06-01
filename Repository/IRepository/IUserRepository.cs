@@ -24,7 +24,7 @@ namespace MOBY_API_Core6.Repository.IRepository
 
         public Task<List<UserVM>> GetAllUser(PaggingVM pagging, UserAccountFilterVM userAccountFilterVM);
 
-        public Task<int> GetAllUserCount();
+        public Task<int> GetAllUserCount(UserAccountFilterVM userAccountFilterVM);
 
         public Task<bool> BanUser(UserUidVM uid);
 
