@@ -56,7 +56,7 @@ namespace MOBY_API_Core6.Repository
                     Image = itemVM.Image
                 };
 #pragma warning restore CS8601 // Possible null reference assignment.
-                await _context.sadas.AddAsync(item);
+                await _context.Items.AddAsync(item);
                 return await _context.SaveChangesAsync();
             }
             throw new KeyNotFoundException();
@@ -64,11 +64,11 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<List<int>> GetListItemIDByUserID(int userId)
         {
-            return await _context.sadas.Where(i => i.UserId == userId).Select(i => i.ItemId).ToListAsync();
+            return await _context.Items.Where(i => i.UserId == userId).Select(i => i.ItemId).ToListAsync();
         }
         public async Task<int> GetQuantityByItemID(int itemID)
         {
-            return await _context.sadas.Where(i => i.ItemId == itemID).Select(i => i.ItemShareAmount).FirstOrDefaultAsync();
+            return await _context.Items.Where(i => i.ItemId == itemID).Select(i => i.ItemShareAmount).FirstOrDefaultAsync();
         }
         public async Task<List<BriefItem>?> GetAllBriefItemAndBriefRequest(bool share, bool status, int pageNumber, int pageSize)
         {
@@ -200,7 +200,7 @@ namespace MOBY_API_Core6.Repository
             bool check = await _context.Orders.Where(or => or.ItemId == itemVM.ItemID && or.Status < 3).AnyAsync();
             if (!check)
             {
-                var item = await _context.sadas.Where(it => it.ItemId == itemVM.ItemID
+                var item = await _context.Items.Where(it => it.ItemId == itemVM.ItemID
                 && it.UserId == itemVM.UserID)
                     .FirstOrDefaultAsync();
                 if (item != null)
@@ -214,7 +214,7 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<int> UpdateItem(UpdateItemVM itemVM, DateTime dateTimeUpdate, DateTime? dateTimeExpired)
         {
-            Models.Item? currentItem = await _context.sadas
+            Models.Item? currentItem = await _context.Items
                 .Where(it => it.ItemId == itemVM.ItemID && it.UserId == itemVM.UserId && it.ItemStatus != null)
                 .FirstOrDefaultAsync();
             var checkSubCategoryExists = await _context.SubCategories
@@ -316,7 +316,7 @@ namespace MOBY_API_Core6.Repository
         {
             int itemsToSkip = (pageNumber - 1) * pageSize;
             var query = _context.BriefItems
-                .Join(_context.sadas, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
+                .Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
                 .Join(_context.UserAccounts, bfit => bfit.it.UserId, us => us.UserId, (bfit, us) => new { bfit, us })
                 .Where(bfitus => bfitus.bfit.it.ItemShippingAddress.Trim().Contains(city)
                 && bfitus.bfit.bf.Share == true
@@ -337,7 +337,7 @@ namespace MOBY_API_Core6.Repository
             try
             {
                 DateTime dateTimeNow = DateTime.Now;
-                List<Models.Item> items = await _context.sadas.Where(it => it.ItemExpiredTime != null).ToListAsync();
+                List<Models.Item> items = await _context.Items.Where(it => it.ItemExpiredTime != null).ToListAsync();
                 if (items != null)
                 {
                     foreach (Models.Item item in items)
@@ -363,7 +363,7 @@ namespace MOBY_API_Core6.Repository
         {
             int itemsToSkip = (dynamicFilterVM.PageNumber - 1) * dynamicFilterVM.PageSize;
             var query = _context.BriefItems
-                .Join(_context.sadas, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
+                .Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
                 .Join(_context.UserAccounts, bfit => bfit.it.UserId, us => us.UserId, (bfit, us) => new { bfit, us })
                 .Where(bfitus => bfitus.us.UserStatus == true
                 && bfitus.bfit.bf.CategoryStatus == true
@@ -570,7 +570,7 @@ namespace MOBY_API_Core6.Repository
                 {
                     int itemsToSkip = (pageNumber - 1) * pageSize;
                     var query = _context.BriefItems
-                    .Join(_context.sadas, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
+                    .Join(_context.Items, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
                     .Where(bfit => bfit.bf.Share == true
                     && bfit.bf.ItemStatus == true
                     && bfit.bf.UserId != userID);
