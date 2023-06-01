@@ -56,7 +56,7 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<int> CreateOrderReport(CreateReportVM reportVM)
         {
-            Order? checkOrder = await _context.Orders.Where(or => or.OrderId == reportVM.OrderID && or.Status >= 2).FirstOrDefaultAsync();
+            Order? checkOrder = await _context.Orders.Where(or => or.OrderId == reportVM.OrderID && or.Status == 1).FirstOrDefaultAsync();
             bool checkUser = await _context.UserAccounts.Where(us => us.UserId == reportVM.UserID && us.UserStatus == true).AnyAsync();
             if (checkOrder != null && checkUser == true)
             {
