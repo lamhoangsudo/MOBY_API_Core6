@@ -563,45 +563,53 @@ namespace MOBY_API_Core6.Repository
         }
         public async Task<ListVM<BriefItem>?> GetListRecommendByBaby(int babyID, int userID, int pageNumber, int pageSize, bool age, bool weight, bool height)
         {
-            Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == babyID && bb.UserId == userID).FirstOrDefaultAsync();
-            if (baby != null)
+            try
             {
-                int itemsToSkip = (pageNumber - 1) * pageSize;
-                var query = _context.BriefItems
-                .Join(_context.sadas, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
-                .Where(bfit => bfit.bf.Share == true
-                && bfit.bf.ItemStatus == true
-                && bfit.bf.UserId != userID);
-                if (age)
+                Baby? baby = await _context.Babies.Where(bb => bb.Idbaby == babyID && bb.UserId == userID).FirstOrDefaultAsync();
+                if (baby != null)
                 {
-                    LocalDateTime now = DateTime.Now.ToLocalDateTime();
-                    LocalDateTime babyBirth = baby.DateOfBirth.ToLocalDateTime();
-                    Period period = Period.Between(babyBirth, now, PeriodUnits.AllDateUnits);
-                    double monthsAge = period.Months;
-                    if (monthsAge == 0)
+                    int itemsToSkip = (pageNumber - 1) * pageSize;
+                    var query = _context.BriefItems
+                    .Join(_context.sadas, bf => bf.ItemId, it => it.ItemId, (bf, it) => new { bf, it })
+                    .Where(bfit => bfit.bf.Share == true
+                    && bfit.bf.ItemStatus == true
+                    && bfit.bf.UserId != userID);
+                    if (age)
                     {
-                        double dayAge = period.Days;
-                        monthsAge = (double)dayAge / 30;
+                        LocalDateTime now = DateTime.Now.ToLocalDateTime();
+                        LocalDateTime babyBirth = baby.DateOfBirth.ToLocalDateTime();
+                        Period period = Period.Between(babyBirth, now, PeriodUnits.AllDateUnits);
+                        double monthsAge = period.Months;
+                        if (monthsAge == 0)
+                        {
+                            double dayAge = period.Days;
+                            monthsAge = (double)dayAge / 30;
+                        }
+                        query = query.Where(bfit => bfit.it.MaxAge >= monthsAge && bfit.it.MinAge <= monthsAge);
                     }
-                    query = query.Where(bfit => bfit.it.MaxAge >= monthsAge && bfit.it.MinAge <= monthsAge);
+                    if (weight)
+                    {
+                        query = query.Where(bfit => bfit.it.MaxWeight >= baby.Weight && bfit.it.MinWeight <= baby.Weight);
+                    }
+                    if (height)
+                    {
+                        query = query.Where(bfit => bfit.it.MaxHeight >= baby.Height && bfit.it.MinHeight <= baby.Height);
+                    }
+                    int total = query.Count();
+                    int totalPage = total / pageSize;
+                    if (total % pageSize != 0)
+                    {
+                        ++totalPage;
+                    }
+                    return new(total, totalPage, await query.OrderByDescending(bfit => bfit.bf.ItemDateCreated).Select(bfit => bfit.bf).Skip(itemsToSkip).Take(pageSize).ToListAsync());
                 }
-                if (weight)
-                {
-                    query = query.Where(bfit => bfit.it.MaxWeight >= baby.Weight && bfit.it.MinWeight <= baby.Weight);
-                }
-                if (height)
-                {
-                    query = query.Where(bfit => bfit.it.MaxHeight >= baby.Height && bfit.it.MinHeight <= baby.Height);
-                }
-                int total = query.Count();
-                int totalPage = total / pageSize;
-                if (total % pageSize != 0)
-                {
-                    ++totalPage;
-                }
-                return new(total, totalPage, await query.OrderByDescending(bfit => bfit.bf.ItemDateCreated).Select(bfit => bfit.bf).Skip(itemsToSkip).Take(pageSize).ToListAsync());
+                return null;
             }
-            return null;
+            catch (Exception ex)
+            {
+                _logger4Net.Loggers(ex);
+                return null;
+            }
         }
     }
 }
