@@ -281,7 +281,8 @@ namespace MOBY_API_Core6.Repository
             {
                 report.ReportDateResolve = DateTime.Now;
                 report.ReportStatus = reportVM.IsDelete;
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
