@@ -552,6 +552,9 @@ namespace Item.Controllers
             }
             try
             {
+                age = true;
+                weight = true;
+                height = true;
                 ListVM<BriefItem>? listRecommendItemByBaby = await _itemService.GetListRecommendByBaby(babyID, userID, pageNumber, pageSize, age, weight, height);
                 if (listRecommendItemByBaby != null)
                 {
