@@ -362,7 +362,7 @@ namespace MOBY_API_Core6.Controllers
                 }
                 else
                 {
-                    return NotFound(ReturnMessage.Create(RecordPenaltyService.ErrorMessage));
+                    return NotFound(ReturnMessage.Create(ReportService.ErrorMessage));
                 }
             }
             catch (Exception ex)
