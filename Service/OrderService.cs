@@ -28,6 +28,7 @@ namespace MOBY_API_Core6.Service
         public async Task<bool> CheckOrderReceivedDate(int uid)
         {
             List<Order> listShippingOrder = await orderRepository.GetShippingOrder(uid);
+            List<Order> listShippingOrder1 = await orderRepository.GetShippingOrder(uid);
             if (listShippingOrder == null)
             {
                 return false;
@@ -40,14 +41,13 @@ namespace MOBY_API_Core6.Service
                     {
                         if (r.ReportStatus == 0 && r.User.UserStatus == true)
                         {
-                            listShippingOrder.Remove(o);
+                            listShippingOrder1.Remove(o);
                             break;
                         }
                     }
                 }
             }
-
-            foreach (Order o in listShippingOrder)
+            foreach (Order o in listShippingOrder1)
             {
                 TimeSpan totalDays = DateTime.Now - o.DatePackage!.Value;
                 if (totalDays.TotalDays >= 16)
