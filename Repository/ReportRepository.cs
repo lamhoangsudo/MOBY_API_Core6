@@ -291,7 +291,8 @@ namespace MOBY_API_Core6.Repository
             AutoDeleteAllBanUser();
             int itemsToSkip = (dynamicFilterReportVM.PageNumber - 1) * dynamicFilterReportVM.PageSize;
             var query = _context.ViewReports
-                .Join(_context.UserAccounts, vr => vr.UserId, us => us.UserId, (vr, us) => new { vr, us });
+                .Join(_context.UserAccounts, vr => vr.UserId, us => us.UserId, (vr, us) => new { vr, us })
+                .Where(vrus => vrus.vr.ReportStatus != 3);
             if (dynamicFilterReportVM.UserID != null)
             {
                 query = query.Where(query => query.vr.UserId == dynamicFilterReportVM.UserID && query.us.UserStatus == true);
