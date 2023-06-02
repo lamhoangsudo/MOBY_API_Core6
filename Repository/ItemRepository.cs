@@ -575,7 +575,7 @@ namespace MOBY_API_Core6.Repository
                     .Where(bfit => bfit.bf.Share == true
                     && bfit.bf.ItemStatus == true
                     && bfit.bf.UserId != userID);
-                    if (age)
+                    /*if (age)
                     {
                         LocalDateTime now = DateTime.Now.ToLocalDateTime();
                         LocalDateTime babyBirth = baby.DateOfBirth.ToLocalDateTime();
@@ -595,7 +595,17 @@ namespace MOBY_API_Core6.Repository
                     if (height)
                     {
                         query = query.Where(bfit => bfit.it.MaxHeight >= baby.Height && bfit.it.MinHeight <= baby.Height);
+                    }*/
+                    LocalDateTime now = DateTime.Now.ToLocalDateTime();
+                    LocalDateTime babyBirth = baby.DateOfBirth.ToLocalDateTime();
+                    Period period = Period.Between(babyBirth, now, PeriodUnits.AllDateUnits);
+                    double monthsAge = period.Months;
+                    if (monthsAge == 0)
+                    {
+                        double dayAge = period.Days;
+                        monthsAge = (double)dayAge / 30;
                     }
+                    query = query.Where(bfit => (bfit.it.MaxAge >= monthsAge && bfit.it.MinAge <= monthsAge) || (bfit.it.MaxWeight >= baby.Weight && bfit.it.MinWeight <= baby.Weight) || (bfit.it.MaxHeight >= baby.Height && bfit.it.MinHeight <= baby.Height));
                     int total = query.Count();
                     int totalPage = total / pageSize;
                     if (total % pageSize != 0)
