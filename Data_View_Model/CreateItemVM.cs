@@ -33,19 +33,19 @@ namespace MOBY_API_Core6.Data_View_Model
         [DefaultValue(true)]
         public bool Share { get; set; }
         [DefaultValue(0)]
-        public double? MaxAge { get; set; } = 0;
+        public double MaxAge { get; set; } = 0;
         [DefaultValue(0)]
-        public double? MinAge { get; set; } = 0;
+        public double MinAge { get; set; } = 0;
         [DefaultValue(0)]
-        public double? MaxWeight { get; set; } = 0;
+        public double MaxWeight { get; set; } = 0;
         [DefaultValue(0)]
-        public double? MinWeight { get; set; } = 0;
+        public double MinWeight { get; set; } = 0;
         [DefaultValue(0)]
-        public double? MaxHeight { get; set; } = 0;
+        public double MaxHeight { get; set; } = 0;
         [DefaultValue(0)]
-        public double? MinHeight { get; set; } = 0;
+        public double MinHeight { get; set; } = 0;
 
-        public CreateItemVM(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, double itemEstimateValue, double itemSalePrice, int itemShareAmount, string itemShippingAddress, string image, string? stringDateTimeExpired, bool share, double? maxAge, double? minAge, double? maxWeight, double? minWeight, double? maxHeight, double? minHeight)
+        public CreateItemVM(int userId, int subCategoryId, string itemTitle, string itemDetailedDescription, double itemMass, bool itemSize, double itemEstimateValue, double itemSalePrice, int itemShareAmount, string itemShippingAddress, string image, string? stringDateTimeExpired, bool share, double maxAge, double minAge, double maxWeight, double minWeight, double maxHeight, double minHeight)
         {
             this.UserId = userId;
             this.SubCategoryId = subCategoryId;
