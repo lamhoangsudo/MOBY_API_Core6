@@ -15,7 +15,7 @@ namespace MOBY_API_Core6.Service.IService
         public Task<bool> EditUser(UserAccount currentUser, UpdateAccountVM accountVM);
         public Task<bool> EditBankAccount(UserAccount currentUser, UpdateBankAccount accountVM);
         public Task<List<UserVM>> GetAllUser(PaggingVM pagging, UserAccountFilterVM userAccountFilterVM);
-        public Task<int> GetAllUserCount();
+        public Task<int> GetAllUserCount(UserAccountFilterVM userAccountFilterVM);
         public Task<bool> BanUser(UserUidVM uid);
         public Task<bool> UnbanUser(UserUidVM uid);
     }

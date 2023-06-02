@@ -78,9 +78,9 @@ namespace MOBY_API_Core6.Service
             return accountListVM;
         }
 
-        public async Task<int> GetAllUserCount()
+        public async Task<int> GetAllUserCount(UserAccountFilterVM userAccountFilterVM)
         {
-            return await userRepository.GetAllUserCount();
+            return await userRepository.GetAllUserCount(userAccountFilterVM);
         }
 
         public async Task<bool> BanUser(UserUidVM uid)

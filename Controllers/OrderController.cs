@@ -278,7 +278,13 @@ namespace MOBY_API_Core6.Controllers
 
                 if (await orderDAO.CancelOrder(currentOrder, cancelOrdervm.ReasonCancel, uid, pernament))
                 {
-
+                    Email newEmail = new Email();
+                    newEmail.To = currentOrder.Item.User.UserGmail;
+                    newEmail.UserName = currentOrder.Item.User.UserName;
+                    newEmail.Subject = "Đơn hàng đã bị hủy";
+                    newEmail.Obj = "Đơn Hàng";
+                    newEmail.Link = "https://moby-customer.vercel.app/account/order/order/" + currentOrder.OrderId + "";
+                    await emailDAO.SendEmai(newEmail);
                     return Ok(ReturnMessage.Create("success"));
                 }
 
