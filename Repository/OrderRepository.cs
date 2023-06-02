@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
 
@@ -8,10 +9,11 @@ namespace MOBY_API_Core6.Repository
     public class OrderRepository : IOrderRepository
     {
         private readonly MOBYContext context;
-
+        private readonly Logger4Net _logger4Net;
         public OrderRepository(MOBYContext context)
         {
             this.context = context;
+            _logger4Net = new Logger4Net();
         }
         public async Task<List<OrderBriefVM>> GetOrderByRecieverID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM)
         {
@@ -242,29 +244,37 @@ namespace MOBY_API_Core6.Repository
 
         public async Task<bool> CancelOrder(Order order, string reasonCancel, int uid, bool pernament)
         {
-            if (order.UserId != uid)
+            try
             {
+                if (order.UserId != uid)
+                {
+                    return false;
+                }
+                order.Status = 3;
+                order.DateCancel = DateTime.Now;
+                order.ReasonCancel = reasonCancel;
+                if (pernament)
+                {
+                    if (order.User.Reputation <= 5)
+                    {
+                        order.User.Reputation = 0;
+                        order.User.UserStatus = false;
+                    }
+                    else
+                    {
+                        order.User.Reputation -= 5;
+                    }
+
+                }
+                order.User.Balance += (order.Price * order.Quantity);
+                await context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger4Net.Loggers(ex);
                 return false;
             }
-            order.Status = 3;
-            order.DateCancel = DateTime.Now;
-            order.ReasonCancel = reasonCancel;
-            if (pernament)
-            {
-                if (order.User.Reputation <= 5)
-                {
-                    order.User.Reputation = 0;
-                    order.User.UserStatus = false;
-                }
-                else
-                {
-                    order.User.Reputation -= 5;
-                }
-
-            }
-            order.User.Balance += (order.Price * order.Quantity);
-            await context.SaveChangesAsync();
-            return true;
         }
     }
 }

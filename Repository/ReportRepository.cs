@@ -987,8 +987,8 @@ namespace MOBY_API_Core6.Repository
                     To = gmail,
                     Subject = "Tố cáo của bạn đang được xử lý",
                     UserName = username,
-                    Obj = "Tố cáo",
-                    Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId
+                    Obj = "tố cáo của bạn đang được xử lý",
+                    Link = "https://moby-customer.vercel.app/account/report/" + report.ReportId + "?type=1"
                 };
                 await emailRepository.SendEmai(email);
                 report.ReportStatus = 4;

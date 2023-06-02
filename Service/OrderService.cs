@@ -1,4 +1,5 @@
 ﻿using MOBY_API_Core6.Data_View_Model;
+using MOBY_API_Core6.Log4Net;
 using MOBY_API_Core6.Models;
 using MOBY_API_Core6.Repository.IRepository;
 using MOBY_API_Core6.Service.IService;
@@ -7,12 +8,12 @@ namespace MOBY_API_Core6.Service
 {
     public class OrderService : IOrderService
     {
-        private readonly MOBYContext context;
         private readonly IOrderRepository orderRepository;
-        public OrderService(MOBYContext context, IOrderRepository orderRepository)
+        private readonly Logger4Net _logger4Net;
+        public OrderService(IOrderRepository orderRepository)
         {
-            this.context = context;
             this.orderRepository = orderRepository;
+            _logger4Net = new Logger4Net();
         }
 
         public async Task<List<OrderBriefVM>> GetOrderByRecieverID(int uid, PaggingVM pagging, OrderStatusVM orderStatusVM)
@@ -87,7 +88,15 @@ namespace MOBY_API_Core6.Service
 
         public async Task<bool> CancelOrder(Order order, string reasonCancel, int uid, bool pernament)
         {
-            return await orderRepository.CancelOrder(order, reasonCancel, uid, pernament);
+            try
+            {
+                return await orderRepository.CancelOrder(order, reasonCancel, uid, pernament);
+            }
+            catch (Exception ex)
+            {
+                _logger4Net.Loggers(ex);
+                return false;
+            }
         }
     }
 }
