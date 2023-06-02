@@ -118,7 +118,7 @@ namespace MOBY_API_Core6.Service
                 To = blog.User.UserGmail,
                 UserName = blog.User.UserName,
                 Subject = "Bài Blog của bạn đã được phê duyệt",
-                Obj = "Blog",
+                Obj = "Bài Blog của bạn đã được duyệt thành công",
                 Link = "https://moby-customer.vercel.app/blog/" + blog.BlogId
             };
             await emailDAO.SendEmai(newEmail);
@@ -136,7 +136,7 @@ namespace MOBY_API_Core6.Service
                 To = blog.User.UserGmail,
                 Subject = "Bài Blog của bạn đã bị từ chối",
                 UserName = blog.User.UserName,
-                Obj = "Blog",
+                Obj = "Bài Blog của bạn đã bị từ chối",
                 Link = "https://moby-customer.vercel.app/blog/" + blog.BlogId
             };
             await emailDAO.SendEmai(newEmail);

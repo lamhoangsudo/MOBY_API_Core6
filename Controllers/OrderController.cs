@@ -209,23 +209,27 @@ namespace MOBY_API_Core6.Controllers
                 {
                     if (updateOrderVM.Status == 1)
                     {
-                        Email newEmail = new Email();
-                        newEmail.To = currentOrder.User.UserGmail;
-                        newEmail.UserName = currentOrder.User.UserName;
-                        newEmail.Subject = "Đơn hàng của bạn đang được giao";
-                        newEmail.Obj = "Đơn Hàng";
-                        newEmail.Link = "https://moby-customer.vercel.app/account/order/order/" + currentOrder.OrderId + "";
+                        Email newEmail = new()
+                        {
+                            To = currentOrder.User.UserGmail,
+                            UserName = currentOrder.User.UserName,
+                            Subject = "Đơn hàng của bạn đang được giao",
+                            Obj = "đơn Hàng đang được giao",
+                            Link = "https://moby-customer.vercel.app/account/order/order/" + currentOrder.OrderId + ""
+                        };
                         await emailDAO.SendEmai(newEmail);
                     }
                     else
                     if (updateOrderVM.Status == 2)
                     {
-                        Email newEmail = new Email();
-                        newEmail.To = currentOrder.Item.User.UserGmail;
-                        newEmail.UserName = currentOrder.Item.User.UserName;
-                        newEmail.Subject = "Đơn hàng của bạn đang được nhận thành công";
-                        newEmail.Obj = "Đơn Hàng";
-                        newEmail.Link = "https://moby-customer.vercel.app/account/order/order/" + currentOrder.OrderId + "";
+                        Email newEmail = new()
+                        {
+                            To = currentOrder.Item.User.UserGmail,
+                            UserName = currentOrder.Item.User.UserName,
+                            Subject = "Đơn hàng của bạn đang được nhận thành công",
+                            Obj = "đơn Hàng của bạn đang được nhận thành công",
+                            Link = "https://moby-customer.vercel.app/account/order/order/" + currentOrder.OrderId + ""
+                        };
                         await emailDAO.SendEmai(newEmail);
                     }
                     return Ok(ReturnMessage.Create("success"));
@@ -267,7 +271,6 @@ namespace MOBY_API_Core6.Controllers
                 {
                     return BadRequest(ReturnMessage.Create("order not found"));
                 }
-
                 bool pernament = true;
                 TimeSpan totalDays = DateTime.Now - currentOrder.DateCreate;
                 int totalDaysint = Convert.ToInt32(totalDays.TotalDays);
@@ -275,16 +278,20 @@ namespace MOBY_API_Core6.Controllers
                 {
                     pernament = false;
                 }
-
                 if (await orderDAO.CancelOrder(currentOrder, cancelOrdervm.ReasonCancel, uid, pernament))
                 {
-
+                    Email newEmail = new()
+                    {
+                        To = currentOrder.Item.User.UserGmail,
+                        UserName = currentOrder.Item.User.UserName,
+                        Subject = "Đơn hàng đã bị hủy",
+                        Obj = "đơn Hàng của bạn đã bị hủy",
+                        Link = "https://moby-customer.vercel.app/account/order/order/" + currentOrder.OrderId + ""
+                    };
+                    await emailDAO.SendEmai(newEmail);
                     return Ok(ReturnMessage.Create("success"));
                 }
-
                 return BadRequest(ReturnMessage.Create("error at cancelOrder"));
-
-
             }
             catch (Exception ex)
             {

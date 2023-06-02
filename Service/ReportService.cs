@@ -376,7 +376,6 @@ namespace MOBY_API_Core6.Service
             }
             return statusAndReasonHidenViewModel;
         }
-
         public async Task<UserAccount?> GetUserByObjID(GetUserObj getUserObj)
         {
             try
@@ -435,6 +434,24 @@ namespace MOBY_API_Core6.Service
                 _logger4Net.Loggers(ex);
                 ErrorMessage = ex.Message;
                 return null;
+            }
+        }
+        public async Task<bool> StatusProcessingReportOrder(int reportOrderID)
+        {
+            try
+            {
+                int check = await _reportRepository.StatusProcessingReportOrder(reportOrderID, _emailService);
+                if (check <= 0)
+                {
+                    return false;
+                }
+                return true;
+            }
+            catch(Exception ex)
+            {
+                _logger4Net.Loggers(ex);
+                ErrorMessage = ex.Message;
+                return false;
             }
         }
     }

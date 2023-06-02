@@ -50,7 +50,8 @@ namespace MOBY_API_Core6.Repository
                     Evident = reportVM.Image
                 };
                 await _context.Reports.AddAsync(report);
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
@@ -75,7 +76,8 @@ namespace MOBY_API_Core6.Repository
                         Evident = reportVM.Image
                     };
                     await _context.Reports.AddAsync(report);
-                    return await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
+                    return 1;
                 }
             }
             throw new KeyNotFoundException();
@@ -98,7 +100,8 @@ namespace MOBY_API_Core6.Repository
                     Evident = reportVM.Image
                 };
                 await _context.Reports.AddAsync(report);
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
@@ -120,7 +123,8 @@ namespace MOBY_API_Core6.Repository
                     Evident = reportVM.Image
                 };
                 await _context.Reports.AddAsync(report);
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
@@ -142,7 +146,8 @@ namespace MOBY_API_Core6.Repository
                     Evident = reportVM.Image
                 };
                 await _context.Reports.AddAsync(report);
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
@@ -151,7 +156,7 @@ namespace MOBY_API_Core6.Repository
             var query = _context.Reports
                 .Join(_context.UserAccounts, rp => rp.UserId, us => us.UserId, (rp, us) => new { rp, us })
                 .Where(rpus => rpus.rp.ReportId == reportVM.ReportID
-                && rpus.rp.ReportStatus == 0
+                && (rpus.rp.ReportStatus == 0 || rpus.rp.ReportStatus == 4)
                 && rpus.us.UserStatus == true);
             Report? report = await query
                 .Select(rpus => rpus.rp)
@@ -190,16 +195,17 @@ namespace MOBY_API_Core6.Repository
                     Email email = new()
                     {
                         To = gmail,
-                        Subject = "Báo cáo của bạn đã được phê duyệt",
+                        Subject = "Tố cáo của bạn đã được phê duyệt",
                         UserName = username,
-                        Obj = "Report",
-                        Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId
+                        Obj = "tố cáo của bạn đã được phê duyệt thành công",
+                        Link = "https://moby-customer.vercel.app/account/report/" + report.ReportId + "?type=" + type
                     };
                     await emailRepository.SendEmai(email);
                 }
                 report.ReportDateResolve = DateTime.Now;
                 report.ReportStatus = 1;
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
@@ -208,7 +214,7 @@ namespace MOBY_API_Core6.Repository
             var query = _context.Reports
                 .Join(_context.UserAccounts, rp => rp.UserId, us => us.UserId, (rp, us) => new { rp, us })
                 .Where(rpus => rpus.rp.ReportId == reportVM.ReportID
-                && rpus.rp.ReportStatus == 0
+                && (rpus.rp.ReportStatus == 0 || rpus.rp.ReportStatus == 4)
                 && rpus.us.UserStatus == true);
             Report? report = await query
                 .Select(rpus => rpus.rp)
@@ -247,17 +253,18 @@ namespace MOBY_API_Core6.Repository
                     Email email = new()
                     {
                         To = gmail,
-                        Subject = "your report has been deny",
+                        Subject = "Tố cáo của bạn đã bị từ chối",
                         UserName = username,
-                        Obj = "Report",
-                        Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId
+                        Obj = "tố cáo của bạn đã bị từ chối",
+                        Link = "https://moby-customer.vercel.app/account/report/" + report.ReportId + "?type=" + type
                     };
                     await emailRepository.SendEmai(email);
                 }
                 report.ReportDateResolve = DateTime.Now;
                 report.ReportStatus = 2;
                 report.ReasonDeny = reportVM.Reason;
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
@@ -270,7 +277,8 @@ namespace MOBY_API_Core6.Repository
                 report.ReportContent = reportVM.Content;
                 report.Title = reportVM.Title;
                 report.Evident = reportVM.Image;
-                return await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }
@@ -443,8 +451,8 @@ namespace MOBY_API_Core6.Repository
                     To = userAccount.UserGmail,
                     Subject = "sản phẩm của bạn đã bị ẩn đi",
                     UserName = userAccount.UserName,
-                    Obj = "sản phẩm",
-                    Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + item.ItemId
+                    Obj = "sản phẩm của bạn đã vi phạm quy định, chúng tôi đã ẩn sản phẩm của bạn hãy cập nhập lại sản phẩm của bạn để phù hợp với cộng đồng",
+                    Link = "https://moby-customer.vercel.app/account/product/" + item.ItemId
                 };
                 await emailRepository.SendEmai(email);
                 return true;
@@ -476,8 +484,8 @@ namespace MOBY_API_Core6.Repository
                     To = userAccount.UserGmail,
                     Subject = "đơn hàng của bạn đã bị hủy",
                     UserName = userAccount.UserName,
-                    Obj = "đơn hàng",
-                    Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + order.OrderId
+                    Obj = "đơn hàng của bạn đã vi phạm quy định, chúng tôi đã hủy đơn hàng của bạn",
+                    Link = "https://moby-customer.vercel.app/account/order/order/" + order.OrderId
                 };
                 await emailRepository.SendEmai(email);
                 return true;
@@ -505,8 +513,8 @@ namespace MOBY_API_Core6.Repository
                     To = userAccount.UserGmail,
                     Subject = "Bình luận của bạn đã bị ẩn",
                     UserName = userAccount.UserName,
-                    Obj = "bình luận",
-                    Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + comment.CommentId
+                    Obj = "bình luận của bạn đã vi phạm quy định, chúng tôi đã ẩn bình luận của bạn",
+                    Link = ""
                 };
                 await emailRepository.SendEmai(email);
                 return true;
@@ -534,8 +542,8 @@ namespace MOBY_API_Core6.Repository
                     To = userAccount.UserGmail,
                     Subject = "Bình luận của bạn đã bị ẩn",
                     UserName = userAccount.UserName,
-                    Obj = "bình luận",
-                    Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + reply.ReplyId
+                    Obj = "bình luận của bạn đã vi phạm quy định, chúng tôi đã ẩn bình luận của bạn",
+                    Link = ""
                 };
                 await emailRepository.SendEmai(email);
                 return true;
@@ -564,8 +572,8 @@ namespace MOBY_API_Core6.Repository
                     To = userAccount.UserGmail,
                     Subject = "Bài viết của bạn đã bị ẩn đi",
                     UserName = userAccount.UserName,
-                    Obj = "bài viết",
-                    Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + blog.BlogId
+                    Obj = "bài viết của bạn đã vi phạm quy định, chúng tôi đã ẩn bài viết của bạn hãy cập nhập lại bài viết của bạn để phù hợp với cộng đồng",
+                    Link = "https://moby-customer.vercel.app/blog/" + blog.BlogId
                 };
                 await emailRepository.SendEmai(email);
                 return true;
@@ -610,8 +618,8 @@ namespace MOBY_API_Core6.Repository
                             To = userAccountItem.UserGmail,
                             Subject = "sản phẩm của bạn đã vi phạm quy định",
                             UserName = userAccountItem.UserName,
-                            Obj = "sản phẩm",
-                            Link = ""
+                            Obj = "bạn đã vi phạm nặng quy định, chúng tôi đã trừ điểm uy tín theo quy định",
+                            Link = "https://moby-customer.vercel.app/account"
                         };
                         await emailRepository.SendEmai(email);
                     }
@@ -660,8 +668,8 @@ namespace MOBY_API_Core6.Repository
                             To = userAccountOrder.UserGmail,
                             Subject = "đơn hàng của bạn đã vi phạm quy định",
                             UserName = userAccountOrder.UserName,
-                            Obj = "đơn hàng",
-                            Link = ""
+                            Obj = "bạn đã vi phạm nặng quy định, chúng tôi đã trừ điểm uy tín theo quy định",
+                            Link = "https://moby-customer.vercel.app/account"
                         };
                         await emailRepository.SendEmai(email);
                     }
@@ -709,8 +717,8 @@ namespace MOBY_API_Core6.Repository
                             To = userAccountComment.UserGmail,
                             Subject = "bình luận của bạn đã vi phạm quy định",
                             UserName = userAccountComment.UserName,
-                            Obj = "bình luận",
-                            Link = ""
+                            Obj = "bạn đã vi phạm nặng quy định, chúng tôi đã trừ điểm uy tín theo quy định",
+                            Link = "https://moby-customer.vercel.app/account"
                         };
                         await emailRepository.SendEmai(email);
                     }
@@ -758,8 +766,8 @@ namespace MOBY_API_Core6.Repository
                             To = userAccountReply.UserGmail,
                             Subject = "bình luận của bạn đã vi phạm quy định",
                             UserName = userAccountReply.UserName,
-                            Obj = "bình luận",
-                            Link = ""
+                            Obj = "bạn đã vi phạm nặng quy định, chúng tôi đã trừ điểm uy tín theo quy định",
+                            Link = "https://moby-customer.vercel.app/account"
                         };
 
                         await emailRepository.SendEmai(email);
@@ -806,10 +814,10 @@ namespace MOBY_API_Core6.Repository
                         Email email = new()
                         {
                             To = userAccountBlog.UserGmail,
-                            Subject = "bình luận của bạn đã vi phạm quy định",
+                            Subject = "Bài viết của bạn đã vi phạm quy định",
                             UserName = userAccountBlog.UserName,
-                            Obj = "bình luận",
-                            Link = ""
+                            Obj = "bạn đã vi phạm nặng quy định, chúng tôi đã trừ điểm uy tín theo quy định",
+                            Link = "https://moby-customer.vercel.app/account"
                         };
 
                         await emailRepository.SendEmai(email);
@@ -953,6 +961,39 @@ namespace MOBY_API_Core6.Repository
             if (userAccount != null)
             {
                 return userAccount;
+            }
+            throw new KeyNotFoundException();
+        }
+        public async Task<int> StatusProcessingReportOrder(int reportOrderID, IEmailService emailRepository)
+        {
+            var query = _context.Reports
+                .Join(_context.UserAccounts, rp => rp.UserId, us => us.UserId, (rp, us) => new { rp, us })
+                .Where(rpus => rpus.rp.ReportId == reportOrderID
+                && rpus.rp.ReportStatus == 0
+                && rpus.us.UserStatus == true);
+            Report? report = await query
+                .Select(rpus => rpus.rp)
+                .FirstOrDefaultAsync();
+            if (report != null)
+            {
+                string? username = await query
+                    .Select(rpus => rpus.us.UserName)
+                    .FirstOrDefaultAsync();
+                string? gmail = await query
+                .Select(rpus => rpus.us.UserGmail)
+                .FirstOrDefaultAsync();
+                Email email = new()
+                {
+                    To = gmail,
+                    Subject = "Tố cáo của bạn đang được xử lý",
+                    UserName = username,
+                    Obj = "Tố cáo",
+                    Link = "https://moby-customer.vercel.app/Report/GetDetailReport?report=" + report.ReportId
+                };
+                await emailRepository.SendEmai(email);
+                report.ReportStatus = 4;
+                await _context.SaveChangesAsync();
+                return 1;
             }
             throw new KeyNotFoundException();
         }

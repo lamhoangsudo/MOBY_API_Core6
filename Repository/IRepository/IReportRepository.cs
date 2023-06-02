@@ -41,5 +41,6 @@ namespace MOBY_API_Core6.Repository.IRepository
         Task<UserAccount?> GetUserByCommentID(int id);
         Task<UserAccount?> GetUserByReplyID(int id);
         Task<UserAccount?> GetUserByBlogID(int id);
+        Task<int> StatusProcessingReportOrder(int reportOrderID, IEmailService emailRepository);
     }
 }

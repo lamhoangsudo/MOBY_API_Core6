@@ -58,6 +58,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpPut("UpdateReport")]
         public async Task<IActionResult> UpdateReport([FromBody] UpdateReportVM reportVM)
         {
@@ -79,6 +80,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpPatch("ApprovedReport")]
         public async Task<IActionResult> ApprovedReport([FromBody] ApprovedReportVM reportVM)
         {
@@ -100,6 +102,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpPatch("DenyReport")]
         public async Task<IActionResult> DenyReport([FromBody] DenyReportVM reportVM)
         {
@@ -121,6 +124,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpPatch("DeleteReport")]
         public async Task<IActionResult> DeleteReport([FromBody] DeleteReportVM reportVM)
         {
@@ -141,6 +145,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpPost("GetAllReport")]
         public async Task<IActionResult> GetReport([FromBody] DynamicFilterReportVM dynamicFilterReportVM)
         {
@@ -266,6 +271,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpPatch("HiddenObject")]
         public async Task<IActionResult> HideObject([FromBody] HiddenAndPunish hiddenAndPunish)
         {
@@ -287,6 +293,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpPut("PunishViolators")]
         public async Task<IActionResult> PunishViolators([FromBody] HiddenAndPunish hideAndPunish)
         {
@@ -308,6 +315,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpGet("GetStatusAndReasonHiden")]
         public async Task<IActionResult> GetStatusAndReasonHiden([FromQuery] int id, [FromQuery] int type)
         {
@@ -329,6 +337,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpGet("GetRecordPenaltyPointsByUser")]
         public async Task<IActionResult> GetRecordPenaltyPointsByUser([FromQuery] int userID)
         {
@@ -350,6 +359,7 @@ namespace MOBY_API_Core6.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        [Authorize]
         [HttpGet("GetUserByOBJ")]
         public async Task<IActionResult> GetUserByObj([FromQuery] GetUserObj getUserObj)
         {
@@ -359,6 +369,28 @@ namespace MOBY_API_Core6.Controllers
                 if (userAccount != null)
                 {
                     return Ok(userAccount);
+                }
+                else
+                {
+                    return NotFound(ReturnMessage.Create(ReportService.ErrorMessage));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger4Net.Loggers(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        [Authorize]
+        [HttpPatch("StatusProcessingReportOrder")]
+        public async Task<IActionResult> StatusProcessingReportOrder([FromBody] int orderID)
+        {
+            try
+            {
+                bool check = await _reportService.StatusProcessingReportOrder(orderID);
+                if (check)
+                {
+                    return Ok(ReturnMessage.Create("Đã xác nhận thành công"));
                 }
                 else
                 {

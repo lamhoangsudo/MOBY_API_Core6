@@ -132,7 +132,7 @@ namespace MOBY_API_Core6.Repository
                 if (pagging.OrderBy)
                 {
                     return await context.UserAccounts
-                    .Where(uc => uc.UserStatus == userAccountFilterVM.UserStatus && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
+                    .Where(uc => uc.RoleId == 2 && uc.UserStatus == userAccountFilterVM.UserStatus && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
                     .Skip(itemsToSkip)
                     .Take(pagging.PageSize)
                     .OrderByDescending(x => x.UserId)
@@ -142,7 +142,7 @@ namespace MOBY_API_Core6.Repository
                 else
                 {
                     return await context.UserAccounts
-                    .Where(uc => uc.UserStatus == userAccountFilterVM.UserStatus && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
+                    .Where(uc => uc.RoleId == 2 && uc.UserStatus == userAccountFilterVM.UserStatus && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
                     .Skip(itemsToSkip)
                     .Take(pagging.PageSize)
                     .Select(u => UserVM.UserAccountToVewModel(u))
@@ -154,7 +154,7 @@ namespace MOBY_API_Core6.Repository
                 if (pagging.OrderBy)
                 {
                     return await context.UserAccounts
-                    .Where(uc => uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
+                    .Where(uc => uc.RoleId == 2 && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
                     .Skip(itemsToSkip)
                     .Take(pagging.PageSize)
                     .OrderByDescending(x => x.UserId)
@@ -164,7 +164,7 @@ namespace MOBY_API_Core6.Repository
                 else
                 {
                     return await context.UserAccounts
-                    .Where(uc => uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
+                    .Where(uc => uc.RoleId == 2 && uc.UserName.Contains(userAccountFilterVM.UserName) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail))
                     .Skip(itemsToSkip)
                     .Take(pagging.PageSize)
                     .Select(u => UserVM.UserAccountToVewModel(u))
@@ -173,9 +173,11 @@ namespace MOBY_API_Core6.Repository
             }
             throw new InvalidDataException();
         }
-        public async Task<int> GetAllUserCount()
+        public async Task<int> GetAllUserCount(UserAccountFilterVM userAccountFilterVM)
         {
-            return await context.UserAccounts.CountAsync();
+            return await context.UserAccounts
+                .Where(uc => uc.RoleId == 2 && uc.UserStatus == userAccountFilterVM.UserStatus && uc.UserName.Contains(userAccountFilterVM.UserName!) && uc.UserGmail.Contains(userAccountFilterVM.UserGmail!))
+                .CountAsync();
         }
 
         public async Task<bool> BanUser(UserUidVM uid)
@@ -188,8 +190,8 @@ namespace MOBY_API_Core6.Repository
                 Email newEmail = new()
                 {
                     To = foundAccount.UserGmail,
-                    Subject = "your has been ban",
-                    Obj = "Account",
+                    Subject = "tài khoản của bạn đã bị khóa",
+                    Obj = "tài khoản của bạn đã bị khóa",
                     Link = foundAccount.UserGmail + " has been banned by admintrator at " + DateTime.Now.ToString()
                 };
                 await emailDAO.SendEmai(newEmail);
@@ -208,7 +210,7 @@ namespace MOBY_API_Core6.Repository
                 Email newEmail = new()
                 {
                     To = foundAccount.UserGmail,
-                    Subject = "your has been unbanned",
+                    Subject = "tài khoản của bạn đã được mở khóa",
                     Link = foundAccount.UserGmail + " has been unbanned by admintrator at " + DateTime.Now.ToString()
                 };
                 await emailDAO.SendEmai(newEmail);
