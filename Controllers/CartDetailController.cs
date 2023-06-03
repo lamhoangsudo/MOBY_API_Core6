@@ -220,12 +220,14 @@ namespace MOBY_API_Core6.Controllers
 
                 if (await cartDetailDAO.ConfirmCartDetail(listCartDetailID, user.UserId))
                 {
-                    Email newEmail = new Email();
-                    newEmail.To = user.UserGmail;
-                    newEmail.UserName = user.UserName;
-                    newEmail.Subject = "Đơn hàng của bạn đã được khởi tạo";
-                    newEmail.Obj = "Đơn Hàng";
-                    newEmail.Link = "https://moby-customer.vercel.app/account/order?itemType=receiver&status=0";
+                    Email newEmail = new()
+                    {
+                        To = user.UserGmail,
+                        UserName = user.UserName,
+                        Subject = "Đơn hàng của bạn đã được khởi tạo",
+                        Obj = "đơn hàng của bạn đã được khởi tạo thành công",
+                        Link = "https://moby-customer.vercel.app/account/order?itemType=receiver&status=0"
+                    };
                     await emailDAO.SendEmai(newEmail);
                     return Ok(ReturnMessage.Create("Success"));
                 }
