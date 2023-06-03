@@ -602,7 +602,6 @@ namespace MOBY_API_Core6.Repository
                     .FirstOrDefaultAsync();
                 if (item != null)
                 {
-                    item.ItemStatus = false;
                     recordPenaltyPoint = new()
                     {
                         UserId = userAccountItem.UserId,
@@ -652,7 +651,6 @@ namespace MOBY_API_Core6.Repository
                     .FirstOrDefaultAsync();
                 if (order != null)
                 {
-                    order.Status = 3;
                     recordPenaltyPoint = new()
                     {
                         UserId = userAccountOrder.UserId,
@@ -701,7 +699,6 @@ namespace MOBY_API_Core6.Repository
                     .FirstOrDefaultAsync();
                 if (comment != null)
                 {
-                    comment.Status = false;
                     recordPenaltyPoint = new()
                     {
                         UserId = userAccountComment.UserId,
@@ -750,7 +747,6 @@ namespace MOBY_API_Core6.Repository
                     .FirstOrDefaultAsync();
                 if (reply != null)
                 {
-                    reply.Status = false;
                     recordPenaltyPoint = new()
                     {
                         UserId = userAccountReply.UserId,
@@ -800,7 +796,6 @@ namespace MOBY_API_Core6.Repository
                     .FirstOrDefaultAsync();
                 if (blog != null)
                 {
-                    blog.BlogStatus = 2;
                     recordPenaltyPoint = new()
                     {
                         UserId = userAccountBlog.UserId,
