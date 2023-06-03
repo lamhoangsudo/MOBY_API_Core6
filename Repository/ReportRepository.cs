@@ -474,7 +474,7 @@ namespace MOBY_API_Core6.Repository
                     .FirstOrDefaultAsync();
                 order.Status = 3;
                 order.ReasonCancel = hideAndPunish.Reason;
-                if (userAccount.UserStatus == false)
+                if (userAccount.UserStatus == true)
                 {
                     userAccount.Balance += (order.Price * order.Quantity);
                 }
