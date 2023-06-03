@@ -8,6 +8,8 @@ namespace MOBY_API_Core6.Data_View_Model
         public int OrderId { get; set; }
         public int Status { get; set; }
         public DateTime DateCreate { get; set; }
+        public DateTime? DatePackage { get; set; }
+        public DateTime? DateReceived { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }
         public string? ReasonCancel { get; set; }
@@ -22,6 +24,8 @@ namespace MOBY_API_Core6.Data_View_Model
             {
                 OrderId = order.OrderId,
                 DateCreate = order.DateCreate,
+                DatePackage = order.DatePackage,
+                DateReceived = order.DateReceived,
                 Quantity = order.Quantity,
                 Price = order.Price,
                 Status = order.Status,
