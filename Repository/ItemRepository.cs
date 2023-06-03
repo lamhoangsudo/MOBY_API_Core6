@@ -379,7 +379,7 @@ namespace MOBY_API_Core6.Repository
             }
             if (!string.IsNullOrEmpty(dynamicFilterVM.TitleName) && !string.IsNullOrWhiteSpace(dynamicFilterVM.TitleName))
             {
-                query = query.Where(query => query.bfit.bf.ItemTitle.Contains(dynamicFilterVM.TitleName));
+                query = query.Where(query => query.bfit.bf.ItemTitle.Contains(dynamicFilterVM.TitleName.Trim()));
             }
             if (dynamicFilterVM.Location != null)
             {
