@@ -368,7 +368,8 @@ namespace MOBY_API_Core6.Repository
                 .Join(_context.UserAccounts, bfit => bfit.it.UserId, us => us.UserId, (bfit, us) => new { bfit, us })
                 .Where(bfitus => bfitus.us.UserStatus == true
                 && bfitus.bfit.bf.CategoryStatus == true
-                && bfitus.bfit.bf.SubCategoryStatus == true);
+                && bfitus.bfit.bf.SubCategoryStatus == true
+                && bfitus.bfit.bf.ItemStatus == true);
             if (dynamicFilterVM.CategoryID != null)
             {
                 query = query.Where(query => query.bfit.bf.CategoryId == dynamicFilterVM.CategoryID);
