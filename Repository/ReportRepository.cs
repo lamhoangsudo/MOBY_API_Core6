@@ -666,7 +666,7 @@ namespace MOBY_API_Core6.Repository
                             To = userAccountOrder.UserGmail,
                             Subject = "đơn hàng của bạn đã vi phạm quy định",
                             UserName = userAccountOrder.UserName,
-                            Obj = "bạn đã vi phạm nặng quy định, chúng tôi đã trừ điểm uy tín theo quy định",
+                            Obj = "bạn đã vi phạm nặng quy định, chúng tôi đã trừ điểm uy tín của bạn theo quy định",
                             Link = "https://moby-customer.vercel.app/account/order/order/" + order.OrderId
                         };
                         await emailRepository.SendEmai(email);
