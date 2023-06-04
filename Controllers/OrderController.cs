@@ -214,7 +214,7 @@ namespace MOBY_API_Core6.Controllers
                             To = currentOrder.User.UserGmail,
                             UserName = currentOrder.User.UserName,
                             Subject = "Đơn hàng của bạn đang được giao",
-                            Obj = "đơn Hàng đang được giao",
+                            Obj = "đơn hàng của bạn đang được giao",
                             Link = "https://moby-customer.vercel.app/account/order/order/" + currentOrder.OrderId + ""
                         };
                         await emailDAO.SendEmai(newEmail);
@@ -227,7 +227,7 @@ namespace MOBY_API_Core6.Controllers
                             To = currentOrder.Item.User.UserGmail,
                             UserName = currentOrder.Item.User.UserName,
                             Subject = "Đơn hàng của bạn đang được nhận thành công",
-                            Obj = "đơn Hàng của bạn đang được nhận thành công",
+                            Obj = "đơn hàng của bạn đang được nhận thành công",
                             Link = "https://moby-customer.vercel.app/account/order/order/" + currentOrder.OrderId + ""
                         };
                         await emailDAO.SendEmai(newEmail);
@@ -285,7 +285,7 @@ namespace MOBY_API_Core6.Controllers
                         To = currentOrder.Item.User.UserGmail,
                         UserName = currentOrder.Item.User.UserName,
                         Subject = "Đơn hàng đã bị hủy",
-                        Obj = "đơn Hàng của bạn đã bị hủy",
+                        Obj = "đơn hàng của bạn đã bị hủy",
                         Link = "https://moby-customer.vercel.app/account/order/order/" + currentOrder.OrderId + ""
                     };
                     await emailDAO.SendEmai(newEmail);
