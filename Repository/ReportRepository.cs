@@ -618,7 +618,7 @@ namespace MOBY_API_Core6.Repository
                             Subject = "sản phẩm của bạn đã vi phạm quy định",
                             UserName = userAccountItem.UserName,
                             Obj = "bạn đã vi phạm nặng quy định, chúng tôi đã trừ điểm uy tín theo quy định",
-                            Link = "https://moby-customer.vercel.app/account/product/21"+item.ItemId
+                            Link = "https://moby-customer.vercel.app/account/product/21" + item.ItemId
                         };
                         await emailRepository.SendEmai(email);
                     }
@@ -667,7 +667,7 @@ namespace MOBY_API_Core6.Repository
                             Subject = "đơn hàng của bạn đã vi phạm quy định",
                             UserName = userAccountOrder.UserName,
                             Obj = "bạn đã vi phạm nặng quy định, chúng tôi đã trừ điểm uy tín theo quy định",
-                            Link = "https://moby-customer.vercel.app/account/order/order/"+order.OrderId
+                            Link = "https://moby-customer.vercel.app/account/order/order/" + order.OrderId
                         };
                         await emailRepository.SendEmai(email);
                     }
@@ -812,7 +812,7 @@ namespace MOBY_API_Core6.Repository
                             Subject = "Bài viết của bạn đã vi phạm quy định",
                             UserName = userAccountBlog.UserName,
                             Obj = "bạn đã vi phạm nặng quy định, chúng tôi đã trừ điểm uy tín theo quy định",
-                            Link = "https://moby-customer.vercel.app/account/blog/"+blog.BlogId
+                            Link = "https://moby-customer.vercel.app/account/blog/" + blog.BlogId
                         };
 
                         await emailRepository.SendEmai(email);
